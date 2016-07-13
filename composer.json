@@ -1,6 +1,6 @@
 {
   "name": "metabolism/rocket-builder",
   "version": "master",
-  "type": "package",
+  "type": "rocket-module",
   "description": "Rocket Builder by Metabolism"
 }
