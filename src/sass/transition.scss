@@ -3,6 +3,10 @@
   $will-change : ();
   $i           : 0;
 
+  @if($speed == false ){
+    $speed : $transition-duration
+  }
+
   @each $property in $properties {
 
     $will-change : append($will-change, $property);

@@ -175,8 +175,7 @@ var UIPopin = function(config){
         var $popin   = $(that.config.html.popin);
         var $body    = $('body');
         var $content = $popin.find('.ui-popin__content');
-
-
+        
         $content.append(content);
 
         if( !$content.find('.ui-popin__close').length )

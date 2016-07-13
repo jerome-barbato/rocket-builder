@@ -1,7 +1,7 @@
 //v1.5
 
 .ui-popin {
-  position: fixed; left: 0; top: 0; width: 100%;
+  position: fixed; left: 0; top: 0; width: 100%; overflow: auto;
   height: 100%; z-index: 9999;background: rgba(0,0,0,0.9);
   transition: allow(opacity); text-align: center; opacity: 0;
 
@@ -28,3 +28,5 @@
     }
   }
 }
+
+body.popin-added{ overflow: hidden }

@@ -1,4 +1,5 @@
 $font_path:'../fonts';
+$font-families : ();
 
 @each $font in $fonts {
 
@@ -21,5 +22,12 @@ $font_path:'../fonts';
     font-stretch: #{$stretch};
   }
 
-  ._font-#{$family} { font-family: $family, $fallback }
+  @if not map-has-key($font-families, $family){
+    $newFont: ($family: $fallback);
+    $font-families : map-merge($font-families, $newFont);
+  }
+}
+
+@each $family, $fallback in $font-families {
+  ._font-#{to-lower-case($family)} { font-family: $family, $fallback }
 }

@@ -1,4 +1,5 @@
 // Path
+$misc-path    :  $public-path+'medias/misc/';
 $pages-path   :  $public-path+'medias/pages/';
 $blocks-path  :  $public-path+'medias/blocks/';
 $tmp-path     :  $public-path+'medias/tmp/';
@@ -27,4 +28,8 @@ $fonts-path   :  $public-path+'fonts/';
 
 @function icons-url($path){
   @return url( $icons-path + $path )
+}
+
+@function misc-url($path){
+  @return url( $misc-path + $path )
 }

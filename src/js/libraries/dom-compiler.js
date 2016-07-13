@@ -94,6 +94,15 @@ var DOMCompiler = function(){
 
                 $template.find('transclude').replaceWith(html);
 
+                if( $(this).attr('class') && $(this).attr('class').length )
+                    $template.addClass($(this).attr('class'));
+
+                if( $(this).attr('id') && $(this).attr('id').length )
+                    $template.attr('id', $(this).attr('id'));
+
+                if( $(this).attr('style') && $(this).attr('style').length )
+                    $template.attr('style', $(this).attr('style'));
+
                 that._compileElements($template);
 
                 $(this).replaceWith($template);

@@ -74,10 +74,10 @@ var UISlider = function (config) {
     that.classnames = {
         slider     : 'ui-slider',
         slides     : 'ui-slider__slides',
-        slide      : 'ui-slider__slides__slide',
+        slide      : 'ui-slider__slide',
         pagination : 'ui-slider__pagination',
         arrows     : 'ui-slider__arrows',
-        arrow      : 'ui-slider__arrows__arrow',
+        arrow      : 'ui-slider__arrow',
         preload    : 'ui-slider__preload',
         scroller   : 'ui-slider__scroller'
     };
@@ -340,10 +340,10 @@ var UISlider = function (config) {
         if( that.context.$next_slide )
             that._addMod(that.context.$next_slide, 'slide', 'next');
 
-        if( window.jQuery.fit ){
+        if( window.jQuery.fn.fit ){
 
-            that.context.$current_slide.find('.ui-fit').fit();
-            that.context.$next_slide.find('.ui-fit').fit();
+            that.context.$current_slide.find('.ui-fit__object').fit();
+            that.context.$next_slide.find('.ui-fit__object').fit();
         }
 
         that._animate(animate, function () {
@@ -577,7 +577,12 @@ var UISliders = function () {
 
         dom.compiler.register('element', 'slide', function (elem) {
 
-            return '<div class="ui-slider__slides__slide"><transclude/></div>';
+            return '<div class="ui-slider__slide"><transclude/></div>';
+        });
+
+        dom.compiler.register('attribute', 'slide-item', function (elem, attrs) {
+
+            elem.addClass('ui-slider__slide__item');
         });
 
         dom.compiler.register('element', 'arrows', function (elem) {
@@ -592,12 +597,12 @@ var UISliders = function () {
 
         dom.compiler.register('element', 'arrow-left', function (elem) {
 
-            return '<a class="ui-slider__arrows__arrow ui-slider__arrows__arrow--left"><transclude/></a>';
+            return '<a class="ui-slider__arrow ui-slider__arrow--left"><transclude/></a>';
         });
 
         dom.compiler.register('element', 'arrow-right', function (elem) {
 
-            return '<a class="ui-slider__arrows__arrow ui-slider__arrows__arrow--right"><transclude/></a>';
+            return '<a class="ui-slider__arrow ui-slider__arrow--right"><transclude/></a>';
         });
     }
 

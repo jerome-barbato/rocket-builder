@@ -37,6 +37,12 @@ var UIDefer = function () {
 
             if( !elem.is("script") ){
 
+                if( window.precompile )
+                    elem.attr('src', "{{ blank() }}");
+
+                if( attrs.defer )
+                    dom.compiler.attr(elem, 'src', attrs.defer);
+
                 elem.addClass('ui-defer');
             }
         });

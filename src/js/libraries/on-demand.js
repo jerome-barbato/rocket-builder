@@ -92,8 +92,9 @@ var UIOnDemand = function(){
             var top      = element.use_parent ? element.$parent.offset().top : element.$.offset().top;
             var height   = element.use_parent ? element.$parent.height() : element.$.height();
 
-            element.top    = top;
-            element.bottom = top+height;
+            element.top     = top;
+            element.visible = element.$.is(':visible');
+            element.bottom  = top+height;
         }
     };
 
@@ -110,14 +111,14 @@ var UIOnDemand = function(){
     that._load = function () {
 
         var scrollTop    = that.context.$window.scrollTop();
-        var targetScroll = scrollTop+that.context.window_height*that.config.load;
+        var targetScroll = scrollTop + that.context.window_height*that.config.load;
 
         for (var i in that.context.elements) {
 
             var element  = that.context.elements[i];
             var $element = element.$;
 
-            if( !element.preloaded && element.top <= targetScroll ){
+            if( !element.preloaded && element.visible && element.top <= targetScroll ){
 
                 element.preloaded = true;
                 $element.removeClass(that.selector+'--waiting').addClass(that.selector+'--loading');
@@ -193,7 +194,10 @@ var UIOnDemand = function(){
      */
     that.__construct =  function(){
 
-        that.context.$window.on('scroll', that._load).on('resize', that._resize);
+        that.context.$window.on('scroll', that._load).on('resize', function(){
+            that._resize();
+            that._load()
+        });
 
         $(document).on('boot', function(){
 
@@ -226,7 +230,6 @@ var UIOnDemand = function(){
                 elem.data('src', attrs.onDemand);
             }
         });
-
     }
 
 

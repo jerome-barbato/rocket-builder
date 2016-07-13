@@ -19,13 +19,6 @@ if( window.angular )
     dom.extensions = angular.module('dom-extensions', []);
 
 
-dom.compiler.register('attribute', 'background', function(elem, attrs){
-
-    if( attrs.background && attrs.background.length )
-        elem.css('backgroundImage', "url('"+attrs.background+"')");
-});
-
-
 
 dom.compiler.register('filter', 'width', function(elem, attrs){
 
@@ -47,6 +40,14 @@ dom.compiler.register('filter', 'height', function(elem, attrs){
         if( height.length == 2 )
             elem.attr('height', Math.round(parseInt(height[0])/parseInt(height[1])));
     }
+});
+
+
+
+dom.compiler.register('attribute', 'background', function(elem, attrs){
+
+    if( attrs.background && attrs.background.length )
+        elem.css('backgroundImage', "url('"+attrs.background+"')");
 });
 
 
@@ -155,6 +156,26 @@ dom.compiler.register('attribute', 'pages-src', function(elem, attrs){
         elem.attr('src', '{{ asset.medias.pages }}'+attrs.pagesSrc);
     else
         elem.attr('src', asset.medias.pages+attrs.pagesSrc);
+});
+
+
+
+dom.compiler.register('attribute', 'components-src', function(elem, attrs){
+
+    if( window.precompile )
+        elem.attr('src', '{{ asset.medias.components }}'+attrs.componentsSrc);
+    else
+        elem.attr('src', asset.medias.components+attrs.componentsSrc);
+});
+
+
+
+dom.compiler.register('attribute', 'tmp-src', function(elem, attrs){
+
+    if( window.precompile )
+        elem.attr('src', '{{ asset.medias.tmp }}'+attrs.tmpSrc);
+    else
+        elem.attr('src', asset.medias.tmp+attrs.tmpSrc);
 });
 
 

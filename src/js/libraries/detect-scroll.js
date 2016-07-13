@@ -137,16 +137,16 @@ var UIDetectScroll = function(){
 
     that._detectScrollBoundReached = function (scroll_top) {
 
-        if( scroll_top == 0 && !that.context.top_reached ){
+        if( scroll_top <= 1 && !that.context.top_reached ){
 
             that.context.top_reached = true;
-            that.context.$body.addClass('scroll--top-reached');
+            that.context.$body.addClass('scroll--top-reached').removeClass('scroll--body');
         }
 
-        if( scroll_top > 0 && that.context.top_reached ) {
+        if( scroll_top > 1 && that.context.top_reached ) {
 
             that.context.top_reached = false;
-            that.context.$body.removeClass('scroll--top-reached');
+            that.context.$body.removeClass('scroll--top-reached').addClass('scroll--body');
         }
 
         if( scroll_top+that.context.window_height >= that.context.document_height && !that.context.bottom_reached ){

@@ -29,10 +29,7 @@ var UIScroll = function () {
             link   : 'ui-scroll',
             offset : 'ui-scroll-offset'
         },
-        force_offset : {
-            top  : false,
-            down : false
-        }
+        force_offset : false
     };
 
     that.targets     = [];
@@ -51,7 +48,7 @@ var UIScroll = function () {
             var target      = href != "#top" ? $(href).offset().top : 0;
             var direction   = target > that.scroll_top ? 'down' : 'top';
 
-            var scroll_to   = target-(that.config.force_offset[direction]!==false?that.config.force_offset[direction]:that._computeOffset());
+            var scroll_to   = target - that._computeOffset(direction);
 
             var scroll_diff = Math.abs(that.scroll_top - scroll_to);
             var velocity    = Math.sqrt(scroll_diff/$(window).height());
@@ -67,7 +64,13 @@ var UIScroll = function () {
 
 
 
-    that._computeOffset = function(){
+    that._computeOffset = function(direction){
+
+        if( that.config.force_offset ){
+
+            that.offset = that.config.force_offset;
+            return that.config.force_offset;
+        }
 
         var $offset = $('.'+that.config.class.offset);
         var offset  = 0;
@@ -109,7 +112,7 @@ var UIScroll = function () {
                 target.seen = false;
             }
 
-            if( target.top <= that.scroll_top && target.bottom >= that.scroll_top ){
+            if( target.top <= that.scroll_top && target.bottom > that.scroll_top ){
 
                 if( !target.active ){
 
@@ -130,6 +133,19 @@ var UIScroll = function () {
 
 
     that.add = function( elem ){
+
+        var target  = elem.attr('href').split('#');
+        var current = window.location.href.split('#');
+
+        if( target[0].length && target[0] != current[0] ){
+
+            elem.removeClass('ui-scroll');
+            return;
+        }
+        else{
+
+            elem.attr('href', '#'+target[1]);
+        }
 
         var element = {
             anchor  : elem.attr('href'),
@@ -173,7 +189,7 @@ var UIScroll = function () {
 
     that._handleHash = function(){
 
-        if( window.location.hash.length ){
+        if( window.location.hash.length && window.location.hash.indexOf('#/') == -1 ){
 
             var count = 0;
 
@@ -198,13 +214,16 @@ var UIScroll = function () {
 
         $(window).on('hashchange', function(e){
 
-            var $target = $(window.location.hash);
+            if( window.location.hash.indexOf('#/') == -1 ){
 
-            if( $target.length && $target.hasClass('ui-scroll--target') ){
+                var $target = $(window.location.hash);
 
-                e.preventDefault();
-                window.scrollTo(0, $target.offset().top-that._computeOffset());
-                setTimeout(function(){ window.scrollTo(0, $target.offset().top-that._computeOffset()) });
+                if( $target.length && $target.hasClass('ui-scroll--target') ){
+
+                    e.preventDefault();
+                    window.scrollTo(0, $target.offset().top-that._computeOffset());
+                    setTimeout(function(){ window.scrollTo(0, $target.offset().top-that._computeOffset()) });
+                }
             }
         })
     };

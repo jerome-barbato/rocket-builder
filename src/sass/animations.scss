@@ -6,126 +6,130 @@
   100%{ opacity: 1 }
 }
 
-
 @keyframes fade-out {
   0%{ opacity: 1 }
   100%{ opacity: 0 }
 }
-
 
 @keyframes slide-down {
   0%{ opacity: 0; transform: translateY(-$animation-offset-rem) }
   100%{ opacity: 1; transform: none }
 }
 
-
 @keyframes slide-up {
   0%{ opacity: 0; transform: translateY($animation-offset-rem) }
   100%{ opacity: 1; transform: none }
 }
-
 
 @keyframes slide-right {
   0%{ opacity: 0; transform: translateX(-$animation-offset-rem) }
   100%{ opacity: 1; transform: none }
 }
 
-
 @keyframes slide-left {
   0%{ opacity: 0; transform: translateX($animation-offset-rem) }
   100%{ opacity: 1; transform: none }
 }
-
 
 @keyframes slide-from-top {
   0%{ opacity: 0; transform: translateY(-$animation-offset) }
   100%{ opacity: 1; transform: none }
 }
 
-
 @keyframes slide-from-bottom {
   0%{ opacity: 0; transform: translateY($animation-offset) }
   100%{ opacity: 1; transform: none }
 }
-
 
 @keyframes slide-from-left {
   0%{ opacity: 0; transform: translateX(-$animation-offset) }
   100%{ opacity: 1; transform: none }
 }
 
+@keyframes slide-from-left-only {
+  0%{ transform: translateX(-$animation-offset/2) }
+  100%{ transform: none }
+}
 
 @keyframes slide-from-right {
   0%{ opacity: 0; transform: translateX($animation-offset) }
   100%{ opacity: 1; transform: none }
 }
 
+@keyframes slide-from-right-only {
+  0%{ transform: translateX($animation-offset/2) }
+  100%{ transform: none }
+}
 
 @keyframes slide-to-top {
   0%{ opacity: 1; transform: none }
   100%{ opacity: 0; transform: translateY($animation-offset) }
 }
 
-
 @keyframes slide-to-bottom {
   0%{ opacity: 1; transform: none }
   100%{ opacity: 0; transform: translateY(-$animation-offset) }
 }
-
 
 @keyframes slide-to-left {
   0%{ opacity: 1; transform: none }
   100%{ opacity: 0; transform: translateX(-$animation-offset) }
 }
 
+@keyframes slide-to-left-only {
+  0%{ transform: none }
+  100%{ transform: translateX(-$animation-offset/2) }
+}
 
 @keyframes slide-to-right {
   100%{ opacity: 0; transform: translateX($animation-offset) }
   0%{ opacity: 1; transform: none }
 }
 
-
-@keyframes zoom-in {
-  0%{ opacity: 0; transform: scale(0.5) }
-  100%{ opacity: 1; transform: none }
+@keyframes slide-to-right-only {
+  100%{ transform: translateX($animation-offset/2) }
+  0%{ transform: none }
 }
 
+@keyframes zoom-in {
+  0%{ opacity: 0; transform: scale(0.8) }
+  100%{ opacity: 1; transform: none }
+}
 
 @keyframes scale {
   0%{ transform: scale(0) }
   100%{ transform: none }
 }
 
-
 @keyframes zoom-out {
   0%{ opacity: 1; transform: none }
-  100%{ opacity: 0; transform: scale(0.5) }
+  100%{ opacity: 0; transform: scale(0.8) }
 }
 
-
 @keyframes unzoom-in {
-  0%{ opacity: 0; transform: scale(2) }
+  0%{ opacity: 0; transform: scale(1.2) }
   100%{ opacity: 1; transform: none }
 }
 
-
 @keyframes unzoom-out {
   0%{ opacity: 1; transform: none }
-  100%{ opacity: 0; transform: scale(2) }
+  100%{ opacity: 0; transform: scale(1.2) }
 }
-
 
 @keyframes rotate-x {
   0%{ opacity: 0; transform: perspective(400px) rotateX(-180deg) }
   100%{ opacity: 1; transform: perspective(400px) }
 }
 
-
 @keyframes rotate-y {
   0%{ opacity: 0; transform: perspective(400px) rotateY(90deg) }
   100%{ opacity: 1; transform: perspective(400px) }
 }
 
+@keyframes rotate-in {
+  0%{ opacity: 0; transform: scale(0.8) rotateZ(30deg) }
+  100%{ opacity: 1; transform: none }
+}
 
 @keyframes pop {
   0%   { opacity: 0; transform: scale(0,0) }
@@ -134,7 +138,6 @@
   80%  { transform: scale(1.02, 0.98) }
   100% { transform: scale(1, 1) }
 }
-
 
 @keyframes wobble {
   from { transform: none }
@@ -145,7 +148,6 @@
   75% { transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg)  }
   to { transform: none  }
 }
-
 
 // repeat name and animated properties
 
@@ -162,6 +164,7 @@ $animations :
         unzoom-out  'opacity, transform',
         rotate-x    'opacity, transform',
         rotate-y    'opacity, transform',
+        rotate-in   'opacity, transform',
         pop         'opacity, transform',
         wobble      'transform';
 
