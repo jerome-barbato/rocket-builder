@@ -5,11 +5,6 @@
 .DS_Store
 npm-debug.log
 cache
-app/export
-app/tmp
-app/backup
 node_modules
 debug*
 *.debug
-app/resources/public/css/*.css*
-app/resources/public/js/*.js*
