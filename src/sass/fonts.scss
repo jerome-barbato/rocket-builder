@@ -1,0 +1,25 @@
+$font_path:'../fonts';
+
+@each $font in $fonts {
+
+  $family   : nth($font, 1);
+  $src      : nth($font, 2);
+  $weight   : nth($font, 3);
+  $style    : nth($font, 4);
+  $stretch  : nth($font, 5);
+  $fallback : nth($font, 6);
+
+  @font-face {
+    font-family: "#{$family}";
+    src: url('#{$font_path}/#{$src}.eot');
+    src: url('#{$font_path}/#{$src}.eot?#iefix') format('embedded-opentype'),
+    url('#{$font_path}/#{$src}.woff') format('woff'),
+    url('#{$font_path}/#{$src}.ttf') format('truetype'),
+    url('#{$font_path}/#{$src}.svg##{$src}') format('svg');
+    font-weight: #{$weight};
+    font-style: #{$style};
+    font-stretch: #{$stretch};
+  }
+
+  ._font-#{$family} { font-family: $family, $fallback }
+}

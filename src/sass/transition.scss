@@ -1,0 +1,16 @@
+@function allow($properties, $speed:$transition-duration, $easing:$ease-in-out-cubic) {
+
+  $will-change : ();
+  $i           : 0;
+
+  @each $property in $properties {
+
+    $will-change : append($will-change, $property);
+    @if($i < length($properties)-1){
+      $will-change : append($will-change, unquote(','));
+    }
+    $i: $i+1;
+  }
+
+  @return $will-change+unquote('; transition-duration:')+$speed+unquote('; transition-timing-function:')+$easing+unquote('; backface-visibility:hidden')+unquote('; will-change:')+$will-change;
+}

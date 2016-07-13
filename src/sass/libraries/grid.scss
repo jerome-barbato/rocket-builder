@@ -1,0 +1,43 @@
+.grid{
+  display: block;
+  @if variable-exists(grid-margin) { & + & { margin-top: $grid-margin }}
+  &--flex{
+    .g-row{ @extend .g-row--flex }
+  }
+}
+
+.g-row{
+  @extend ._clearfix; display: block;
+  @if variable-exists(grid-row-padding) { padding: $grid-row-padding }
+  @if variable-exists(grid-row-margin) { &+&{ margin-top: $grid-row-margin } }
+  &--top{ align-items: flex-start }
+  &--center{ align-items: center }
+  &--bottom{ align-items: flex-end }
+
+  &--flex{
+    display: flex; flex: 0 1 auto; flex-direction: row; flex-wrap: wrap;
+    .g-col{
+      flex-grow: 1; flex-basis: 0; float: none;
+      @for $j from 1 through 8{
+        @for $i from 2 through 8{
+          @if $j < $i{
+            &--#{$j}_in_#{$i}{ flex-basis: ((100%*$j)/$i) }
+          }
+        }
+      }
+    }
+  }
+}
+
+.g-col{
+  float: left; width: 100%; border-collapse: collapse; display: block;
+  @if variable-exists(grid-col-padding) { padding: $grid-col-padding }
+  @for $j from 1 through 8{
+    @for $i from 2 through 8{
+      @if $j < $i{
+        &--#{$j}_in_#{$i}{ max-width: ((100%*$j)/$i) }
+        &---#{$j}_in_#{$i}{ margin-left: ((100%*$j)/$i) }
+      }
+    }
+  }
+}

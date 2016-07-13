@@ -1,0 +1,16 @@
+// Mobile|Desktop|Tablet Specific
+
+.ui-hide{
+
+  @media #{$media-desktop} {
+    &--desktop{ display: none!important }
+  }
+
+  @media #{$media-tablet-only} {
+    &--tablet{ display: none!important }
+  }
+
+  @media #{$media-mobile} {
+    &--mobile{ display: none!important }
+  }
+}

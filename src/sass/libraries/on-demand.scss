@@ -1,0 +1,4 @@
+img{
+  &.ui-on-demand{ opacity: 0; transition: $speed-slow opacity $ease-in-out-cubic; backface-visibility: hidden }
+  &.ui-on-demand--loaded{ opacity: 1 }
+}

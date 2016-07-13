@@ -1,0 +1,15 @@
+.ui-fit{
+
+  overflow: hidden;
+
+  .mod--object-fit &__object{
+    width: 100%; height: 100%; overflow: hidden;
+    &--cover{ object-fit: cover }
+    &--contain{ object-fit: contain }
+  }
+
+  .mod--no-object-fit &{
+    overflow: hidden;
+    &__object{ position: relative }
+  }
+}

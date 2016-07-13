@@ -1,0 +1,6 @@
+//require activation.js/animations.scss
+
+.ui-activation--seen{ backface-visibility: hidden }
+.ui-activation--active{
+  &.ui-animation, .ui-animation{ animation-play-state: running }
+}

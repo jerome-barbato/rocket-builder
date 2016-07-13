@@ -1,0 +1,14 @@
+// Unsupported Browsers
+
+@each $unsupported-browser in $unsupported-browsers
+{
+  html.#{$unsupported-browser} body{
+    > *{ display: none!important; visibility: hidden!important }
+    background: url("../medias/misc/not-supported.jpg") no-repeat center #f4f4f4!important;
+  }
+}
+
+
+// Position
+
+.relative { position: relative }

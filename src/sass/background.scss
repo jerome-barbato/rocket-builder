@@ -1,0 +1,19 @@
+@function fit(){
+  @return  url('') no-repeat center / 100% 100%;
+}
+
+@function cover(){
+  @return  url('') no-repeat center / cover;
+}
+
+@function contain(){
+  @return  url('') no-repeat center / contain;
+}
+
+@function fit-height(){
+  @return  url('') no-repeat center / auto 100%;
+}
+
+@function fit-width(){
+  @return  url('') no-repeat center / 100% auto;
+}
