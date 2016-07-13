@@ -3,6 +3,6 @@
 Build JS, SASS and HTML sources using GULP
  
  
- ## v2.0.0 ##
+## v2.0.0 ##
 
 removed from core
