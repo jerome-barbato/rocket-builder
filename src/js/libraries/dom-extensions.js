@@ -87,7 +87,7 @@ dom.compiler.register('attribute', 'icon-before', function(elem, attrs){
 dom.compiler.register('attribute', 'ui', function(elem, attrs){
 
     if( attrs.ui && attrs.ui.length )
-        elem.addClass('ui-'+attrs.ui);
+        elem.addClass('ui-'+attrs.ui.replace(/-/g,'_'));
 });
 
 

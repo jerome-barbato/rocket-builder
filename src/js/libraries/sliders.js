@@ -50,6 +50,7 @@ var UISlider = function (config) {
         start_slide    : 0,
         swipe_tablet   : true,
         swipe_mobile   : true,
+        swipe_desktop  : true,
         preload        : true,
         loop           : true,
         sync           : false,
@@ -192,9 +193,11 @@ var UISlider = function (config) {
             });
         }
 
-
-        if ($.isFunction($.fn.swipe) && that.context.slide_count > 1 &&
-            $('html').hasClass('mobile') && ( that.config.swipe_tablet || (that.config.swipe_mobile && $(window).width() < 768) )) {
+        if ( $.isFunction($.fn.swipe) && that.context.slide_count > 1 &&
+            ( (that.config.swipe_desktop && browser.desktop)
+            || (that.config.swipe_tablet && browser.tablet)
+            || (that.config.swipe_mobile && browser.mobile && !browser.tablet) )
+        ) {
 
             that.config.$element.swipe({
 
@@ -559,7 +562,7 @@ var UISliders = function () {
 
     that.__construct = function () {
 
-        $(window).load(that.init);
+        $(document).on('boot', that.init);
     };
 
 

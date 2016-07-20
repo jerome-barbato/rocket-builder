@@ -45,7 +45,15 @@ var UIScroll = function () {
             e.preventDefault();
 
             var href        = $(this).attr('href');
-            var target      = href != "#top" ? $(href).offset().top : 0;
+            var target      = 0;
+
+            if( href == "#top" )
+                target = 0;
+            else if( href == "#next" )
+                target = $(window).height();
+            else
+                target = $(href).offset().top;
+
             var direction   = target > that.scroll_top ? 'down' : 'top';
 
             var scroll_to   = target - that._computeOffset(direction);

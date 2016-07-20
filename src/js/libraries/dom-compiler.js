@@ -41,7 +41,7 @@ var DOMCompiler = function(){
             var value = element.attributes[i].value;
 
             if( window.precompile )
-                value = value.replace(/\{\{ /g, '{{').replace(/ \}\}/g, '}}').replace(/ \? /g, '?').replace(/ : /g, ':').replace(/ ~ /g, '~');
+                value = value.replace(/\{\{ /g, '{{').replace(/ \}\}/g, '}}').replace(/ \? /g, '?').replace(/ : /g, ':').replace(/ \| /g, '|').replace(/ ~ /g, '~');
             
             attributes[_.camelCase(element.attributes[i].name)] = value;
         }
