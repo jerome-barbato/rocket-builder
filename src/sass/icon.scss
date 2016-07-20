@@ -10,16 +10,18 @@
 }
 
 //include icon
-@mixin icon($name:false, $position:'before') {
+@mixin icon($name:false, $position:'before', $extend:true) {
 
-  @if( $position == 'after'){
-
-    @extend .icon--after, .icon--#{$name};
+  @if( $extend ) {
+    @if( $position == 'after'){
+      @extend .icon--after;
+    }
+    @else{
+      @extend .icon--before, .icon--#{$name};
+    }
   }
-  @else{
 
-    @extend .icon--before, .icon--#{$name};
-  }
+  @extend .icon--#{$name};
 }
 
 

@@ -32,6 +32,7 @@
   &__scroller{
     width: 100%; overflow: hidden;
     position: relative; height: 100%;
+    z-index: 1;
   }
 
   &__pagination  a {
@@ -41,13 +42,13 @@
   }
 
   &__arrows {
-    user-select: none; z-index: 2;
+    user-select: none; z-index: 4;
   }
 
   &__arrow {
     cursor: pointer; position: absolute;
     display: inline-block;
-    z-index: 3; top: 50%;
+    z-index: 5; top: 50%;
 
     &--left{ left: 0 }
     &--right{ right: 0 }
