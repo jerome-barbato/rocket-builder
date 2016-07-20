@@ -6,6 +6,10 @@
 var gutil       = require('gulp-util');
 var fs          = require('fs');
 var app_path    = "../app/";
+
+if( !fs.exists(app_path) )
+    app_path    = "../../../web/app/themes/meta/app/";
+
 var src_path    = app_path+"resources/src/";
 var public_path = app_path+"resources/public/";
 
