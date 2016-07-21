@@ -1,6 +1,6 @@
 $media-desktop          : "screen and (min-width: "+($screen-tablet + 1px)+")";
 
-$media-wide             : "screen and (max-width: "+$screen-wide-width+")";
+$media-wide             : "screen and (min-width: "+$screen-wide-width+")";
 
 $media-13inch           : "screen and (max-width: "+$screen-13inch-width+"),(max-height: "+$screen-13inch-height+")";
 $media-13inch-only      : "screen and (min-width: "+($screen-tablet + 1px)+") and (max-width: "+$screen-13inch-width+"),(max-height: "+$screen-13inch-height+")";

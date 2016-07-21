@@ -1,16 +1,22 @@
-// Mobile|Desktop|Tablet Specific
+@mixin lib-hide{
 
-.ui-hide{
+  .ui-hide{
 
-  @media #{$media-desktop} {
-    &--desktop{ display: none!important }
+    @media #{$media-desktop} {
+      &--desktop{ display: none!important }
+    }
+
+    @media #{$media-tablet-only} {
+      &--tablet{ display: none!important }
+    }
+
+    @media #{$media-mobile} {
+      &--mobile{ display: none!important }
+    }
   }
+}
 
-  @media #{$media-tablet-only} {
-    &--tablet{ display: none!important }
-  }
 
-  @media #{$media-mobile} {
-    &--mobile{ display: none!important }
-  }
+@if( index($libraries, 'hide') ){
+  @include lib-hide;
 }
