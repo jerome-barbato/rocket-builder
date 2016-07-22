@@ -26,8 +26,9 @@ var UIToggle = function (config) {
     };
 
     that.config = {
-        $element  : false,
-        auto_close : true
+        $element   : false,
+        auto_close : true,
+        open_first : true
     };
 
 
@@ -94,6 +95,8 @@ var UIToggle = function (config) {
 
         that.context.$toggles   = that.config.$element.find('.ui-toggle');
         that.context.$toggle    = that.config.$element.find('.ui-toggle__handler');
+
+        that.open( that.context.$toggles.first() );
 
         that._setupEvents();
     };
