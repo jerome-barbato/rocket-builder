@@ -1,5 +1,5 @@
 //v2
-@mixin lib-slider{
+@mixin lib-sliders{
 
   .ui-slider{
     height: 100%;
@@ -123,6 +123,6 @@
 }
 
 
-@if( index($libraries, 'slider') ){
-  @include lib-slider;
+@if( index($libraries, 'sliders') ){
+  @include lib-sliders;
 }
