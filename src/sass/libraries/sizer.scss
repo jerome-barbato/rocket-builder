@@ -1,4 +1,12 @@
-.ui-sizer{
-  width: 100%; height: auto; display: block;
-  &+.ui-fit__object{ position: overlay() }
+@mixin lib-sizer{
+
+  .ui-sizer{
+    width: 100%; height: auto; display: block;
+    &+.ui-fit__object{ position: overlay() }
+  }
+}
+
+
+@if( index($libraries, 'sizer') ){
+  @include lib-sizer;
 }

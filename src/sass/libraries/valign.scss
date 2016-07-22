@@ -1,12 +1,19 @@
-// Vertical Align
-vcenter{ visibility: hidden }
+@mixin lib-valign{
 
-.valign {
-  display: table; height: 100%; margin: auto; width: 100%;
-  &__middle, &__bottom , &__top {
-    display: table-cell; height: 100%; width: 100%;
+  vcenter{ visibility: hidden }
+
+  .valign {
+    display: table; height: 100%; margin: auto; width: 100%;
+    &__middle, &__bottom , &__top {
+      display: table-cell; height: 100%; width: 100%;
+    }
+    &__middle { vertical-align: middle }
+    &__bottom { vertical-align: bottom }
+    &__top{ vertical-align: top }
   }
-  &__middle { vertical-align: middle }
-  &__bottom { vertical-align: bottom }
-  &__top{ vertical-align: top }
+}
+
+
+@if( index($libraries, 'valign') ){
+  @include lib-valign;
 }

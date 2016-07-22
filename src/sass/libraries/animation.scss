@@ -3,49 +3,56 @@
 $animation-duration : $transition-duration*2;
 $animation-delay    : 0.05s;
 
-[when-visible],[animation],[delay],[easing]{ visibility: hidden }
+@mixin lib-animation{
 
-.ui-animation{
-  animation-duration: $animation-duration; animation-timing-function: $ease-out-cubic;
-  animation-play-state: paused; animation-fill-mode: both; backface-visibility: hidden;
+  [when-visible],[animation],[delay],[easing]{ visibility: hidden }
 
-  &--stack{
-    animation: none!important; will-change: unset; backface-visibility: visible;
-    .ui-animation { animation-name: slide-up; will-change: opacity, transform }
+  .ui-animation{
+    animation-duration: $animation-duration; animation-timing-function: $ease-out-cubic;
+    animation-play-state: paused; animation-fill-mode: both; backface-visibility: hidden;
+
+    &--stack{
+      animation: none!important; will-change: unset; backface-visibility: visible;
+      .ui-animation { animation-name: slide-up; will-change: opacity, transform }
+    }
+
+    &--active{
+      &, .ui-animation{ animation-play-state: running }
+    }
+
+    @each $name, $properties in $animations{
+      &--#{$name}{ animation-name: #{$name}!important; will-change: unquote($properties) }
+      @media #{$media-tablet} {
+        &--tablet--#{$name}{ animation-name: #{$name}!important; will-change: unquote($properties) }
+      }
+      @media #{$media-mobile} {
+        &--mobile--#{$name}{ animation-name: #{$name}!important; will-change: unquote($properties) }
+      }
+    }
+
+    @for $i from 0 through 35{
+      &--delay-#{$i}{ animation-delay: $animation-delay*$i }
+      @media #{$media-tablet} {
+        &--tablet--delay-#{$i}{ animation-delay: $animation-delay*$i }
+      }
+      @media #{$media-mobile} {
+        &--mobile--delay-#{$i}{ animation-delay: $animation-delay*$i }
+      }
+    }
+
+    @each $name, $easing in $easings{
+      &--easing-#{$name}{ animation-timing-function: $easing }
+      @media #{$media-tablet} {
+        &--tablet--easing-#{$name}{ animation-timing-function: $easing }
+      }
+      @media #{$media-mobile} {
+        &--mobile--easing-#{$name}{ animation-timing-function: $easing }
+      }
+    }
   }
+}
 
-  &--active{
-    &, .ui-animation{ animation-play-state: running }
-  }
 
-  @each $name, $properties in $animations{
-    &--#{$name}{ animation-name: #{$name}!important; will-change: unquote($properties) }
-    @media #{$media-tablet} {
-      &--tablet--#{$name}{ animation-name: #{$name}!important; will-change: unquote($properties) }
-    }
-    @media #{$media-mobile} {
-      &--mobile--#{$name}{ animation-name: #{$name}!important; will-change: unquote($properties) }
-    }
-  }
-
-  @for $i from 0 through 35{
-    &--delay-#{$i}{ animation-delay: $animation-delay*$i }
-    @media #{$media-tablet} {
-      &--tablet--delay-#{$i}{ animation-delay: $animation-delay*$i }
-    }
-    @media #{$media-mobile} {
-      &--mobile--delay-#{$i}{ animation-delay: $animation-delay*$i }
-    }
-  }
-
-  @each $name, $easing in $easings{
-    &--easing-#{$name}{ animation-timing-function: $easing }
-    @media #{$media-tablet} {
-      &--tablet--easing-#{$name}{ animation-timing-function: $easing }
-    }
-    @media #{$media-mobile} {
-      &--mobile--easing-#{$name}{ animation-timing-function: $easing }
-    }
-  }
-
+@if( index($libraries, 'animation') ){
+  @include lib-animation;
 }

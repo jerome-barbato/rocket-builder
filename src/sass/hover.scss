@@ -122,7 +122,7 @@
   position: relative; z-index: 1;
   transition: allow( border-color color );
   
-  &:before {
+  &:after {
     content: ''; transition: allow( transform );
     transform-origin: center bottom; position: overlay(); z-index: -1;
     background-color: $bg-color; transform: scale(1,0);
@@ -131,7 +131,7 @@
   .desktop &:hover {
     border-color: $bg-color;
     color: $color;
-    &:before { transform: none }
+    &:after { transform: none }
   }
 }
 

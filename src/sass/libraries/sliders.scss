@@ -1,121 +1,128 @@
 //v2
+@mixin lib-slider{
 
-.ui-slider{
-  height: 100%;
-  position: relative;
+  .ui-slider{
+    height: 100%;
+    position: relative;
 
-  &__slides {
-    width: 100%;
-    position: relative; height: 100%;
-    backface-visibility: hidden;
-  }
-
-  &__slide {
-    height: 100%; position: absolute;
-    left: 0; top: 0; width: 100%;
-    z-index: 1; display: none;
-    animation-duration: $ui-slider-speed;
-    animation-fill-mode: both;
-    animation-timing-function: $ease-in-out-cubic;
-    will-change: opacity, transform;
-
-    .ui-slider--animating &--previous{ display: block }
-    &--current{ display: block; z-index: 2 }
-  }
-
-  &__preload {
-    position: absolute; user-select: none;
-    top: 0; left: 0; opacity: 0.01; z-index: -1;
-    img{ width: 1px; height: 1px; float: left }
-  }
-
-  &__scroller{
-    width: 100%; overflow: hidden;
-    position: relative; height: 100%;
-    z-index: 1;
-  }
-
-  &__pagination  a {
-    display: inline-block;
-    cursor: pointer; user-select: none;
-    transition: background $ease-in-out-cubic $speed-fast;
-  }
-
-  &__arrows {
-    user-select: none; z-index: 4;
-  }
-
-  &__arrow {
-    cursor: pointer; position: absolute;
-    display: inline-block;
-    z-index: 5; top: 50%;
-
-    &--left{ left: 0 }
-    &--right{ right: 0 }
-  }
-
-
-  &__slide{
-
-    &__item{
-      animation-fill-mode: both;
-      animation-duration: $ui-slider-speed;
-      animation-timing-function: $ease-in-out-cubic;
-      will-change: opacity, transform;
+    &__slides {
+      width: 100%;
+      position: relative; height: 100%;
       backface-visibility: hidden;
     }
 
-    //horizontal
-    $horizontal : '.ui-slider--animation-horizontal.ui-slider--animating.ui-slider--direction';
-    &--current{
-      #{$horizontal}-forward &{
-        animation-name: slide-from-right;
-        .ui-slider__slide__item{ animation-name: slide-from-right-only }
+    &__slide {
+      height: 100%; position: absolute;
+      left: 0; top: 0; width: 100%;
+      z-index: 1; display: none;
+      animation-duration: $ui-slider-speed;
+      animation-fill-mode: both;
+      animation-timing-function: $ease-in-out-cubic;
+      will-change: opacity, transform;
+
+      .ui-slider--animating &--previous{ display: block }
+      &--current{ display: block; z-index: 2 }
+    }
+
+    &__preload {
+      position: absolute; user-select: none;
+      top: 0; left: 0; opacity: 0.01; z-index: -1;
+      img{ width: 1px; height: 1px; float: left }
+    }
+
+    &__scroller{
+      width: 100%; overflow: hidden;
+      position: relative; height: 100%;
+      z-index: 1;
+    }
+
+    &__pagination  a {
+      display: inline-block;
+      cursor: pointer; user-select: none;
+      transition: background $ease-in-out-cubic $speed-fast;
+    }
+
+    &__arrows {
+      user-select: none; z-index: 4;
+    }
+
+    &__arrow {
+      cursor: pointer; position: absolute;
+      display: inline-block;
+      z-index: 5; top: 50%;
+
+      &--left{ left: 0 }
+      &--right{ right: 0 }
+    }
+
+
+    &__slide{
+
+      &__item{
+        animation-fill-mode: both;
+        animation-duration: $ui-slider-speed;
+        animation-timing-function: $ease-in-out-cubic;
+        will-change: opacity, transform;
+        backface-visibility: hidden;
       }
-      #{$horizontal}-backward &{
-        animation-name: slide-from-left;
-        .ui-slider__slide__item{ animation-name: slide-from-left-only }
+
+      //horizontal
+      $horizontal : '.ui-slider--animation-horizontal.ui-slider--animating.ui-slider--direction';
+      &--current{
+        #{$horizontal}-forward &{
+          animation-name: slide-from-right;
+          .ui-slider__slide__item{ animation-name: slide-from-right-only }
+        }
+        #{$horizontal}-backward &{
+          animation-name: slide-from-left;
+          .ui-slider__slide__item{ animation-name: slide-from-left-only }
+        }
       }
-    }
-    &--previous{
-      #{$horizontal}-forward &{
-        animation-name: slide-to-left;
-        .ui-slider__slide__item{ animation-name: slide-to-left-only }
+      &--previous{
+        #{$horizontal}-forward &{
+          animation-name: slide-to-left;
+          .ui-slider__slide__item{ animation-name: slide-to-left-only }
+        }
+        #{$horizontal}-backward &{
+          animation-name: slide-to-right;
+          .ui-slider__slide__item{ animation-name: slide-to-right-only }
+        }
       }
-      #{$horizontal}-backward &{
-        animation-name: slide-to-right;
-        .ui-slider__slide__item{ animation-name: slide-to-right-only }
+
+
+      //zoom
+      $zoom : '.ui-slider--animation-zoom.ui-slider--animating.ui-slider--direction';
+      &--current{
+        #{$zoom}-forward &{ animation-name: zoom-in }
+        #{$zoom}-backward &{ animation-name: unzoom-in }
       }
-    }
+      &--previous{
+        #{$zoom}-forward &{ animation-name: unzoom-out }
+        #{$zoom}-backward &{ animation-name: zoom-out }
+      }
 
 
-    //zoom
-    $zoom : '.ui-slider--animation-zoom.ui-slider--animating.ui-slider--direction';
-    &--current{
-      #{$zoom}-forward &{ animation-name: zoom-in }
-      #{$zoom}-backward &{ animation-name: unzoom-in }
-    }
-    &--previous{
-      #{$zoom}-forward &{ animation-name: unzoom-out }
-      #{$zoom}-backward &{ animation-name: zoom-out }
-    }
+      //vertical
+      $vertical : '.ui-slider--animation-vertical.ui-slider--animating.ui-slider--direction';
+      &--current{
+        #{$vertical}-forward &{ animation-name: slide-from-bottom }
+        #{$vertical}-backward &{ animation-name: slide-from-top }
+      }
+      &--previous{
+        #{$vertical}-forward &{ animation-name: slide-to-bottom }
+        #{$vertical}-backward &{ animation-name: slide-to-top }
+      }
 
 
-    //vertical
-    $vertical : '.ui-slider--animation-vertical.ui-slider--animating.ui-slider--direction';
-    &--current{
-      #{$vertical}-forward &{ animation-name: slide-from-bottom }
-      #{$vertical}-backward &{ animation-name: slide-from-top }
-    }
-    &--previous{
-      #{$vertical}-forward &{ animation-name: slide-to-bottom }
-      #{$vertical}-backward &{ animation-name: slide-to-top }
-    }
-
-
-    //crossfade
-    &--current{
-      .ui-slider--animation-crossfade.ui-slider--animating &{ animation-name: fade-in; animation-duration: $ui-slider-speed*4 }
+      //crossfade
+      &--current{
+        .ui-slider--animation-crossfade.ui-slider--animating &{ animation-name: fade-in; animation-duration: $ui-slider-speed*4 }
+      }
     }
   }
+}
+
+
+@if( index($libraries, 'slider') ){
+  @include lib-slider;
 }

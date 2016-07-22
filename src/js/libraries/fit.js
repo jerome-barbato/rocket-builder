@@ -19,6 +19,8 @@ var UIFit = function() {
 
     that.$elements = false;
     that.timeout   = false;
+    that.warn      = false;
+
     that.selector  = {
         parent:'ui-fit',
         object:'ui-fit__object'
@@ -34,38 +36,38 @@ var UIFit = function() {
         var container_width  = $container.width();
         var container_height = $container.height();
         var container_ratio  = container_width/container_height;
-        var element_ratio    = $element.data('ratio');
 
-        if( !$element.data('ratio') )
-            element_ratio = that._getRatio($element);
+        that._getRatio($element, function( element_ratio ){
 
-        if( $element.hasClass(that.selector.object+"--contain") ){
+            if( $element.hasClass(that.selector.object+"--contain") ){
 
-            if( element_ratio < container_ratio ) {
+                if( element_ratio < container_ratio ) {
 
-                var width = Math.round(container_height*element_ratio);
-                $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
+                    var width = Math.round(container_height*element_ratio);
+                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
+                }
+                else {
+
+                    var height = Math.round(container_width/element_ratio);
+                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
+                }
+
+            }else{
+
+                if( element_ratio > container_ratio ) {
+
+                    var width = Math.round(container_height*element_ratio);
+                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
+                }
+                else {
+
+                    var height = Math.round(container_width/element_ratio);
+                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
+                }
             }
-            else {
-
-                var height = Math.round(container_width/element_ratio);
-                $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
-            }
-
-        }else{
-
-            if( element_ratio > container_ratio ) {
-
-                var width = Math.round(container_height*element_ratio);
-                $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
-            }
-            else {
-
-                var height = Math.round(container_width/element_ratio);
-                $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
-            }
-        }
+        });
     };
+
 
 
 
@@ -87,18 +89,53 @@ var UIFit = function() {
 
 
 
-    that._getRatio = function( $element ){
+    that._getRatio = function( $element, callback ){
+
+        if( $element.data('ratio') ){
+
+            callback($element.data('ratio'));
+            return;
+        }
 
         var width    = parseInt($element.attr('width'));
         var height   = parseInt($element.attr('height'));
         var ratio    = Math.round( (width/height)*100 )/100;
 
-        if( isNaN(ratio) )
-            console.error("there is a prb computing the image ratio, please be sure to specify width/height in the html");
+        if( isNaN(ratio) ){
 
-        $element.data('ratio', ratio);
+            if( !that.warn ){
 
-        return ratio;
+                console.warn("there was a prb computing an image ratio, please be sure to specify width/height in the html to avoid resize on image loading");
+                that.warn = true;
+            }
+
+            var getNaturalDimensions = function(){
+
+                var width    = parseInt($element.naturalWidth());
+                var height   = parseInt($element.naturalHeight());
+                var ratio    = Math.round( (width/height)*100 )/100;
+
+                if( !isNaN(ratio) ){
+
+                    $element.data('ratio', ratio);
+
+                    if( callback )
+                        callback(ratio);
+                }
+            };
+
+            if( $element.prop('complete') )
+                getNaturalDimensions();
+            else
+                $element.load(getNaturalDimensions);
+        }
+        else{
+
+            $element.data('ratio', ratio);
+
+            if( callback )
+                callback(ratio);
+        }
     };
 
 

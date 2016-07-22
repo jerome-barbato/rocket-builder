@@ -1,4 +1,11 @@
-img{
-  &.ui-on-demand{ opacity: 0; transition: $speed-slow opacity $ease-in-out-cubic; backface-visibility: hidden }
-  &.ui-on-demand--loaded{ opacity: 1 }
+@mixin lib-on-demand{
+  img{
+    &.ui-on-demand{ opacity: 0; transition: $speed-slow opacity $ease-in-out-cubic; backface-visibility: hidden }
+    &.ui-on-demand--loaded{ opacity: 1 }
+  }
+}
+
+
+@if( index($libraries, 'on-demand') ){
+  @include lib-on-demand;
 }

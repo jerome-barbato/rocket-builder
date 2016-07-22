@@ -1,6 +1,14 @@
-.align{
-  &--center {  text-align: center }
-  &--left {    text-align: left }
-  &--right {   text-align: right }
-  &--justify { text-align: justify }
+@mixin lib-align {
+
+  .align{
+    &--center {  text-align: center }
+    &--left {    text-align: left }
+    &--right {   text-align: right }
+    &--justify { text-align: justify }
+  }
+}
+
+
+@if( index($libraries, 'align') ){
+  @include lib-align;
 }

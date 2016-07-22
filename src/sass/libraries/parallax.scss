@@ -1,3 +1,11 @@
-.ui-parallax{
-  backface-visibility: hidden; will-change: transform;
+@mixin lib-parallax{
+
+  .ui-parallax{
+    backface-visibility: hidden; will-change: transform;
+  }
+}
+
+
+@if( index($libraries, 'parallax') ){
+  @include lib-parallax;
 }

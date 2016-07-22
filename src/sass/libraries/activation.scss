@@ -1,6 +1,14 @@
 //require activation.js/animations.scss
 
-.ui-activation--seen{ backface-visibility: hidden }
-.ui-activation--active{
-  &.ui-animation, .ui-animation{ animation-play-state: running }
+@mixin lib-activation {
+
+  .ui-activation--seen{ backface-visibility: hidden }
+  .ui-activation--active{
+    &.ui-animation, .ui-animation{ animation-play-state: running }
+  }
+}
+
+
+@if( index($libraries, 'activation') ){
+  @include lib-activation;
 }
