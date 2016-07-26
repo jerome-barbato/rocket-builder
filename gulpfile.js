@@ -86,16 +86,19 @@ gulp.task('default', [], function () {
     gulp.start(styles);
     gulp.start(templates);
 
-    gulp.watch(config.paths.watch.js, function() {
+    if ( !getArg("--no-watch")){
 
-        gulp.start(scripts);
-        gulp.start(templates);
-    });
+        gulp.watch(config.paths.watch.js, function() {
 
-    gulp.watch(config.paths.watch.sass, function() {
+            gulp.start(scripts);
+            gulp.start(templates);
+        });
 
-        gulp.start(styles);
-    });
+        gulp.watch(config.paths.watch.sass, function() {
 
-    gulp.start("watch::templates");
+            gulp.start(styles);
+        });
+        gulp.start("watch::templates");
+    }
+
 });
