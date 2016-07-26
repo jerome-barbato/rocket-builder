@@ -27,7 +27,8 @@ var UIScroll = function () {
         offset    : 0,
         class     : {
             link   : 'ui-scroll',
-            offset : 'ui-scroll-offset'
+            offset : 'ui-scroll-offset',
+            target : 'ui-scroll--target'
         },
         force_offset : false
     };
@@ -166,7 +167,7 @@ var UIScroll = function () {
 
         if( element.$.length ){
 
-            element.$.addClass('ui-scroll--target');
+            element.$.addClass(that.config.class.target);
 
             element.bottom =  element.top+element.$.height();
             element.bottom =  element.top+element.$.height();
@@ -205,7 +206,7 @@ var UIScroll = function () {
 
                 var $target = $(window.location.hash);
 
-                if( $target.length && $target.hasClass('ui-scroll--target') ){
+                if( $target.length && $target.hasClass( that.config.class.target ) ){
 
                     e.preventDefault();
                     window.scrollTo(0, $target.offset().top-that._computeOffset());
@@ -226,7 +227,7 @@ var UIScroll = function () {
 
                 var $target = $(window.location.hash);
 
-                if( $target.length && $target.hasClass('ui-scroll--target') ){
+                if( $target.length && $target.hasClass(that.config.class.target) ){
 
                     e.preventDefault();
                     window.scrollTo(0, $target.offset().top-that._computeOffset());

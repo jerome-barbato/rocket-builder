@@ -36,7 +36,7 @@ var UIDetectScroll = function(){
 
     that.config = {
         class     :{
-            offset : 'ui-detect-scroll--fixed-header',
+            offset : 'ui-scroll-offset',
             detect : 'ui-detect-scroll'
         },
         force_offset : false
@@ -232,9 +232,9 @@ var UIDetectScroll = function(){
 
         dom.compiler.register('attribute', 'fixed-header', function (elem, attrs) {
 
-            elem.addClass('ui-detect-scroll--fixed-header');
+            elem.addClass('ui-scroll-offset');
 
-            if( elem.attr('id') == undefined )
+            if( elem.attr('id') == undefined && attrs.fixedHeader )
                 elem.attr('id', attrs.fixedHeader);
         });
     }

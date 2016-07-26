@@ -34,7 +34,8 @@ var UIActivation = function(){
         offset  : 0.2,
         reverse : false,
         debug   : false,
-        mobile  : false
+        tablet  : false,
+        phone   : false
     };
 
 
@@ -330,7 +331,7 @@ var UIActivation = function(){
 
         $(document).on('boot', function(){
 
-            if( !that.config.mobile && browser.mobile ){
+            if( (browser.phone && !that.config.phone) || (browser.tablet && !that.config.tablet) ){
 
                 $('.ui-animation').alterClass('ui-animation--*').removeClass('ui-animation');
                 $('.ui-activation').addClass('ui-activation--active ui-activation--seen');
