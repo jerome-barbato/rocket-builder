@@ -8,7 +8,7 @@ $media-13inch-only      : "screen and (min-width: "+($screen-tablet + 1px)+") an
 $media-tablet-desktop   : "screen and (min-width: "+($screen-mobile + 1px)+")";
 
 $media-tablet           : "screen and (max-width: "+$screen-tablet+")";
-$media-tablet-portrait  : "screen and (max-width: "+($screen-mobile+1px)+") and (orientation: portrait)";
+$media-tablet-portrait  : "screen and (max-width: "+($screen-tablet - 1px)+")";
 $media-tablet-only      : "screen and (min-width: "+($screen-mobile + 1px)+") and (max-width: "+$screen-tablet+")";
 
 $media-mobile           : "screen and (max-width: "+$screen-mobile+")";

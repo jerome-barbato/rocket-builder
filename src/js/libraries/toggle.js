@@ -96,7 +96,8 @@ var UIToggle = function (config) {
         that.context.$toggles   = that.config.$element.find('.ui-toggle');
         that.context.$toggle    = that.config.$element.find('.ui-toggle__handler');
 
-        that.open( that.context.$toggles.first() );
+        if( that.config.open_first )
+            that.open( that.context.$toggles.first() );
 
         that._setupEvents();
     };

@@ -124,7 +124,7 @@ dom.compiler.register('attribute', 'hide-on', function(elem, attrs){
 
         var hideOn_map = hideOn.split(' ');
 
-        elem.addClass('ui-hide ui-hide--' + hideOn_map.join(' ui-hide--'));
+        elem.addClass('ui-hide--' + hideOn_map.join(' ui-hide--'));
     }
 });
 
