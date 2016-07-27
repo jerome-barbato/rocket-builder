@@ -44,19 +44,28 @@ var UIScroll = function () {
 
             e.preventDefault();
 
-            var href        = $(this).attr('href');
-            var target      = 0;
+            var target = $(this).attr('href');
+            that.scrollTo(target, true);
+        });
 
-            if( href == "#top" )
-                target = 0;
-            else if( href == "#next" )
-                target = $(window).height();
-            else
-                target = $(href).offset().top;
+        $(window).scroll(that._setActive).resize(that._resize);
+    };
 
-            var direction   = target > that.scroll_top ? 'down' : 'top';
 
-            var scroll_to   = target - that._computeOffset(direction);
+    that.scrollTo = function(id, animate){
+
+        var target = 0;
+
+        if( id == "#top" )
+            target = 0;
+        else if( id == "#next" )
+            target = $(window).height();
+        else
+            target = $(id).offset().top;
+
+        var scroll_to   = target - that._computeOffset();
+
+        if( animate ){
 
             var scroll_diff = Math.abs(that.scroll_top - scroll_to);
             var velocity    = Math.sqrt(scroll_diff/$(window).height());
@@ -65,14 +74,15 @@ var UIScroll = function () {
 
                 $(document).trigger('ui-scroll');
             });
-        });
+        }
+        else{
 
-        $(window).scroll(that._setActive).resize(that._resize);
+            window.scrollTo(0, scroll_to );
+        }
     };
 
 
-
-    that._computeOffset = function(direction){
+    that._computeOffset = function(){
 
         if( that.config.force_offset ){
 
@@ -197,29 +207,6 @@ var UIScroll = function () {
 
     that._handleHash = function(){
 
-        if( window.location.hash.length && window.location.hash.indexOf('#/') == -1 ){
-
-            var count = 0;
-
-            $(window).on('scroll.scrollTo', function(e) {
-
-                var $target = $(window.location.hash);
-
-                if( $target.length && $target.hasClass('ui-scroll--target') ){
-
-                    e.preventDefault();
-                    window.scrollTo(0, $target.offset().top-that._computeOffset());
-
-                    if( count++ >=2 )
-                        $(window).unbind("scroll.scrollTo");
-                }
-                else{
-
-                    $(window).unbind("scroll.scrollTo");
-                }
-            });
-        }
-
         $(window).on('hashchange', function(e){
 
             if( window.location.hash.indexOf('#/') == -1 ){
@@ -229,8 +216,9 @@ var UIScroll = function () {
                 if( $target.length && $target.hasClass('ui-scroll--target') ){
 
                     e.preventDefault();
-                    window.scrollTo(0, $target.offset().top-that._computeOffset());
-                    setTimeout(function(){ window.scrollTo(0, $target.offset().top-that._computeOffset()) });
+
+                    //that.scrollTo(window.location.hash, false);
+                    setTimeout(function(){ that.scrollTo(window.location.hash, true) });
                 }
             }
         })
@@ -261,8 +249,7 @@ var UIScroll = function () {
             that._resize();
             that._setupEvents();
 
-            if( $(window).scrollTop() == 0 )
-                $(window).trigger('scroll.scrollTo');
+            $(window).trigger('hashchange');
         });
     };
 
