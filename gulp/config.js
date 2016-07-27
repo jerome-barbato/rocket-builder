@@ -3,51 +3,76 @@
  * Configuration
  */
 
+// Dependencies
 var gutil       = require('gulp-util');
 var fs          = require('fs');
+
+// Retrieving environment from environment variable
+var environment = (process.env.WWW_ENV ? process.env.WWW_ENV : "development");
+
+// Enable watching for changes in src files
+var watching_mode   = true;
+
+// Framework parameter can be rocket, wordpress or silex
+var framework       = "rocket";
+
+// Theme name will help to find src for compilation
+var theme_name      = "meta";
+
+// Application root path
 var app_path    = "../app/";
 
-try {
+// Src assets paths
+var src_path;
 
-    var stats = fs.statSync(app_path);
+// Public assets paths
+var public_path;
 
-} catch (e) {
-
-    app_path = "../../../web/app/themes/meta/app/";
-}
-
-var src_path    = app_path+"resources/src/";
-var public_path = app_path+"resources/public/";
+// Global config file
+var paths;
 
 
+/** Load function will set configuration variables */
+exports.load  = function load() {
 
-/**
- *  Global config file
- */
-var paths = {
-    base : {
-        config   : app_path+'config/front.config',
-        src      : src_path,
-        public   : public_path
-    },
-    src : {
-        js       : [],
-        sass     : src_path+"sass/*.scss",
-        template : src_path+"template/**/*.twig",
-        html     : public_path+"views/**/*.html"
-    },
-    dest : {
-        js       : public_path+"js",
-        css      : public_path+"css",
-        template : app_path+"views"
-    },
-    watch : {
-        js       : src_path+"js/**/*.js",
-        sass     : src_path+"sass/**/*.scss",
-        template : src_path+"template/**/*.twig"
+    // Application root path differ for each framework
+    switch (framework) {
+        case "silex":
+            app_path    = "../app/";
+            break;
+        case "wordpress":
+            app_path    = "../../../web/app/themes/" + theme_name + "/app/";
+            break;
+        default:
+            app_path    = "../app/";
     }
-};
 
+    src_path    = app_path+"resources/src/";
+    public_path = app_path+"resources/public/";
+    paths = {
+        base : {
+            config   : app_path+'config/front.config',
+            src      : src_path,
+            public   : public_path
+        },
+        src : {
+            js       : [],
+            sass     : src_path+"sass/*.scss",
+            template : src_path+"template/**/*.twig",
+            html     : public_path+"views/**/*.html"
+        },
+        dest : {
+            js       : public_path+"js",
+            css      : public_path+"css",
+            template : app_path+"views"
+        },
+        watch : {
+            js       : src_path+"js/**/*.js",
+            sass     : src_path+"sass/**/*.scss",
+            template : src_path+"template/**/*.twig"
+        }
+    };
+};
 
 
 /**
@@ -84,12 +109,16 @@ function addCoreDependencies() {
     paths.src.js.push(src_path+'js/vendors/**/*.js');
 }
 
-
-
+/** Auto start */
+exports.load();
 addCoreDependencies();
 
 
+/** Exports */
 exports.paths = paths;
+exports.environment = environment;
+exports.watching_mode = watching_mode;
+exports.framework = framework;
 
 
 

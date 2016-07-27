@@ -3,23 +3,14 @@
  * @version: 1.5
  * @author: Metabolism
  *
- * changelog:
- * #1.2
- * changed gulp-ruby-sass to gulp-sass
- * added gulp-css-globbing to allow @import '*'
- * #1.3
- * added front.config parsing
- * #1.4
- * refractoring, partialing, unity test addition, Rocket html compiler
- * #1.5
- * moved gulpfiles and package to core, added builder symlink
+ * CHANGELOG:
  */
 
 'use strict';
 
 var gulp    = require('gulp'),
-    config  = require('./gulp/config'),
     fs      = require('fs'),
+    config  = require('./gulp/config'),
     wrench  = require('wrench'),
     $       = require('gulp-load-plugins')(
         {
@@ -70,23 +61,55 @@ function getArg(key) {
  */
 gulp.task('default', [], function () {
 
-    var styles    = "compile::style",
-        scripts   = "concat::scripts",
-        templates = "compile::templates";
+    // Quick access for style compilation
+    var styles          = "compile::style";
 
-    if (getArg("--production") || getArg("-p")){
+    // Quick access for scripts compilation
+    var scripts         = "concat::scripts";
+
+    // Quick access for template compilation
+    var templates       = "compile::templates";
+
+    /** Parameters evaluation **/
+    // Production mode
+    if (getArg("--production") || getArg("-p")) {
+        config.environment = 'production';
+    }
+
+    // Framework
+    if (getArg("--framework")) {
+        config.framework = getArg("--framework");
+    }
+
+    // Theme name
+    if (getArg("--theme")) {
+        config.theme_name = getArg("--theme")
+    }
+
+    config.load();
+
+    // Watching mode
+    if (getArg("--no-watch") || config.environment == "production") {
+        config.watching_mode = false;
+    }
+
+    /** Harlem Check **/
+    if (config.environment == "production"){
 
         styles  = "compress::style";
         scripts = "compress::scripts";
     }
 
+    console.log(config.environment);
+
+    /*
     gulp.start(scripts);
     gulp.start("compress::script::browser");
 
     gulp.start(styles);
     gulp.start(templates);
 
-    if ( !getArg("--no-watch")){
+    if (config.watching_mode){
 
         gulp.watch(config.paths.watch.js, function() {
 
@@ -99,6 +122,6 @@ gulp.task('default', [], function () {
             gulp.start(styles);
         });
         gulp.start("watch::templates");
-    }
+    }*/
 
 });
