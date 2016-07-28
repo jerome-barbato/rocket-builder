@@ -54,7 +54,7 @@ var UIRouter = function(){
         that.context.pages    = $('.ui-router');
         that.context.triggers = $('[href^="#/"]');
 
-        if( location.hash )
+        if( location.hash && location.hash.indexOf('/') == 1 )
             that.gotoPath( that._getPath() );
         else
             location.hash = that._findDefaultPath();
