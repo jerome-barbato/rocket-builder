@@ -79,6 +79,12 @@ gulp.task('default', [], function () {
         config.load();
     }
 
+    // dev mode
+    if (getArg("--development") || getArg("-d")) {
+        config.environment = 'development';
+        config.load();
+    }
+
     // Framework
     if (getArg("--framework")) {
         config.framework = getArg("--framework");
