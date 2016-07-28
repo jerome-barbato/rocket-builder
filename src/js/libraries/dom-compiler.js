@@ -20,7 +20,7 @@ var DOMCompiler = function(){
     that.dom_attributes         = [];
     that.dom_attributes_filters = [];
     that.dom_elements           = [];
-    that.debug                  = true;
+    that.debug                  = false;
 
 
     that.attr = function(elem, attr, value){
