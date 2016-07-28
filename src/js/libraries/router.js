@@ -24,9 +24,10 @@ var UIRouter = function(){
 
     that.config = {
         animations : {
-            enter:'slide-from-left',
-            leave:'slide-to-right'
-        }
+            enter:'fade-in',
+            leave:'fade-out'
+        },
+        scroll_to_top:false
     };
 
     that.context = {
@@ -42,10 +43,15 @@ var UIRouter = function(){
     that.__construct =  function(){
 
         $(window).on('hashchange', function() {
-            that.gotoPath( that._getPath(), function(){ $(window).scrollTop(0) } );
+
+            that.gotoPath( that._getPath(), function(){
+
+                if( that.config.scroll_to_top )
+                    $(window).scrollTop(0);
+            } );
         });
 
-        that.context.pages = $('.ui-router');
+        that.context.pages    = $('.ui-router');
         that.context.triggers = $('[href^="#/"]');
 
         if( location.hash )
@@ -235,7 +241,7 @@ var UIRouter = function(){
 
             var $parent = elem.parents('.ui-router');
             elem.addClass('ui-router');
-            dom.compiler.attr(elem, 'page', $parent.length?$parent.data('page')+'/'+attrs.page:attrs.page);
+            elem.attr('data-page', $parent.length?$parent.data('page')+'/'+attrs.page:attrs.page);
 
             if( typeof attrs.default !== "undefined" ){
 

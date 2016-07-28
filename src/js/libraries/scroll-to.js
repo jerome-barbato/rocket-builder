@@ -64,7 +64,9 @@ var UIScroll = function () {
         else
             target = $(id).offset().top;
 
-        var scroll_to   = target - that._computeOffset();
+        var scroll_to = target - that._computeOffset();
+
+        $(document).trigger('ui-scroll', [id, target]);
 
         if( animate ){
 

@@ -63,6 +63,22 @@ var BEM = function(){
 
 
 
+    that.removeModifier = function(elem, attrs){
+
+        attrs.mod.split(' ').forEach(function(mod){
+
+            if( mod.length && mod != " ") {
+
+                if (typeof elem.data('bem') != "undefined")
+                    elem.removeClass(elem.data('bem') + '--' + mod);
+                else
+                    elem.removeClass(mod);
+            }
+        });
+    };
+
+
+
     that.manageBlock = function(elem, attrs){
 
         that._configure('block', elem, attrs.block||attrs.component);
@@ -107,6 +123,13 @@ var BEM = function(){
 
             that.addModifier(elem, attrs);
         });
+    }
+
+
+    if (window.jQuery) {
+
+        window.jQuery.fn.addMod = function(mod) { that.addModifier(this, {mod:mod}) };
+        window.jQuery.fn.removeMod = function(mod) { that.removeModifier(this, {mod:mod}) };
     }
 };
 

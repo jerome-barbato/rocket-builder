@@ -1,5 +1,9 @@
 //force browser repaint function, ex: $('.class').repaint()
-window.jQuery&&(window.jQuery.fn.repaint=function(){this.length&&this.get(0).offsetHeight},window.jQuery.fn.refresh=function(){return $(this.selector)});
+window.jQuery&&(window.jQuery.fn.repaint=function(){this.length&&this.get(0).offsetHeight});
+
+
+//force selector refresh, ex: $toto.refresh()
+window.jQuery&&(window.jQuery.fn.refresh=function(){return $(this.selector)});
 
 
 //implement find first level, ex: $('.class').findClosest('p')
@@ -8,3 +12,24 @@ window.jQuery&&(window.jQuery.fn.repaint=function(){this.length&&this.get(0).off
 
 //natural image dimension for image loaded, ex: $('.class').naturalHeight(), $('.class').naturalWidth()
 !function(n){function t(n){var t=new Image;return t.src=n,t}return"naturalWidth"in new Image?(n.fn.naturalWidth=function(){return this[0].naturalWidth},void(n.fn.naturalHeight=function(){return this[0].naturalHeight})):(n.fn.naturalWidth=function(){return t(this.src).width},void(n.fn.naturalHeight=function(){return t(this.src).height}))}(jQuery);
+
+//disable element scroll
+if(window.jQuery){
+    window.jQuery.fn.disableScroll = function(){
+        this.data('scroll', false).on('scroll.utils touchmove.utils mousewheel.utils', function(e){
+
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+    };
+    window.jQuery.fn.enableScroll = function(){
+        this.data('scroll', true).off('scroll.utils touchmove.utils mousewheel.utils');
+    };
+    window.jQuery.fn.toggleScroll = function(){
+        if( typeof this.data('scroll') == "undefined" || this.data('scroll'))
+            this.disableScroll();
+        else
+            this.enableScroll();
+    };
+}

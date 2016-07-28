@@ -371,11 +371,6 @@ var UIActivation = function(){
             that._addClassFromAttr(elem, attrs, 'delay');
         });
 
-        dom.compiler.register('attribute', 'offset', function(elem, attrs) {
-
-            dom.compiler.attr(elem, 'offset', attrs.offset);
-        });
-
         dom.compiler.register('attribute', 'easing', function(elem, attrs) {
 
             elem.addClass('ui-animation');
@@ -384,7 +379,7 @@ var UIActivation = function(){
 
         dom.compiler.register('attribute', 'visibility', function(elem, attrs) {
 
-            dom.compiler.attr(elem, 'visibility', parseInt(attrs.visibility.replace('%', ''))/100);
+            dom.compiler.attr(elem, 'offset', parseInt(attrs.visibility.replace('%', ''))/100);
         });
 
         dom.compiler.register('attribute', 'animation', function(elem, attrs) {

@@ -20,8 +20,9 @@ var UIParallax = function () {
     var that = this;
 
     that.config = {
-
+        mobile:false
     };
+
 
     that.context = {
         window_height   : 0,
@@ -95,6 +96,9 @@ var UIParallax = function () {
      *
      */
     that.__construct = function () {
+
+        if( browser && browser.mobile && !that.config.mobile )
+            return;
 
         $(document).on('boot', function(){
 

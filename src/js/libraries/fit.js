@@ -176,6 +176,23 @@ var UIFit = function() {
     }
 
 
+    /*
+     * jQuery extension
+     *
+     * ex: $('.class').fit();
+     */
+
+    if (window.jQuery) {
+
+        window.jQuery.fn.fit = function() {
+
+            if( Modernizr && Modernizr.objectfit )
+                return;
+
+            $(this).each(function() { ui.fit.compute( $(this) ) });
+        };
+    }
+
     that.__construct();
 };
 
@@ -184,20 +201,3 @@ var ui = ui || {};
 ui.fit = new UIFit();
 
 
-
-/*
- * jQuery extension
- *
- * ex: $('.class').fit();
- */
-
-if (window.jQuery) {
-
-    window.jQuery.fn.fit = function() {
-
-        if( Modernizr && Modernizr.objectfit )
-            return;
-
-        $(this).each(function() { ui.fit.compute( $(this) ) });
-    };
-}

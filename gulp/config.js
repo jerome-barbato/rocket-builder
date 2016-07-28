@@ -69,11 +69,11 @@ var Config = module.exports = {
         };
 
 
-            console.log("Status: \n" +
+            /*console.log("Status: \n" +
                 "Path to config : " + Config.paths.base.config +
                 "\nEnv : " + Config.environment +
                 "\nFramework : " + Config.framework +
-                "\nTheme : " + Config.theme_name);
+                "\nTheme : " + Config.theme_name);*/
     },
 
 

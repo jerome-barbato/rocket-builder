@@ -52,7 +52,6 @@ var UIPopin = function(config){
     };
 
 
-
     that.add = function( id, content, context, remove ){
 
         if( $('.ui-popin--'+id).length ){
@@ -135,6 +134,8 @@ var UIPopin = function(config){
 
     that._remove = function( $popin ){
 
+        $(window).enableScroll();
+
         if( !$popin || !$popin.length ) return;
 
         var $body = $('body');
@@ -195,6 +196,8 @@ var UIPopin = function(config){
 
 
     that._show = function( $popin ) {
+
+        $(window).disableScroll();
 
         var $body = $('body');
 
