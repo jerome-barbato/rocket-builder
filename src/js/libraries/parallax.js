@@ -20,7 +20,8 @@ var UIParallax = function () {
     var that = this;
 
     that.config = {
-        mobile:false
+        mobile : false,
+        type   : 'down'
     };
 
 
@@ -68,7 +69,7 @@ var UIParallax = function () {
 
         $.each(that.context.items, function(i, item){
 
-            if( that.context.scroll_top+that.context.window_height > item.top && item.bottom > that.context.scroll_top) {
+            if( that.context.scroll_top + that.context.window_height > item.top && item.bottom > that.context.scroll_top) {
 
                 if( item.top < that.context.window_height )
                     item.offset = that.context.scroll_top / item.bottom;
@@ -77,14 +78,23 @@ var UIParallax = function () {
 
                 item.offset = item.center ? item.offset-0.5 : item.offset;
                 item.offset = (Math.round(-item.offset*1000)/1000);
+
                 item.$.css('transform', 'translate3d(0,'+(item.offset*item.strenght)+item.unit+',0)');
             }
             else{
 
-                if( that.context.scroll_top+that.context.window_height <= item.top )
-                    item.$.css('transform', 'translate3d(0,'+( (item.center ? 0.5 : 0)*item.strenght)+item.unit+',0)');
+                var offset = 0;
+
+                if( that.context.scroll_top + that.context.window_height <= item.top )
+                    offset = (item.center ? 0.5 : 0)*item.strenght;
                 else
-                    item.$.css('transform', 'translate3d(0,'+( -(item.center ? 0.5 : 1)*item.strenght)+item.unit+',0)');
+                    offset = -(item.center ? 0.5 : 1)*item.strenght;
+
+                if( item.offset != offset ){
+
+                    item.offset = offset;
+                    item.$.css('transform', 'translate3d(0,'+item.offset+item.unit+',0)');
+                }
             }
         });
     };
