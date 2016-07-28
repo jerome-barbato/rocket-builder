@@ -102,8 +102,7 @@ gulp.task('default', [], function () {
         scripts = "compress::scripts";
     }
 
-
-
+    config.load();
 
     gulp.start(scripts);
     gulp.start("compress::script::browser");
