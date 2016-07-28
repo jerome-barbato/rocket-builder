@@ -74,23 +74,25 @@ gulp.task('default', [], function () {
     // Production mode
     if (getArg("--production") || getArg("-p")) {
         config.environment = 'production';
+        config.load();
     }
 
     // Framework
     if (getArg("--framework")) {
         config.framework = getArg("--framework");
+        config.load();
     }
 
     // Theme name
     if (getArg("--theme")) {
-        config.theme_name = getArg("--theme")
+        config.theme_name = getArg("--theme");
+        config.load();
     }
-
-    config.load();
 
     // Watching mode
     if (getArg("--no-watch") || config.environment == "production") {
         config.watching_mode = false;
+        config.load();
     }
 
     /** Harlem Check **/
@@ -100,9 +102,9 @@ gulp.task('default', [], function () {
         scripts = "compress::scripts";
     }
 
-    console.log(config.environment);
 
-    /*
+
+
     gulp.start(scripts);
     gulp.start("compress::script::browser");
 
@@ -122,6 +124,6 @@ gulp.task('default', [], function () {
             gulp.start(styles);
         });
         gulp.start("watch::templates");
-    }*/
+    }
 
 });
