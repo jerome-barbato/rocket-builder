@@ -93,7 +93,7 @@ var Config = module.exports = {
             Config.paths.src.js.push(Config.src_path+'js/core/vendors/'+library+'.min.js');
 
             if( library == "angular" || library == "jquery" )
-                Config.paths.src.js.push(src_path+'js/core/vendors/'+library+'/**/*.js');
+                Config.paths.src.js.push(Config.src_path+'js/core/vendors/'+library+'/**/*.js');
         });
 
         needed_core.polyfill.forEach(function(library){
@@ -103,7 +103,7 @@ var Config = module.exports = {
 
         needed_core.libraries.forEach(function(library){
 
-            Config.paths.src.js.push(src_path+'js/core/libraries/'+library+'.js');
+            Config.paths.src.js.push(Config.src_path+'js/core/libraries/'+library+'.js');
         });
 
         Config.paths.src.js.push(Config.src_path+'js/app.js');

@@ -10,7 +10,7 @@ var $           = require('gulp-load-plugins')();
  *
  */
 gulp.task('concat::scripts', function(){
-
+    config.init();
     return gulp.src(config.paths.src.js)
         .pipe($.concat('app.js'))
         .pipe($.sourcemaps.init())

@@ -61,6 +61,8 @@ function getArg(key) {
  */
 gulp.task('default', [], function () {
 
+
+    config.init();
     // Quick access for style compilation
     var styles          = "compile::style";
 
