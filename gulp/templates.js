@@ -28,6 +28,8 @@ function loadDep(){
     var front_config = JSON.parse(fs.readFileSync(config.paths.base.config));
     var needed_core  = front_config.compiler;
 
+    src.push( fs.readFileSync(config.paths.base.src+'js/core/vendors/browser.js', 'utf-8') );
+
     needed_core.vendors.forEach(function(library){
 
         src.push( fs.readFileSync(config.paths.base.src+'js/core/vendors/'+library+'.min.js', 'utf-8') );
