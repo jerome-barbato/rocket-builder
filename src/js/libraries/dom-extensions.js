@@ -132,50 +132,90 @@ dom.compiler.register('attribute', 'hide-on', function(elem, attrs){
 
 dom.compiler.register('attribute', 'blocks-src', function(elem, attrs){
 
-    if( window.precompile )
-        elem.attr('src', '{{ asset.medias.blocks }}'+attrs.blocksSrc);
-    else
-        elem.attr('src', asset.medias.blocks+attrs.blocksSrc);
+    if( typeof asset == "undefined" ) {
+
+        console.warn('asset is not defined');
+        elem.attr('src', attrs.blocksSrc);
+    }
+    else {
+
+        if (window.precompile)
+            elem.attr('src', '{{ asset.medias.blocks }}' + attrs.blocksSrc);
+        else
+            elem.attr('src', asset.medias.blocks + attrs.blocksSrc);
+    }
 });
 
 
 
 dom.compiler.register('attribute', 'icons-src', function(elem, attrs){
 
-    if( window.precompile )
-        elem.attr('src', '{{ asset.medias.icons }}'+attrs.iconsSrc);
-    else
-        elem.attr('src', asset.medias.icons+attrs.iconsSrc);
+    if( typeof asset == "undefined" ) {
+
+        console.warn('asset is not defined');
+        elem.attr('src', attrs.blocksSrc);
+    }
+    else {
+
+        if (window.precompile)
+            elem.attr('src', '{{ asset.medias.icons }}' + attrs.iconsSrc);
+        else
+            elem.attr('src', asset.medias.icons + attrs.iconsSrc);
+    }
 });
 
 
 
 dom.compiler.register('attribute', 'pages-src', function(elem, attrs){
 
-    if( window.precompile )
-        elem.attr('src', '{{ asset.medias.pages }}'+attrs.pagesSrc);
-    else
-        elem.attr('src', asset.medias.pages+attrs.pagesSrc);
+    if( typeof asset == "undefined" ) {
+
+        console.warn('asset is not defined');
+        elem.attr('src', attrs.blocksSrc);
+    }
+    else {
+
+        if (window.precompile)
+            elem.attr('src', '{{ asset.medias.pages }}' + attrs.pagesSrc);
+        else
+            elem.attr('src', asset.medias.pages + attrs.pagesSrc);
+    }
 });
 
 
 
 dom.compiler.register('attribute', 'components-src', function(elem, attrs){
 
-    if( window.precompile )
-        elem.attr('src', '{{ asset.medias.components }}'+attrs.componentsSrc);
-    else
-        elem.attr('src', asset.medias.components+attrs.componentsSrc);
+    if( typeof asset == "undefined" ) {
+
+        console.warn('asset is not defined');
+        elem.attr('src', attrs.blocksSrc);
+    }
+    else {
+
+        if (window.precompile)
+            elem.attr('src', '{{ asset.medias.components }}' + attrs.componentsSrc);
+        else
+            elem.attr('src', asset.medias.components + attrs.componentsSrc);
+    }
 });
 
 
 
 dom.compiler.register('attribute', 'tmp-src', function(elem, attrs){
 
-    if( window.precompile )
-        elem.attr('src', '{{ asset.medias.tmp }}'+attrs.tmpSrc);
-    else
-        elem.attr('src', asset.medias.tmp+attrs.tmpSrc);
+    if( typeof asset == "undefined" ) {
+
+        console.warn('asset is not defined');
+        elem.attr('src', attrs.blocksSrc);
+    }
+    else {
+
+        if (window.precompile)
+            elem.attr('src', '{{ asset.medias.tmp }}' + attrs.tmpSrc);
+        else
+            elem.attr('src', asset.medias.tmp + attrs.tmpSrc);
+    }
 });
 
 
