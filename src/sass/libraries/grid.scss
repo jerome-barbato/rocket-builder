@@ -42,6 +42,7 @@
         }
       }
     }
+    @media #{$media-tablet-portrait} { max-width: none; float: none }
   }
 }
 
