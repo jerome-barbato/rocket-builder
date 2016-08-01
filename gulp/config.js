@@ -6,6 +6,13 @@
 // Dependencies
 var gutil       = require('gulp-util');
 var fs          = require('fs');
+var getArg      = function(key) {
+
+    var index = process.argv.indexOf(key);
+    var next = process.argv[index + 1];
+
+    return (index < 0) ? null : (!next || next[0] === "-") ? true : next;
+};
 
 var Config = module.exports = {
 
@@ -126,9 +133,32 @@ var Config = module.exports = {
     /**
      * Initilization
      */
-    init            : function init() {
+    init : function init() {
+
+        /** Parameters evaluation **/
+        // Production mode
+        if (getArg("--production") || getArg("-p"))
+            Config.environment = 'production';
+
+        // dev mode
+        if (getArg("--development") || getArg("-d"))
+            Config.environment = 'development';
+
+        // Framework
+        if (getArg("--framework"))
+            Config.framework = getArg("--framework");
+
+        // Theme name
+        if (getArg("--theme"))
+            Config.theme_name = getArg("--theme");
+
+        // Watching mode
+        if (getArg("--no-watch") || Config.environment == "production")
+            Config.watching_mode = false;
+
         Config.load();
         Config.addCoreDependencies();
     }
-
 };
+
+Config.init();
