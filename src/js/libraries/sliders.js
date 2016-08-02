@@ -127,7 +127,6 @@ var UISlider = function (config) {
 
         that.config.$element.addClass('ui-preload');
 
-        that._addMod(that.config.$element, 'slider', 'initialised');
         that._addMod(that.config.$element, 'slider', 'animation-'+that.config.animation);
 
         that.context.$slides_container.wrap('<div class="'+that.classnames.scroller+'"/>');
@@ -281,6 +280,8 @@ var UISlider = function (config) {
 
         that._alterMod(that.config.$element, 'slider', 'direction');
         that._addMod(that.config.$element, 'slider', 'direction-' + (direction=='right'?'forward':'backward'));
+        that._alterMod(that.config.$element, 'slider', 'index');
+        that._addMod(that.config.$element, 'slider', 'index-' + (parseInt(target)+1));
 
         that.context.direction        = direction;
         that.context.indices.current  = target;
