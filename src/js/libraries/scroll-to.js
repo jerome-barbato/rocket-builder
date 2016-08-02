@@ -285,7 +285,7 @@ var UIScroll = function () {
             if( that.config.user_anchor )
                 elem.attr('href', '#'+attrs.scrollTo);
             else
-                elem.data('ui-href', '#'+attrs.scrollTo);
+                dom.compiler.attr(elem, 'ui-href', '#'+attrs.scrollTo);
         });
 
         dom.compiler.register('attribute', 'fixed-header', function (elem, attrs) {

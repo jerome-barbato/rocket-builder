@@ -45,8 +45,8 @@ if( typeof DOMCompiler !== "undefined" ) {
 
         var properties = "g-col";
 
-        if( attrs.size )
-            properties += ' g-col--'+attrs.size.replace('/','_in_');
+        if( attrs.col )
+            properties += ' g-col--'+attrs.col.replace('/','_in_');
 
         if( attrs.offsetBy )
             properties += ' g-col---'+attrs.offsetBy.replace('/','_in_');
