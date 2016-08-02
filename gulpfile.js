@@ -46,7 +46,7 @@ wrench.readdirSyncRecursive('./gulp').filter(function(file) {
  * @param key
  * @returns {*}
  */
-function getArg(key) {
+var getArg = function(key) {
 
     var index = process.argv.indexOf(key);
     var next = process.argv[index + 1];
@@ -61,56 +61,21 @@ function getArg(key) {
  */
 gulp.task('default', [], function () {
 
-
-    config.init();
     // Quick access for style compilation
-    var styles          = "compile::style";
+    var styles    = "compile::style";
 
     // Quick access for scripts compilation
-    var scripts         = "concat::scripts";
+    var scripts   = "concat::scripts";
 
     // Quick access for template compilation
-    var templates       = "compile::templates";
-
-    /** Parameters evaluation **/
-    // Production mode
-    if (getArg("--production") || getArg("-p")) {
-        config.environment = 'production';
-        config.load();
-    }
-
-    // dev mode
-    if (getArg("--development") || getArg("-d")) {
-        config.environment = 'development';
-        config.load();
-    }
-
-    // Framework
-    if (getArg("--framework")) {
-        config.framework = getArg("--framework");
-        config.load();
-    }
-
-    // Theme name
-    if (getArg("--theme")) {
-        config.theme_name = getArg("--theme");
-        config.load();
-    }
-
-    // Watching mode
-    if (getArg("--no-watch") || config.environment == "production") {
-        config.watching_mode = false;
-        config.load();
-    }
+    var templates = "compile::templates";
 
     /** Harlem Check **/
-    if (config.environment == "production"){
+    if (getArg("--production") || getArg("-p")){
 
         styles  = "compress::style";
         scripts = "compress::scripts";
     }
-
-    config.load();
 
     gulp.start(scripts);
     gulp.start("compress::script::browser");

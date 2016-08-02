@@ -1,6 +1,11 @@
 // Clearfix
+@mixin clearfix() {
+  &:after{
+    content: '\0020'; display: block; overflow: hidden;
+    visibility: hidden; width: 0; height: 0; clear: both;
+  }
+}
 
-._clearfix:after, .clearfix {
-  content: '\0020'; display: block; overflow: hidden;
-  visibility: hidden; width: 0; height: 0; clear: both;
+._clearfix, .clearfix {
+  @include clearfix()
 }

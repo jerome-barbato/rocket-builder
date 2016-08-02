@@ -7,7 +7,7 @@
     "type": "git",
     "url": "ssh://git@bitbucket.org:Metabolism/rocket-builder.git"
   },
-  "dev-dependencies": {
+  "devDependencies": {
     "del": "^2.2.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
