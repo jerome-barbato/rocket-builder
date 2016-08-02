@@ -167,8 +167,11 @@ var UIScroll = function () {
         elem.data('ui-scroll--initialized', true);
 
         var raw_target  = that.config.user_anchor ? elem.attr('href') : elem.data('ui-href');
-        var target  = raw_target.split('#');
 
+        if( !raw_target || !raw_target.length )
+            return;
+
+        var target  = raw_target.split('#');
         var current = window.location.href.split('#');
 
         if( target[0].length && target[0] != current[0] ){
