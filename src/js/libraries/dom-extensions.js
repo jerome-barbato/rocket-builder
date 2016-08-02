@@ -54,8 +54,10 @@ dom.compiler.register('attribute', 'background', function(elem, attrs){
 
 dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
-    if( typeof asset != "undefined" && attrs.sizer && attrs.sizer.length )
-        elem.append('<img src="'+ asset.medias.root + 'sizers/' + attrs.sizer.replace('/', 'x') + '.png" class="ui-sizer ui-sizer--' + attrs.sizer.replace('/', 'x') + '">');
+    if (window.precompile)
+        elem.append('<img src="{{ asset.medias.root }}sizers/' + attrs.sizer.replace('/', 'x') + '.png" class="ui-sizer ui-sizer--' + attrs.sizer.replace('/', 'x') + '">');
+    else if ( typeof asset != "undefined" )
+        elem.append('<img src="' + asset.medias.root + 'sizers/' + attrs.sizer.replace('/', 'x') + '.png" class="ui-sizer ui-sizer--' + attrs.sizer.replace('/', 'x') + '">');
 });
 
 
