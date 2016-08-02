@@ -81,7 +81,7 @@ var BEM = function(){
 
     that.manageBlock = function(elem, attrs){
 
-        that._configure('block', elem, attrs.block||attrs.component);
+        that._configure('block', elem, attrs.block);
     };
 
 
@@ -105,12 +105,6 @@ var BEM = function(){
 
         dom.compiler.register('attribute', 'block', function (elem, attrs) {
 
-            that.manageBlock(elem, attrs);
-        });
-
-        dom.compiler.register('attribute', 'component', function (elem, attrs) {
-
-            elem.attr('block', attrs.component);
             that.manageBlock(elem, attrs);
         });
 

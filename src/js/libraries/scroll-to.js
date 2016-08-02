@@ -30,7 +30,8 @@ var UIScroll = function () {
             offset : 'ui-scroll-offset',
             target : 'ui-scroll--target'
         },
-        force_offset : false
+        force_offset : false,
+        user_anchor  : false
     };
 
     that.targets     = [];
@@ -45,7 +46,7 @@ var UIScroll = function () {
 
             e.preventDefault();
 
-            var target = $(this).attr('href');
+            var target = that.config.user_anchor ? $(this).attr('href') : $(this).data('ui-href');
             that.scrollTo(target, true);
         });
 
@@ -57,12 +58,17 @@ var UIScroll = function () {
 
         var target = 0;
 
-        if( id == "#top" )
+        if( $(id).length )
+            target = $(id).offset().top;
+        else if( id == "#top" )
             target = 0;
         else if( id == "#next" )
             target = $(window).height();
         else
-            target = $(id).offset().top;
+        {
+            $(document).trigger('ui-scroll', [id, false]);
+            return;
+        }
 
         var scroll_to = target - that._computeOffset();
 
@@ -73,7 +79,7 @@ var UIScroll = function () {
             var scroll_diff = Math.abs(that.scroll_top - scroll_to);
             var velocity    = Math.sqrt(scroll_diff/$(window).height());
 
-            $('html, body').animate({scrollTop:scroll_to}, Math.max(200, velocity*that.config.speed), that.config.easeInOut, function(){
+            $('html, body').stop().animate({scrollTop:scroll_to}, Math.max(200, velocity*that.config.speed), that.config.easeInOut, function(){
 
                 $(document).trigger('ui-scroll');
             });
@@ -155,7 +161,14 @@ var UIScroll = function () {
 
     that.add = function( elem ){
 
-        var target  = elem.attr('href').split('#');
+        if( elem.data('ui-scroll--initialized') )
+            return;
+
+        elem.data('ui-scroll--initialized', true);
+
+        var raw_target  = that.config.user_anchor ? elem.attr('href') : elem.data('ui-href');
+        var target  = raw_target.split('#');
+
         var current = window.location.href.split('#');
 
         if( target[0].length && target[0] != current[0] ){
@@ -165,11 +178,12 @@ var UIScroll = function () {
         }
         else{
 
-            elem.attr('href', '#'+target[1]);
+            if( that.config.user_anchor )
+                elem.attr('href', '#'+target[1]);
         }
 
         var element = {
-            anchor  : elem.attr('href'),
+            anchor  : that.config.user_anchor ? elem.attr('href') : elem.data('ui-href'),
             $link   : elem,
             seen    : false,
             current : false
@@ -234,7 +248,7 @@ var UIScroll = function () {
      *
      */
     that.__construct = function () {
-        
+
         $(document).on('boot', function(){
 
             $('.'+that.config.class.link).each(function(){
@@ -250,10 +264,11 @@ var UIScroll = function () {
             that.scroll_top = that.offset;
 
             that._resize();
-            that._setupEvents();
 
             $(window).trigger('hashchange');
         });
+
+        that._setupEvents();
     };
 
 
@@ -262,7 +277,12 @@ var UIScroll = function () {
 
         dom.compiler.register('attribute', 'scroll-to', function (elem, attrs) {
 
-            elem.addClass(that.config.class.link).attr('href', '#'+attrs.scrollTo);
+            elem.addClass(that.config.class.link);
+
+            if( that.config.user_anchor )
+                elem.attr('href', '#'+attrs.scrollTo);
+            else
+                elem.data('ui-href', '#'+attrs.scrollTo);
         });
 
         dom.compiler.register('attribute', 'fixed-header', function (elem, attrs) {

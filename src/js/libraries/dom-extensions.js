@@ -52,6 +52,14 @@ dom.compiler.register('attribute', 'background', function(elem, attrs){
 
 
 
+dom.compiler.register('attribute', 'sizer', function(elem, attrs){
+
+    if( typeof asset != "undefined" && attrs.sizer && attrs.sizer.length )
+        elem.append('<img src="'+ asset.medias.root + 'sizers/' + attrs.sizer.replace('/', 'x') + '.png" class="ui-sizer ui-sizer--' + attrs.sizer.replace('/', 'x') + '">');
+});
+
+
+
 dom.compiler.register('attribute', 'background-color', function(elem, attrs){
 
     if( attrs.backgroundColor && attrs.backgroundColor.length )
@@ -153,7 +161,7 @@ dom.compiler.register('attribute', 'icons-src', function(elem, attrs){
     if( typeof asset == "undefined" ) {
 
         console.warn('asset is not defined');
-        elem.attr('src', attrs.blocksSrc);
+        elem.attr('src', attrs.iconsSrc);
     }
     else {
 
@@ -171,7 +179,7 @@ dom.compiler.register('attribute', 'pages-src', function(elem, attrs){
     if( typeof asset == "undefined" ) {
 
         console.warn('asset is not defined');
-        elem.attr('src', attrs.blocksSrc);
+        elem.attr('src', attrs.pagesSrc);
     }
     else {
 
@@ -189,7 +197,7 @@ dom.compiler.register('attribute', 'components-src', function(elem, attrs){
     if( typeof asset == "undefined" ) {
 
         console.warn('asset is not defined');
-        elem.attr('src', attrs.blocksSrc);
+        elem.attr('src', attrs.componentsSrc);
     }
     else {
 
@@ -207,7 +215,7 @@ dom.compiler.register('attribute', 'tmp-src', function(elem, attrs){
     if( typeof asset == "undefined" ) {
 
         console.warn('asset is not defined');
-        elem.attr('src', attrs.blocksSrc);
+        elem.attr('src', attrs.tmpSrc);
     }
     else {
 
