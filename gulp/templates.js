@@ -54,30 +54,35 @@ function compile(html, scripts, callback) {
 
     var virtualConsole = $.jsdom.createVirtualConsole().sendTo(console);
 
-    html = html.replace(/<template /g,'<xtemplate ').replace(/<\/template>/g,'</xtemplate>');
+    if( html.indexOf('<!-- jsdom:disabled -->') != -1 ){
 
-    $.jsdom.env({
-        html           : html,
-        src            : scripts,
-        virtualConsole : virtualConsole,
-        done           : function (err, window) {
+        html = html.replace('<!-- jsdom:disabled -->','');
+        callback(new Buffer(html));
+    }
+    else {
 
-            window.precompile = true;
-            var $             = window.$;
-            var compiler      = window.dom.compiler;
-            var $body         = $('body');
+        html = html.replace(/<template /g, '<xtemplate ').replace(/<\/template>/g, '</xtemplate>');
 
-            //todo: find a better way
-            if( $('html').attr('lang') == undefined ) {
+        $.jsdom.env({
+            html           : html,
+            src            : scripts,
+            virtualConsole : virtualConsole,
+            done : function (err, window) {
+
+                window.precompile = true;
+
+                var $ = window.$;
+                var compiler = window.dom.compiler;
+                var $body = $('body');
 
                 compiler.run($body);
                 html = $body.html();
-            }
 
-            html = html.replace(/<xtemplate /g,'<template ').replace(/<\/xtemplate>/g,'</template>');
-            callback(new Buffer(html));
-        }
-    });
+                html = html.replace(/<xtemplate /g, '<template ').replace(/<\/xtemplate>/g, '</template>');
+                callback(new Buffer(html));
+            }
+        });
+    }
 }
 
 
@@ -88,9 +93,9 @@ function compileFiles() {
 
     return $.through.obj(function(file, enc, cb) {
 
-        var html = file.contents.toString('utf8');
+        var raw_html = file.contents.toString('utf8');
 
-        compile(html, scripts, function(compiled_html){
+        compile(raw_html, scripts, function(compiled_html){
 
             file.contents = compiled_html;
             cb(null, file);
