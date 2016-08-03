@@ -1,7 +1,7 @@
 {
   "name": "rocket-builder",
-  "version": "2.0.0",
-  "description": "SASS, JS and HTML Compiler",
+  "version": "2.2.0",
+  "description": "SASS, JS and HTML Compiler with some usefull task",
   "main": "gulpfile.js",
   "repository": {
     "type": "git",
@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "del": "^2.2.1",
+    "fs-path": "0.0.22",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-css-globbing": "^0.1.8",
