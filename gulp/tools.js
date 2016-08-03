@@ -13,7 +13,7 @@ var gulp    = require('gulp'),
 
 
 /**
- * Rocket directives post-processing with Rocket Dom Compiler
+ * Create block and component task, add twig and scss file
  */
 gulp.task('create', function() {
 
