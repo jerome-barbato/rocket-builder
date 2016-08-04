@@ -39,6 +39,11 @@ var BEM = function(){
         elem.data(':bem', single_binding ? block_class_name : block_class_name+element_class_name);
         elem.data('bem', block_class_name+element_class_name);
 
+        var depth = elem.data('bem').split('__').length;
+
+        if( depth > 3 )
+            console.warn(elem.data('bem')+' : BEM depth is important, please use single binding');
+
         elem.addClass(block_class_name+element_class_name);
 
         if( that.debug )
