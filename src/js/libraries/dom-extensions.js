@@ -73,7 +73,7 @@ dom.compiler.register('attribute', 'background-color', function(elem, attrs){
 dom.compiler.register('attribute', 'icon', function(elem, attrs){
 
     if( attrs.icon && attrs.icon.length )
-        elem.addClass('icon icon--before icon--'+attrs.icon);
+        elem.addClass('icon--before icon--'+attrs.icon);
 });
 
 
@@ -81,7 +81,7 @@ dom.compiler.register('attribute', 'icon', function(elem, attrs){
 dom.compiler.register('attribute', 'icon-after', function(elem, attrs){
 
     if( attrs.iconAfter && attrs.iconAfter.length )
-        elem.addClass('icon icon--after icon--'+attrs.iconAfter);
+        elem.addClass('icon--after icon--'+attrs.iconAfter);
 });
 
 
@@ -89,7 +89,7 @@ dom.compiler.register('attribute', 'icon-after', function(elem, attrs){
 dom.compiler.register('attribute', 'icon-before', function(elem, attrs){
 
     if( attrs.iconBefore && attrs.iconBefore.length )
-        elem.addClass('icon icon--before icon--'+attrs.iconBefore);
+        elem.addClass('icon--before icon--'+attrs.iconBefore);
 });
 
 
@@ -105,7 +105,7 @@ dom.compiler.register('attribute', 'ui', function(elem, attrs){
 dom.compiler.register('attribute', 'text', function(elem, attrs){
 
     if( attrs.text && attrs.text.length )
-        elem.addClass('text text--'+attrs.text);
+        elem.addClass('text--'+attrs.text);
 });
 
 
@@ -113,7 +113,7 @@ dom.compiler.register('attribute', 'text', function(elem, attrs){
 dom.compiler.register('attribute', 'button', function(elem, attrs){
 
     if( attrs.button && attrs.button.length )
-        elem.addClass('button button--'+attrs.button);
+        elem.addClass('button--'+attrs.button);
 });
 
 

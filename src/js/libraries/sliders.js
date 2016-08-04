@@ -390,7 +390,7 @@ var UISlider = function (config) {
                 }
             });
 
-            if( !that.config.use_transition ){
+            if( !that.config.use_transition || !$animatedSlides.length){
                 that._removeMod(that.config.$element, 'slider', 'animating');
                 callback();
             }
