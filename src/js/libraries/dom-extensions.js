@@ -56,8 +56,8 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
     if (window.precompile)
         elem.append('<img src="{{ asset.medias.root }}sizers/' + attrs.sizer.replace('/', 'x') + '.png" class="ui-sizer ui-sizer--' + attrs.sizer.replace('/', 'x') + '">');
-    else if ( typeof asset != "undefined" )
-        elem.append('<img src="' + asset.medias.root + 'sizers/' + attrs.sizer.replace('/', 'x') + '.png" class="ui-sizer ui-sizer--' + attrs.sizer.replace('/', 'x') + '">');
+    else if ( typeof window.APP != "undefined" )
+        elem.append('<img src="' + window.APP.asset.medias.root + 'sizers/' + attrs.sizer.replace('/', 'x') + '.png" class="ui-sizer ui-sizer--' + attrs.sizer.replace('/', 'x') + '">');
 });
 
 
@@ -148,13 +148,13 @@ dom.compiler.register('attribute', 'blocks-src', function(elem, attrs){
     }
     else{
 
-        if( typeof asset == "undefined" ) {
+        if( typeof window.APP == "undefined" ) {
 
             console.warn('asset.medias.blocks is not defined');
             elem.attr('src', attrs.blocksSrc);
         }
         else {
-            elem.attr('src', asset.medias.blocks + attrs.blocksSrc);
+            elem.attr('src', window.APP.asset.medias.blocks + attrs.blocksSrc);
         }
     }
 });
@@ -169,13 +169,13 @@ dom.compiler.register('attribute', 'icons-src', function(elem, attrs){
     }
     else{
 
-        if( typeof asset == "undefined" ) {
+        if( typeof window.APP == "undefined" ) {
 
             console.warn('asset.medias.icons is not defined');
             elem.attr('src', attrs.iconsSrc);
         }
         else {
-            elem.attr('src', asset.medias.icons + attrs.iconsSrc);
+            elem.attr('src', window.APP.asset.medias.icons + attrs.iconsSrc);
         }
     }
 });
@@ -190,13 +190,13 @@ dom.compiler.register('attribute', 'pages-src', function(elem, attrs){
     }
     else{
 
-        if( typeof asset == "undefined" ) {
+        if( typeof widow.APP == "undefined" ) {
 
             console.warn('asset.medias.pages is not defined');
             elem.attr('src', attrs.pagesSrc);
         }
         else {
-            elem.attr('src', asset.medias.pages + attrs.pagesSrc);
+            elem.attr('src', window.APP.asset.medias.pages + attrs.pagesSrc);
         }
     }
 });
@@ -211,13 +211,13 @@ dom.compiler.register('attribute', 'components-src', function(elem, attrs){
     }
     else{
 
-        if( typeof asset == "undefined" ) {
+        if( typeof window.APP == "undefined" ) {
 
             console.warn('asset.medias.components is not defined');
             elem.attr('src', attrs.componentsSrc);
         }
         else {
-            elem.attr('src', asset.medias.components + attrs.componentsSrc);
+            elem.attr('src', window.APP.asset.medias.components + attrs.componentsSrc);
         }
     }
 });
@@ -232,13 +232,13 @@ dom.compiler.register('attribute', 'tmp-src', function(elem, attrs){
     }
     else{
 
-        if( typeof asset == "undefined" ) {
+        if( typeof window.APP == "undefined" ) {
 
             console.warn('asset.medias.tmp is not defined');
             elem.attr('src', attrs.tmpSrc);
         }
         else {
-            elem.attr('src', asset.medias.tmp + attrs.tmpSrc);
+            elem.attr('src', window.APP.asset.medias.tmp + attrs.tmpSrc);
         }
     }
 });
