@@ -20,6 +20,7 @@ if(window.jQuery){
 
             e.preventDefault();
             e.stopPropagation();
+
             return false;
         });
     };
