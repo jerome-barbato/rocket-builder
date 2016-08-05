@@ -1,10 +1,10 @@
 @mixin lib-align {
 
   .align{
-    &--center {  text-align: center }
-    &--left {    text-align: left }
-    &--right {   text-align: right }
-    &--justify { text-align: justify }
+    &-center, &-c {  text-align: center }
+    &-left, &-l {    text-align: left }
+    &-right, &-r {   text-align: right }
+    &-justify, &-j { text-align: justify }
   }
 }
 

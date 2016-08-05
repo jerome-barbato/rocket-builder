@@ -75,6 +75,7 @@ var Config = module.exports = {
             }
         };
 
+        Config.front = JSON.parse(fs.readFileSync(Config.paths.base.config));
 
             /*console.log("Status: \n" +
                 "Path to config : " + Config.paths.base.config +
@@ -91,8 +92,7 @@ var Config = module.exports = {
      */
     addCoreDependencies : function addCoreDependencies() {
 
-        var front_config = JSON.parse(fs.readFileSync(Config.paths.base.config));
-        var needed_core  = front_config.app;
+        var needed_core  = Config.front.app;
 
         // Define js src order from front config
         needed_core.vendors.forEach(function(library){

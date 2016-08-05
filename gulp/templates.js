@@ -20,13 +20,11 @@ var gulp    = require('gulp'),
         }
     );
 
-
 function loadDep(){
 
     var src = [];
 
-    var front_config = JSON.parse(fs.readFileSync(config.paths.base.config));
-    var needed_core  = front_config.compiler;
+    var needed_core  = config.front.compiler;
 
     src.push( fs.readFileSync(config.paths.base.src+'js/core/vendors/browser.js', 'utf-8') );
 
@@ -69,11 +67,12 @@ function compile(html, scripts, callback) {
             virtualConsole : virtualConsole,
             done : function (err, window) {
 
-                window.precompile = true;
+                window.precompile    = true;
+                window.compact_class = config.front.compiler.compact;
 
-                var $ = window.$;
+                var $        = window.$;
                 var compiler = window.dom.compiler;
-                var $body = $('body');
+                var $body    = $('body');
 
                 compiler.run($body);
                 html = $body.html();

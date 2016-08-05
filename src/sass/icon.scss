@@ -1,5 +1,5 @@
-.icon--before:before, .icon--after:after{
-  @extend ._font-icons!optional;
+.icon:before, .icon-after:after{
+  font-family: icons, sans-serif;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;
@@ -9,27 +9,32 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-//include icon
-@mixin icon($name:false, $position:'before', $extend:true) {
-
-  @if( $extend ) {
-    @if( $position == 'after'){
-      @extend .icon--after;
-    }
-    @else{
-      @extend .icon--before, .icon--#{$name};
-    }
-  }
-
-  @extend .icon--#{$name};
-}
-
-
 @each $icon in $icons {
 
   $id      : nth($icon, 1);
   $content : nth($icon, 2);
 
-  .icon--after.icon--#{$id}:after,
-  .icon--before.icon--#{$id}:before{ content: $content }
+  .icon-after--#{$id}:after,
+  .icon--#{$id}:before{ content: $content }
+}
+
+
+//include icon
+@mixin icon($name:false, $position:'before', $extend:true) {
+
+  @if($extend){
+    @if($position == 'before'){
+      @extend .icon;
+    }
+    @else{
+      @extend .icon-after;
+    }
+  }
+
+  @if($position == 'before'){
+    @extend .icon--#{$name};
+  }
+  @else{
+    @extend .icon-after--#{$name};
+  }
 }
