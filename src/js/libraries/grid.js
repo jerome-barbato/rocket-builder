@@ -45,11 +45,12 @@ if( typeof DOMCompiler !== "undefined" ) {
 
         var properties = "g-col";
 
-        if( attrs.col )
-            properties += ' g-col--'+attrs.col.replace('/','_in_');
+        attrs.col = attrs.col.split('/');
+        if( attrs.col.length == 2 && attrs.col[0] != attrs.col[1] )
+            properties += ' g-col--'+attrs.col[0]+'_'+attrs.col[1];
 
         if( attrs.offsetBy )
-            properties += ' g-col---'+attrs.offsetBy.replace('/','_in_');
+            properties += ' g-col---'+attrs.offsetBy.replace('/','_');
 
         elem.addClass(properties);
     });

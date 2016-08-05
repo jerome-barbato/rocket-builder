@@ -23,7 +23,7 @@
         @for $j from 1 through 8{
           @for $i from 2 through 8{
             @if $j < $i{
-              &--#{$j}_in_#{$i}{ flex-basis: ((100%*$j)/$i) }
+              &--#{$j}_#{$i}{ flex-basis: ((100%*$j)/$i) }
             }
           }
         }
@@ -37,8 +37,8 @@
     @for $j from 1 through 8{
       @for $i from 2 through 8{
         @if $j < $i{
-          &--#{$j}_in_#{$i}{ max-width: ((100%*$j)/$i) }
-          &---#{$j}_in_#{$i}{ margin-left: ((100%*$j)/$i) }
+          &--#{$j}_#{$i}{ max-width: ((100%*$j)/$i) }
+          &---#{$j}_#{$i}{ margin-left: ((100%*$j)/$i) }
         }
       }
     }

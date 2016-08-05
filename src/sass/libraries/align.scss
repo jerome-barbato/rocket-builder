@@ -9,6 +9,6 @@
 }
 
 
-@if( index($libraries, 'text-align') ){
+@if( index($libraries, 'align') ){
   @include lib-align;
 }
