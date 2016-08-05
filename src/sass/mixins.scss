@@ -1,5 +1,5 @@
 //custom scrollbar colors
-@mixin scrollbar($size, $primary, $secondary: lighten($primary, 25%), $radius-thumb: 10px, $radius-track: 10px) {
+@mixin scrollbar($size, $primary, $secondary: lighten($primary, 25%), $radius-thumb: 0, $radius-track: 0) {
   &::-webkit-scrollbar {
     width:  $size;
     height: $size;

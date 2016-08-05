@@ -54,10 +54,23 @@ dom.compiler.register('attribute', 'background', function(elem, attrs){
 
 dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
-    if (window.precompile)
-        elem.append('<img src="{{ asset.medias.root }}sizers/' + attrs.sizer.replace('/', 'x') + '.png" class="ui-sizer ui-sizer--' + attrs.sizer.replace('/', 'x') + '">');
-    else if ( typeof window.APP != "undefined" )
-        elem.append('<img src="' + window.APP.asset.medias.root + 'sizers/' + attrs.sizer.replace('/', 'x') + '.png" class="ui-sizer ui-sizer--' + attrs.sizer.replace('/', 'x') + '">');
+    var size   = attrs.sizer.replace('/', 'x');
+    var _class = attrs.class;
+
+    if (window.precompile){
+
+        if( elem.is('img') )
+            elem.replaceWith('<img src="{{ asset.medias.root }}sizers/' + size + '.png" class="ui-sizer' + (_class.length?' '+_class:'') + '" style="background-image: url(\''+attrs.src+'\')">');
+        else
+            elem.append('<img src="{{ asset.medias.root }}sizers/' + size + '.png" class="ui-sizer">');
+    }
+    else if ( typeof window.APP != "undefined" ){
+
+        if( elem.is('img') )
+            elem.replaceWith('<img src="' + window.APP.asset.medias.root + 'sizers/' + size + '.png" class="ui-sizer' + (_class.length?' '+_class:'') + '" style="background-image: url(\''+attrs.src+'\')">');
+        else
+            elem.append('<img src="' + window.APP.asset.medias.root + 'sizers/' + size + '.png" class="ui-sizer">');
+    }
 });
 
 
