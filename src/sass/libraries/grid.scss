@@ -9,7 +9,7 @@
   }
 
   .g-row{
-    @extend ._clearfix; display: block;
+    @extend ._clearfix; display: block; position: relative;
     @if variable-exists(grid-row-padding) { padding: $grid-row-padding }
     @if variable-exists(grid-row-margin) { &+&{ margin-top: $grid-row-margin } }
     &--top{ align-items: flex-start }
@@ -33,6 +33,7 @@
 
   .g-col{
     float: left; width: 100%; border-collapse: collapse; display: block;
+    position: relative;
     @if variable-exists(grid-col-padding) { padding: $grid-col-padding }
     @for $j from 1 through 8{
       @for $i from 2 through 8{

@@ -86,10 +86,10 @@ if( typeof DOMCompiler !== "undefined" ) {
         var properties = "g-col";
 
         if( attrs.size )
-            properties += ' g-col--'+attrs.size.replace('/','_in_');
+            properties += ' g-col--'+attrs.size.replace('/','_');
 
         if( attrs.offsetBy )
-            properties += ' g-col---'+attrs.offsetBy.replace('/','_in_');
+            properties += ' g-col---'+attrs.offsetBy.replace('/','_');
 
         return '<div class="'+properties+'"><transclude/></div>';
     });

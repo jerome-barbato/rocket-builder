@@ -118,7 +118,7 @@ dom.compiler.register('attribute', 'ui', function(elem, attrs){
 dom.compiler.register('attribute', 'text', function(elem, attrs){
 
     if( attrs.text && attrs.text.length )
-        elem.addClass('txt txt--'+attrs.text);
+        elem.addClass('text text--'+attrs.text);
 });
 
 
@@ -126,7 +126,7 @@ dom.compiler.register('attribute', 'text', function(elem, attrs){
 dom.compiler.register('attribute', 'button', function(elem, attrs){
 
     if( attrs.button && attrs.button.length )
-        elem.addClass('btn btn--'+attrs.button);
+        elem.addClass('bouton bouton--'+attrs.button);
 });
 
 
