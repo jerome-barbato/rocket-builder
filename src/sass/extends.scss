@@ -12,5 +12,5 @@
 
 // Text
 @mixin text($type) {
-  @extend .txt, .txt--#{$type};
+  @extend .text, .text--#{$type};
 }
