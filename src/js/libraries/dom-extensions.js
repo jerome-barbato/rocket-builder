@@ -126,7 +126,7 @@ dom.compiler.register('attribute', 'text', function(elem, attrs){
 dom.compiler.register('attribute', 'button', function(elem, attrs){
 
     if( attrs.button && attrs.button.length )
-        elem.addClass('bouton bouton--'+attrs.button);
+        elem.addClass('button button--'+attrs.button);
 });
 
 
