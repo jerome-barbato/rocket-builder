@@ -229,7 +229,7 @@ var UIScroll = function () {
 
         $(window).on('hashchange', function(e){
 
-            if( window.location.hash.indexOf('#/') == -1 ){
+            if( window.location.hash.indexOf('#/') == -1 && !window.location.hash.match(/^#!?\//) ){
 
                 var $target = $(window.location.hash);
 

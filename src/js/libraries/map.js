@@ -46,13 +46,13 @@ var UIMap = function(){
 
     that.config = {
         marker : {
-            url    : APP.asset.medias.icons+'marker@2x.png',
+            url       : APP.asset.medias.icons+'marker@2x.png',
+            hover_url : APP.asset.medias.icons+'marker--hover@2x.png',
             width  : 45,
             height : 65
         },
         overlay : {
-            selector   : '#distributor',
-            properties : ['title', 'distance', 'street', 'phone']
+            properties : []
         },
         map : {
             center            :[25,0],
@@ -67,12 +67,13 @@ var UIMap = function(){
             panControl        : false,
             streetViewControl : true,
             styles            : []
-        },
-        offset      : {21:0.00039, 20:0.00077, 19:0.0015, 18: 0.0031, 17:0.0062, 16:0.0123, 15:0.025, 14:0.05, 13:0.098, 12:0.19 }
+        }
     };
 
     that.context = {
+        init     : false,
         markers  : [],
+        marker   : false,
         overlays : [],
         map      : false,
         gmap     : false
@@ -85,9 +86,18 @@ var UIMap = function(){
     /**
      *
      */
-    that.__construct =  function() {
-        
+    that.init =  function( $map, template, config ) {
+
+        that.config = $.extend(that.config, config);
+
         that.config.map.mapTypeId = google.maps.MapTypeId[that.config.map.mapTypeId];
+
+        that.config.marker_hover = {
+            url         : that.config.marker.hover_url,
+            scaledSize  : new google.maps.Size(that.config.marker.width, that.config.marker.height),
+            anchor      : new google.maps.Point(that.config.marker.width/2, that.config.marker.height),
+            labelOrigin : new google.maps.Point(that.config.marker.width/2, that.config.marker.height*0.65)
+        };
 
         that.config.marker = {
             url         : that.config.marker.url,
@@ -96,11 +106,16 @@ var UIMap = function(){
             labelOrigin : new google.maps.Point(that.config.marker.width/2, that.config.marker.height*0.65)
         };
 
-        var $map = $('.ui-map');
-
-        that.config.overlay.html = $(that.config.overlay.selector).html();
+        that.config.overlay.html = template;
         that.context.gmap = $map.gmap3(that.config.map);
         that.context.map  = $map.gmap3('get');
+
+        google.maps.event.addListener(that.context.map, 'zoom_changed', function() {
+            var zoomLevel = that.context.map.getZoom();
+            $(document).trigger('ui-map.zoom',[that.context.map, zoomLevel]);
+        });
+
+        that.context.init = true;
     };
 
 
@@ -125,15 +140,6 @@ var UIMap = function(){
     };
 
 
-    that.addZoomListener = function ( callback ){
-
-        google.maps.event.addListener(that.context.map, 'zoom_changed', function() {
-            var zoomLevel = that.context.map.getZoom();
-            callback(zoomLevel);
-        });
-
-    };
-
 
     that.clearMarkers = function(){
 
@@ -144,23 +150,56 @@ var UIMap = function(){
     };
 
 
+
+    that.clearOverlay = function(){
+
+        if( that.context.overlay )
+            that.context.overlay.setMap(null);
+
+        that.context.overlay = false;
+        that.context.has_overlay = false;
+    };
+
+
+
+    that.hightlightMarker = function(id, status){
+
+        if( that.context.init )
+            that.context.markers[id].setIcon( status ? that.config.marker_hover : that.config.marker);
+    };
+
+
     /**
      *
      */
+    that.reset = function(){
+
+        that.clearMarkers();
+    };
+
+
+    /**
+     *
+     */
+    that.addMyLocation = function( data ){
+
+        that.context.gmap.marker({address:data}).then(function(marker){
+
+            that.context.markers.push(marker);
+        });
+    };
+
+
+
     that.addMarkers = function( markers, fit ){
 
         var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         $.each(markers, function(i, marker){
 
-            marker.id       = i;
-            marker.street   = marker.address;
-            marker.distance = 0;
             marker.icon     = that.config.marker;
             marker.label    = {text: labels[i++ % labels.length], color: 'white', fontSize:'12px'}
         });
-
-        that.clearMarkers();
 
         that.context.gmap.marker(markers).then(function(markers){
 
@@ -170,36 +209,62 @@ var UIMap = function(){
 
                 mouseover: function(marker){
 
+                    that.context.marker = marker;
 
+                    marker.setIcon(that.config.marker_hover);
+                    $(document).trigger('ui-map.over', [that.context.map, marker.index]);
                 },
                 mouseout: function(marker){
 
+                    if( !that.context.has_overlay ){
+
+                        marker.setIcon(that.config.marker);
+                        $(document).trigger('ui-map.out', [that.context.map, marker.index]);
+
+                        that.context.marker = false;
+                    }
                 },
                 click: function(marker){
 
-                    if( that.context.overlay )
-                        that.context.overlay.setMap(null);
+                    if( that.context.marker )
+                        that.context.marker.setIcon(that.config.marker);
 
-                    var html = that.config.overlay.html;
+                    that.context.marker = marker;
 
-                    $.each(that.config.overlay.properties, function(i, key){
-                        html = html.split('[['+key+']]').join(marker[key]);
-                    });
+                    marker.setIcon(that.config.marker_hover);
+                    $(document).trigger('ui-map.click', [that.context.map, marker.index]);
 
-                    that.context.gmap.overlay({
-                        position : marker.getPosition(),
-                        content  : html,
-                        y        : -95,
-                        x        : 30
+                    if( !browser.phone ){
 
-                    }).then(function(overlay){
+                        that.clearOverlay();
 
-                        that.context.overlay = overlay;
+                        that.context.has_overlay = true;
 
-                        overlay.$.find('.close').click(function(){
-                            that.context.overlay.setMap(null);
+                        var html = that.config.overlay.html;
+
+                        $.each(that.config.overlay.properties, function (i, key) {
+                            html = html.split('[[' + key + ']]').join(marker[key]);
                         });
-                    });
+
+                        that.context.gmap.overlay({
+                            position: marker.getPosition(),
+                            content: html,
+                            y: -70,
+                            x: 35
+
+                        }).then(function (overlay) {
+
+                            that.context.overlay = overlay;
+                            overlay.$.find('.close').click(function () {
+
+                                marker.setIcon(that.config.marker);
+                                that.context.marker = false;
+
+                                that.clearOverlay();
+                                $(document).trigger('ui-map.out', [that.context.map, marker.id]);
+                            });
+                        });
+                    }
                 }
             });
 
@@ -222,11 +287,8 @@ var UIMap = function(){
          }*/
 
         if( fit )
-            that.context.gmap.fit({maxZoom: 16});
+            that.context.gmap.fit();
     };
-
-
-    $(document).on('boot', that.__construct);
 };
 
 
