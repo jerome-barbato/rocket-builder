@@ -21,10 +21,7 @@ var UIFit = function() {
     that.timeout   = false;
     that.warn      = false;
 
-    that.selector  = {
-        parent:'ui-fit',
-        object:'ui-fit__object'
-    };
+    that.selector  = 'ui-fit';
 
 
     /* Public methods. */
@@ -32,14 +29,14 @@ var UIFit = function() {
 
         if( !$element.is(':visible') ) return;
 
-        var $container       = $element.closest('.'+that.selector.parent);
+        var $container       = $element.closest('.'+that.selector);
         var container_width  = $container.width();
         var container_height = $container.height();
         var container_ratio  = container_width/container_height;
 
         that._getRatio($element, function( element_ratio ){
 
-            if( $element.hasClass(that.selector.object+"--contain") ){
+            if( $element.hasClass(that.selector+"__contain") ){
 
                 if( element_ratio < container_ratio ) {
 
@@ -170,8 +167,8 @@ var UIFit = function() {
 
         dom.compiler.register('attribute', 'object-fit', function (elem, attrs) {
 
-            elem.parent().addClass(that.selector.parent);
-            elem.addClass(that.selector.object + ' ' + that.selector.object + '--' + (attrs.objectFit.length ? attrs.objectFit : 'cover'));
+            elem.parent().addClass(that.selector);
+            elem.addClass(that.selector + '__' + (attrs.objectFit.length ? attrs.objectFit : 'cover'));
         });
     }
 
