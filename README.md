@@ -106,6 +106,9 @@ Arguments addition:
 * --no-watch        : Disable src assets watching
 * --framework 'name'      : Specific framework behavior ( rocket, silex, wordpress )
 * --theme 'name' : Specific theme behavior
+
+### 2.1 ###
+* added protect html attribute to write inline twig ex : <input protect="{{ required ? 'required' }}">
 ### 2.0 ###
 * removed from core module
 ### 1.5 ###

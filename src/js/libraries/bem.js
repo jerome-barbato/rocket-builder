@@ -96,7 +96,6 @@ var BEM = function(){
         var $element = elem.parents('[element]');
         var $block   = elem.parents('[block]');
 
-
         if( !$element.length || $element.parents('[block]').data(':bem') != $block.data(':bem'))
             $element = $block;
 

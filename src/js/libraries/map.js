@@ -209,6 +209,9 @@ var UIMap = function(){
 
                 mouseover: function(marker){
 
+                    if( that.context.marker )
+                        that.context.marker.setIcon(that.config.marker);
+
                     that.context.marker = marker;
 
                     marker.setIcon(that.config.marker_hover);

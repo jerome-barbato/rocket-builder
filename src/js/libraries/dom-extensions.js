@@ -59,15 +59,23 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
     if (window.precompile){
 
-        if( elem.is('img') )
-            elem.replaceWith('<img src="{{ asset.medias.root }}sizers/' + size + '.png" class="ui-sizer' + (_class.length?' '+_class:'') + '" style="background-image: url(\''+attrs.src+'\')">');
+        if( elem.is('img') ){
+
+            elem.attr('src', '{{ asset.medias.root }}sizers/' + size + '.png');
+            elem.addClass('ui-sizer');
+            elem.css('backgroundImage', "url('"+attrs.src+"')");
+        }
         else
             elem.append('<img src="{{ asset.medias.root }}sizers/' + size + '.png" class="ui-sizer">');
     }
     else if ( typeof window.APP != "undefined" ){
 
-        if( elem.is('img') )
-            elem.replaceWith('<img src="' + window.APP.asset.medias.root + 'sizers/' + size + '.png" class="ui-sizer' + (_class.length?' '+_class:'') + '" style="background-image: url(\''+attrs.src+'\')">');
+        if( elem.is('img') ){
+
+            elem.attr('src', window.APP.asset.medias.root+'sizers/' + size + '.png');
+            elem.addClass('ui-sizer');
+            elem.css('backgroundImage', "url('"+attrs.src+"')");
+        }
         else
             elem.append('<img src="' + window.APP.asset.medias.root + 'sizers/' + size + '.png" class="ui-sizer">');
     }

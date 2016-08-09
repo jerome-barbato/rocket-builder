@@ -78,6 +78,7 @@ function compile(html, scripts, callback) {
                 html = $body.html();
 
                 html = html.replace(/<xtemplate /g, '<template ').replace(/<\/xtemplate>/g, '</template>');
+                html = html.replace(/protect=\"([^"]*)\"/g, "$1");
                 callback(new Buffer(html));
             }
         });

@@ -12,6 +12,7 @@ $media-tablet-portrait  : "screen and (max-width: "+($screen-tablet - 1px)+")";
 $media-tablet-landscape : "screen and (min-width: "+($screen-mobile + 1px)+") and (max-width: "+$screen-tablet+") and (orientation: landscape)";
 $media-tablet-only      : "screen and (min-width: "+($screen-mobile + 1px)+") and (max-width: "+$screen-tablet+")";
 
+$media-not-mobile       : "screen and (min-width: "+($screen-mobile + 1px)+")";
 $media-mobile           : "screen and (max-width: "+$screen-mobile+")";
 $media-mobile-portrait  : "screen and (max-width: "+$screen-mobile+") and (orientation: portrait)";
 $media-mobile-landscape : "screen and (max-width: "+$screen-mobile+") and (orientation: landscape)";
@@ -22,6 +23,7 @@ $media-retina           : "(-webkit-min-device-pixel-ratio: 2),(min-resolution: 
 
 // Dummy queries for mqpaker
 
+@media #{$media-not-mobile} {       html{ display: block } }
 @media #{$media-desktop} {          html{ display: block } }
 @media #{$media-wide}   {           html{ display: block } }
 @media #{$media-13inch} {           html{ display: block } }
