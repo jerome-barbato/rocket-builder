@@ -1,24 +1,3 @@
-/*$(document).on('boot', function(){
-
-    $('.ui-map').each(function(){
-
-        var marker = {
-            url: APP.asset.medias.icons+'marker@2x.png',
-            scaledSize: new google.maps.Size(45, 65),
-            anchor: new google.maps.Point(22, 65),
-            labelOrigin: new google.maps.Point(24, 42)
-        };
-
-        $(this).gmap3({
-            center:[48.8620722, 2.352047],
-            zoom:4
-        }).marker([
-            {address:"8 avenue Lorenzi,Nice, France", icon: marker, label:{text: 'A',color: 'white', fontSize:'12px'}},
-            {address:"66000 Perpignan, France", icon: marker, label:{text: 'B',color: 'white', fontSize:'12px'}}
-        ])
-    });
-});*/
-
 /**
  * Map
  *

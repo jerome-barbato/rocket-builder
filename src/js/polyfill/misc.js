@@ -3,7 +3,18 @@ String.prototype.repeat = function(num) {
     return new Array(isNaN(num)? 1 : ++num).join(this);
 };
 
+/**
+ * Replace double brackets fields in String with data values.
+ * @param data values to assign.
+ */
+String.prototype.populate = function(data) {
+    var content = this.toString();
+    $.each(data, function(id, key){
+        content = content.split('[['+id+']]').join(key);
+    });
 
+    return content;
+};
 
 /**
  * Number.prototype.format(n, x)
