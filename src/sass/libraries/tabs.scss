@@ -1,3 +1,11 @@
-.ui-tab{
+@mixin lib-tabs{
+  .ui-tab{
+    display: none;
+    &--active{ display: block }
+  }
+}
 
+
+@if( index($libraries, 'tabs') ){
+  @include lib-tabs;
 }

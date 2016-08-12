@@ -28,7 +28,9 @@ var UIToggle = function (config) {
     that.config = {
         $element   : false,
         auto_close : true,
-        open_first : true
+        open_first : true,
+        speed      : 400,
+        easing     : 'easeInOutCubic'
     };
 
 
@@ -52,8 +54,8 @@ var UIToggle = function (config) {
 
         $toggle.each(function(){
 
-            $(this).removeClass('ui-toggle--active');
-            $(this).find('.ui-toggle__content').stop().slideUp();
+            if( $(this).hasClass('ui-toggle--active') )
+                that.toggle( $(this) );
         });
     };
 
@@ -66,7 +68,7 @@ var UIToggle = function (config) {
         $toggle.each(function(){
 
             $(this).toggleClass('ui-toggle--active');
-            $(this).find('.ui-toggle__content').stop().slideToggle();
+            $(this).find('.ui-toggle__content').stop().slideToggle(that.config.speed, that.config.easing);
         });
     };
 
@@ -78,8 +80,8 @@ var UIToggle = function (config) {
 
         $toggle.each(function(){
 
-            $(this).addClass('ui-toggle--active');
-            $(this).find('.ui-toggle__content').stop().slideDown();
+            if( !$(this).hasClass('ui-toggle--active') )
+                that.toggle( $(this) );
         });
     };
 
@@ -93,8 +95,12 @@ var UIToggle = function (config) {
 
         that.config = $.extend(that.config, config);
 
-        that.context.$toggles   = that.config.$element.find('.ui-toggle');
-        that.context.$toggle    = that.config.$element.find('.ui-toggle__handler');
+        if( that.config.$element.hasClass('.ui-toggle') )
+            that.context.$toggles = that.config.$element;
+        else
+            that.context.$toggles   = that.config.$element.find('.ui-toggle');
+
+        that.context.$toggle = that.config.$element.find('.ui-toggle__handler');
 
         if( that.config.open_first )
             that.open( that.context.$toggles.first() );
@@ -116,7 +122,9 @@ var UIToggles = function () {
     that.init = function () {
 
         $('.ui-toggles').each(function () { that.add( $(this) ) });
+        $('.ui-toggle').each(function () { that.add( $(this) ) });
     };
+
 
     that.add = function( $toggle ){
 
@@ -128,6 +136,7 @@ var UIToggles = function () {
             context.$element = $toggle;
 
             $toggle.removeAttr('data-context');
+            $toggle.find('.ui-toggle').data('ui-toggles--initialised');
 
             that.toggles.push( new UIToggle(context) );
         }
