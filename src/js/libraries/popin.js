@@ -21,20 +21,17 @@
  *
  **/
 
-var UIPopin = function(config){
+var UIPopin = function(){
 
     var that = this;
-
-    that.popins = [];
 
     /* Contructor. */
 
     /**
      *
      */
-    that.__construct =  function(config){
+    that.__construct =  function(){
 
-        that.config = $.extend(that.config, config);
         that._setupEvents();
     };
 
@@ -42,7 +39,12 @@ var UIPopin = function(config){
     /* Public */
 
     that.config = {
-
+        $body   : $('body'),
+        $popin  : false,
+        id      : false,
+        context : {
+            remove : false
+        },
         transitionEnd : 'webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd',
         html : {
 
@@ -52,58 +54,41 @@ var UIPopin = function(config){
     };
 
 
-    that.add = function( id, content, context, remove ){
+    that.add = function( id, content, context ){
 
-        if( $('.ui-popin--'+id).length ){
+        if( that.config.id ){
 
-            that.show(id);
-            return;
-        }
+            if( that.config.id == id && that.config.context == context ){
 
-        if( typeof(content) == "undefined" || content === false )
-            content = $('template#'+id).html();
-
-        if ( !window.angular ){
-
-            if( typeof(context) != "undefined" ){
-
-                $.each(context, function(key, value){
-
-                    content = content.split('[['+key+']]').join(value);
-                });
+                that.show(that.config.id);
+                return;
             }
             else{
 
-                content = content.replace(/\[\[/g, "'").replace(/\]\]/g, "'");
-            }
-
-            if( typeof DOMCompiler !== "undefined" ){
-
-                var $content = $('<div/>').append(content);
-                dom.compiler.run($content);
-                content = $content.html();
+                that._remove();
             }
         }
 
-        return that._add(content, id, remove);
+        that.config.id = id;
+        that.config.context = context;
+
+        that._add(content);
     };
 
 
 
     that.show = function( id ){
 
-        var $popin = $('.ui-popin--'+id);
-
-        if( $popin.length )
-            that._show( $popin );
+        if( id == that.config.id )
+            that._show();
     };
 
 
 
-    that.close = function( popin ){
+    that.close = function( id ){
 
-        var $popin = $('.ui-popin--'+popin);
-        that._remove( $popin );
+        if( id == that.config.id )
+            that._close();
     };
 
 
@@ -115,64 +100,80 @@ var UIPopin = function(config){
      */
     that._setupEvents = function() {
 
-        $(document).on('click', '.ui-popin-trigger', function(e) {
+        $(document).on('click', '[data-popin]', function(e) {
 
             e.preventDefault();
 
-            var id      = $(this).data('popin');
             var context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
-            var remove  = $(this).hasDataAttr('remove') ? $(this).data('remove') : true;
 
-            if( $('.ui-popin--'+id).length )
-                ui.popin.show(id);
-            else
-                ui.popin.add(id, $('template#'+id).html(), context, remove);
+            that.add($(this).data('popin'), false, context);
         });
     };
 
 
 
-    that._remove = function( $popin ){
+    that._remove = function(){
 
-        if( !$popin || !$popin.length ) return;
+        that.config.$popin.remove();
+        that.config.id = that.config.$popin = false;
+        that.config.context = { remove : false };
+    };
 
-        var $body = $('body');
+
+    that._close = function(){
+
+        if( !that.config.$popin ) return;
 
         if( Modernizr && Modernizr.csstransitions ) {
 
-            $body.addClass('ui-popin--removing');
+            that.config.$body.removeClass('ui-popin--adding').addClass('ui-popin--removing');
 
-            $popin.one(that.config.transitionEnd, function () {
+            that.config.$popin.one(that.config.transitionEnd, function () {
 
-                $body.removeClass('ui-popin--removing');
+                that.config.$body.removeClass('ui-popin--removing');
 
-                $(document).trigger('ui-popin.removed', [$popin]);
+                $(document).trigger('ui-popin.removed', [that.config.id]);
 
-                if( $popin.data('remove') )
-                    $popin.remove();
+                if( that.config.context.remove )
+                    that._remove();
                 else
-                    $popin.hide();
+                    that.config.$popin.hide();
 
-                $body.repaint();
+                that.config.$body.repaint();
             });
         }
         else{
 
-            if( $popin.data('remove') )
-                $popin.remove();
+            if( that.config.context.remove )
+                that._remove();
             else
                 $popin.hide();
         }
 
-        $body.removeClass('ui-popin--added');
+        that.config.$body.removeClass('ui-popin--added');
     };
 
 
 
-    that._add = function(content, id, remove){
+    that._add = function(content){
+
+        if( typeof(content) == "undefined" || content === false )
+            content = $('template#'+that.config.id).html();
+
+        if ( !window.angular ){
+
+            if( typeof(that.config.context) != "undefined" )
+                content = content.populate(that.config.context);
+
+            if( typeof DOMCompiler !== "undefined" ){
+
+                var $tmp = $('<div/>').append(content);
+                dom.compiler.run($tmp);
+                content = $tmp.html();
+            }
+        }
 
         var $popin   = $(that.config.html.popin);
-        var $body    = $('body');
         var $content = $popin.find('.ui-popin__content');
 
         $content.append(content);
@@ -180,55 +181,50 @@ var UIPopin = function(config){
         if( !$content.find('.ui-popin__close, .ui-popin-close').length )
             $content.append(that.config.html.close);
 
-        $body.append($popin);
-        $popin.addClass('ui-popin--'+id);
-        $popin.data('popin-id', id);
+        that.config.$body.append($popin);
+        $popin.addClass('ui-popin--'+that.config.id);
 
-        $popin.data('remove', typeof remove != "undefined" ? remove : true);
+        that.config.$popin = $popin;
 
         if( $popin.find('.ui-slider').length && typeof(ui.sliders) != "undefined" )
             ui.sliders.init();
 
-        that._show($popin);
+        that._show();
     };
 
 
 
-    that._show = function( $popin ) {
+    that._show = function() {
 
-        var $body = $('body');
+        that.config.$popin.show().repaint();
 
-        $popin.show().repaint();
+        that.config.$body.addClass('ui-popin--added');
 
-        $body.addClass('ui-popin--added');
-
-        $(document).trigger('ui-popin.added', [$popin, $popin.data('popin-id')]);
+        $(document).trigger('ui-popin.added', [that.config.$popin, that.config.id, that.config.context]);
 
         if( Modernizr && Modernizr.csstransitions ){
 
-            $body.addClass('ui-popin--adding');
+            that.config.$body.addClass('ui-popin--adding');
 
-            $popin.one(that.config.transitionEnd, function() {
+            that.config.$popin.one(that.config.transitionEnd, function() {
 
-                $body.removeClass('ui-popin--adding');
+                that.config.$body.removeClass('ui-popin--adding');
             });
         }
         else{
 
-            $body.removeClass('ui-popin--adding');
+            that.config.$body.removeClass('ui-popin--adding');
         }
 
 
-        $popin.on('click', function(e) {
+        that.config.$popin.on('click', function(e) {
 
             if( $(e.target).hasClass('ui-popin__overlay') || $(e.target).hasClass('ui-popin__close') || $(e.target).hasClass('ui-popin-close')){
 
-                $popin.off('click');
-                that._remove($popin);
+                that.config.$popin.off('click');
+                that._close();
             }
         });
-
-        return $popin;
     };
 
 
@@ -237,7 +233,6 @@ var UIPopin = function(config){
 
         dom.compiler.register('attribute', 'popin', function (elem, attrs) {
 
-            elem.addClass('ui-popin-trigger');
             elem.attr('data-popin', attrs.popin);
 
             if( attrs.context ){
@@ -245,17 +240,11 @@ var UIPopin = function(config){
                 elem.attr('data-context', attrs.context);
                 elem.removeAttr('context');
             }
-
-            if( attrs.removeOnClose ){
-
-                elem.attr('data-remove', attrs.remove);
-                elem.removeAttr('remove-on-close');
-            }
         });
     }
 
 
-    that.__construct(config);
+    that.__construct();
 };
 
 var ui = ui || {};
