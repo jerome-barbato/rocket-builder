@@ -94,14 +94,13 @@ var DOMCompiler = function(){
 
                 $template.find('transclude').replaceWith(html);
 
-                if( $(this).attr('class') && $(this).attr('class').length )
-                    $template.addClass($(this).attr('class'));
+                for(var i=0; i<this.attributes.length; i++){
 
-                if( $(this).attr('id') && $(this).attr('id').length )
-                    $template.attr('id', $(this).attr('id'));
-
-                if( $(this).attr('style') && $(this).attr('style').length )
-                    $template.attr('style', $(this).attr('style'));
+                    if( this.attributes[i].name != 'class' )
+                        $template.attr(this.attributes[i].name, this.attributes[i].value);
+                    else
+                        $template.addClass(this.attributes[i].value);
+                }
 
                 that._compileElements($template);
 

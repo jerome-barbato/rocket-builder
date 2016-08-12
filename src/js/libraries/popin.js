@@ -174,14 +174,15 @@ var UIPopin = function(config){
         var $popin   = $(that.config.html.popin);
         var $body    = $('body');
         var $content = $popin.find('.ui-popin__content');
-        
+
         $content.append(content);
 
-        if( !$content.find('.ui-popin__close').length )
+        if( !$content.find('.ui-popin__close, .ui-popin-close').length )
             $content.append(that.config.html.close);
 
         $body.append($popin);
         $popin.addClass('ui-popin--'+id);
+        $popin.data('popin-id', id);
 
         $popin.data('remove', typeof remove != "undefined" ? remove : true);
 
@@ -201,7 +202,7 @@ var UIPopin = function(config){
 
         $body.addClass('ui-popin--added');
 
-        $(document).trigger('ui-popin.added', [$popin]);
+        $(document).trigger('ui-popin.added', [$popin, $popin.data('popin-id')]);
 
         if( Modernizr && Modernizr.csstransitions ){
 
@@ -220,7 +221,7 @@ var UIPopin = function(config){
 
         $popin.on('click', function(e) {
 
-            if( $(e.target).hasClass('ui-popin__overlay') || $(e.target).hasClass('ui-popin__close')){
+            if( $(e.target).hasClass('ui-popin__overlay') || $(e.target).hasClass('ui-popin__close') || $(e.target).hasClass('ui-popin-close')){
 
                 $popin.off('click');
                 that._remove($popin);
