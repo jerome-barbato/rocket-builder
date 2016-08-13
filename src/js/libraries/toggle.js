@@ -54,8 +54,8 @@ var UIToggle = function (config) {
 
         $toggle.each(function(){
 
-            if( $(this).hasClass('ui-toggle--active') )
-                that.toggle( $(this) );
+            $(this).removeClass('ui-toggle--active');
+            $(this).find('.ui-toggle__content').stop().slideUp(that.config.speed, that.config.easing);
         });
     };
 
@@ -80,8 +80,8 @@ var UIToggle = function (config) {
 
         $toggle.each(function(){
 
-            if( !$(this).hasClass('ui-toggle--active') )
-                that.toggle( $(this) );
+            $(this).addClass('ui-toggle--active');
+            $(this).find('.ui-toggle__content').stop().slideDown(that.config.speed, that.config.easing);
         });
     };
 
@@ -136,7 +136,7 @@ var UIToggles = function () {
             context.$element = $toggle;
 
             $toggle.removeAttr('data-context');
-            $toggle.find('.ui-toggle').data('ui-toggles--initialised');
+            $toggle.find('.ui-toggle').data('ui-toggles--initialised', true);
 
             that.toggles.push( new UIToggle(context) );
         }
