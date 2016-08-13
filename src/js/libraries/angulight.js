@@ -63,36 +63,12 @@ var angularLight = function(){
     };
 
 
-    that._extendjQuery = function(){
-
-        var html = $.fn.html;
-        var append = $.fn.append;
-        var prepend = $.fn.prepend;
-
-        $.fn.append = function(){
-            var ret = append.apply(this, arguments);
-            that._domHasChanged( $(this) );
-            return ret;
-        };
-
-        $.fn.prepend = function(){
-            var ret = prepend.apply(this, arguments);
-            that._domHasChanged( $(this) );
-            return ret;
-        };
-
-        $.fn.html = function(){
-            var ret = html.apply(this, arguments);
-            that._domHasChanged( $(this) );
-            return ret;
-        };
-    };
-
-
     that.__construct = function(){
 
-        that._extendjQuery();
-        $(document).on('boot', function(){ that._domHasChanged( $('body')) });
+        $(document).on('DOMNodeUpdated', function(e, $element){
+
+            that._domHasChanged( $element );
+        });
     };
 
 
@@ -107,8 +83,6 @@ var angularLight = function(){
             that._run('directive', $(this) );
             $(this).data('directive', false);
         });
-
-        $(document).trigger('DOMHasChanged', [$dom]);
     };
 
 

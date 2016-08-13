@@ -329,20 +329,19 @@ var UIActivation = function(){
      */
     that.__construct =  function() {
 
-        $(document).on('boot', function(){
+        $(document).on('DOMNodeUpdated', function(e, $node){
 
             if( (browser.phone && !that.config.phone) || (browser.tablet && !that.config.tablet) ){
 
-                $('.ui-animation').alterClass('ui-animation--*').removeClass('ui-animation');
-                $('.ui-activation').addClass('ui-activation--active ui-activation--seen');
+                $node.find('.ui-animation').alterClass('ui-animation--*').removeClass('ui-animation');
+                $node.find('.ui-activation').addClass('ui-activation--active ui-activation--seen');
             }
             else
-                that.add( $('.ui-activation') );
+                that.add( $node.find('.ui-activation') );
         });
 
         $(document).on('loaded', function(){
 
-            that._recompute();
             that._setupEvents();
             that._scroll();
         });

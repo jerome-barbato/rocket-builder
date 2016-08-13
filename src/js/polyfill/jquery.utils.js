@@ -34,3 +34,34 @@ if(window.jQuery){
             this.enableScroll();
     };
 }
+
+//add DOMNodeUpdated event
+
+(function(){
+
+    if(window.jQuery) {
+
+        var html    = $.fn.html;
+        var append  = $.fn.append;
+        var prepend = $.fn.prepend;
+        var after   = $.fn.after;
+        var before  = $.fn.before;
+
+        var updateDom = function (fct, args, context) {
+
+            args[0] = args[0] instanceof $ ? args[0] : $(args[0]);
+            var ret = fct.apply(context, args);
+            if (args.length)
+                $(document).trigger('DOMNodeUpdated', args);
+            return ret;
+        };
+
+        $.fn.html = function () { return updateDom(html, arguments, this) };
+        $.fn.append = function () { return updateDom(append, arguments, this) };
+        $.fn.prepend = function () { return updateDom(prepend, arguments, this) };
+        $.fn.after = function () { return updateDom(after, arguments, this) };
+        $.fn.before = function () { return updateDom(before, arguments, this) };
+
+        $(document).ready(function(){ $(document).trigger('DOMNodeUpdated', [$('body')]) });
+    }
+})();
