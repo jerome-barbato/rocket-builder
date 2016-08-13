@@ -1,5 +1,5 @@
 /**
- * Activation
+ * Cookie
  *
  * Copyright (c) 2016 - Metabolism
  * Author:

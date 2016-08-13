@@ -113,9 +113,9 @@ var Config = module.exports = {
             Config.paths.src.js.push(Config.src_path+'js/core/libraries/'+library+'.js');
         });
 
-        Config.paths.src.js.push(Config.src_path+'js/app.js');
-        Config.paths.src.js.push(Config.src_path+'js/app/**/*.js');
         Config.paths.src.js.push(Config.src_path+'js/vendors/**/*.js');
+        Config.paths.src.js.push(Config.src_path+'js/app/**/*.js');
+        Config.paths.src.js.push(Config.src_path+'js/app.js');
     },
 
     /**
