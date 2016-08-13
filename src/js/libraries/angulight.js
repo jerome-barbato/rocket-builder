@@ -107,6 +107,8 @@ var angularLight = function(){
             that._run('directive', $(this) );
             $(this).data('directive', false);
         });
+
+        $(document).trigger('DOMHasChanged', [$dom]);
     };
 
 

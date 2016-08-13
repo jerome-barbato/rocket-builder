@@ -243,7 +243,7 @@ var UIMap = function(){
                                 that.context.marker = false;
 
                                 that.clearOverlay();
-                                $(document).trigger('ui-map.out', [that.context.map, marker.id]);
+                                $(document).trigger('ui-map.out', [that.context.map, marker.index]);
                             });
                         });
                     }

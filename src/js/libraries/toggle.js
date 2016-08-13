@@ -29,6 +29,7 @@ var UIToggle = function (config) {
         $element   : false,
         auto_close : true,
         open_first : true,
+        animate    : true,
         speed      : 400,
         easing     : 'easeInOutCubic'
     };
@@ -55,7 +56,9 @@ var UIToggle = function (config) {
         $toggle.each(function(){
 
             $(this).removeClass('ui-toggle--active');
-            $(this).find('.ui-toggle__content').stop().slideUp(that.config.speed, that.config.easing);
+
+            if( that.config.animate )
+                $(this).find('.ui-toggle__content').stop().slideUp(that.config.speed, that.config.easing);
         });
     };
 
@@ -68,7 +71,9 @@ var UIToggle = function (config) {
         $toggle.each(function(){
 
             $(this).toggleClass('ui-toggle--active');
-            $(this).find('.ui-toggle__content').stop().slideToggle(that.config.speed, that.config.easing);
+
+            if( that.config.animate )
+                $(this).find('.ui-toggle__content').stop().slideToggle(that.config.speed, that.config.easing);
         });
     };
 
@@ -81,7 +86,9 @@ var UIToggle = function (config) {
         $toggle.each(function(){
 
             $(this).addClass('ui-toggle--active');
-            $(this).find('.ui-toggle__content').stop().slideDown(that.config.speed, that.config.easing);
+
+            if( that.config.animate )
+                $(this).find('.ui-toggle__content').stop().slideDown(that.config.speed, that.config.easing);
         });
     };
 
@@ -158,10 +165,16 @@ var UIToggles = function () {
             elem.addClass('ui-toggles');
 
             if( attrs.toggles.length )
-                dom.compiler.attr(elem, 'context', attrs.context);
+                dom.compiler.attr(elem, 'context', attrs.toggles);
         });
 
-        dom.compiler.register('attribute', 'toggle', function (elem) { elem.addClass('ui-toggle') });
+        dom.compiler.register('attribute', 'toggle', function (elem, attrs) {
+
+            elem.addClass('ui-toggle');
+
+            if( attrs.toggle.length )
+                dom.compiler.attr(elem, 'context', attrs.toggle);
+        });
         dom.compiler.register('attribute', 'toggle-handler', function (elem) { elem.addClass('ui-toggle__handler') });
         dom.compiler.register('attribute', 'toggle-content', function (elem) { elem.addClass('ui-toggle__content') });
     }
