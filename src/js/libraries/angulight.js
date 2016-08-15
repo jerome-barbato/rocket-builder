@@ -2,8 +2,6 @@ var angularLight = function(){
 
     var that = this;
 
-    that.debug = false;
-
     that.context = {
         controllers : {},
         directives  : {},
@@ -22,7 +20,9 @@ var angularLight = function(){
         if( !$element.data(type) )
             return;
 
-        if( that.debug )
+        $(this).data(type, false);
+
+        if( window._DEBUG && window._DEBUG > 2 )
             console.time('angulight:run');
 
         var data = $element.data(type).split('(');
@@ -55,7 +55,7 @@ var angularLight = function(){
             new (Function.prototype.bind.apply(fct, [null].concat(params)));
         }
 
-        if( that.debug ){
+        if( window._DEBUG && window._DEBUG > 2 ){
 
             console.log(name, params);
             console.timeEnd('angulight:run')
@@ -65,23 +65,27 @@ var angularLight = function(){
 
     that.__construct = function(){
 
-        $(document).on('DOMNodeUpdated', function(e, $element){
-
-            that._domHasChanged( $element );
-        });
+        $(document).on('DOMNodeUpdated', that._domHasChanged );
     };
 
 
-    that._domHasChanged = function( $dom ){
+    that._domHasChanged = function(e, $dom ){
+
+        $dom.each(function(){
+
+            if( $(this).is('[data-controller]') )
+                that._run('controller', $(this) );
+
+            if( $(this).is('[data-directive]') )
+                that._run('directive', $(this) );
+        });
 
         $dom.find('[data-controller]').each(function(){
             that._run('controller', $(this) );
-            $(this).data('controller', false)
         });
 
         $dom.find('[data-directive]').each(function(){
             that._run('directive', $(this) );
-            $(this).data('directive', false);
         });
     };
 

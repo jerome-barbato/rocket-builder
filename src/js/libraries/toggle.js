@@ -27,8 +27,8 @@ var UIToggle = function (config) {
 
     that.config = {
         $element   : false,
-        auto_close : true,
-        open_first : true,
+        auto_close : false,
+        open_first : false,
         animate    : true,
         speed      : 400,
         easing     : 'easeInOutCubic'
@@ -129,13 +129,16 @@ var UIToggles = function () {
 
     that.add = function( $toggle ){
 
-        $toggle.data('ui-toggles--initialised', true);
+        if( $toggle.data('ui-toggles--initialized') )
+            return;
+
+        $toggle.data('ui-toggles--initialized', true);
+        $toggle.find('.ui-toggle').data('ui-toggles--initialised', true);
 
         var context = $toggle.data('context') ? JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') : {};
         context.$element = $toggle;
 
         $toggle.removeAttr('data-context');
-        $toggle.find('.ui-toggle').data('ui-toggles--initialised', true);
 
         that.toggles.push( new UIToggle(context) );
     };
@@ -146,7 +149,6 @@ var UIToggles = function () {
     that.__construct = function () {
 
         $('.ui-toggles').initialize(function () { that.add( $(this) ) });
-        $('.ui-toggle').initialize(function () { that.add( $(this) ) });
     };
 
 
@@ -158,7 +160,8 @@ var UIToggles = function () {
 
             if( attrs.toggles.length )
                 dom.compiler.attr(elem, 'context', attrs.toggles);
-        });
+
+        },that.add);
 
         dom.compiler.register('attribute', 'toggle', function (elem, attrs) {
 
@@ -167,6 +170,7 @@ var UIToggles = function () {
             if( attrs.toggle.length )
                 dom.compiler.attr(elem, 'context', attrs.toggle);
         });
+
         dom.compiler.register('attribute', 'toggle-handler', function (elem) { elem.addClass('ui-toggle__handler') });
         dom.compiler.register('attribute', 'toggle-content', function (elem) { elem.addClass('ui-toggle__content') });
     }

@@ -141,7 +141,7 @@ var DOMCompiler = function(){
 
         var raw_init = $dom.html();
 
-        if( _DEBUG )
+        if( window._DEBUG )
             console.time('dom compilation');
 
         $dom = $dom.not('template');
@@ -156,7 +156,7 @@ var DOMCompiler = function(){
             setTimeout(function(){ $(document).trigger('DOMNodeUpdated', [$dom, 'dom-compiler']) });
         }
 
-        if( _DEBUG ){
+        if( window._DEBUG ){
 
             console.timeEnd('dom compilation');
             console.info('dom element count : '+($dom.find('*').length+$dom.length));

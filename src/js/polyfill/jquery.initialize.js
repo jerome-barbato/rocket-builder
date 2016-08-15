@@ -31,7 +31,7 @@
         $.fn.before  = function () { return updateDom(before, arguments, this) };
 
         $(document).ready(function(){
-            if( typeof DOMCompiler =="undefined" )
+            if( typeof DOMCompiler == "undefined" )
                 $(document).trigger('DOMNodeUpdated', [$('body')]);
         });
 
@@ -50,7 +50,7 @@
 
             $(document).on('DOMNodeUpdated', function(e, $node){
 
-                if( _DEBUG )
+                if( window._DEBUG && window._DEBUG > 3 )
                     console.info('Initialize '+selector);
 
                 $node.each(function () {

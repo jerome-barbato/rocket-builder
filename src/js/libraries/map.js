@@ -172,6 +172,7 @@ var UIMap = function(){
 
     that.addMarkers = function( markers, fit ){
 
+        markers = _.values(markers);
         var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         $.each(markers, function(i, marker){

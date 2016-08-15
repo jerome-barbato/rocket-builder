@@ -68,6 +68,7 @@ function compile(html, scripts, callback) {
             done : function (err, window) {
 
                 window.precompile    = true;
+                window._DEBUG        = false;
                 window.compact_class = config.front.compiler.compact;
 
                 var $        = window.$;
