@@ -161,11 +161,6 @@ var UIScroll = function () {
 
     that.add = function( elem ){
 
-        if( elem.data('ui-scroll--initialized') )
-            return;
-
-        elem.data('ui-scroll--initialized', true);
-
         var raw_target  = that.config.user_anchor ? elem.attr('href') : elem.data('ui-href');
 
         if( !raw_target || !raw_target.length )
@@ -252,11 +247,11 @@ var UIScroll = function () {
      */
     that.__construct = function () {
 
-        $(document).on('boot', function(){
+        $('.'+that.config.class.link).initialize(function(){
+            that.add($(this))
+        });
 
-            $('.'+that.config.class.link).each(function(){
-                that.add($(this))
-            });
+        $(document).on('boot', function(){
 
             that._handleHash();
         });

@@ -217,7 +217,7 @@ var UIShare = function(){
             }
         });
 
-        $('.ui-share--mail').each(function(){
+        $('.ui-share--mail').initialize(function(){
 
             var link     = $(this).attr('href');
             var subject  = $(this).hasDataAttr('subject') ? $(this).data('subject') : false;

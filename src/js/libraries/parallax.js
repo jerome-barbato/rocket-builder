@@ -100,6 +100,15 @@ var UIParallax = function () {
     };
 
 
+    that._add = function( $element ){
+
+        that.context.items.push({
+            $        : $element,
+            strenght : parseInt($element.data('parallax')),
+            unit     : $element.data('parallax-unit'),
+            center   : $element.data('parallax-center')});
+    }
+
     /* Contructor. */
 
     /**
@@ -110,16 +119,12 @@ var UIParallax = function () {
         if( browser && browser.mobile && !that.config.mobile )
             return;
 
-        $(document).on('boot', function(){
+        $('.ui-parallax').initialize(function(){
 
-            $('.ui-parallax').each(function(){
+            that._add( $(this) );
+        });
 
-                that.context.items.push({
-                    $        : $(this),
-                    strenght : parseInt($(this).data('parallax')),
-                    unit     : $(this).data('parallax-unit'),
-                    center   : $(this).data('parallax-center')});
-            });
+        $(document).on('loaded', function(){
 
             that._resize();
             that._update();
@@ -143,7 +148,8 @@ var UIParallax = function () {
             dom.compiler.attr(elem, 'parallax-center', attrs.center ? attrs.center !== "true" : true);
 
             elem.addClass('ui-parallax');
-        });
+
+        }, that._add);
     }
 
 

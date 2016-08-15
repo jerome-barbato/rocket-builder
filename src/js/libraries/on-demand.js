@@ -21,8 +21,7 @@ var UIOnDemand = function(){
     that.context = {
         init          : false,
         elements      : [],
-        window_height : 0,
-        $window       : $(window)
+        window_height : 0
     };
 
     that.selector = 'ui-on-demand';
@@ -34,10 +33,7 @@ var UIOnDemand = function(){
 
     that.add = function ( $element ) {
 
-        if( $element.data(that.selector+'--initialized') )
-            return;
-
-        if( $element.closest('.ui-preload').length )
+        if( $element.parents('.ui-preload').length )
             return;
 
         $element.addClass(that.selector+'--waiting');
@@ -84,7 +80,7 @@ var UIOnDemand = function(){
 
     that._resize = function(){
 
-        that.context.window_height = that.context.$window.height();
+        that.context.window_height = $(window).height();
 
         for (var i in that.context.elements) {
 
@@ -110,7 +106,7 @@ var UIOnDemand = function(){
 
     that._load = function () {
 
-        var scrollTop    = that.context.$window.scrollTop();
+        var scrollTop    = $(window).scrollTop();
         var targetScroll = scrollTop + that.context.window_height*that.config.load;
 
         for (var i in that.context.elements) {
@@ -194,17 +190,16 @@ var UIOnDemand = function(){
      */
     that.__construct =  function(){
 
-        that.context.$window.on('scroll', that._load).on('resize', function(){
+        $('.ui-on-demand').initialize(function(){
+            that.add($(this))
+        });
+        
+        
+        $(window).on('scroll', that._load).on('resize', function(){
             that._resize();
             that._load()
         });
-
-        $(document).on('boot', function(){
-
-            $('.ui-on-demand').each(function(){
-                that.add($(this))
-            });
-        });
+        
 
         $(document).on('loaded', function(){
 
@@ -229,7 +224,8 @@ var UIOnDemand = function(){
 
                 elem.data('src', attrs.onDemand);
             }
-        });
+
+        }, that.add);
     }
 
 

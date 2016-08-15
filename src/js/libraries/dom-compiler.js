@@ -20,7 +20,6 @@ var DOMCompiler = function(){
     that.dom_attributes         = [];
     that.dom_attributes_filters = [];
     that.dom_elements           = [];
-    that.debug                  = false;
 
 
     that.attr = function(elem, attr, value){
@@ -57,6 +56,9 @@ var DOMCompiler = function(){
 
             var compiler = _.camelCase(dom_attribute);
 
+            if( $dom.is('['+dom_attribute+']') )
+                that[compiler]($dom, that._getAttributes($dom[0]) );
+
             $dom.find('['+dom_attribute+']').each(function(){
 
                 that[compiler]( $(this), that._getAttributes(this) );
@@ -81,30 +83,38 @@ var DOMCompiler = function(){
 
 
 
+    that._compileElement = function(dom, dom_element){
+
+        var compiler = _.camelCase(dom_element);
+
+        var $template = $(that[compiler]($(dom), that._getAttributes(dom)));
+        var html      = $(dom).html();
+
+        $template.find('transclude').replaceWith(html);
+
+        for(var i=0; i<dom.attributes.length; i++){
+
+            if( dom.attributes[i].name != 'class' )
+                $template.attr(dom.attributes[i].name, dom.attributes[i].value);
+            else
+                $template.addClass(dom.attributes[i].value);
+        }
+
+        that._compileElements($template);
+
+        $(dom).replaceWith($template);
+    };
+
+
     that._compileElements = function($dom){
 
         that.dom_elements.forEach(function(dom_element){
 
+            if( $dom.is(dom_element) )
+                that._compileElement($dom[0], dom_element);
+
             $dom.find(dom_element).each(function(){
-
-                var compiler = _.camelCase(dom_element);
-
-                var $template = $(that[compiler]($(this), that._getAttributes(this)));
-                var html      = $(this).html();
-
-                $template.find('transclude').replaceWith(html);
-
-                for(var i=0; i<this.attributes.length; i++){
-
-                    if( this.attributes[i].name != 'class' )
-                        $template.attr(this.attributes[i].name, this.attributes[i].value);
-                    else
-                        $template.addClass(this.attributes[i].value);
-                }
-
-                that._compileElements($template);
-
-                $(this).replaceWith($template);
+                that._compileElement(this, dom_element)
             });
         });
     };
@@ -114,6 +124,9 @@ var DOMCompiler = function(){
     that._cleanAttributes = function($dom){
 
         that.dom_attributes.forEach(function (dom_attribute) {
+
+            if( $dom.is('[' + dom_attribute + ']') )
+                $dom.removeAttr(dom_attribute);
 
             $dom.find('[' + dom_attribute + ']').each(function () {
 
@@ -126,7 +139,9 @@ var DOMCompiler = function(){
 
     that.run = function( $dom ){
 
-        if( that.debug )
+        var raw_init = $dom.html();
+
+        if( _DEBUG )
             console.time('dom compilation');
 
         $dom = $dom.not('template');
@@ -137,18 +152,20 @@ var DOMCompiler = function(){
 
         that._cleanAttributes($dom);
 
-        $(document).trigger('dom-compiled');
+        if( raw_init != $dom.html() ){
+            setTimeout(function(){ $(document).trigger('DOMNodeUpdated', [$dom, 'dom-compiler']) });
+        }
 
-        if( that.debug ){
+        if( _DEBUG ){
 
             console.timeEnd('dom compilation');
-            console.info('dom element count : '+$dom.find('*').length);
+            console.info('dom element count : '+($dom.find('*').length+$dom.length));
         }
     };
 
 
 
-    that.register = function(type, attribute, link){
+    that.register = function(type, attribute, link, main){
 
         var name = _.camelCase(attribute);
 
@@ -157,19 +174,19 @@ var DOMCompiler = function(){
             case 'attribute':
 
                 that.dom_attributes.push(attribute);
-                that._addAngularDirective('A', name, link, that.dom_attributes.length);
+                that._addAngularDirective('A', name, link, main, that.dom_attributes.length);
                 break;
 
             case 'filter':
 
                 that.dom_attributes_filters.push(attribute);
-                that._addAngularDirective('F', name, link, that.dom_attributes_filters.length);
+                that._addAngularDirective('F', name, link, main, that.dom_attributes_filters.length);
                 break;
 
             case 'element':
 
                 that.dom_elements.push(attribute);
-                that._addAngularDirective('E', name, link, that.dom_elements.length);
+                that._addAngularDirective('E', name, link, main, that.dom_elements.length);
                 break;
         }
 
@@ -178,7 +195,7 @@ var DOMCompiler = function(){
 
 
 
-    that._addAngularDirective = function(restrict, name, link, priority){
+    that._addAngularDirective = function(restrict, name, link, main, priority){
 
         if( !window.angular ) return;
 
@@ -189,7 +206,10 @@ var DOMCompiler = function(){
                     restrict: "A", scope: false, priority:1000-priority,
                     link: {
                         pre: function(scope, elem, attrs) { link(elem, attrs) },
-                        post: function(scope, elem) { if( restrict == "A" ) elem.removeAttr(_.kebabCase(name)) }
+                        post: function(scope, elem) {
+                            if( typeof main != "undefined" ) main(elem);
+                            if( restrict == "A" ) elem.removeAttr(_.kebabCase(name))
+                        }
                     }
                 }
             }]);
@@ -199,7 +219,12 @@ var DOMCompiler = function(){
             that.angular_module.directive(name, [function() {
                 return {
                     restrict: restrict, scope: false, priority:1000-priority, transclude:true,
-                    template: link, replace: true
+                    template: link, replace: true,
+                    link: {
+                        post: function(scope, elem) {
+                            if( typeof main != "undefined" ) main(elem);
+                        }
+                    }
                 }
             }]);
         }
@@ -216,10 +241,12 @@ var DOMCompiler = function(){
 
         if( !window.angular ){
 
-            $(document).ready(function(){
-
-                that.run( $('body') );
-            });
+            $(document)
+                .ready(function(){ that.run( $('body') ) })
+                .on('DOMNodeUpdated', function(e, $node, caller){
+                    if( caller != "dom-compiler" )
+                        that.run( $node )
+                });
         }
         else{
 

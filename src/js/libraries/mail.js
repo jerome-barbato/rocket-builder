@@ -21,7 +21,7 @@ var UIMail = function(){
 
     /* Contructor. */
 
-    that.resolve = function(){
+    that._resolve = function(){
 
         var email = $(this).data('name')+'@'+$(this).data('domain');
 
@@ -42,7 +42,7 @@ var UIMail = function(){
      */
     that.__construct =  function(){
 
-        $('.ui-mail').each(that.resolve);
+        $('.ui-mail').initialize(that._resolve);
     };
 
 

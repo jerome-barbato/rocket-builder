@@ -45,7 +45,7 @@ var UIPopin = function(){
         context : {
             remove : false
         },
-        transitionEnd : 'webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd',
+        transitionEnd : 'webkitTransitionEnd.ui-popin transitionend.ui-popin msTransitionEnd.ui-popin oTransitionEnd.ui-popin',
         html : {
 
             popin:'<div class="ui-popin"><div class="valign"><div class="valign__middle ui-popin__overlay"><div class="ui-popin__content"></div></div></div></div>',
@@ -164,13 +164,6 @@ var UIPopin = function(){
 
             if( typeof(that.config.context) != "undefined" )
                 content = content.populate(that.config.context);
-
-            if( typeof DOMCompiler !== "undefined" ){
-
-                var $tmp = $('<div/>').append(content);
-                dom.compiler.run($tmp);
-                content = $tmp.html();
-            }
         }
 
         var $popin   = $(that.config.html.popin);

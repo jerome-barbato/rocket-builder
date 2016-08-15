@@ -45,7 +45,7 @@ var UIDetectScroll = function(){
 
     that.add = function ( $element ) {
 
-        if( !$element || !$element.length || $element.data(that.config.class.detect+'--initialized') )
+        if( !$element || !$element.length )
             return;
 
         var element = {
@@ -58,6 +58,8 @@ var UIDetectScroll = function(){
         element.bottom = element.top + $element.outerHeight();
 
         that.context.elements.push(element);
+
+        that._detect();
     };
 
 
@@ -201,11 +203,8 @@ var UIDetectScroll = function(){
         if( that.config.force_offset )
             that.context.offset = that.config.force_offset;
 
-        $(document).on('boot', function(){
-
-            $('.'+that.config.class.detect).each(function(){
-                that.add($(this))
-            });
+        $('.'+that.config.class.detect).initialize(function(){
+            that.add( $(this) )
         });
 
         $(document).on('loaded', function(){

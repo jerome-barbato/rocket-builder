@@ -15,10 +15,6 @@
 
 var dom = dom || {};
 
-if( window.angular )
-    dom.extensions = angular.module('dom-extensions', []);
-
-
 
 dom.compiler.register('filter', 'width', function(elem, attrs){
 

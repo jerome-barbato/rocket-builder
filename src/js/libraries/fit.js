@@ -17,7 +17,6 @@ var UIFit = function() {
 
     var that = this;
 
-    that.$elements = false;
     that.timeout   = false;
     that.warn      = false;
 
@@ -73,9 +72,7 @@ var UIFit = function() {
      */
     that._init = function() {
 
-        that.$elements = $('.'+that.selector.object);
-
-        that.$elements.each(function() {
+        $('.'+that.selector.object).initialize(function() {
 
             var $element = $(this);
 
@@ -155,9 +152,9 @@ var UIFit = function() {
         if( Modernizr && Modernizr.objectfit )
             return;
 
-        $(document).on('boot', that._init);
-        $(document).on('loaded', that._computeAll);
+        that._init();
 
+        $(document).on('loaded', that._computeAll);
         $(window).resize(that._computeAll);
     };
 

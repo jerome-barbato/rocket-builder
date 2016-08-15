@@ -126,27 +126,18 @@ var UIToggles = function () {
 
     that.toggles = [];
 
-    that.init = function () {
-
-        $('.ui-toggles').each(function () { that.add( $(this) ) });
-        $('.ui-toggle').each(function () { that.add( $(this) ) });
-    };
-
 
     that.add = function( $toggle ){
 
-        if ($toggle.data('ui-toggles--initialised') !== true) {
+        $toggle.data('ui-toggles--initialised', true);
 
-            $toggle.data('ui-toggles--initialised', true);
+        var context = $toggle.data('context') ? JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') : {};
+        context.$element = $toggle;
 
-            var context = $toggle.data('context') ? JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') : {};
-            context.$element = $toggle;
+        $toggle.removeAttr('data-context');
+        $toggle.find('.ui-toggle').data('ui-toggles--initialised', true);
 
-            $toggle.removeAttr('data-context');
-            $toggle.find('.ui-toggle').data('ui-toggles--initialised', true);
-
-            that.toggles.push( new UIToggle(context) );
-        }
+        that.toggles.push( new UIToggle(context) );
     };
 
 
@@ -154,7 +145,8 @@ var UIToggles = function () {
 
     that.__construct = function () {
 
-        $(document).on('loaded', that.init);
+        $('.ui-toggles').initialize(function () { that.add( $(this) ) });
+        $('.ui-toggle').initialize(function () { that.add( $(this) ) });
     };
 
 

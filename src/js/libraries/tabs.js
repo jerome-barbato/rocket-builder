@@ -82,23 +82,21 @@ var UITabs = function () {
 
     that.init = function () {
 
-        $('.ui-tabs').each(function () { that.add( $(this) ) });
+        $('.ui-tabs').initialize(function () { that.add( $(this) ) });
     };
 
 
     that.add = function( $tabs ){
 
-        if ($tabs.data('ui-tabs--initialised') !== true) {
+        if ( $tabs.initialised() )
+            return;
 
-            $tabs.data('ui-tabs--initialised', true);
+        var context = $tabs.data('context') ? JSON.parse('{' + $tabs.data('context').replace(/'/g, '"') + '}') : {};
+        context.$element = $tabs;
 
-            var context = $tabs.data('context') ? JSON.parse('{' + $tabs.data('context').replace(/'/g, '"') + '}') : {};
-            context.$element = $tabs;
+        $tabs.removeAttr('data-context');
 
-            $tabs.removeAttr('data-context');
-
-            that.tabs.push( new UITab(context) );
-        }
+        that.tabs.push( new UITab(context) );
     };
 
 

@@ -21,14 +21,14 @@ var UIDefer = function () {
 
     that.__construct = function(){
 
-        $('.ui-defer').each(function(){
+        $('.ui-defer').initialize(function(){
 
             $(this).attr('src', $(this).data('src') );
-            $(this).removeAttr('data-src');
+            $(this).removeAttr('data-src').removeClass('ui-defer');
         });
     };
 
-    $(document).on('loaded', that.__construct);
+    that.__construct();
 
 
     if( typeof DOMCompiler !== "undefined" ) {

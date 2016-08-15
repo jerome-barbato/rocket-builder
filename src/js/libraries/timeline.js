@@ -73,7 +73,7 @@ var UITimeline = function(){
         if( $timelines.length == 0)
             return;
 
-        $timelines.each(function(){
+        $timelines.initialize(function(){
 
             var $timeline = $(this);
             var timeline  = that.animations[$timeline.data('timeline')];

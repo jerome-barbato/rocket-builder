@@ -522,31 +522,21 @@ var UISliders = function () {
 
     that.sliders = {};
 
-    that.init = function () {
 
-        $('.ui-slider').each(function () {
+    that.add = function( $slider ){
 
-            that.add( $(this) );
-        });
-    };
+        if( $slider.data('initialized') )
+            return;
 
+        if( $slider.attr('id') == undefined )
+            $slider.attr('id', guid('slider'));
 
-    that.add = function($slider){
+        var context = $slider.data('context') ? JSON.parse('{' + $slider.data('context').replace(/'/g, '"') + '}') : {};
+        context.$element = $slider;
 
-        if ($slider.data('ui-slider--initialised') !== true) {
+        $slider.removeAttr('data-context');
 
-            if( $slider.attr('id') == undefined )
-                $slider.attr('id', guid('slider'));
-
-            $slider.data('ui-slider--initialised', true);
-
-            var context = $slider.data('context') ? JSON.parse('{' + $slider.data('context').replace(/'/g, '"') + '}') : {};
-            context.$element = $slider;
-
-            $slider.removeAttr('data-context');
-
-            that.sliders[$slider.attr('id')] = new UISlider(context);
-        }
+        that.sliders[$slider.attr('id')] = new UISlider(context);
     };
 
 
@@ -563,7 +553,10 @@ var UISliders = function () {
 
     that.__construct = function () {
 
-        $(document).on('boot', that.init);
+        $('.ui-slider').initialize(function () {
+
+            that.add( $(this) );
+        });
     };
 
 
@@ -572,7 +565,8 @@ var UISliders = function () {
         dom.compiler.register('element', 'ui-slider', function (elem, attrs) {
 
             return '<div class="ui-slider"'+(attrs.context?' data-context="'+attrs.context+'"':'')+'><transclude/></div>';
-        });
+
+        }, that.add);
 
         dom.compiler.register('element', 'slides', function (elem) {
 
