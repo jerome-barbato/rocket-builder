@@ -43,12 +43,11 @@
         }
       }
     }
-    @media #{$media-tablet-portrait} { max-width: none; float: none }
-    &--1_2{
-      @media #{$media-tablet-portrait} { max-width: 50%; float: left }
-      @media #{$media-mobile} { max-width: none; float: none }
-    }
   }
+}
+
+@mixin break-grid(){
+  max-width: none; float: none
 }
 
 

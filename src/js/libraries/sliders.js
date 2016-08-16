@@ -56,7 +56,7 @@ var UISlider = function (config) {
         sync           : false,
         load           : 1.9,
         use_transition : Modernizr && Modernizr.csstransitions,
-        animationEnd   : 'animationend oanimationend webkitAnimationEnd MSAnimationEnd'
+        display           : false
     };
 
 
@@ -68,7 +68,8 @@ var UISlider = function (config) {
         count             : false,
         loop              : 0,
         window_height     : 0,
-        $window           : false
+        $window           : false,
+        animationEnd   : 'animationend.ui-slider oanimationend.ui-slider webkitAnimationEnd.ui-slider MSAnimationEnd.ui-slider'
     };
 
 
@@ -125,6 +126,8 @@ var UISlider = function (config) {
         if (!that.context.slide_count)
             return false;
 
+        that._packSlides();
+
         that.config.$element.addClass('ui-preload');
 
         that._addMod(that.config.$element, 'slider', 'animation-'+that.config.animation);
@@ -144,6 +147,26 @@ var UISlider = function (config) {
         that._show(Math.min(that.context.slide_count, that.config.start_slide), false);
         that._preload();
         that._startAutoplay();
+    };
+
+
+    that._packSlides = function(){
+
+        if( that.config.display ){
+
+            $.each(['desktop','mobile','tablet','phone'], function(i, device){
+
+                if ( that.config.display[device] && that.config.display[device] > 1 && browser[device]) {
+
+                    for (var j = 0; j < that.context.$slides.length; j += that.config.display[device]) {
+                        that.context.$slides.slice(j, j + that.config.display[device]).contents().unwrap().wrapAll("<div class='ui-slider__slide'></div>")
+                    }
+                }
+            });
+
+            that.context.$slides = that.context.$slides_container.findClosest('.'+that.classnames.slide, '.'+that.classnames.slider);
+            that.context.slide_count = that.context.$slides.length;
+        }
     };
 
 
@@ -380,7 +403,7 @@ var UISlider = function (config) {
 
             var i = 0;
 
-            $animatedSlides.one(that.config.animationEnd, function(){
+            $animatedSlides.one(that.context.animationEnd, function(){
 
                 i++;
                 if( i == $animatedSlides.length ){
@@ -525,9 +548,6 @@ var UISliders = function () {
 
     that.add = function( $slider ){
 
-        if( $slider.data('initialized') )
-            return;
-
         if( $slider.attr('id') == undefined )
             $slider.attr('id', guid('slider'));
 
@@ -555,6 +575,7 @@ var UISliders = function () {
 
         $('.ui-slider').initialize(function () {
 
+            console.log($(this))
             that.add( $(this) );
         });
     };

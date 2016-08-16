@@ -34,3 +34,6 @@ if(window.jQuery){
             this.enableScroll();
     };
 }
+
+if(window.jQuery && typeof $.fn.initialize == "undefined")
+    $.fn.initialize = $.fn.each;

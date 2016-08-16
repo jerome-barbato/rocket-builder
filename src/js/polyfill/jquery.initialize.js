@@ -39,11 +39,19 @@
             return typeof $(this).data('initialized') != "undefined" && $(this).data('initialized');
         };
 
+        var initialize = function(callback){
+            var $elem = $(this);
+            if( typeof $elem.data('initialized') == "undefined" ){
+
+                $elem.data('initialized', true);
+                callback.call(this);
+            }
+        };
+
         $.fn.initialize = function(callback){
 
             $(this).each(function(){
-                if( typeof $(this).data('initialized') == "undefined" )
-                    callback.call(this);
+                initialize.call(this, callback);
             });
 
             var selector = this.selector;
@@ -55,16 +63,12 @@
 
                 $node.each(function () {
 
-                    if( $(this).is(selector) && typeof $(this).data('initialized') == "undefined" ){
-
-                        $(this).data('initialized', true);
-                        callback.call(this);
-                    }
+                    if( $(this).is(selector) )
+                        initialize.call(this, callback);
                 });
 
                 $node.find(selector).each(function(){
-                    if( typeof $(this).data('initialized') == "undefined" )
-                        callback.call(this);
+                    initialize.call(this, callback);
                 });
             })
         };

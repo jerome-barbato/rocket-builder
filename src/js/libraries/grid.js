@@ -85,11 +85,17 @@ if( typeof DOMCompiler !== "undefined" ) {
 
         var properties = "g-col";
 
-        if( attrs.size )
-            properties += ' g-col--'+attrs.size.replace('/','_');
+        if( attrs.size ){
 
-        if( attrs.offsetBy )
+            properties += ' g-col--'+attrs.size.replace('/','_');
+            elem.removeAttr('size');
+        }
+
+        if( attrs.offsetBy ){
+
             properties += ' g-col---'+attrs.offsetBy.replace('/','_');
+            elem.removeAttr('offset-by');
+        }
 
         return '<div class="'+properties+'"><transclude/></div>';
     });

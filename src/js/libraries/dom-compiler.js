@@ -94,8 +94,10 @@ var DOMCompiler = function(){
 
         for(var i=0; i<dom.attributes.length; i++){
 
-            if( dom.attributes[i].name != 'class' )
-                $template.attr(dom.attributes[i].name, dom.attributes[i].value);
+            if( dom.attributes[i].name != 'class' ) {
+                if (dom.attributes[i].name != 'context')
+                    $template.attr(dom.attributes[i].name, dom.attributes[i].value);
+            }
             else
                 $template.addClass(dom.attributes[i].value);
         }
