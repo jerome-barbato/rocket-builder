@@ -27,7 +27,8 @@ var UITab = function (config) {
     };
 
     that.config = {
-        $element   : false
+        $element   : false,
+        block      : ['phone']
     };
 
 
@@ -36,7 +37,7 @@ var UITab = function (config) {
         that.context.$tab_handlers.click(function(e){
 
             e.preventDefault();
-            that.open( $(this).index() );
+            that.open( that.context.$tab_handlers.index($(this)) );
         });
     };
 
@@ -61,8 +62,23 @@ var UITab = function (config) {
 
         that.config = $.extend(that.config, config);
 
-        that.context.$tab_handlers = that.config.$element.find('a');
-        that.context.$tabs = that.config.$element.nextAll();
+        that.context.$tab_handlers = that.config.$element.find('.ui-tabs__handler');
+        that.context.$tabs = that.config.$element.nextAll('.ui-tab');
+
+        $.each(that.config.block, function(i, block){
+
+            if( browser && browser[block] ){
+
+                that.context.$tab_handlers.each(function(i){
+
+                    if( that.context.$tabs.length > i )
+                        that.context.$tabs.eq(i).insertAfter($(this));
+                });
+
+                that.context.$tab_handlers = that.config.$element.find('.ui-tabs__handler');
+                that.context.$tabs = that.config.$element.find('.ui-tab');
+            }
+        });
 
         that._setupEvents();
         that.open(0);
@@ -111,6 +127,7 @@ var UITabs = function () {
 
         dom.compiler.register('attribute', 'tabs', function (elem) { elem.addClass('ui-tabs') });
         dom.compiler.register('attribute', 'tab', function (elem) { elem.addClass('ui-tab') });
+        dom.compiler.register('attribute', 'tabs-handler', function (elem) { elem.addClass('ui-tabs__handler') });
         dom.compiler.register('element', 'tab', function (elem) { return '<div class="ui-tab"><transclude/></div>' });
     }
 
