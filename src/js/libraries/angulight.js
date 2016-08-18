@@ -10,17 +10,10 @@ var angularLight = function(){
 
     that.controller = function(id, callback){ that._register('controllers', id, callback) };
     that.directive  = function(id, callback){ that._register('directives', id, callback) };
-    that.service    = function(id, callback){ that._register('services', id, callback) };
 
-    that._register = function(type, id, callback){ that.context[type][_.camelCase(id)] = callback };
-
+    that._register  = function(type, id, callback){ that.context[type][_.camelCase(id)] = callback };
 
     that._run = function(type, $element){
-
-        if( !$element.data(type) )
-            return;
-
-        $(this).data(type, false);
 
         if( window._DEBUG && window._DEBUG > 2 )
             console.time('angulight:run');
@@ -65,27 +58,19 @@ var angularLight = function(){
 
     that.__construct = function(){
 
-        $(document).on('DOMNodeUpdated', that._domHasChanged );
-    };
-
-
-    that._domHasChanged = function(e, $dom ){
-
-        $dom.each(function(){
-
-            if( $(this).is('[data-controller]') )
-                that._run('controller', $(this) );
-
-            if( $(this).is('[data-directive]') )
-                that._run('directive', $(this) );
-        });
-
-        $dom.find('[data-controller]').each(function(){
+        $('[data-controller]').initialize(function(){
             that._run('controller', $(this) );
         });
 
-        $dom.find('[data-directive]').each(function(){
+        $('[data-directive]').initialize(function(){
             that._run('directive', $(this) );
+        });
+
+        $('[data-if]').initialize(function(){
+
+            var condition = $(this).data('if');
+            if( condition == "false" || condition == "0" || condition == "" || !condition )
+                $(this).remove();
         });
     };
 
@@ -101,9 +86,14 @@ var angularLight = function(){
 
             elem.attr('data-directive', attrs.directive);
         });
+
+        dom.compiler.register('attribute', 'if', function (elem, attrs) {
+
+            elem.attr('data-if', attrs.if);
+        });
     }
 
-    that.__construct();
+    $(document).ready(that.__construct);
 };
 
 var angulight = new angularLight();
