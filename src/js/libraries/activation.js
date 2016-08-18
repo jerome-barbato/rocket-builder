@@ -320,7 +320,7 @@ var UIActivation = function(){
     };
 
 
-    /* Contructor. */
+    /* Constructor. */
 
     /**
      *
