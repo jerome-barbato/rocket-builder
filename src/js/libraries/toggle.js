@@ -107,6 +107,23 @@ var UIToggle = function (config) {
         else
             that.context.$toggles   = that.config.$element.find('.ui-toggle');
 
+        that.context.$toggles.each(function(){
+
+            var $element = $(this);
+            var context = $element.data('context') ? JSON.parse('{' + $element.data('context').replace(/'/g, '"') + '}') : {};
+            $element.removeAttr('data-context');
+
+            $.each( context.disable, function(i, device){
+
+                if( browser && browser[device] ){
+
+                    $element.removeClass('ui-toggle');
+                    $element.find('.ui-toggle__handler').removeClass('ui-toggle__handler');
+                    $element.find('.ui-toggle__content').removeClass('ui-toggle__content');
+                }
+            });
+        });
+
         that.context.$toggle = that.config.$element.find('.ui-toggle__handler');
 
         if( that.config.open_first )
