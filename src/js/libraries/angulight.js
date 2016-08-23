@@ -2,18 +2,18 @@ var angularLight = function(){
 
     var that = this;
 
-    that.context = {
+    var context = {
         controllers : {},
         directives  : {},
         services    : {}
     };
 
-    that.controller = function(id, callback){ that._register('controllers', id, callback) };
-    that.directive  = function(id, callback){ that._register('directives', id, callback) };
+    that.controller = function(id, callback){ register('controllers', id, callback) };
+    that.directive  = function(id, callback){ register('directives', id, callback) };
 
-    that._register  = function(type, id, callback){ that.context[type][_.camelCase(id)] = callback };
+    var register  = function(type, id, callback){ context[type][_.camelCase(id)] = callback };
 
-    that._run = function(type, $element){
+    var run = function(type, $element){
 
         if( window._DEBUG && window._DEBUG > 2 )
             console.time('angulight:run');
@@ -42,9 +42,9 @@ var angularLight = function(){
            params = params.concat(raw_params);
        }
 
-        if( typeof that.context[type+'s'][name] != "undefined" ){
+        if( typeof context[type+'s'][name] != "undefined" ){
 
-            var fct = that.context[type+'s'][name];
+            var fct = context[type+'s'][name];
             new (Function.prototype.bind.apply(fct, [null].concat(params)));
         }
 
@@ -56,14 +56,14 @@ var angularLight = function(){
     };
 
 
-    that.__construct = function(){
+    var __construct = function(){
 
         $('[data-controller]').initialize(function(){
-            that._run('controller', $(this) );
+            run('controller', $(this) );
         });
 
         $('[data-directive]').initialize(function(){
-            that._run('directive', $(this) );
+            run('directive', $(this) );
         });
 
         $('[data-if]').initialize(function(){
@@ -93,7 +93,7 @@ var angularLight = function(){
         });
     }
 
-    $(document).ready(that.__construct);
+    $(document).ready(__construct);
 };
 
 var angulight = new angularLight();
