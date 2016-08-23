@@ -96,14 +96,6 @@ var UITabs = function () {
     that.tabs = [];
 
 
-    that.init = function () {
-
-        $('.ui-tabs').initialize(function () {
-            that.add( $(this) )
-        });
-    };
-
-
     that.add = function( $tabs ){
 
         var context = $tabs.data('context') ? JSON.parse('{' + $tabs.data('context').replace(/'/g, '"') + '}') : {};
@@ -119,18 +111,17 @@ var UITabs = function () {
 
     that.__construct = function () {
 
-        $(document).on('boot', that.init);
+        $('.ui-tabs').initialize(function () { that.add( $(this) ) });
     };
 
 
     if( typeof DOMCompiler !== "undefined" ) {
 
-        dom.compiler.register('attribute', 'tabs', function (elem) { elem.addClass('ui-tabs') });
+        dom.compiler.register('attribute', 'tabs', function (elem) { elem.addClass('ui-tabs') }, that.add);
         dom.compiler.register('attribute', 'tab', function (elem) { elem.addClass('ui-tab') });
         dom.compiler.register('attribute', 'tabs-handler', function (elem) { elem.addClass('ui-tabs__handler') });
         dom.compiler.register('element', 'tab', function (elem) { return '<div class="ui-tab"><transclude/></div>' });
     }
-
 
     that.__construct();
 };

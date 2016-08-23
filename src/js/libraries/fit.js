@@ -28,7 +28,7 @@ var UIFit = function() {
 
         if( $element.data('waiting') ) return;
 
-        var $container       = $element.closest('.'+that.selector);
+        var $container       = $element.parent();
         var container_width  = $container.width();
         var container_height = $container.height();
         var container_ratio  = container_width/container_height;
@@ -40,12 +40,12 @@ var UIFit = function() {
                 if( element_ratio < container_ratio ) {
 
                     var width = Math.round(container_height*element_ratio);
-                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
+                    $element.css({width:width, height:container_height});
                 }
                 else {
 
                     var height = Math.round(container_width/element_ratio);
-                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
+                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px'});
                 }
 
             }else{
@@ -53,12 +53,12 @@ var UIFit = function() {
                 if( element_ratio > container_ratio ) {
 
                     var width = Math.round(container_height*element_ratio);
-                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
+                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px'});
                 }
                 else {
 
                     var height = Math.round(container_width/element_ratio);
-                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
+                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px'});
                 }
             }
         });
@@ -72,7 +72,7 @@ var UIFit = function() {
      */
     that._init = function() {
 
-        $('.'+that.selector).initialize(function() {
+        $('.'+that.selector+'__cover, .'+that.selector+'__contain').initialize(function() {
 
             var $element = $(this);
 
@@ -85,10 +85,8 @@ var UIFit = function() {
                     that.compute($element);
                 });
             }
-            else{
-
+            else
                 that.compute($element);
-            }
 
             $(document).on('loaded', function(){ that.compute($element) });
             $(window).resize(function(){ that.compute($element) });
@@ -134,7 +132,7 @@ var UIFit = function() {
                 }
             };
 
-            if( $element.complete || $element.readyState === 4 ){
+            if( $element.prop('complete') ){
 
                 getNaturalDimensions();
             }

@@ -11,7 +11,10 @@
     }
 
     .mod--no-object-fit &{
-      &__cover, &__contain{ position: relative; visibility: hidden }
+      &__cover, &__contain{
+        position: relative; visibility: hidden;
+        &[style]{ visibility: visible}
+      }
     }
   }
 }
