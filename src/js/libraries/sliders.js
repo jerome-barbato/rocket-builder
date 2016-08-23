@@ -575,7 +575,6 @@ var UISliders = function () {
 
         $('.ui-slider').initialize(function () {
 
-            console.log($(this))
             that.add( $(this) );
         });
     };

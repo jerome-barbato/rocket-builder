@@ -25,7 +25,7 @@ var angularLight = function(){
 
        if( data.length == 2  ){
 
-            var raw_params = data[1].replace(')','').split(',');
+            var raw_params = data[1].replace(')','').replace(", '",",'").replace("' ,","',").split(',');
 
             for(var i=0; i<raw_params.length; i++){
 
@@ -39,8 +39,8 @@ var angularLight = function(){
                     raw_params[i] = parseFloat(raw_params[i]);
             }
 
-            params = params.concat(raw_params);
-        }
+           params = params.concat(raw_params);
+       }
 
         if( typeof that.context[type+'s'][name] != "undefined" ){
 

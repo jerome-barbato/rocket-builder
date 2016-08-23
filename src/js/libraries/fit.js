@@ -26,7 +26,7 @@ var UIFit = function() {
     /* Public methods. */
     that.compute = function( $element ) {
 
-        if( !$element.is(':visible') ) return;
+        if( $element.data('waiting') ) return;
 
         var $container       = $element.closest('.'+that.selector);
         var container_width  = $container.width();
@@ -72,12 +72,26 @@ var UIFit = function() {
      */
     that._init = function() {
 
-        $('.'+that.selector.object).initialize(function() {
+        $('.'+that.selector).initialize(function() {
 
             var $element = $(this);
 
-            if( !$element.data('ratio') )
-                that._getRatio($element);
+            $element.data('waiting', false);
+
+            if( !$element.data('ratio') ) {
+
+                that._getRatio($element, function () {
+
+                    that.compute($element);
+                });
+            }
+            else{
+
+                that.compute($element);
+            }
+
+            $(document).on('loaded', function(){ that.compute($element) });
+            $(window).resize(function(){ that.compute($element) });
         });
     };
 
@@ -109,6 +123,8 @@ var UIFit = function() {
                 var height   = parseInt($element.naturalHeight());
                 var ratio    = Math.round( (width/height)*100 )/100;
 
+                $element.data('waiting', false);
+
                 if( !isNaN(ratio) ){
 
                     $element.data('ratio', ratio);
@@ -118,10 +134,15 @@ var UIFit = function() {
                 }
             };
 
-            if( $element.prop('complete') )
+            if( $element.complete || $element.readyState === 4 ){
+
                 getNaturalDimensions();
-            else
+            }
+            else{
+
+                $element.data('waiting', true);
                 $element.load(getNaturalDimensions);
+            }
         }
         else{
 
@@ -134,28 +155,12 @@ var UIFit = function() {
 
 
 
-    that._computeAll = function(){
-
-        setTimeout(function(){
-
-            $('.'+that.selector.object).each(function() {
-
-                that.compute($(this));
-            });
-        });
-    };
-
-
-
     that.__construct = function(){
 
         if( Modernizr && Modernizr.objectfit )
             return;
 
         that._init();
-
-        $(document).on('loaded', that._computeAll);
-        $(window).resize(that._computeAll);
     };
 
 
