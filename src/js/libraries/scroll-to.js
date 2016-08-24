@@ -31,7 +31,7 @@ var UIScroll = function () {
             target : 'ui-scroll--target'
         },
         force_offset : false,
-        user_anchor  : false
+        user_anchor  : true
     };
 
     that.targets     = [];
@@ -44,10 +44,13 @@ var UIScroll = function () {
 
         $(document).on('click','.'+that.config.class.link, function(e){
 
-            e.preventDefault();
+            if( $(this).attr('href').indexOf('http') == -1 ) {
 
-            var target = that.config.user_anchor ? $(this).attr('href') : $(this).data('ui-href');
-            that.scrollTo(target, true);
+                e.preventDefault();
+
+                var target = that.config.user_anchor ? $(this).attr('href') : $(this).data('ui-href');
+                that.scrollTo(target, true);
+            }
         });
 
         $(window).scroll(that._setActive).resize(that._resize);
@@ -247,6 +250,9 @@ var UIScroll = function () {
      */
     that.__construct = function () {
 
+        if( window.precompile )
+            return;
+
         $('.'+that.config.class.link).initialize(function(){
             that.add($(this))
         });
@@ -275,12 +281,19 @@ var UIScroll = function () {
 
         dom.compiler.register('attribute', 'scroll-to', function (elem, attrs) {
 
-            elem.addClass(that.config.class.link);
+            if( attrs.scrollTo.indexOf('http') != -1 ){
 
-            if( that.config.user_anchor )
-                elem.attr('href', '#'+attrs.scrollTo);
-            else
-                dom.compiler.attr(elem, 'ui-href', '#'+attrs.scrollTo);
+                elem.attr('href', attrs.scrollTo);
+            }
+            else{
+
+                elem.addClass(that.config.class.link);
+
+                if( that.config.user_anchor )
+                    elem.attr('href', '#'+attrs.scrollTo);
+                else
+                    dom.compiler.attr(elem, 'ui-href', '#'+attrs.scrollTo);
+            }
         });
 
         dom.compiler.register('attribute', 'fixed-header', function (elem, attrs) {

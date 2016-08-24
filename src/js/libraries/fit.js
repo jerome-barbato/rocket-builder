@@ -26,9 +26,9 @@ var UIFit = function() {
     /* Public methods. */
     that.compute = function( $element ) {
 
-        if( !$element.is(':visible') ) return;
+        if( $element.data('waiting') ) return;
 
-        var $container       = $element.closest('.'+that.selector);
+        var $container       = $element.parent();
         var container_width  = $container.width();
         var container_height = $container.height();
         var container_ratio  = container_width/container_height;
@@ -40,12 +40,12 @@ var UIFit = function() {
                 if( element_ratio < container_ratio ) {
 
                     var width = Math.round(container_height*element_ratio);
-                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
+                    $element.css({width:width, height:container_height});
                 }
                 else {
 
                     var height = Math.round(container_width/element_ratio);
-                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
+                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px'});
                 }
 
             }else{
@@ -53,12 +53,12 @@ var UIFit = function() {
                 if( element_ratio > container_ratio ) {
 
                     var width = Math.round(container_height*element_ratio);
-                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
+                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px'});
                 }
                 else {
 
                     var height = Math.round(container_width/element_ratio);
-                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
+                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px'});
                 }
             }
         });
@@ -72,12 +72,24 @@ var UIFit = function() {
      */
     that._init = function() {
 
-        $('.'+that.selector.object).initialize(function() {
+        $('.'+that.selector+'__cover, .'+that.selector+'__contain').initialize(function() {
 
             var $element = $(this);
 
-            if( !$element.data('ratio') )
-                that._getRatio($element);
+            $element.data('waiting', false);
+
+            if( !$element.data('ratio') ) {
+
+                that._getRatio($element, function () {
+
+                    that.compute($element);
+                });
+            }
+            else
+                that.compute($element);
+
+            $(document).on('loaded', function(){ that.compute($element) });
+            $(window).resize(function(){ that.compute($element) });
         });
     };
 
@@ -109,6 +121,8 @@ var UIFit = function() {
                 var height   = parseInt($element.naturalHeight());
                 var ratio    = Math.round( (width/height)*100 )/100;
 
+                $element.data('waiting', false);
+
                 if( !isNaN(ratio) ){
 
                     $element.data('ratio', ratio);
@@ -118,10 +132,15 @@ var UIFit = function() {
                 }
             };
 
-            if( $element.prop('complete') )
+            if( $element.prop('complete') ){
+
                 getNaturalDimensions();
-            else
+            }
+            else{
+
+                $element.data('waiting', true);
                 $element.load(getNaturalDimensions);
+            }
         }
         else{
 
@@ -134,28 +153,12 @@ var UIFit = function() {
 
 
 
-    that._computeAll = function(){
-
-        setTimeout(function(){
-
-            $('.'+that.selector.object).each(function() {
-
-                that.compute($(this));
-            });
-        });
-    };
-
-
-
     that.__construct = function(){
 
         if( Modernizr && Modernizr.objectfit )
             return;
 
         that._init();
-
-        $(document).on('loaded', that._computeAll);
-        $(window).resize(that._computeAll);
     };
 
 

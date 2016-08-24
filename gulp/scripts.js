@@ -10,7 +10,7 @@ var $           = require('gulp-load-plugins')();
  *
  */
 gulp.task('concat::scripts', function(){
-    config.init();
+
     return gulp.src(config.paths.src.js)
         .pipe($.concat('app.js'))
         .pipe($.sourcemaps.init())
@@ -36,7 +36,7 @@ gulp.task('compress::scripts', function(){
 
 gulp.task('compress::script::browser', function(){
 
-    return gulp.src(config.paths.base.src+'js/core/vendors/browser.js')
+    return gulp.src([config.paths.base.src+'js/core/vendors/modernizr.min.js', config.paths.base.src+'js/core/vendors/browser.js'])
         .pipe($.concat('browser.min.js'))
         .pipe($.uglify().on('error', config.errorHandler('Scripts')))
         .pipe(gulp.dest(config.paths.dest.js));

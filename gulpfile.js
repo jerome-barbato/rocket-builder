@@ -85,7 +85,12 @@ gulp.task('default', [], function () {
 
     if (config.watching_mode){
 
-        gulp.watch(config.paths.watch.js, function() {
+        gulp.watch(config.paths.watch.js_app, function() {
+
+            gulp.start(scripts);
+        });
+
+        gulp.watch(config.paths.watch.js_core, function() {
 
             gulp.start(scripts);
             gulp.start(templates);
@@ -95,6 +100,7 @@ gulp.task('default', [], function () {
 
             gulp.start(styles);
         });
+
         gulp.start("watch::templates");
     }
 

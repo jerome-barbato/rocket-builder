@@ -70,6 +70,8 @@ var Config = module.exports = {
             },
             watch : {
                 js       : Config.src_path+"js/**/*.js",
+                js_app   : [Config.src_path+"js/app/**/*.js", Config.src_path+"js/app.js"],
+                js_core  : [Config.src_path+"js/core/**/*.js"],
                 sass     : Config.src_path+"sass/**/*.scss",
                 template : Config.src_path+"template/**/*.twig"
             }
