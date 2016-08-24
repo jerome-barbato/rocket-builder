@@ -19,11 +19,11 @@
  */
 var UIMap = function(){
 
-    var that = this;
+    var self = this;
 
     /* Public */
 
-    that.config = {
+    self.config = {
         marker : {
             url       : APP.asset.medias.icons+'marker@2x.png',
             hover_url : APP.asset.medias.icons+'marker--hover@2x.png',
@@ -49,7 +49,7 @@ var UIMap = function(){
         }
     };
 
-    that.context = {
+    self.context = {
         init     : false,
         markers  : [],
         marker   : false,
@@ -65,36 +65,36 @@ var UIMap = function(){
     /**
      *
      */
-    that.init =  function( $map, template, config ) {
+    self.init =  function( $map, template, config ) {
 
-        that.config = $.extend(that.config, config);
+        self.config = $.extend(self.config, config);
 
-        that.config.map.mapTypeId = google.maps.MapTypeId[that.config.map.mapTypeId];
+        self.config.map.mapTypeId = google.maps.MapTypeId[self.config.map.mapTypeId];
 
-        that.config.marker_hover = {
-            url         : that.config.marker.hover_url,
-            scaledSize  : new google.maps.Size(that.config.marker.width, that.config.marker.height),
-            anchor      : new google.maps.Point(that.config.marker.width/2, that.config.marker.height),
-            labelOrigin : new google.maps.Point(that.config.marker.width/2, that.config.marker.height*0.65)
+        self.config.marker_hover = {
+            url         : self.config.marker.hover_url,
+            scaledSize  : new google.maps.Size(self.config.marker.width, self.config.marker.height),
+            anchor      : new google.maps.Point(self.config.marker.width/2, self.config.marker.height),
+            labelOrigin : new google.maps.Point(self.config.marker.width/2, self.config.marker.height*0.65)
         };
 
-        that.config.marker = {
-            url         : that.config.marker.url,
-            scaledSize  : new google.maps.Size(that.config.marker.width, that.config.marker.height),
-            anchor      : new google.maps.Point(that.config.marker.width/2, that.config.marker.height),
-            labelOrigin : new google.maps.Point(that.config.marker.width/2, that.config.marker.height*0.65)
+        self.config.marker = {
+            url         : self.config.marker.url,
+            scaledSize  : new google.maps.Size(self.config.marker.width, self.config.marker.height),
+            anchor      : new google.maps.Point(self.config.marker.width/2, self.config.marker.height),
+            labelOrigin : new google.maps.Point(self.config.marker.width/2, self.config.marker.height*0.65)
         };
 
-        that.config.overlay.html = template;
-        that.context.gmap = $map.gmap3(that.config.map);
-        that.context.map  = $map.gmap3('get');
+        self.config.overlay.html = template;
+        self.context.gmap = $map.gmap3(self.config.map);
+        self.context.map  = $map.gmap3('get');
 
-        google.maps.event.addListener(that.context.map, 'zoom_changed', function() {
-            var zoomLevel = that.context.map.getZoom();
-            $(document).trigger('ui-map.zoom',[that.context.map, zoomLevel]);
+        google.maps.event.addListener(self.context.map, 'zoom_changed', function() {
+            var zoomLevel = self.context.map.getZoom();
+            $(document).trigger('ui-map.zoom',[self.context.map, zoomLevel]);
         });
 
-        that.context.init = true;
+        self.context.init = true;
     };
 
 
@@ -102,134 +102,137 @@ var UIMap = function(){
     /**
      *
      */
-    that.zoomIn = function() {
+    self.zoomIn = function() {
 
-        if(that.context.map.getZoom() < 21 )
-            that.context.map.setZoom( that.context.map.getZoom()+1 );
+        if(self.context.map.getZoom() < 21 )
+            self.context.map.setZoom( self.context.map.getZoom()+1 );
     };
 
 
     /**
      *
      */
-    that.zoomOut = function() {
+    self.zoomOut = function() {
 
-        if(that.context.map.getZoom() >  3)
-            that.context.map.setZoom( that.context.map.getZoom()-1 );
+        if(self.context.map.getZoom() >  3)
+            self.context.map.setZoom( self.context.map.getZoom()-1 );
     };
 
 
 
-    that.clearMarkers = function(){
+    self.clearMarkers = function(){
 
-        $.each(that.context.markers, function(i, marker){
+        $.each(self.context.markers, function(i, marker){
 
             marker.setMap(null);
+            delete self.context.markers[i];
         });
+
+        self.context.markers = [];
     };
 
 
 
-    that.clearOverlay = function(){
+    self.clearOverlay = function(){
 
-        if( that.context.overlay )
-            that.context.overlay.setMap(null);
+        if( self.context.overlay )
+            self.context.overlay.setMap(null);
 
-        that.context.overlay = false;
-        that.context.has_overlay = false;
+        self.context.overlay = false;
+        self.context.has_overlay = false;
     };
 
 
 
-    that.hightlightMarker = function(id, status){
+    self.hightlightMarker = function(id, status){
 
-        if( that.context.init )
-            that.context.markers[id].setIcon( status ? that.config.marker_hover : that.config.marker);
+        if( self.context.init && self.context.markers.length > id )
+            self.context.markers[id].setIcon( status ? self.config.marker_hover : self.config.marker);
     };
 
 
     /**
      *
      */
-    that.reset = function(){
+    self.reset = function(){
 
-        that.clearMarkers();
+        self.clearMarkers();
     };
 
 
     /**
      *
      */
-    that.addMyLocation = function( data ){
+    self.addMyLocation = function( data ){
 
-        that.context.gmap.marker({address:data}).then(function(marker){
+        self.context.gmap.marker({address:data}).then(function(marker){
 
-            that.context.markers.push(marker);
+            self.context.markers.push(marker);
         });
     };
 
 
 
-    that.addMarkers = function( markers, fit ){
+    self.addMarkers = function( markers, fit ){
 
         markers = _.values(markers);
         var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         $.each(markers, function(i, marker){
 
-            marker.icon     = that.config.marker;
+            marker.icon     = self.config.marker;
             marker.label    = {text: labels[i++ % labels.length], color: 'white', fontSize:'12px'}
         });
 
-        that.context.gmap.marker(markers).then(function(markers){
+        self.context.gmap.marker(markers).then(function(markers){
 
-            that.context.markers = markers;
+            self.context.markers = self.context.markers.concat(markers);
 
         }).on({
 
                 mouseover: function(marker){
 
-                    if( that.context.marker )
-                        that.context.marker.setIcon(that.config.marker);
+                    if( self.context.marker )
+                        self.context.marker.setIcon(self.config.marker);
 
-                    that.context.marker = marker;
+                    self.context.marker = marker;
 
-                    marker.setIcon(that.config.marker_hover);
-                    $(document).trigger('ui-map.over', [that.context.map, marker.index]);
+                    marker.setIcon(self.config.marker_hover);
+                    $(document).trigger('ui-map.over', [self.context.map, marker.index]);
                 },
                 mouseout: function(marker){
 
-                    if( !that.context.has_overlay ){
+                    if( !self.context.has_overlay ){
 
-                        marker.setIcon(that.config.marker);
-                        $(document).trigger('ui-map.out', [that.context.map, marker.index]);
+                        marker.setIcon(self.config.marker);
+                        $(document).trigger('ui-map.out', [self.context.map, marker.index]);
 
-                        that.context.marker = false;
+                        self.context.marker = false;
                     }
                 },
                 click: function(marker){
 
-                    if( that.context.marker )
-                        that.context.marker.setIcon(that.config.marker);
+                    if( self.context.marker )
+                        self.context.marker.setIcon(self.config.marker);
 
-                    that.context.marker = marker;
+                    self.context.marker = marker;
 
-                    marker.setIcon(that.config.marker_hover);
-                    $(document).trigger('ui-map.click', [that.context.map, marker.index]);
+                    marker.setIcon(self.config.marker_hover);
+                    $(document).trigger('ui-map.click', [self.context.map, marker.index]);
 
                     if( !browser.phone ){
 
-                        that.clearOverlay();
+                        self.clearOverlay();
 
-                        that.context.has_overlay = true;
+                        self.context.has_overlay = true;
 
-                        var html = that.config.overlay.html;
+                        var html = self.config.overlay.html;
 
-                        $.each(that.config.overlay.properties, function (i, key) {
+                        $.each(self.config.overlay.properties, function (i, key) {
                             html = html.split('[[' + key + ']]').join(marker[key]);
                         });
 
-                        that.context.gmap.overlay({
+                        self.context.gmap.overlay({
                             position: marker.getPosition(),
                             content: html,
                             y: -70,
@@ -237,14 +240,14 @@ var UIMap = function(){
 
                         }).then(function (overlay) {
 
-                            that.context.overlay = overlay;
+                            self.context.overlay = overlay;
                             overlay.$.find('.close').click(function () {
 
-                                marker.setIcon(that.config.marker);
-                                that.context.marker = false;
+                                marker.setIcon(self.config.marker);
+                                self.context.marker = false;
 
-                                that.clearOverlay();
-                                $(document).trigger('ui-map.out', [that.context.map, marker.index]);
+                                self.clearOverlay();
+                                $(document).trigger('ui-map.out', [self.context.map, marker.index]);
                             });
                         });
                     }
@@ -261,7 +264,7 @@ var UIMap = function(){
          },
          events: {
          click:function(cluster, event, data) {
-         var gmap = that.context.gmap.gmap3('get');
+         var gmap = self.context.gmap.gmap3('get');
 
          gmap.panTo(data.data.latLng);
          gmap.setZoom(gmap.getZoom()+2);
@@ -270,7 +273,7 @@ var UIMap = function(){
          }*/
 
         if( fit )
-            that.context.gmap.fit();
+            self.context.gmap.fit();
     };
 };
 

@@ -23,22 +23,22 @@
 
 var UIPopin = function(){
 
-    var that = this;
+    var self = this;
 
     /* Contructor. */
 
     /**
      *
      */
-    that.__construct =  function(){
+    self.__construct =  function(){
 
-        that._setupEvents();
+        self._setupEvents();
     };
 
 
     /* Public */
 
-    that.config = {
+    self.config = {
         $body   : $('body'),
         $popin  : false,
         id      : false,
@@ -53,42 +53,51 @@ var UIPopin = function(){
         }
     };
 
+    self.context = {};
 
-    that.add = function( id, content, context ){
 
-        if( that.config.id ){
+    self.add = function( id, content, context ){
 
-            if( that.config.id == id && that.config.context == context ){
+        if( self.config.id ){
 
-                that.show(that.config.id);
+            if( self.config.id == id && self.context == context ){
+
+                self.show(self.config.id);
                 return;
             }
             else{
 
-                that._remove();
+                self._remove();
             }
         }
 
-        that.config.id = id;
-        that.config.context = context;
+        self.config.id = id;
+        self.context = $.extend(self.config.context, context);
 
-        that._add(content);
+        self._add(content);
     };
 
 
 
-    that.show = function( id ){
+    self.show = function( id ){
 
-        if( id == that.config.id )
-            that._show();
+        if( id == self.config.id )
+            self._show();
     };
 
 
 
-    that.close = function( id ){
+    self.getId = function(){
 
-        if( id == that.config.id )
-            that._close();
+        return self.config.id;
+    };
+
+
+
+    self.close = function( id ){
+
+        if( typeof id == 'undefined' || id == self.config.id )
+            self._close();
     };
 
 
@@ -98,7 +107,7 @@ var UIPopin = function(){
     /**
      *
      */
-    that._setupEvents = function() {
+    self._setupEvents = function() {
 
         $(document).on('click', '[data-popin]', function(e) {
 
@@ -106,116 +115,113 @@ var UIPopin = function(){
 
             var context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
 
-            that.add($(this).data('popin'), false, context);
+            self.add($(this).data('popin'), false, context);
         });
     };
 
 
 
-    that._remove = function(){
+    self._remove = function(){
 
-        that.config.$popin.remove();
-        that.config.id = that.config.$popin = false;
-        that.config.context = { remove : false };
+        self.config.$popin.remove();
+        self.config.id = self.config.$popin = false;
+        self.config.context = {};
     };
 
 
-    that._close = function(){
+    self._close = function(){
 
-        if( !that.config.$popin ) return;
+        if( !self.config.$popin ) return;
 
         if( Modernizr && Modernizr.csstransitions ) {
 
-            that.config.$body.removeClass('ui-popin--adding').addClass('ui-popin--removing');
+            self.config.$body.removeClass('ui-popin--adding').addClass('ui-popin--removing');
 
-            that.config.$popin.one(that.config.transitionEnd, function () {
+            self.config.$popin.one(self.config.transitionEnd, function () {
 
-                that.config.$body.removeClass('ui-popin--removing');
+                self.config.$body.removeClass('ui-popin--removing');
 
-                $(document).trigger('ui-popin.removed', [that.config.id]);
+                $(document).trigger('ui-popin.removed', [self.config.id]);
 
-                if( that.config.context.remove )
-                    that._remove();
+                if( self.context.remove )
+                    self._remove();
                 else
-                    that.config.$popin.hide();
+                    self.config.$popin.hide();
 
-                that.config.$body.repaint();
+                self.config.$body.repaint();
             });
         }
         else{
 
-            if( that.config.context.remove )
-                that._remove();
+            if( self.context.remove )
+                self._remove();
             else
                 $popin.hide();
         }
 
-        that.config.$body.removeClass('ui-popin--added');
+        self.config.$body.removeClass('ui-popin--added');
     };
 
 
 
-    that._add = function(content){
+    self._add = function(content){
 
         if( typeof(content) == "undefined" || content === false )
-            content = $('template#'+that.config.id).html();
+            content = $('template#'+self.config.id).html();
 
-        if ( !window.angular ){
+        if ( !window.angular )
+            content = content.populate(self.context);
 
-            if( typeof(that.config.context) != "undefined" )
-                content = content.populate(that.config.context);
-        }
-
-        var $popin   = $(that.config.html.popin);
+        var $popin   = $(self.config.html.popin);
         var $content = $popin.find('.ui-popin__content');
 
         $content.append(content);
 
         if( !$content.find('.ui-popin__close, .ui-popin-close').length )
-            $content.append(that.config.html.close);
+            $content.append(self.config.html.close);
 
-        that.config.$body.append($popin);
-        $popin.addClass('ui-popin--'+that.config.id);
+        self.config.$body.append($popin);
+        $popin.addClass('ui-popin--'+self.config.id);
 
-        that.config.$popin = $popin;
+        self.config.$popin = $popin;
 
         if( $popin.find('.ui-slider').length && typeof(ui.sliders) != "undefined" )
             ui.sliders.init();
 
-        that._show();
+        self._show();
     };
 
 
 
-    that._show = function() {
+    self._show = function() {
 
-        that.config.$popin.show().repaint();
+        self.config.$popin.show().repaint();
 
-        that.config.$body.addClass('ui-popin--added');
+        self.config.$body.addClass('ui-popin--added');
 
-        $(document).trigger('ui-popin.added', [that.config.$popin, that.config.id, that.config.context]);
+        $(document).trigger('ui-popin.added', [self.config.$popin, self.config.id, self.context]);
 
         if( Modernizr && Modernizr.csstransitions ){
 
-            that.config.$body.addClass('ui-popin--adding');
+            self.config.$body.addClass('ui-popin--adding');
 
-            that.config.$popin.one(that.config.transitionEnd, function() {
+            self.config.$popin.one(self.config.transitionEnd, function() {
 
-                that.config.$body.removeClass('ui-popin--adding');
+                self.config.$body.removeClass('ui-popin--adding');
             });
         }
         else{
 
-            that.config.$body.removeClass('ui-popin--adding');
+            self.config.$body.removeClass('ui-popin--adding');
         }
 
 
-        that.config.$popin.on('click', function(e) {
+        self.config.$popin.on('click', function(e) {
 
             if( $(e.target).hasClass('ui-popin__overlay') || $(e.target).hasClass('ui-popin__close') || $(e.target).hasClass('ui-popin-close')){
 
-                that.config.$popin.off('click');
-                that._close();
+                self.config.$popin.off('click');
+                self._close();
             }
         });
     };
@@ -237,7 +243,7 @@ var UIPopin = function(){
     }
 
 
-    that.__construct();
+    self.__construct();
 };
 
 var ui = ui || {};

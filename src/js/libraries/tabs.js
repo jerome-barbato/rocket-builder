@@ -19,37 +19,37 @@
 
 var UITab = function (config) {
 
-    var that = this;
+    var self = this;
 
-    that.context = {
+    self.context = {
         $tabs : false,
         $tab  : false
     };
 
-    that.config = {
+    self.config = {
         $element   : false,
         block      : ['phone']
     };
 
 
-    that._setupEvents = function(){
+    self._setupEvents = function(){
 
-        that.context.$tab_handlers.click(function(e){
+        self.context.$tab_handlers.click(function(e){
 
             e.preventDefault();
-            that.open( that.context.$tab_handlers.index($(this)) );
+            self.open( self.context.$tab_handlers.index($(this)) );
         });
     };
 
 
-    that.open = function( i ){
+    self.open = function( i ){
 
-        that.context.$tab_handlers.removeClass('ui-tabs--active').eq(i).addClass('ui-tabs--active');
+        self.context.$tab_handlers.removeClass('ui-tabs--active').eq(i).addClass('ui-tabs--active');
 
-        that.context.$tabs.removeClass('ui-tab--active');
+        self.context.$tabs.removeClass('ui-tab--active');
 
-        if( i <= that.context.$tabs.length )
-            that.context.$tabs.eq(i).addClass('ui-tab--active');
+        if( i <= self.context.$tabs.length )
+            self.context.$tabs.eq(i).addClass('ui-tab--active');
     };
 
 
@@ -58,72 +58,72 @@ var UITab = function (config) {
     /**
      *
      */
-    that.__construct = function (config) {
+    self.__construct = function (config) {
 
-        that.config = $.extend(that.config, config);
+        self.config = $.extend(self.config, config);
 
-        that.context.$tab_handlers = that.config.$element.find('.ui-tabs__handler');
-        that.context.$tabs = that.config.$element.nextAll('.ui-tab');
+        self.context.$tab_handlers = self.config.$element.find('.ui-tabs__handler');
+        self.context.$tabs = self.config.$element.nextAll('.ui-tab');
 
-        $.each(that.config.block, function(i, block){
+        $.each(self.config.block, function(i, block){
 
             if( browser && browser[block] ){
 
-                that.context.$tab_handlers.each(function(i){
+                self.context.$tab_handlers.each(function(i){
 
-                    if( that.context.$tabs.length > i )
-                        that.context.$tabs.eq(i).insertAfter($(this));
+                    if( self.context.$tabs.length > i )
+                        self.context.$tabs.eq(i).insertAfter($(this));
                 });
 
-                that.context.$tab_handlers = that.config.$element.find('.ui-tabs__handler');
-                that.context.$tabs = that.config.$element.find('.ui-tab');
+                self.context.$tab_handlers = self.config.$element.find('.ui-tabs__handler');
+                self.context.$tabs = self.config.$element.find('.ui-tab');
             }
         });
 
-        that._setupEvents();
-        that.open(0);
+        self._setupEvents();
+        self.open(0);
     };
 
 
-    that.__construct(config);
+    self.__construct(config);
 };
 
 
 var UITabs = function () {
 
-    var that = this;
+    var self = this;
 
-    that.tabs = [];
+    self.tabs = [];
 
 
-    that.add = function( $tabs ){
+    self.add = function( $tabs ){
 
         var context = $tabs.data('context') ? JSON.parse('{' + $tabs.data('context').replace(/'/g, '"') + '}') : {};
         context.$element = $tabs;
 
         $tabs.removeAttr('data-context');
 
-        that.tabs.push( new UITab(context) );
+        self.tabs.push( new UITab(context) );
     };
 
 
     /* Constructor. */
 
-    that.__construct = function () {
+    self.__construct = function () {
 
-        $('.ui-tabs').initialize(function () { that.add( $(this) ) });
+        $('.ui-tabs').initialize(function () { self.add( $(this) ) });
     };
 
 
     if( typeof DOMCompiler !== "undefined" ) {
 
-        dom.compiler.register('attribute', 'tabs', function (elem) { elem.addClass('ui-tabs') }, that.add);
+        dom.compiler.register('attribute', 'tabs', function (elem) { elem.addClass('ui-tabs') }, self.add);
         dom.compiler.register('attribute', 'tab', function (elem) { elem.addClass('ui-tab') });
         dom.compiler.register('attribute', 'tabs-handler', function (elem) { elem.addClass('ui-tabs__handler') });
         dom.compiler.register('element', 'tab', function (elem) { return '<div class="ui-tab"><transclude/></div>' });
     }
 
-    that.__construct();
+    self.__construct();
 };
 
 

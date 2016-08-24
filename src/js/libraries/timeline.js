@@ -18,9 +18,9 @@
  */
 var UITimeline = function(){
 
-    var that = this;
+    var self = this;
 
-    that.animations = {};
+    self.animations = {};
 
 
     /* Contructor. */
@@ -28,45 +28,45 @@ var UITimeline = function(){
     /**
      *
      */
-    that.__construct =  function(){
+    self.__construct =  function(){
 
         $(document).on('boot', function(){
 
-            that._setupAnimations();
-            that._resize();
+            self._setupAnimations();
+            self._resize();
 
-            $(window).resize(that._resize).scroll( that._scroll );
+            $(window).resize(self._resize).scroll( self._scroll );
 
         }).on('loaded', function(){
 
-            that._resize();
-            that._scroll();
+            self._resize();
+            self._scroll();
         });
     };
 
     /* Public */
 
-    that.context = {
+    self.context = {
         hold      : false
     };
 
 
-    that.scroll_infos = false;
-    that.animations   = {};
-    that.timelines    = [];
+    self.scroll_infos = false;
+    self.animations   = {};
+    self.timelines    = [];
 
 
     /* Private. */
 
-    that._resize = function(){
+    self._resize = function(){
 
-        that.context.win_height = $(window).height();
-        that.context.doc_height = $(document).height();
+        self.context.win_height = $(window).height();
+        self.context.doc_height = $(document).height();
     };
 
 
     /* Setup animations */
-    that._setupAnimations = function(){
+    self._setupAnimations = function(){
 
         var $timelines = $('.ui-timeline');
 
@@ -76,7 +76,7 @@ var UITimeline = function(){
         $timelines.initialize(function(){
 
             var $timeline = $(this);
-            var timeline  = that.animations[$timeline.data('timeline')];
+            var timeline  = self.animations[$timeline.data('timeline')];
             var tl        = new TimelineLite();
 
             tl.add("stagger");
@@ -100,21 +100,21 @@ var UITimeline = function(){
             tl.pause();
             tl.seek(0.01);
 
-            that.timelines.push({tl:tl, start_at:$timeline.data('start_at'), end_at:$timeline.data('end_at'), played:false, follow_scroll:$timeline.hasDataAttr('end_at')});
+            self.timelines.push({tl:tl, start_at:$timeline.data('start_at'), end_at:$timeline.data('end_at'), played:false, follow_scroll:$timeline.hasDataAttr('end_at')});
         });
     };
 
 
-    that._scroll = function(){
+    self._scroll = function(){
 
-        if( that.context.hold ) return;
+        if( self.context.hold ) return;
 
-        var scroll = $(window).scrollTop()/(that.context.doc_height-that.context.win_height);
+        var scroll = $(window).scrollTop()/(self.context.doc_height-self.context.win_height);
 
-        if( that.scroll_infos )
+        if( self.scroll_infos )
             console.log('scroll : '+scroll);
 
-        $.each(that.timelines, function(i, timeline){
+        $.each(self.timelines, function(i, timeline){
 
             if( !timeline.follow_scroll ){
 
@@ -169,7 +169,7 @@ var UITimeline = function(){
     }
 
 
-    that.__construct();
+    self.__construct();
 };
 
 var ui = ui || {};

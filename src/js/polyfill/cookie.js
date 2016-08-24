@@ -12,14 +12,14 @@
 
 var cookieHandler = function() {
 
-    var that = this;
+    var self = this;
 
 
     /**
      * Throw new error if no cookies
      * @private
      */
-    that.__construct = function() {
+    self.__construct = function() {
         if (navigator.cookieEnabled) {
             throw new Error("Cookies are not allowed.");
         }
@@ -31,7 +31,7 @@ var cookieHandler = function() {
      * @param cvalue * value of the cookie
      * @param exdays String day amount before expiration
      */
-    that.setCookie = function(cname, cvalue, exdays) {
+    self.setCookie = function(cname, cvalue, exdays) {
         var d = new Date();
         d.setTime(d.getTime() + (exdays*24*60*60*1000));
         var expires = "expires="+d.toUTCString();
@@ -43,7 +43,7 @@ var cookieHandler = function() {
      * @param cname String name of the cookie
      * @returns {*} Cookie | ""
      */
-    that.getCookie = function(cname) {
+    self.getCookie = function(cname) {
         var name = cname + "=";
         var ca = document.cookie.split(';');
         for(var i = 0; i < ca.length; i++) {

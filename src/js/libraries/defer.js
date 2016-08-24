@@ -17,9 +17,9 @@
 
 var UIDefer = function () {
 
-    var that = this;
+    var self = this;
 
-    that.__construct = function(){
+    self.__construct = function(){
 
         $('.ui-defer').initialize(function(){
 
@@ -28,7 +28,7 @@ var UIDefer = function () {
         });
     };
 
-    that.__construct();
+    self.__construct();
 
 
     if( typeof DOMCompiler !== "undefined" ) {

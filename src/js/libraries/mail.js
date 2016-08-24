@@ -15,13 +15,13 @@
 
 var UIMail = function(){
 
-    var that = this;
+    var self = this;
 
 
 
     /* Contructor. */
 
-    that._resolve = function(){
+    self._resolve = function(){
 
         var email = $(this).data('name')+'@'+$(this).data('domain');
 
@@ -40,9 +40,9 @@ var UIMail = function(){
     /**
      *
      */
-    that.__construct =  function(){
+    self.__construct =  function(){
 
-        $('.ui-mail').initialize(that._resolve);
+        $('.ui-mail').initialize(self._resolve);
     };
 
 
@@ -60,7 +60,7 @@ var UIMail = function(){
     }
 
 
-    $(document).on('boot', that.__construct);
+    $(document).on('boot', self.__construct);
 };
 
 var ui = ui || {};

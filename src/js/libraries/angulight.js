@@ -1,19 +1,19 @@
 var angularLight = function(){
 
-    var that = this;
+    var self = this;
 
-    that.context = {
+    self.context = {
         controllers : {},
         directives  : {},
         services    : {}
     };
 
-    that.controller = function(id, callback){ that._register('controllers', id, callback) };
-    that.directive  = function(id, callback){ that._register('directives', id, callback) };
+    self.controller = function(id, callback){ self._register('controllers', id, callback) };
+    self.directive  = function(id, callback){ self._register('directives', id, callback) };
 
-    that._register  = function(type, id, callback){ that.context[type][_.camelCase(id)] = callback };
+    self._register  = function(type, id, callback){ self.context[type][_.camelCase(id)] = callback };
 
-    that._run = function(type, $element){
+    self._run = function(type, $element){
 
         if( window._DEBUG && window._DEBUG > 2 )
             console.time('angulight:run');
@@ -42,9 +42,9 @@ var angularLight = function(){
            params = params.concat(raw_params);
        }
 
-        if( typeof that.context[type+'s'][name] != "undefined" ){
+        if( typeof self.context[type+'s'][name] != "undefined" ){
 
-            var fct = that.context[type+'s'][name];
+            var fct = self.context[type+'s'][name];
             new (Function.prototype.bind.apply(fct, [null].concat(params)));
         }
 
@@ -56,14 +56,14 @@ var angularLight = function(){
     };
 
 
-    that.__construct = function(){
+    self.__construct = function(){
 
         $('[data-controller]').initialize(function(){
-            that._run('controller', $(this) );
+            self._run('controller', $(this) );
         });
 
         $('[data-directive]').initialize(function(){
-            that._run('directive', $(this) );
+            self._run('directive', $(this) );
         });
 
         $('[data-if]').initialize(function(){
@@ -95,7 +95,7 @@ var angularLight = function(){
         });
     }
 
-    $(document).ready(that.__construct);
+    $(document).ready(self.__construct);
 };
 
 var angulight = new angularLight();

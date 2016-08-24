@@ -19,30 +19,30 @@
 
 var UISlider = function (config) {
 
-    var that = this;
+    var self = this;
 
     /* Contructor. */
 
     /**
      *
      */
-    that.__construct = function (config) {
+    self.__construct = function (config) {
 
-        that.config = $.extend(that.config, config);
+        self.config = $.extend(self.config, config);
 
-        if( isNaN(parseInt(that.config.start_slide)) )
-            that.config.start_slide = 0;
+        if( isNaN(parseInt(self.config.start_slide)) )
+            self.config.start_slide = 0;
         else
-            that.config.start_slide = parseInt(that.config.start_slide);
+            self.config.start_slide = parseInt(self.config.start_slide);
 
-        that._setupContext(config);
-        that._setupEvents();
+        self._setupContext(config);
+        self._setupEvents();
     };
 
 
     /* Public */
 
-    that.config = {
+    self.config = {
         $element       : false,
         autoplay       : false,
         hold           : true,
@@ -60,7 +60,7 @@ var UISlider = function (config) {
     };
 
 
-    that.context = {
+    self.context = {
         indices           : { current : -1 },
         is_animating      : false,
         is_visible        : false,
@@ -73,7 +73,7 @@ var UISlider = function (config) {
     };
 
 
-    that.classnames = {
+    self.classnames = {
         slider     : 'ui-slider',
         slides     : 'ui-slider__slides',
         slide      : 'ui-slider__slide',
@@ -88,9 +88,9 @@ var UISlider = function (config) {
 
     /* Public */
 
-    that.goto = function(id, animate, callback){
+    self.goto = function(id, animate, callback){
 
-        that._show(id, animate, callback);
+        self._show(id, animate, callback);
     };
 
 
@@ -99,285 +99,285 @@ var UISlider = function (config) {
 
 
 
-    that._addClass    = function( $element, element){ if($element) $element.addClass(that.classnames[element]) };
-    that._removeClass = function( $element, element){ if($element) $element.removeClass(that.classnames[element]) };
-    that._addMod      = function( $element, element, mod){ if($element) $element.addClass(that.classnames[element]+'--'+mod) };
-    that._removeMod   = function( $element, element, mod){ if($element) $element.removeClass(that.classnames[element]+'--'+mod) };
-    that._alterMod    = function( $element, element, mod){ if($element) $element.alterClass(that.classnames[element]+'--'+(mod?mod:'')+'*') };
+    self._addClass    = function( $element, element){ if($element) $element.addClass(self.classnames[element]) };
+    self._removeClass = function( $element, element){ if($element) $element.removeClass(self.classnames[element]) };
+    self._addMod      = function( $element, element, mod){ if($element) $element.addClass(self.classnames[element]+'--'+mod) };
+    self._removeMod   = function( $element, element, mod){ if($element) $element.removeClass(self.classnames[element]+'--'+mod) };
+    self._alterMod    = function( $element, element, mod){ if($element) $element.alterClass(self.classnames[element]+'--'+(mod?mod:'')+'*') };
 
 
 
     /**
      *
      */
-    that._setupContext = function () {
+    self._setupContext = function () {
 
-        that.context.$slides_container     = that.config.$element.findClosest('.'+that.classnames.slides, '.'+that.classnames.slider);
-        that.context.$slides               = that.context.$slides_container.findClosest('.'+that.classnames.slide, '.'+that.classnames.slider);
-        that.context.$pagination_container = that.config.$element.findClosest('.'+that.classnames.pagination, '.'+that.classnames.slider);
-        that.context.$pagination           = that.context.$pagination_container.find('> a');
-        that.context.$arrows_container     = that.config.$element.findClosest('.'+that.classnames.arrows, '.'+that.classnames.slider);
-        that.context.$arrows               = that.context.$arrows_container.find('.'+that.classnames.arrow);
-        that.context.slide_count           = that.context.$slides.length;
-        that.context.offset                = that.config.$element.offset().top;
-        that.context.$window               = $(window);
-        that.context.window_height         = that.context.$window.height();
+        self.context.$slides_container     = self.config.$element.findClosest('.'+self.classnames.slides, '.'+self.classnames.slider);
+        self.context.$slides               = self.context.$slides_container.findClosest('.'+self.classnames.slide, '.'+self.classnames.slider);
+        self.context.$pagination_container = self.config.$element.findClosest('.'+self.classnames.pagination, '.'+self.classnames.slider);
+        self.context.$pagination           = self.context.$pagination_container.find('> a');
+        self.context.$arrows_container     = self.config.$element.findClosest('.'+self.classnames.arrows, '.'+self.classnames.slider);
+        self.context.$arrows               = self.context.$arrows_container.find('.'+self.classnames.arrow);
+        self.context.slide_count           = self.context.$slides.length;
+        self.context.offset                = self.config.$element.offset().top;
+        self.context.$window               = $(window);
+        self.context.window_height         = self.context.$window.height();
 
-        if (!that.context.slide_count)
+        if (!self.context.slide_count)
             return false;
 
-        that._packSlides();
+        self._packSlides();
 
-        that.config.$element.addClass('ui-preload');
+        self.config.$element.addClass('ui-preload');
 
-        that._addMod(that.config.$element, 'slider', 'animation-'+that.config.animation);
+        self._addMod(self.config.$element, 'slider', 'animation-'+self.config.animation);
 
-        that.context.$slides_container.wrap('<div class="'+that.classnames.scroller+'"/>');
+        self.context.$slides_container.wrap('<div class="'+self.classnames.scroller+'"/>');
 
-        if (that.context.slide_count < 2)
-            that.context.$arrows_container.hide();
+        if (self.context.slide_count < 2)
+            self.context.$arrows_container.hide();
 
 
-        if( that.config.preload )
-            that.config.$element.append('<div class="'+that.classnames.preload+'"/>');
+        if( self.config.preload )
+            self.config.$element.append('<div class="'+self.classnames.preload+'"/>');
 
-        that._sync();
-        that._initArrows();
-        that._initPagination();
-        that._show(Math.min(that.context.slide_count, that.config.start_slide), false);
-        that._preload();
-        that._startAutoplay();
+        self._sync();
+        self._initArrows();
+        self._initPagination();
+        self._show(Math.min(self.context.slide_count, self.config.start_slide), false);
+        self._preload();
+        self._startAutoplay();
     };
 
 
-    that._packSlides = function(){
+    self._packSlides = function(){
 
-        if( that.config.display ){
+        if( self.config.display ){
 
             $.each(['desktop','mobile','tablet','phone'], function(i, device){
 
-                if ( that.config.display[device] && that.config.display[device] > 1 && browser[device]) {
+                if ( self.config.display[device] && self.config.display[device] > 1 && browser[device]) {
 
-                    for (var j = 0; j < that.context.$slides.length; j += that.config.display[device]) {
-                        that.context.$slides.slice(j, j + that.config.display[device]).contents().unwrap().wrapAll("<div class='ui-slider__slide'></div>")
+                    for (var j = 0; j < self.context.$slides.length; j += self.config.display[device]) {
+                        self.context.$slides.slice(j, j + self.config.display[device]).contents().unwrap().wrapAll("<div class='ui-slider__slide'></div>")
                     }
                 }
             });
 
-            that.context.$slides = that.context.$slides_container.findClosest('.'+that.classnames.slide, '.'+that.classnames.slider);
-            that.context.slide_count = that.context.$slides.length;
+            self.context.$slides = self.context.$slides_container.findClosest('.'+self.classnames.slide, '.'+self.classnames.slider);
+            self.context.slide_count = self.context.$slides.length;
         }
     };
 
 
 
-    that._sync = function(){
+    self._sync = function(){
 
         $(document).on('ui-slider.updated', function(e, slideId, index){
 
-            if( slideId == that.config.sync && index != that.context.indices.current )
-                that._show(index, true);
+            if( slideId == self.config.sync && index != self.context.indices.current )
+                self._show(index, true);
         });
     };
 
 
 
-    that._startAutoplay = function () {
+    self._startAutoplay = function () {
 
-        if ( !that.config.autoplay || that.config.autoplay < 500 || that.context.slide_count < 2 )
+        if ( !self.config.autoplay || self.config.autoplay < 500 || self.context.slide_count < 2 )
             return;
 
-        if (that.context.interval)
-            clearInterval(that.context.interval);
+        if (self.context.interval)
+            clearInterval(self.context.interval);
 
-        that.context.interval = setInterval(function () {
+        self.context.interval = setInterval(function () {
 
-            if( that.context.is_visible )
-                that._show(that.context.indices.current + 1, true);
+            if( self.context.is_visible )
+                self._show(self.context.indices.current + 1, true);
 
-        }, that.config.autoplay);
+        }, self.config.autoplay);
 
     };
 
 
 
-    that._setupEvents = function () {
+    self._setupEvents = function () {
 
-        if (that.config.autoplay && that.config.hold) {
+        if (self.config.autoplay && self.config.hold) {
 
-            that.config.$element.hover(function () {
+            self.config.$element.hover(function () {
 
-                clearInterval(that.context.interval);
+                clearInterval(self.context.interval);
 
             }, function () {
 
-                that._startAutoplay();
+                self._startAutoplay();
             });
         }
 
-        if ( $.isFunction($.fn.swipe) && that.context.slide_count > 1 &&
-            ( (that.config.swipe_desktop && browser.desktop)
-            || (that.config.swipe_tablet && browser.tablet)
-            || (that.config.swipe_mobile && browser.mobile && !browser.tablet) )
+        if ( $.isFunction($.fn.swipe) && self.context.slide_count > 1 &&
+            ( (self.config.swipe_desktop && browser.desktop)
+            || (self.config.swipe_tablet && browser.tablet)
+            || (self.config.swipe_mobile && browser.mobile && !browser.tablet) )
         ) {
 
-            that.config.$element.swipe({
+            self.config.$element.swipe({
 
                 swipeLeft: function () {
-                    that._show(that.context.indices.current + 1, true)
+                    self._show(self.context.indices.current + 1, true)
                 },
                 swipeRight: function () {
-                    that._show(that.context.indices.current - 1, true)
+                    self._show(self.context.indices.current - 1, true)
                 }
             });
         }
 
-        that.context.$window
-            .resize(that._computeOffset)
-            .scroll(that._preload)
-            .scroll(that._checkVisibility);
+        self.context.$window
+            .resize(self._computeOffset)
+            .scroll(self._preload)
+            .scroll(self._checkVisibility);
 
-        $(document).on('loaded', that._computeOffset);
+        $(document).on('loaded', self._computeOffset);
     };
 
 
 
-    that._computeOffset = function(){
+    self._computeOffset = function(){
 
-        that.context.offset        = that.config.$element.offset().top;
-        that.context.window_height = that.context.$window.height();
+        self.context.offset        = self.config.$element.offset().top;
+        self.context.window_height = self.context.$window.height();
 
-        that._checkVisibility();
+        self._checkVisibility();
     };
 
 
 
-    that._checkVisibility = function(){
+    self._checkVisibility = function(){
 
-        var scrollTop    = that.context.$window.scrollTop();
-        var targetScroll = scrollTop+that.context.window_height*0.8;
-        var is_visible   = that.context.offset <= targetScroll;
+        var scrollTop    = self.context.$window.scrollTop();
+        var targetScroll = scrollTop+self.context.window_height*0.8;
+        var is_visible   = self.context.offset <= targetScroll;
 
-        if( is_visible && !that.context.is_visible ){
+        if( is_visible && !self.context.is_visible ){
 
-            clearInterval(that.context.interval);
-            that._startAutoplay();
+            clearInterval(self.context.interval);
+            self._startAutoplay();
         }
 
-        that.context.is_visible = is_visible;
+        self.context.is_visible = is_visible;
     };
 
 
 
-    that._computeIndexes = function(target){
+    self._computeIndexes = function(target){
 
-        var direction  = that.context.indices.current > target ? 'left' : 'right';
+        var direction  = self.context.indices.current > target ? 'left' : 'right';
         var next       = direction == 'left' ? target - 1 : target + 1;
-        var current    = that.context.indices.current;
+        var current    = self.context.indices.current;
 
-        if( that.config.loop ){
+        if( self.config.loop ){
 
-            if ( target >= that.context.slide_count ) {
+            if ( target >= self.context.slide_count ) {
 
                 target      = 0;
                 direction  = 'right';
 
             } else if ( target < 0 ) {
 
-                target      = that.context.slide_count - 1;
+                target      = self.context.slide_count - 1;
                 direction  = 'left';
             }
 
             next = direction == 'left' ? target - 1 : target + 1;
 
-            if( next >= that.context.slide_count )
+            if( next >= self.context.slide_count )
                 next = 0;
             else if ( next < 0 )
-                next = that.context.slide_count - 1;
+                next = self.context.slide_count - 1;
         }
         else {
 
-            if (target >= that.context.slide_count || target < 0)
+            if (target >= self.context.slide_count || target < 0)
                 return false;
         }
 
-        that._alterMod(that.config.$element, 'slider', 'direction');
-        that._addMod(that.config.$element, 'slider', 'direction-' + (direction=='right'?'forward':'backward'));
-        that._alterMod(that.config.$element, 'slider', 'index');
-        that._addMod(that.config.$element, 'slider', 'index-' + (parseInt(target)+1));
+        self._alterMod(self.config.$element, 'slider', 'direction');
+        self._addMod(self.config.$element, 'slider', 'direction-' + (direction=='right'?'forward':'backward'));
+        self._alterMod(self.config.$element, 'slider', 'index');
+        self._addMod(self.config.$element, 'slider', 'index-' + (parseInt(target)+1));
 
-        that.context.direction        = direction;
-        that.context.indices.current  = target;
-        that.context.indices.next     = next;
-        that.context.indices.previous = current;
+        self.context.direction        = direction;
+        self.context.indices.current  = target;
+        self.context.indices.next     = next;
+        self.context.indices.previous = current;
 
         return true;
     };
 
 
 
-    that._show = function (index, animate, callback) {
+    self._show = function (index, animate, callback) {
 
-        if (that.context.is_animating || that.context.indices.current == index ) return;
+        if (self.context.is_animating || self.context.indices.current == index ) return;
 
-        if( !that._computeIndexes(index) )
+        if( !self._computeIndexes(index) )
             return false;
 
-        that.context.is_animating = true;
+        self.context.is_animating = true;
 
-        $(document).trigger('ui-slider.updated', [that.config.$element.attr('id'), index, that.context.indices.current]);
+        $(document).trigger('ui-slider.updated', [self.config.$element.attr('id'), index, self.context.indices.current]);
 
-        that.context.$current_slide = that.context.$slides.eq(that.context.indices.current);
+        self.context.$current_slide = self.context.$slides.eq(self.context.indices.current);
 
-        if( that.context.indices.next >= 0 && that.context.indices.next < that.context.slide_count )
-            that.context.$next_slide = that.context.$slides.eq(that.context.indices.next);
+        if( self.context.indices.next >= 0 && self.context.indices.next < self.context.slide_count )
+            self.context.$next_slide = self.context.$slides.eq(self.context.indices.next);
         else
-            that.context.$next_slide = false;
+            self.context.$next_slide = false;
 
-        if( that.context.indices.previous >= 0 && that.context.indices.previous < that.context.slide_count )
-            that.context.$previous_slide = that.context.$slides.eq(that.context.indices.previous);
+        if( self.context.indices.previous >= 0 && self.context.indices.previous < self.context.slide_count )
+            self.context.$previous_slide = self.context.$slides.eq(self.context.indices.previous);
         else
-            that.context.$previous_slide = false;
+            self.context.$previous_slide = false;
 
-        that._removeMod(that.context.$arrows, 'arrow', 'disabled');
+        self._removeMod(self.context.$arrows, 'arrow', 'disabled');
 
-        if ( that.context.indices.current >= that.context.slide_count-1 && !that.config.loop )
-            that._addMod(that.context.$arrows.filter(that.classnames.arrow+'--right'), 'arrow', 'disabled');
+        if ( self.context.indices.current >= self.context.slide_count-1 && !self.config.loop )
+            self._addMod(self.context.$arrows.filter(self.classnames.arrow+'--right'), 'arrow', 'disabled');
 
-        if( that.context.indices.current == 0 && !that.config.loop )
-            that._addMod(that.context.$arrows.filter(that.classnames.arrow+'--left'), 'arrow', 'disabled');
+        if( self.context.indices.current == 0 && !self.config.loop )
+            self._addMod(self.context.$arrows.filter(self.classnames.arrow+'--left'), 'arrow', 'disabled');
 
-        that._updateSlides(animate, callback);
-        that._updatePagination();
+        self._updateSlides(animate, callback);
+        self._updatePagination();
 
-        that.context.loop++;
+        self.context.loop++;
     };
 
 
 
-    that._updateSlides = function (animate, callback) {
+    self._updateSlides = function (animate, callback) {
 
-        that._alterMod(that.context.$slides, 'slide');
+        self._alterMod(self.context.$slides, 'slide');
 
-        if( that.context.$previous_slide )
-            that._addMod(that.context.$previous_slide, 'slide', 'previous');
+        if( self.context.$previous_slide )
+            self._addMod(self.context.$previous_slide, 'slide', 'previous');
 
-        that._addMod(that.context.$current_slide, 'slide', 'current');
+        self._addMod(self.context.$current_slide, 'slide', 'current');
 
-        if( that.context.$next_slide )
-            that._addMod(that.context.$next_slide, 'slide', 'next');
+        if( self.context.$next_slide )
+            self._addMod(self.context.$next_slide, 'slide', 'next');
 
         if( window.jQuery.fn.fit ){
 
-            that.context.$current_slide.find('.ui-fit__object').fit();
-            that.context.$next_slide.find('.ui-fit__object').fit();
+            self.context.$current_slide.find('.ui-fit__object').fit();
+            self.context.$next_slide.find('.ui-fit__object').fit();
         }
 
-        that._animate(animate, function () {
+        self._animate(animate, function () {
 
-            that.context.is_animating = false;
+            self.context.is_animating = false;
 
-            that._preload();
+            self._preload();
 
             if( callback )
                 callback();
@@ -386,16 +386,16 @@ var UISlider = function (config) {
 
 
 
-    that._animate = function(animate, callback){
+    self._animate = function(animate, callback){
 
         if( animate ){
 
-            if( !that.context.loop )
+            if( !self.context.loop )
                 callback();
             else
-                that._addMod(that.config.$element, 'slider', 'animating');
+                self._addMod(self.config.$element, 'slider', 'animating');
 
-            var $animatedSlides  = that.context.$slides.filter(':visible').not(function(){
+            var $animatedSlides  = self.context.$slides.filter(':visible').not(function(){
 
                 var animation = $(this).css('animation-name');
                 return !animation || animation == "none";
@@ -403,18 +403,18 @@ var UISlider = function (config) {
 
             var i = 0;
 
-            $animatedSlides.one(that.context.animationEnd, function(){
+            $animatedSlides.one(self.context.animationEnd, function(){
 
                 i++;
                 if( i == $animatedSlides.length ){
 
-                    that._removeMod(that.config.$element, 'slider', 'animating');
+                    self._removeMod(self.config.$element, 'slider', 'animating');
                     callback();
                 }
             });
 
-            if( !that.config.use_transition || !$animatedSlides.length){
-                that._removeMod(that.config.$element, 'slider', 'animating');
+            if( !self.config.use_transition || !$animatedSlides.length){
+                self._removeMod(self.config.$element, 'slider', 'animating');
                 callback();
             }
         }
@@ -426,66 +426,66 @@ var UISlider = function (config) {
 
 
 
-    that._updatePagination = function () {
+    self._updatePagination = function () {
 
-        that.context.$pagination.removeClass('active');
+        self.context.$pagination.removeClass('active');
 
-        if ( that.context.indices.current >= 0 )
-            that.context.$pagination.eq(that.context.indices.current).addClass('active');
+        if ( self.context.indices.current >= 0 )
+            self.context.$pagination.eq(self.context.indices.current).addClass('active');
     };
 
 
 
-    that._initArrows = function () {
+    self._initArrows = function () {
 
-        if (!that.context.$arrows.length && that.context.slide_count > 1) {
+        if (!self.context.$arrows.length && self.context.slide_count > 1) {
 
-            that.context.$arrows_container.append('<a class="'+that.classnames.arrow+' '+that.classnames.arrow+'--right"></a>');
-            that.context.$arrows_container.prepend('<a class="'+that.classnames.arrow+' '+that.classnames.arrow+'--left"></a>');
+            self.context.$arrows_container.append('<a class="'+self.classnames.arrow+' '+self.classnames.arrow+'--right"></a>');
+            self.context.$arrows_container.prepend('<a class="'+self.classnames.arrow+' '+self.classnames.arrow+'--left"></a>');
 
-            that.context.$arrows = that.context.$arrows_container.find('.'+that.classnames.arrow);
+            self.context.$arrows = self.context.$arrows_container.find('.'+self.classnames.arrow);
         }
 
-        that.context.$arrows.click(function (e) {
+        self.context.$arrows.click(function (e) {
 
             e.preventDefault();
 
-            var inc = $(this).hasClass(that.classnames.arrow+'--left') ? -1 : 1;
-            that._show(that.context.indices.current + inc, true);
+            var inc = $(this).hasClass(self.classnames.arrow+'--left') ? -1 : 1;
+            self._show(self.context.indices.current + inc, true);
         });
     };
 
 
 
-    that._preload = function () {
+    self._preload = function () {
 
-        var scrollTop    = that.context.$window.scrollTop();
-        var targetScroll = scrollTop+that.context.window_height;
+        var scrollTop    = self.context.$window.scrollTop();
+        var targetScroll = scrollTop+self.context.window_height;
 
-        if (that.config.preload && that.context.offset <= targetScroll*that.config.load) {
+        if (self.config.preload && self.context.offset <= targetScroll*self.config.load) {
 
-            that._loadImage(that.context.$current_slide);
+            self._loadImage(self.context.$current_slide);
 
-            if( that.context.$next_slide && that.context.offset <= targetScroll*that.config.load ){
+            if( self.context.$next_slide && self.context.offset <= targetScroll*self.config.load ){
 
-                that._loadImage(that.context.$next_slide);
+                self._loadImage(self.context.$next_slide);
 
-                if( that.config.preload > 1 ){
+                if( self.config.preload > 1 ){
 
-                    var $next = that.context.$next_slide.next();
+                    var $next = self.context.$next_slide.next();
 
                     if( $next.length )
-                        that._loadImage($next);
+                        self._loadImage($next);
                 }
             }
 
-            if( that.config.loop && that.context.$previous_slide && that.context.offset <= targetScroll*that.config.load )
-                that._loadImage(that.context.$previous_slide);
+            if( self.config.loop && self.context.$previous_slide && self.context.offset <= targetScroll*self.config.load )
+                self._loadImage(self.context.$previous_slide);
         }
     };
 
 
-    that._loadImage = function ($slide) {
+    self._loadImage = function ($slide) {
 
         if (!$slide || !$slide.length)
             return false;
@@ -496,7 +496,7 @@ var UISlider = function (config) {
 
             //force load to memory
             if( Modernizr && Modernizr.csstransforms3d )
-                that.config.$element.find('.'+that.classnames.preload).append('<img src="'+$element.data('src')+'"/>');
+                self.config.$element.find('.'+self.classnames.preload).append('<img src="'+$element.data('src')+'"/>');
 
             if( $element.is('img') )
                 $element.attr('src', $element.data('src'));
@@ -510,29 +510,29 @@ var UISlider = function (config) {
     };
 
 
-    that._initPagination = function () {
+    self._initPagination = function () {
 
-        if (!that.context.$pagination.length &&that.context.slide_count > 1) {
+        if (!self.context.$pagination.length &&self.context.slide_count > 1) {
 
             var a = '<a></a>';
-            var $pagination = that.config.$element.findClosest('.'+that.classnames.pagination, '.'+that.classnames.slider);
+            var $pagination = self.config.$element.findClosest('.'+self.classnames.pagination, '.'+self.classnames.slider);
 
-            $pagination.append(a.repeat(that.context.slide_count));
+            $pagination.append(a.repeat(self.context.slide_count));
 
-            that.context.$pagination = $pagination.find('> a');
+            self.context.$pagination = $pagination.find('> a');
         }
 
-        that.context.$pagination.click(function (e) {
+        self.context.$pagination.click(function (e) {
 
             e.preventDefault();
-            that._show($(this).index(), true);
+            self._show($(this).index(), true);
         });
 
-        that._updatePagination();
+        self._updatePagination();
     };
 
 
-    that.__construct(config);
+    self.__construct(config);
 };
 
 
@@ -541,12 +541,12 @@ var UISlider = function (config) {
  */
 var UISliders = function () {
 
-    var that = this;
+    var self = this;
 
-    that.sliders = {};
+    self.sliders = {};
 
 
-    that.add = function( $slider ){
+    self.add = function( $slider ){
 
         if( $slider.attr('id') == undefined )
             $slider.attr('id', guid('slider'));
@@ -556,26 +556,26 @@ var UISliders = function () {
 
         $slider.removeAttr('data-context');
 
-        that.sliders[$slider.attr('id')] = new UISlider(context);
+        self.sliders[$slider.attr('id')] = new UISlider(context);
     };
 
 
-    that.goto = function(sliderId, slideId, animate, callback){
+    self.goto = function(sliderId, slideId, animate, callback){
 
-        if( that.sliders[sliderId] ){
+        if( self.sliders[sliderId] ){
 
-            var slider = that.sliders[sliderId];
+            var slider = self.sliders[sliderId];
 
             slider.goto(slideId, animate, callback)
         }
     };
 
 
-    that.__construct = function () {
+    self.__construct = function () {
 
         $('.ui-slider').initialize(function () {
 
-            that.add( $(this) );
+            self.add( $(this) );
         });
     };
 
@@ -586,7 +586,7 @@ var UISliders = function () {
 
             return '<div class="ui-slider"'+(attrs.context?' data-context="'+attrs.context+'"':'')+'><transclude/></div>';
 
-        }, that.add);
+        }, self.add);
 
         dom.compiler.register('element', 'slides', function (elem) {
 
@@ -625,7 +625,7 @@ var UISliders = function () {
     }
 
 
-    that.__construct();
+    self.__construct();
 };
 
 var ui = ui || {};

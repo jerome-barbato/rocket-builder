@@ -17,15 +17,15 @@
 
 var UIParallax = function () {
 
-    var that = this;
+    var self = this;
 
-    that.config = {
+    self.config = {
         mobile : false,
         type   : 'down'
     };
 
 
-    that.context = {
+    self.context = {
         window_height   : 0,
         document_height : 0,
         scroll_top      : 0,
@@ -33,27 +33,27 @@ var UIParallax = function () {
     };
 
 
-    that._setupEvents = function(){
+    self._setupEvents = function(){
 
         $(document).on('loaded', function(){
 
-            that._resize();
-            that._update();
+            self._resize();
+            self._update();
         });
 
         $(window)
-            .scroll(function(){ requestAnimationFrame(that._update) })
-            .resize(function(){ that._resize(); requestAnimationFrame(that._update) });
+            .scroll(function(){ requestAnimationFrame(self._update) })
+            .resize(function(){ self._resize(); requestAnimationFrame(self._update) });
     };
 
 
 
-    that._resize = function(){
+    self._resize = function(){
 
-        that.context.window_height   = $(window).height();
-        that.context.document_height = $(document).height();
+        self.context.window_height   = $(window).height();
+        self.context.document_height = $(document).height();
 
-        $.each(that.context.items, function(i, item){
+        $.each(self.context.items, function(i, item){
 
             item.top    = item.$.offset().top;
             item.height = item.$.height();
@@ -63,18 +63,18 @@ var UIParallax = function () {
 
 
 
-    that._update = function(){
+    self._update = function(){
 
-        that.context.scroll_top = $(window).scrollTop();
+        self.context.scroll_top = $(window).scrollTop();
 
-        $.each(that.context.items, function(i, item){
+        $.each(self.context.items, function(i, item){
 
-            if( that.context.scroll_top + that.context.window_height > item.top && item.bottom > that.context.scroll_top) {
+            if( self.context.scroll_top + self.context.window_height > item.top && item.bottom > self.context.scroll_top) {
 
-                if( item.top < that.context.window_height )
-                    item.offset = that.context.scroll_top / item.bottom;
+                if( item.top < self.context.window_height )
+                    item.offset = self.context.scroll_top / item.bottom;
                 else
-                    item.offset = (that.context.scroll_top + that.context.window_height - item.top) / (item.bottom + that.context.window_height - item.top);
+                    item.offset = (self.context.scroll_top + self.context.window_height - item.top) / (item.bottom + self.context.window_height - item.top);
 
                 item.offset = item.center ? item.offset-0.5 : item.offset;
                 item.offset = (Math.round(-item.offset*1000)/1000);
@@ -85,7 +85,7 @@ var UIParallax = function () {
 
                 var offset = 0;
 
-                if( that.context.scroll_top + that.context.window_height <= item.top )
+                if( self.context.scroll_top + self.context.window_height <= item.top )
                     offset = (item.center ? 0.5 : 0)*item.strenght;
                 else
                     offset = -(item.center ? 0.5 : 1)*item.strenght;
@@ -100,9 +100,9 @@ var UIParallax = function () {
     };
 
 
-    that._add = function( $element ){
+    self._add = function( $element ){
 
-        that.context.items.push({
+        self.context.items.push({
             $        : $element,
             strenght : parseInt($element.data('parallax')),
             unit     : $element.data('parallax-unit'),
@@ -114,23 +114,23 @@ var UIParallax = function () {
     /**
      *
      */
-    that.__construct = function () {
+    self.__construct = function () {
 
-        if( browser && browser.mobile && !that.config.mobile )
+        if( browser && browser.mobile && !self.config.mobile )
             return;
 
         $('.ui-parallax').initialize(function(){
 
-            that._add( $(this) );
+            self._add( $(this) );
         });
 
         $(document).on('loaded', function(){
 
-            that._resize();
-            that._update();
+            self._resize();
+            self._update();
         });
 
-        that._setupEvents();
+        self._setupEvents();
     };
 
 
@@ -149,11 +149,11 @@ var UIParallax = function () {
 
             elem.addClass('ui-parallax');
 
-        }, that._add);
+        }, self._add);
     }
 
 
-    that.__construct();
+    self.__construct();
 };
 
 

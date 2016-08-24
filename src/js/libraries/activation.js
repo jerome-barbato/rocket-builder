@@ -15,12 +15,12 @@
 
 var UIActivation = function(){
 
-    var that = this;
+    var self = this;
 
 
     /* Public */
 
-    that.context = {
+    self.context = {
         hold          : false,
         window_height : 0,
         elements      : [],
@@ -29,7 +29,7 @@ var UIActivation = function(){
     };
 
 
-    that.config = {
+    self.config = {
         offset  : 0.2,
         reverse : false,
         debug   : false,
@@ -38,18 +38,18 @@ var UIActivation = function(){
     };
 
 
-    that.add = function( $element ){
+    self.add = function( $element ){
 
 
         if( !$element || !$element.length )
             return;
 
-        that._add( $element );
-        that._init();
+        self._add( $element );
+        self._init();
     };
 
 
-    that.reset = function( $dom ){
+    self.reset = function( $dom ){
 
         if( !$dom || !$dom.length )
             return;
@@ -74,7 +74,7 @@ var UIActivation = function(){
                 }
             }
 
-            $.each(that.context.elements, function(index, element) {
+            $.each(self.context.elements, function(index, element) {
 
                 if (element.active && $item.is(element.$))
                     element.active = false;
@@ -85,15 +85,15 @@ var UIActivation = function(){
 
     /* Private. */
 
-    that._init = function(){
+    self._init = function(){
 
         if( Modernizr && Modernizr.csstransitions )
-            that._scroll();
+            self._scroll();
     };
 
 
 
-    that.onAnimationEnded = function($element, callback){
+    self.onAnimationEnded = function($element, callback){
 
         var keep   = $element.hasDataAttr('keep') ? $element.data('keep') : false;
         var $items = $element.find('.ui-animation');
@@ -102,13 +102,13 @@ var UIActivation = function(){
 
             var i = 0;
 
-            $items.one(that.context.animationEnd, function(){
+            $items.one(self.context.animationEnd, function(){
 
                 i++;
 
                 if( i == $items.length ){
 
-                    if( !that.config.reverse ) {
+                    if( !self.config.reverse ) {
 
                         $element.removeClass('ui-activation--active');
 
@@ -122,15 +122,15 @@ var UIActivation = function(){
                             });
                         }
 
-                        if (!that.config.debug && !keep) {
+                        if (!self.config.debug && !keep) {
 
                             $element.removeClass('ui-animation').alterClass('ui-animation--*');
                             $items.removeClass('ui-animation').alterClass('ui-animation--*');
                         }
                     }
 
-                    $items.unbind(that.context.animationEnd);
-                    $element.unbind(that.context.animationEnd);
+                    $items.unbind(self.context.animationEnd);
+                    $element.unbind(self.context.animationEnd);
 
                     if( callback )
                         callback();
@@ -139,23 +139,23 @@ var UIActivation = function(){
         }
         else{
 
-            $element.one(that.context.animationEnd, function(){
+            $element.one(self.context.animationEnd, function(){
 
-                if( !that.config.reverse ) {
+                if( !self.config.reverse ) {
 
                     $element.removeClass('ui-activation--active');
 
                     if( $element.hasClass('ui-activation') )
                         setTimeout(function(){ $element.addClass('ui-activation--seen') });
 
-                    if( !that.config.debug && !keep) {
+                    if( !self.config.debug && !keep) {
 
                         $element.removeClass('ui-animation').alterClass('ui-animation--*');
                         $element.trigger('ui-animation.end');
                     }
                 }
 
-                $element.unbind(that.context.animationEnd);
+                $element.unbind(self.context.animationEnd);
 
                 if( callback )
                     callback();
@@ -165,9 +165,9 @@ var UIActivation = function(){
 
 
 
-    that._add = function($element){
+    self._add = function($element){
 
-        if( that.context.disable ){
+        if( self.context.disable ){
 
             $element.alterClass('ui-animation--*').removeClass('ui-animation');
             $element.find('.ui-animation').alterClass('ui-animation--*').removeClass('ui-animation');
@@ -175,9 +175,9 @@ var UIActivation = function(){
         }
         else{
 
-            var offset   = $element.hasDataAttr('offset') ? parseFloat($element.data('offset')) : that.config.offset;
+            var offset   = $element.hasDataAttr('offset') ? parseFloat($element.data('offset')) : self.config.offset;
             var element  = {$:$element, top:$element.offset().top, offset:offset, active:false, increment:$element.hasClass('ui-animation--name-increment')};
-            var value    = parseFloat( that.context.lang=='fr' ? $element.text().replace(/,/, '.') : $element.text().replace(/,/g, '') );
+            var value    = parseFloat( self.context.lang=='fr' ? $element.text().replace(/,/, '.') : $element.text().replace(/,/g, '') );
 
             if( element.increment && !isNaN(value) ){
 
@@ -197,26 +197,26 @@ var UIActivation = function(){
                 element.init   = init;
             }
 
-            that.context.elements.push(element);
+            self.context.elements.push(element);
         }
     };
 
 
 
-    that._setupEvents = function() {
+    self._setupEvents = function() {
 
         $(window)
-            .scroll( that._scroll )
-            .resize(function(){ that._recompute(); that._scroll() });
+            .scroll( self._scroll )
+            .resize(function(){ self._recompute(); self._scroll() });
     };
 
 
 
-    that._recompute = function(){
+    self._recompute = function(){
 
-        that.context.window_height = $(window).height();
+        self.context.window_height = $(window).height();
 
-        $.each(that.context.elements, function(i, element){
+        $.each(self.context.elements, function(i, element){
 
             element.top = element.$.offset().top;
         });
@@ -224,16 +224,16 @@ var UIActivation = function(){
 
 
 
-    that._decrement = function(element){
+    self._decrement = function(element){
         //todo
     };
 
 
 
-    that._increment = function(element){
+    self._increment = function(element){
 
-        var unit_decimal  = that.context.lang=='fr'?',':'.';
-        var unit_thousand = that.context.lang=='fr'?' ':',';
+        var unit_decimal  = self.context.lang=='fr'?',':'.';
+        var unit_thousand = self.context.lang=='fr'?' ':',';
 
         $({increment: element.init}).stop(true).animate({increment: element.value}, {
             duration : 1500,
@@ -254,37 +254,37 @@ var UIActivation = function(){
 
 
 
-    that._scroll = function() {
+    self._scroll = function() {
 
-        if( that.context.hold ) return;
+        if( self.context.hold ) return;
 
-        var scrollTop = $(window).scrollTop()+that.context.window_height;
+        var scrollTop = $(window).scrollTop()+self.context.window_height;
 
-        $.each(that.context.elements, function(index, element) {
+        $.each(self.context.elements, function(index, element) {
 
             if( element.active ) {
 
-                if( that.config.reverse && element.top > scrollTop+that.context.window_height ){
+                if( self.config.reverse && element.top > scrollTop+self.context.window_height ){
 
                     element.$.removeClass('ui-activation--active');
                     element.active = false;
 
                     if( element.increment )
-                        that._decrement(element);
+                        self._decrement(element);
                 }
             }
             else{
 
-                if( scrollTop > element.top + that.context.window_height*element.offset  ){
+                if( scrollTop > element.top + self.context.window_height*element.offset  ){
 
-                    that.onAnimationEnded(element.$);
+                    self.onAnimationEnded(element.$);
 
                     element.$.addClass('ui-activation--active');
 
                     element.active = true;
 
                     if( element.increment )
-                        that._increment(element);
+                        self._increment(element);
                 }
             }
         });
@@ -292,7 +292,7 @@ var UIActivation = function(){
 
 
 
-    that._addClassFromAttr = function(elem, attrs, id, name){
+    self._addClassFromAttr = function(elem, attrs, id, name){
 
         if( attrs[id].length ){
 
@@ -325,20 +325,20 @@ var UIActivation = function(){
     /**
      *
      */
-    that.__construct =  function() {
+    self.__construct =  function() {
 
-        that.context.disable = (browser.phone && !that.config.phone) || (browser.tablet && !that.config.tablet);
+        self.context.disable = (browser.phone && !self.config.phone) || (browser.tablet && !self.config.tablet);
 
         $('.ui-activation').initialize(function() {
 
-            that.add( $(this) );
+            self.add( $(this) );
         });
 
         $(document).on('loaded', function(){
 
-            that._setupEvents();
-            that._recompute();
-            that._scroll();
+            self._setupEvents();
+            self._recompute();
+            self._scroll();
         });
     };
 
@@ -351,7 +351,7 @@ var UIActivation = function(){
             elem.addClass('ui-activation ui-animation ui-animation--'+attrs.whenVisible);
             dom.compiler.attr(elem, 'animation', attrs.whenVisible);
 
-        }, that.add);
+        }, self.add);
 
         dom.compiler.register('attribute', 'activate', function(elem, attrs) {
 
@@ -363,13 +363,13 @@ var UIActivation = function(){
             elem.addClass('ui-animation');
 
             dom.compiler.attr(elem, 'delay', attrs.delay);
-            that._addClassFromAttr(elem, attrs, 'delay');
+            self._addClassFromAttr(elem, attrs, 'delay');
         });
 
         dom.compiler.register('attribute', 'easing', function(elem, attrs) {
 
             elem.addClass('ui-animation');
-            that._addClassFromAttr(elem, attrs, 'easing');
+            self._addClassFromAttr(elem, attrs, 'easing');
         });
 
         dom.compiler.register('attribute', 'visibility', function(elem, attrs) {
@@ -403,7 +403,7 @@ var UIActivation = function(){
             var $element = $(this);
             $element.removeClass('ui-activation--seen').addClass('ui-animation '+( animation && animation.length ? ' ui-animation--'+animation:''));
 
-            that.onAnimationEnded($element, function(){
+            self.onAnimationEnded($element, function(){
 
                 $element.alterClass('ui-animation--*');
 
@@ -419,7 +419,7 @@ var UIActivation = function(){
     }
 
 
-    that.__construct();
+    self.__construct();
 };
 
 

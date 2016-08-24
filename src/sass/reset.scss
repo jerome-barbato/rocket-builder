@@ -65,3 +65,5 @@ textarea {
 *, *:before, *:after{ box-sizing: border-box }
 
 [block],[element],[mod],[data-if]{ display: none!important }
+
+.hidden{ visibility: hidden; position: absolute; left: -1px; top: -1px; width: 0; height: 0; opacity: 0.01 }

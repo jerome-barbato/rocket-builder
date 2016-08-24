@@ -19,13 +19,13 @@
 
 var UIToggle = function (config) {
 
-    var that = this;
+    var self = this;
 
-    that.context = {
+    self.context = {
         $toggle : false
     };
 
-    that.config = {
+    self.config = {
         $element   : false,
         auto_close : false,
         open_first : false,
@@ -35,20 +35,20 @@ var UIToggle = function (config) {
     };
 
 
-    that._setupEvents = function(){
+    self._setupEvents = function(){
 
-        that.context.$toggle.click(function(){
+        self.context.$toggle.click(function(){
 
             var $parent = $(this).parents('.ui-toggle');
-            that.toggle( $parent );
+            self.toggle( $parent );
 
-            if( that.config.auto_close )
-                that.close( that.context.$toggles.not($parent) );
+            if( self.config.auto_close )
+                self.close( self.context.$toggles.not($parent) );
         });
     };
 
 
-    that.close = function( $toggle ){
+    self.close = function( $toggle ){
 
         if( !$toggle.length )
             return;
@@ -57,13 +57,13 @@ var UIToggle = function (config) {
 
             $(this).removeClass('ui-toggle--active');
 
-            if( that.config.animate )
-                $(this).find('.ui-toggle__content').stop().slideUp(that.config.speed, that.config.easing);
+            if( self.config.animate )
+                $(this).find('.ui-toggle__content').stop().slideUp(self.config.speed, self.config.easing);
         });
     };
 
 
-    that.toggle = function( $toggle ){
+    self.toggle = function( $toggle ){
 
         if( !$toggle.length )
             return;
@@ -72,13 +72,13 @@ var UIToggle = function (config) {
 
             $(this).toggleClass('ui-toggle--active');
 
-            if( that.config.animate )
-                $(this).find('.ui-toggle__content').stop().slideToggle(that.config.speed, that.config.easing);
+            if( self.config.animate )
+                $(this).find('.ui-toggle__content').stop().slideToggle(self.config.speed, self.config.easing);
         });
     };
 
 
-    that.open = function( $toggle ){
+    self.open = function( $toggle ){
 
         if( !$toggle.length )
             return;
@@ -87,8 +87,8 @@ var UIToggle = function (config) {
 
             $(this).addClass('ui-toggle--active');
 
-            if( that.config.animate )
-                $(this).find('.ui-toggle__content').stop().slideDown(that.config.speed, that.config.easing);
+            if( self.config.animate )
+                $(this).find('.ui-toggle__content').stop().slideDown(self.config.speed, self.config.easing);
         });
     };
 
@@ -98,16 +98,16 @@ var UIToggle = function (config) {
     /**
      *
      */
-    that.__construct = function (config) {
+    self.__construct = function (config) {
 
-        that.config = $.extend(that.config, config);
+        self.config = $.extend(self.config, config);
 
-        if( that.config.$element.hasClass('.ui-toggle') )
-            that.context.$toggles = that.config.$element;
+        if( self.config.$element.hasClass('.ui-toggle') )
+            self.context.$toggles = self.config.$element;
         else
-            that.context.$toggles   = that.config.$element.find('.ui-toggle');
+            self.context.$toggles   = self.config.$element.find('.ui-toggle');
 
-        that.context.$toggles.each(function(){
+        self.context.$toggles.each(function(){
 
             var $element = $(this);
             var context = $element.data('context') ? JSON.parse('{' + $element.data('context').replace(/'/g, '"') + '}') : {};
@@ -124,27 +124,27 @@ var UIToggle = function (config) {
             });
         });
 
-        that.context.$toggle = that.config.$element.find('.ui-toggle__handler');
+        self.context.$toggle = self.config.$element.find('.ui-toggle__handler');
 
-        if( that.config.open_first )
-            that.open( that.context.$toggles.first() );
+        if( self.config.open_first )
+            self.open( self.context.$toggles.first() );
 
-        that._setupEvents();
+        self._setupEvents();
     };
 
 
-    that.__construct(config);
+    self.__construct(config);
 };
 
 
 var UIToggles = function () {
 
-    var that = this;
+    var self = this;
 
-    that.toggles = [];
+    self.toggles = [];
 
 
-    that.add = function( $toggle ){
+    self.add = function( $toggle ){
 
         if( $toggle.data('ui-toggles--initialized') )
             return;
@@ -157,15 +157,15 @@ var UIToggles = function () {
 
         $toggle.removeAttr('data-context');
 
-        that.toggles.push( new UIToggle(context) );
+        self.toggles.push( new UIToggle(context) );
     };
 
 
     /* Constructor. */
 
-    that.__construct = function () {
+    self.__construct = function () {
 
-        $('.ui-toggles').initialize(function () { that.add( $(this) ) });
+        $('.ui-toggles').initialize(function () { self.add( $(this) ) });
     };
 
 
@@ -178,7 +178,7 @@ var UIToggles = function () {
             if( attrs.toggles.length )
                 dom.compiler.attr(elem, 'context', attrs.toggles);
 
-        },that.add);
+        },self.add);
 
         dom.compiler.register('attribute', 'toggle', function (elem, attrs) {
 
@@ -193,7 +193,7 @@ var UIToggles = function () {
     }
 
 
-    that.__construct();
+    self.__construct();
 };
 
 

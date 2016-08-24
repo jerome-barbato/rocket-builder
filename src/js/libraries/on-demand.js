@@ -16,27 +16,27 @@
 
 var UIOnDemand = function(){
 
-    var that = this;
+    var self = this;
 
-    that.context = {
+    self.context = {
         init          : false,
         elements      : [],
         window_height : 0
     };
 
-    that.selector = 'ui-on-demand';
+    self.selector = 'ui-on-demand';
 
-    that.config = {
+    self.config = {
         load : 1.9
     };
 
 
-    that.add = function ( $element ) {
+    self.add = function ( $element ) {
 
         if( $element.parents('.ui-preload').length )
             return;
 
-        $element.addClass(that.selector+'--waiting');
+        $element.addClass(self.selector+'--waiting');
 
         var use_parent = false;
         var $parent    = false;
@@ -73,18 +73,18 @@ var UIOnDemand = function(){
             $element.html('<source src="'+element.src+'" type="video/mp4"><source src="'+element.src.replace('.mp4', '.webm')+'" type="video/webm">');
         }
 
-        that.context.elements.push(element);
+        self.context.elements.push(element);
     };
 
 
 
-    that._resize = function(){
+    self._resize = function(){
 
-        that.context.window_height = $(window).height();
+        self.context.window_height = $(window).height();
 
-        for (var i in that.context.elements) {
+        for (var i in self.context.elements) {
 
-            var element  = that.context.elements[i];
+            var element  = self.context.elements[i];
             var top      = element.use_parent ? element.$parent.offset().top : element.$.offset().top;
             var height   = element.use_parent ? element.$parent.height() : element.$.height();
 
@@ -96,28 +96,28 @@ var UIOnDemand = function(){
 
 
 
-    that._loaded = function(element){
+    self._loaded = function(element){
 
-        element.$.removeClass(that.selector+'--loading').addClass(that.selector+'--loaded');
+        element.$.removeClass(self.selector+'--loading').addClass(self.selector+'--loaded');
         element.loaded = true;
     };
 
 
 
-    that._load = function () {
+    self._load = function () {
 
         var scrollTop    = $(window).scrollTop();
-        var targetScroll = scrollTop + that.context.window_height*that.config.load;
+        var targetScroll = scrollTop + self.context.window_height*self.config.load;
 
-        for (var i in that.context.elements) {
+        for (var i in self.context.elements) {
 
-            var element  = that.context.elements[i];
+            var element  = self.context.elements[i];
             var $element = element.$;
 
             if( !element.preloaded && element.visible && element.top <= targetScroll ){
 
                 element.preloaded = true;
-                $element.removeClass(that.selector+'--waiting').addClass(that.selector+'--loading');
+                $element.removeClass(self.selector+'--waiting').addClass(self.selector+'--loading');
 
                 switch( element.type ) {
 
@@ -125,7 +125,7 @@ var UIOnDemand = function(){
 
                         (function(elem) {
 
-                            elem.$.on('load', function () { that._loaded(elem) });
+                            elem.$.on('load', function () { self._loaded(elem) });
 
                         })(element);
 
@@ -137,7 +137,7 @@ var UIOnDemand = function(){
 
                         (function(elem) {
 
-                            elem.$.on('loadeddata', function(){ that._loaded(elem) });
+                            elem.$.on('loadeddata', function(){ self._loaded(elem) });
 
                         })(element);
 
@@ -149,7 +149,7 @@ var UIOnDemand = function(){
 
                         (function(elem) {
 
-                            $('<img/>').on('load', function() { that._loaded(elem) }).attr('src', elem.src);
+                            $('<img/>').on('load', function() { self._loaded(elem) }).attr('src', elem.src);
 
                         })(element);
 
@@ -162,18 +162,18 @@ var UIOnDemand = function(){
 
             if( element.type == "video" && element.preloaded ){
 
-                if( element.top < scrollTop+that.context.window_height && element.bottom > scrollTop){
+                if( element.top < scrollTop+self.context.window_height && element.bottom > scrollTop){
 
                     if( !element.play ){
 
-                        $element.addClass(that.selector+'--playing').removeClass(that.selector+'--paused');
+                        $element.addClass(self.selector+'--playing').removeClass(self.selector+'--paused');
                         $element.get(0).play();
                         element.play = true;
                     }
                 }
                 else if( element.play ){
 
-                    $element.addClass(that.selector+'--paused').removeClass(that.selector+'--playing');
+                    $element.addClass(self.selector+'--paused').removeClass(self.selector+'--playing');
                     $element.get(0).pause();
                     element.play = false;
                 }
@@ -188,23 +188,23 @@ var UIOnDemand = function(){
     /**
      *
      */
-    that.__construct =  function(){
+    self.__construct =  function(){
 
         $('.ui-on-demand').initialize(function(){
-            that.add($(this))
+            self.add($(this))
         });
         
         
-        $(window).on('scroll', that._load).on('resize', function(){
-            that._resize();
-            that._load()
+        $(window).on('scroll', self._load).on('resize', function(){
+            self._resize();
+            self._load()
         });
         
 
         $(document).on('loaded', function(){
 
-            that._resize();
-            setTimeout(that._load, 300);
+            self._resize();
+            setTimeout(self._load, 300);
         });
     };
 
@@ -225,12 +225,12 @@ var UIOnDemand = function(){
                 elem.data('src', attrs.onDemand);
             }
 
-        }, that.add);
+        }, self.add);
     }
 
 
     /* Public */
-    that.__construct();
+    self.__construct();
 };
 
 var ui = ui || {};

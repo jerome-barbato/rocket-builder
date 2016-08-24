@@ -15,11 +15,11 @@
 
 var BEM = function(){
 
-    var that   = this;
+    var self   = this;
 
-    that.debug = false;
+    self.debug = false;
 
-    that._configure = function(type, elem, block_class_name, element_class_name){
+    self._configure = function(type, elem, block_class_name, element_class_name){
 
         var single_binding = false;
 
@@ -46,13 +46,13 @@ var BEM = function(){
 
         elem.addClass(block_class_name+element_class_name);
 
-        if( that.debug )
+        if( self.debug )
             elem.attr('is', type);
     };
 
 
 
-    that.addModifier = function(elem, attrs){
+    self.addModifier = function(elem, attrs){
 
         attrs.mod.split(' ').forEach(function(mod){
 
@@ -68,7 +68,7 @@ var BEM = function(){
 
 
 
-    that.removeModifier = function(elem, attrs){
+    self.removeModifier = function(elem, attrs){
 
         attrs.mod.split(' ').forEach(function(mod){
 
@@ -84,14 +84,14 @@ var BEM = function(){
 
 
 
-    that.manageBlock = function(elem, attrs){
+    self.manageBlock = function(elem, attrs){
 
-        that._configure('block', elem, attrs.block);
+        self._configure('block', elem, attrs.block);
     };
 
 
 
-    that.manageElements = function(elem, attrs){
+    self.manageElements = function(elem, attrs){
 
         var $element = elem.parents('[element]');
         var $block   = elem.parents('[block]');
@@ -100,7 +100,7 @@ var BEM = function(){
             $element = $block;
 
         if( $element.length )
-            that._configure('element', elem, $element.data(':bem'), attrs.element);
+            self._configure('element', elem, $element.data(':bem'), attrs.element);
     };
 
 
@@ -109,25 +109,25 @@ var BEM = function(){
 
         dom.compiler.register('attribute', 'block', function (elem, attrs) {
 
-            that.manageBlock(elem, attrs);
+            self.manageBlock(elem, attrs);
         });
 
         dom.compiler.register('attribute', 'element', function (elem, attrs) {
 
-            that.manageElements(elem, attrs);
+            self.manageElements(elem, attrs);
         });
 
         dom.compiler.register('attribute', 'mod', function (elem, attrs) {
 
-            that.addModifier(elem, attrs);
+            self.addModifier(elem, attrs);
         });
     }
 
 
     if (window.jQuery) {
 
-        window.jQuery.fn.addMod = function(mod) { that.addModifier(this, {mod:mod}) };
-        window.jQuery.fn.removeMod = function(mod) { that.removeModifier(this, {mod:mod}) };
+        window.jQuery.fn.addMod = function(mod) { self.addModifier(this, {mod:mod}) };
+        window.jQuery.fn.removeMod = function(mod) { self.removeModifier(this, {mod:mod}) };
     }
 };
 

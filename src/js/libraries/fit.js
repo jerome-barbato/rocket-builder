@@ -15,16 +15,16 @@
 
 var UIFit = function() {
 
-    var that = this;
+    var self = this;
 
-    that.timeout   = false;
-    that.warn      = false;
+    self.timeout   = false;
+    self.warn      = false;
 
-    that.selector  = 'ui-fit';
+    self.selector  = 'ui-fit';
 
 
     /* Public methods. */
-    that.compute = function( $element ) {
+    self.compute = function( $element ) {
 
         if( $element.data('waiting') ) return;
 
@@ -33,9 +33,9 @@ var UIFit = function() {
         var container_height = $container.height();
         var container_ratio  = container_width/container_height;
 
-        that._getRatio($element, function( element_ratio ){
+        self._getRatio($element, function( element_ratio ){
 
-            if( $element.hasClass(that.selector+"__contain") ){
+            if( $element.hasClass(self.selector+"__contain") ){
 
                 if( element_ratio < container_ratio ) {
 
@@ -70,9 +70,9 @@ var UIFit = function() {
     /**
      *
      */
-    that._init = function() {
+    self._init = function() {
 
-        $('.'+that.selector+'__cover, .'+that.selector+'__contain').initialize(function() {
+        $('.'+self.selector+'__cover, .'+self.selector+'__contain').initialize(function() {
 
             var $element = $(this);
 
@@ -80,22 +80,22 @@ var UIFit = function() {
 
             if( !$element.data('ratio') ) {
 
-                that._getRatio($element, function () {
+                self._getRatio($element, function () {
 
-                    that.compute($element);
+                    self.compute($element);
                 });
             }
             else
-                that.compute($element);
+                self.compute($element);
 
-            $(document).on('loaded', function(){ that.compute($element) });
-            $(window).resize(function(){ that.compute($element) });
+            $(document).on('loaded', function(){ self.compute($element) });
+            $(window).resize(function(){ self.compute($element) });
         });
     };
 
 
 
-    that._getRatio = function( $element, callback ){
+    self._getRatio = function( $element, callback ){
 
         if( $element.data('ratio') ){
 
@@ -109,10 +109,10 @@ var UIFit = function() {
 
         if( isNaN(ratio) ){
 
-            if( !that.warn ){
+            if( !self.warn ){
 
                 console.warn("there was a prb computing an image ratio, please be sure to specify width/height in the html to avoid resize on image loading");
-                that.warn = true;
+                self.warn = true;
             }
 
             var getNaturalDimensions = function(){
@@ -153,12 +153,12 @@ var UIFit = function() {
 
 
 
-    that.__construct = function(){
+    self.__construct = function(){
 
         if( Modernizr && Modernizr.objectfit )
             return;
 
-        that._init();
+        self._init();
     };
 
 
@@ -167,8 +167,8 @@ var UIFit = function() {
 
         dom.compiler.register('attribute', 'object-fit', function (elem, attrs) {
 
-            elem.parent().addClass(that.selector);
-            elem.addClass(that.selector + '__' + (attrs.objectFit.length ? attrs.objectFit : 'cover'));
+            elem.parent().addClass(self.selector);
+            elem.addClass(self.selector + '__' + (attrs.objectFit.length ? attrs.objectFit : 'cover'));
         });
     }
 
@@ -190,7 +190,7 @@ var UIFit = function() {
         };
     }
 
-    that.__construct();
+    self.__construct();
 };
 
 
