@@ -58,12 +58,12 @@ var angularLight = function(){
 
     self.__construct = function(){
 
-        $('[data-controller]').initialize(function(){
-            self._run('controller', $(this) );
-        });
-
         $('[data-directive]').initialize(function(){
             self._run('directive', $(this) );
+        });
+
+        $('[data-controller]').initialize(function(){
+            self._run('controller', $(this) );
         });
 
         $('[data-if]').initialize(function(){
