@@ -22,8 +22,9 @@ var UITab = function (config) {
     var self = this;
 
     self.context = {
-        $tabs : false,
-        $tab  : false
+        $tabs   : false,
+        $tab    : false,
+        current : 0
     };
 
     self.config = {
@@ -50,6 +51,27 @@ var UITab = function (config) {
 
         if( i <= self.context.$tabs.length )
             self.context.$tabs.eq(i).addClass('ui-tab--active');
+
+        self.current = i;
+
+        if( self.context.id.length )
+            cookies.set('ui-tab-'+self.context.id, i);
+    };
+
+
+    self._init = function(){
+
+        if( self.context.id ) {
+
+            var current_from_cookie = cookies.get('ui-tab-' + self.context.id);
+
+            if (current_from_cookie)
+                self.open(current_from_cookie);
+            else
+                self.open(0);
+        }
+        else
+            self.open(0);
     };
 
 
@@ -64,6 +86,7 @@ var UITab = function (config) {
 
         self.context.$tab_handlers = self.config.$element.find('.ui-tabs__handler');
         self.context.$tabs = self.config.$element.nextAll('.ui-tab');
+        self.context.id    = self.config.$element.attr('id') || false;
 
         $.each(self.config.block, function(i, block){
 
@@ -81,7 +104,7 @@ var UITab = function (config) {
         });
 
         self._setupEvents();
-        self.open(0);
+        self._init();
     };
 
 

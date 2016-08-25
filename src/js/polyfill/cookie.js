@@ -31,7 +31,7 @@ var cookieHandler = function() {
      * @param cvalue * value of the cookie
      * @param exdays String day amount before expiration
      */
-    self.setCookie = function(cname, cvalue, exdays) {
+    self.set = function(cname, cvalue, exdays) {
         var d = new Date();
         d.setTime(d.getTime() + (exdays*24*60*60*1000));
         var expires = "expires="+d.toUTCString();
@@ -43,7 +43,7 @@ var cookieHandler = function() {
      * @param cname String name of the cookie
      * @returns {*} Cookie | ""
      */
-    self.getCookie = function(cname) {
+    self.get = function(cname) {
         var name = cname + "=";
         var ca = document.cookie.split(';');
         for(var i = 0; i < ca.length; i++) {
