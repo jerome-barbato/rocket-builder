@@ -3,15 +3,15 @@
   .ui-hide{
 
     @media #{$media-desktop} {
-      &--desktop{ display: none!important }
+      &--desktop{ display: none }
     }
 
     @media #{$media-tablet-only} {
-      &--tablet{ display: none!important }
+      &--tablet{ display: none }
     }
 
     @media #{$media-mobile} {
-      &--mobile{ display: none!important }
+      &--mobile{ display: none }
     }
   }
 }

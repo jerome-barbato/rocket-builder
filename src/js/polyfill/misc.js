@@ -10,6 +10,10 @@ String.prototype.repeat = function(num) {
 String.prototype.populate = function(data) {
     var content = this.toString();
     $.each(data, function(id, key){
+
+        if( Array.isArray(key) )
+            key = key.join('|');
+
         content = content.split('[['+id+']]').join(key);
     });
 
