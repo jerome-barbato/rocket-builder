@@ -4,8 +4,7 @@ var angularLight = function(){
 
     self.context = {
         controllers : {},
-        directives  : {},
-        services    : {}
+        directives  : {}
     };
 
     self.controller = function(id, callback){ self._register('controllers', id, callback) };
@@ -107,3 +106,4 @@ var angularLight = function(){
 };
 
 var angulight = new angularLight();
+var app = { services : {} };
