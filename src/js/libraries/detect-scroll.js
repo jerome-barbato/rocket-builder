@@ -50,7 +50,7 @@ var UIDetectScroll = function(){
 
         var element = {
             $          : $element,
-            position   : $element.data('detect-scroll'),
+            position   : $element.hasDataAttr('detect-scroll') ? $element.data('detect-scroll') : 'top-reached',
             top        : $element.offset().top,
             reached    : false
         };
@@ -203,11 +203,11 @@ var UIDetectScroll = function(){
         if( self.config.force_offset )
             self.context.offset = self.config.force_offset;
 
-        $('.'+self.config.class.detect).initialize(function(){
-            self.add( $(this) )
-        });
-
         $(document).on('loaded', function(){
+
+            $('.'+self.config.class.detect).each(function(){
+                self.add( $(this) )
+            });
 
             self._resize();
             self._detect();
@@ -222,11 +222,7 @@ var UIDetectScroll = function(){
         dom.compiler.register('attribute', 'detect-scroll', function (elem, attrs) {
 
             elem.addClass('ui-detect-scroll');
-
-            if( window.precompile )
-                elem.attr('data-detect-scroll', attrs.detectScroll);
-            else
-                elem.data('detect-scroll', attrs.detectScroll);
+            dom.compiler.attr(elem, 'detect-scroll', attrs.detectScroll);
         });
 
         dom.compiler.register('attribute', 'fixed-header', function (elem, attrs) {

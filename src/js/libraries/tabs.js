@@ -40,6 +40,12 @@ var UITab = function (config) {
             e.preventDefault();
             self.open( self.context.$tab_handlers.index($(this)) );
         });
+
+        self.context.$tabs.find('[data-tab]').click(function(e){
+
+            e.preventDefault();
+            self.open( parseInt($(this).data('tab'))-1 );
+        });
     };
 
 
@@ -51,6 +57,8 @@ var UITab = function (config) {
 
         if( i <= self.context.$tabs.length )
             self.context.$tabs.eq(i).addClass('ui-tab--active');
+
+        //$('html,body').animate({scrollTop: self.config.$element.offset().top - $('.ui-scroll-offset').height()}, 200, "easeInOutCubic");
 
         self.current = i;
 
