@@ -11,7 +11,15 @@ var angularLight = function(){
     self.controller = function(id, callback){ self._register('controllers', id, callback) };
     self.directive  = function(id, callback){ self._register('directives', id, callback) };
 
-    self._register  = function(type, id, callback){ self.context[type][_.camelCase(id)] = callback };
+    self._register  = function(type, id, callback){
+
+        id = _.camelCase(id);
+
+        if( typeof self.context[type][id] != "undefined")
+            console.error('Angulight: '+type+' '+id+' allready exist');
+        else
+            self.context[type][id] = callback
+    };
 
     self._run = function(type, $element){
 

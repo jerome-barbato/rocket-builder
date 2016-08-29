@@ -16,11 +16,28 @@
 
         var updateDom = function (fct, args, context) {
 
-            if (args.length)
-                args[0] = args[0] instanceof $ ? args[0] : $(args[0]);
-            var ret = fct.apply(context, args);
-            if (args.length)
-                $(document).trigger('DOMNodeUpdated', args);
+            var ret = false;
+
+            if( args.length && typeof args[0] != "undefined" ){
+
+                //todo: better regexp to replace indexOf('<')
+                if( typeof args[0] == "string" && args[0].indexOf('<') == -1 ){
+
+                    ret = fct.apply(context, args);
+                }
+                else{
+
+                    args[0] = args[0] instanceof $ ? args[0] : $(args[0]);
+                    ret = fct.apply(context, args);
+
+                    $(document).trigger('DOMNodeUpdated', args);
+                }
+            }
+            else{
+
+                ret = fct.apply(context, args);
+            }
+
             return ret;
         };
 
