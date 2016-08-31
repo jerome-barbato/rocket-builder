@@ -129,7 +129,11 @@ var UITabs = function () {
 
     self.add = function( $tabs ){
 
-        var context = $tabs.data('context') ? JSON.parse('{' + $tabs.data('context').replace(/'/g, '"') + '}') : {};
+        var context = {};
+        try {
+            context = $tabs.data('context') ? JSON.parse('{' + $tabs.data('context').replace(/'/g, '"') + '}') : {};
+        } catch(e) {}
+
         context.$element = $tabs;
 
         $tabs.removeAttr('data-context');

@@ -110,7 +110,12 @@ var UIToggle = function (config) {
         self.context.$toggles.each(function(){
 
             var $element = $(this);
-            var context = $element.data('context') ? JSON.parse('{' + $element.data('context').replace(/'/g, '"') + '}') : {};
+            var context = {};
+
+            try {
+                context = $element.data('context') ? JSON.parse('{' + $element.data('context').replace(/'/g, '"') + '}') : {};
+            } catch (e) {}
+
             $element.removeAttr('data-context');
 
             $.each( context.disable, function(i, device){
@@ -152,7 +157,12 @@ var UIToggles = function () {
         $toggle.data('ui-toggles--initialized', true);
         $toggle.find('.ui-toggle').data('ui-toggles--initialised', true);
 
-        var context = $toggle.data('context') ? JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') : {};
+        var context = {};
+
+        try {
+            context = $toggle.data('context') ? JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') : {};
+        } catch(e) {}
+
         context.$element = $toggle;
 
         $toggle.removeAttr('data-context');

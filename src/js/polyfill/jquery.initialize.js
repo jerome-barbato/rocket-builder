@@ -59,8 +59,10 @@
         };
 
         var initialize = function(callback){
+
             var $elem = $(this);
-            if( typeof $elem.data('initialized') == "undefined" ){
+
+            if( typeof $elem.data('initialized') == "undefined" && !$elem.parents('template').length ){
 
                 $elem.data('initialized', true);
                 callback.call(this);
@@ -70,6 +72,7 @@
         $.fn.initialize = function(callback){
 
             $(this).each(function(){
+
                 initialize.call(this, callback);
             });
 
