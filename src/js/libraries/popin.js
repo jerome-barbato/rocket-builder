@@ -112,8 +112,12 @@ var UIPopin = function(){
         $(document).on('click', '[data-popin]', function(e) {
 
             e.preventDefault();
+            var context = {};
 
-            var context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
+            try {
+                context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
+            } catch(e) {}
+
 
             self.add($(this).data('popin'), false, context);
         });

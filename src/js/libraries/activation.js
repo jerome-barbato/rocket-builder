@@ -301,7 +301,13 @@ var UIActivation = function(){
 
             if( attrs[id].indexOf(':') > -1 && attrs[id].indexOf('{') == -1 ) {
 
-                var values = JSON.parse('{"' + attrs[id].replace(/ /g, '","').replace(/:/g, '":"') + '"}');
+                var values = {d:false, m:false, t:false};
+
+                try {
+
+                    values = JSON.parse('{"' + attrs[id].replace(/ /g, '","').replace(/:/g, '":"') + '"}');
+
+                } catch (e) {}
 
                 if (values.d)
                     elem.addClass('ui-animation--'+name+'-'+values.d);
