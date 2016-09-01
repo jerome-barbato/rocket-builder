@@ -33,8 +33,8 @@ var UIActivation = function(){
         offset  : 0.2,
         reverse : false,
         debug   : false,
-        tablet  : false,
-        phone   : false
+        tablet  : true,
+        phone   : true
     };
 
 
