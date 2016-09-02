@@ -65,9 +65,6 @@ var angularLight = function(){
 
     self.__construct = function(){
 
-        window.app = window.app || {};
-        app.services = {};
-
         $('[data-directive]').initialize(function(){
             self._run('directive', $(this) );
         });
@@ -109,3 +106,6 @@ var angularLight = function(){
 };
 
 var angulight = new angularLight();
+var app       = app || {};
+
+app.services = {};

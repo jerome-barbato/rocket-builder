@@ -149,11 +149,9 @@ dom.compiler.register('attribute', 'hide-on', function(elem, attrs){
 
     if( attrs.hideOn && attrs.hideOn.length ) {
 
-        var hideOn = attrs.hideOn;
+        var hideOn = attrs.hideOn.replace(' ', '-');
 
-        var hideOn_map = hideOn.split(' ');
-
-        elem.addClass('ui-hide--' + hideOn_map.join(' ui-hide--'));
+        elem.addClass('ui-hide--' + hideOn);
     }
 });
 
@@ -296,7 +294,7 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
             hideOn = "desktop tablet";
 
         if (showOn == "desktop")
-            hideOn = "mobile tablet";
+            hideOn = "mobile-tablet";
 
         if (showOn == "tablet")
             hideOn = "mobile desktop";

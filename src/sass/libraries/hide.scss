@@ -10,6 +10,10 @@
       &--tablet{ display: none }
     }
 
+    @media #{$media-tablet} {
+      &--mobile-tablet, &--tablet-mobile{ display: none }
+    }
+
     @media #{$media-mobile} {
       &--mobile{ display: none }
     }
