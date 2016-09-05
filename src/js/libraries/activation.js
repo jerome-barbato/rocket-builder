@@ -398,7 +398,7 @@ var UIActivation = function(){
 
     if (window.jQuery) {
 
-        window.jQuery.fn.animation = function(animation, callback){
+        $.fn.animation = function(animation, callback){
 
             if( typeof animation == 'function' ){
 
