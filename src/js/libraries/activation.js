@@ -6,7 +6,7 @@
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
  * License: GPL
- * Version: 3
+ * Version: 4
  *
  * Requires:
  *   - jQuery
@@ -25,61 +25,27 @@ var UIActivation = function(){
         window_height : 0,
         elements      : [],
         lang          : $('html').attr('lang'),
-        animationEnd  : 'animationend.ui-animation oanimationend.ui-animation webkitAnimationEnd.ui-animation MSAnimationEnd.ui-animation'
+        animationEnd  : 'animationend.ui-activation oanimationend.ui-activation webkitAnimationEnd.ui-activation MSAnimationEnd.ui-activation'
     };
 
 
     self.config = {
-        offset  : 0.2,
-        reverse : false,
-        debug   : false,
-        tablet  : false,
-        phone   : false
+        visibility  : 0.2,
+        reverse     : true,
+        debug       : false,
+        tablet      : false,
+        phone       : false
     };
 
 
     self.add = function( $element ){
 
-
         if( !$element || !$element.length )
             return;
 
-        self._add( $element );
-        self._init();
-    };
+        var element = self._add( $element );
 
-
-    self.reset = function( $dom ){
-
-        if( !$dom || !$dom.length )
-            return;
-
-        $dom.find('.ui-activation').each(function(){
-
-            var $item = $(this);
-            $item.removeClass('ui-activation--seen');
-
-            if( $item.data('animation') ){
-
-                $item.addClass('ui-animation ui-animation--'+$item.data('animation'));
-                if( $item.data('animation') == "stack" ){
-
-                    $dom.find('.ui-activation--seen').each(function(){
-
-                        $(this).removeClass('ui-activation--seen').addClass('ui-animation ui-animation--delay-'+$(this).data('delay'));
-
-                        if( $(this).data('animation') )
-                            $(this).addClass('ui-animation--'+$(this).data('animation'));
-                    })
-                }
-            }
-
-            $.each(self.context.elements, function(index, element) {
-
-                if (element.active && $item.is(element.$))
-                    element.active = false;
-            });
-        });
+        self._activate(element);
     };
 
 
@@ -93,12 +59,11 @@ var UIActivation = function(){
 
 
 
-    self.onAnimationEnded = function($element, callback){
+    self._onAnimationEnded = function($element, callback){
 
-        var keep   = $element.hasDataAttr('keep') ? $element.data('keep') : false;
-        var $items = $element.find('.ui-animation');
+        var $items = $element.find('[data-delay]');
 
-        if( $items.length && $element.hasClass('ui-animation--stack') ){
+        if( $items.length && $element.data('animation') == 'stack' ){
 
             var i = 0;
 
@@ -106,56 +71,13 @@ var UIActivation = function(){
 
                 i++;
 
-                if( i == $items.length ){
-
-                    if( !self.config.reverse ) {
-
-                        $element.removeClass('ui-activation--active');
-
-                        $element.trigger('ui-animation.end');
-
-                        if ($element.hasClass('ui-activation')) {
-
-                            setTimeout(function () {
-                                $element.addClass('ui-activation--seen');
-                                $items.addClass('ui-activation--seen');
-                            });
-                        }
-
-                        if (!self.config.debug && !keep) {
-
-                            $element.removeClass('ui-animation').alterClass('ui-animation--*');
-                            $items.removeClass('ui-animation').alterClass('ui-animation--*');
-                        }
-                    }
-
-                    $items.unbind(self.context.animationEnd);
-                    $element.unbind(self.context.animationEnd);
-
-                    if( callback )
-                        callback();
-                }
+                if( i == $items.length && callback )
+                    callback();
             });
         }
         else{
 
             $element.one(self.context.animationEnd, function(){
-
-                if( !self.config.reverse ) {
-
-                    $element.removeClass('ui-activation--active');
-
-                    if( $element.hasClass('ui-activation') )
-                        setTimeout(function(){ $element.addClass('ui-activation--seen') });
-
-                    if( !self.config.debug && !keep) {
-
-                        $element.removeClass('ui-animation').alterClass('ui-animation--*');
-                        $element.trigger('ui-animation.end');
-                    }
-                }
-
-                $element.unbind(self.context.animationEnd);
 
                 if( callback )
                     callback();
@@ -169,15 +91,21 @@ var UIActivation = function(){
 
         if( self.context.disable ){
 
-            $element.alterClass('ui-animation--*').removeClass('ui-animation');
-            $element.find('.ui-animation').alterClass('ui-animation--*').removeClass('ui-animation');
-            $element.addClass('ui-activation--active ui-activation--seen');
+            $element.removeAttr('data-animation').removeAttr('data-easing').removeAttr('data-delay');
+            $element.find('[data-delay]').removeAttr('data-animation').removeAttr('data-easing').removeAttr('data-delay');
+            $element.addClass('ui-activation--seen');
         }
         else{
 
-            var offset   = $element.hasDataAttr('offset') ? parseFloat($element.data('offset')) : self.config.offset;
-            var element  = {$:$element, top:$element.offset().top, offset:offset, active:false, increment:$element.hasClass('ui-animation--name-increment')};
-            var value    = parseFloat( self.context.lang=='fr' ? $element.text().replace(/,/, '.') : $element.text().replace(/,/g, '') );
+            var element    = {
+                $          : $element,
+                top        : $element.offset().top,
+                visibility : parseFloat($element.data('visibility')) || self.config.visibility,
+                active     : false,
+                increment  : $element.data('animation') == 'increment'
+            };
+
+            var value = parseFloat( self.context.lang=='fr' ? $element.text().replace(/,/, '.') : $element.text().replace(/,/g, '') );
 
             if( element.increment && !isNaN(value) ){
 
@@ -187,9 +115,6 @@ var UIActivation = function(){
                 if( init < 50 )
                     init = 0;
 
-                if( !$element.hasDataAttr('offset') )
-                    element.offset = 0;
-
                 $element.text(init);
 
                 element.value  = value;
@@ -198,7 +123,11 @@ var UIActivation = function(){
             }
 
             self.context.elements.push(element);
+
+            return element;
         }
+
+        return false;
     };
 
 
@@ -225,7 +154,25 @@ var UIActivation = function(){
 
 
     self._decrement = function(element){
-        //todo
+
+        var unit_decimal  = self.context.lang=='fr'?',':'.';
+        var unit_thousand = self.context.lang=='fr'?' ':',';
+
+        $({increment: element.value}).stop(true).animate({increment: element.init}, {
+            duration : 1500,
+            easing   : "easeOutCubic",
+            step     : function () {
+
+                var value = element.is_int ?
+                    Math.round(this.increment).format(0).replace(/ /g, unit_thousand) :
+                    (Math.round(this.increment*10)/10).format(1).replace('.', unit_decimal);
+
+                element.$.text(value);
+            }
+        }, function () {
+
+            element.$.text( element.is_int ? element.init.format(0).replace(/ /g, unit_thousand) : element.init.format(1).replace('.', unit_decimal) );
+        });
     };
 
 
@@ -253,69 +200,94 @@ var UIActivation = function(){
     };
 
 
+    self._reset = function( element ){
+
+        self._onAnimationEnded(element.$, function(){
+
+            element.$.removeClass('ui-activation--reset');
+        });
+
+        element.$.removeClass('ui-activation--active').addClass('ui-activation--reset');
+        element.active = false;
+
+        if( element.increment )
+            self._decrement(element);
+    };
+
+
+    self._activate = function( element, scrollTop ) {
+
+        if( typeof scrollTop == "undefined")
+            scrollTop = $(window).scrollTop() + self.context.window_height;
+
+        if( !element )
+            return;
+
+        if( element.active ) {
+
+            if( self.config.reverse && element.top + self.context.window_height*element.visibility > scrollTop )
+                self._reset( element );
+        }
+        else{
+
+            if( scrollTop > element.top + self.context.window_height*element.visibility  ){
+
+                self._onAnimationEnded(element.$, function(){
+
+                    if( !self.config.reverse ) {
+
+                        element.$.removeClass('ui-activation--active');
+
+                        if( $element.hasClass('ui-activation') )
+                            setTimeout(function(){ element.$.addClass('ui-activation--seen') });
+                    }
+                });
+
+                element.$.addClass('ui-activation--active');
+
+                element.active = true;
+
+                if( element.increment )
+                    self._increment(element);
+            }
+        }
+    };
 
     self._scroll = function() {
 
         if( self.context.hold ) return;
 
-        var scrollTop = $(window).scrollTop()+self.context.window_height;
+        var scrollTop = $(window).scrollTop() + self.context.window_height;
 
         $.each(self.context.elements, function(index, element) {
 
-            if( element.active ) {
-
-                if( self.config.reverse && element.top > scrollTop+self.context.window_height ){
-
-                    element.$.removeClass('ui-activation--active');
-                    element.active = false;
-
-                    if( element.increment )
-                        self._decrement(element);
-                }
-            }
-            else{
-
-                if( scrollTop > element.top + self.context.window_height*element.offset  ){
-
-                    self.onAnimationEnded(element.$);
-
-                    element.$.addClass('ui-activation--active');
-
-                    element.active = true;
-
-                    if( element.increment )
-                        self._increment(element);
-                }
-            }
+            self._activate(element, scrollTop);
         });
     };
 
 
 
-    self._addClassFromAttr = function(elem, attrs, id, name){
+    self._addAttr = function(elem, value, id, name){
 
-        if( attrs[id].length ){
+        if( typeof name == "undefined" )
+            name = id;
 
-            if( typeof name == "undefined" )
-                name = id;
+        if( value.indexOf(':') > -1 && value.indexOf('{') == -1 ) {
 
-            if( attrs[id].indexOf(':') > -1 && attrs[id].indexOf('{') == -1 ) {
+            var values = JSON.parse('{"' + value.replace(/ /g, '","').replace(/:/g, '":"') + '"}');
 
-                var values = JSON.parse('{"' + attrs[id].replace(/ /g, '","').replace(/:/g, '":"') + '"}');
+            if (values.d)
+                elem.attr('data-'+name, values.d);
 
-                if (values.d)
-                    elem.addClass('ui-animation--'+name+'-'+values.d);
+            if (values.m)
+                elem.attr('data-mobile-'+name , values.m);
 
-                if (values.m)
-                    elem.addClass('ui-animation--mobile--'+name+'-'+values.m);
+            if (values.t)
+                elem.attr('data-tablet-'+name ,values.t);
+        }
+        else{
 
-                if (values.t)
-                    elem.addClass('ui-animation--tablet--'+name+'-'+values.t);
-            }
-            else{
-
-                elem.addClass('ui-animation--'+name+'-'+attrs[id]);
-            }
+            elem.attr('data-'+name, value);
         }
     };
 
@@ -348,8 +320,8 @@ var UIActivation = function(){
 
         dom.compiler.register('attribute', 'when-visible', function(elem, attrs) {
 
-            elem.addClass('ui-activation ui-animation ui-animation--'+attrs.whenVisible);
-            dom.compiler.attr(elem, 'animation', attrs.whenVisible);
+            elem.addClass('ui-activation');
+            self._addAttr(elem, attrs.whenVisible, 'animation');
 
         }, self.add);
 
@@ -360,64 +332,35 @@ var UIActivation = function(){
 
         dom.compiler.register('attribute', 'delay', function(elem, attrs) {
 
-            elem.addClass('ui-animation');
-
-            dom.compiler.attr(elem, 'delay', attrs.delay);
-            self._addClassFromAttr(elem, attrs, 'delay');
+            self._addAttr(elem, attrs.delay, 'delay');
         });
 
         dom.compiler.register('attribute', 'easing', function(elem, attrs) {
 
-            elem.addClass('ui-animation');
-            self._addClassFromAttr(elem, attrs, 'easing');
+            self._addAttr(elem, attrs.easing, 'easing');
         });
 
         dom.compiler.register('attribute', 'visibility', function(elem, attrs) {
 
-            dom.compiler.attr(elem, 'offset', parseInt(attrs.visibility.replace('%', ''))/100);
+            var visibility = attrs.visibility.replace('%', '');
+
+            if( visibility == "top")
+                visibility = 100;
+
+            if( visibility == "half")
+                visibility = 50;
+
+            if( visibility == "bottom")
+                visibility = 0;
+
+            dom.compiler.attr(elem, 'visibility', parseInt(visibility)/100);
         });
 
         dom.compiler.register('attribute', 'animation', function(elem, attrs) {
 
-            elem.addClass('ui-animation ui-animation--'+attrs.animation);
-
-            dom.compiler.attr(elem, 'animation', attrs.animation);
-        });
-
-        dom.compiler.register('attribute', 'keep', function(elem, attrs) {
-
-            dom.compiler.attr(elem, 'keep', attrs.keep);
+            self._addAttr(elem, attrs.animation, 'animation');
         });
     }
-
-    if (window.jQuery) {
-
-        window.jQuery.fn.animation = function(animation, callback){
-
-            if( typeof animation == 'function' ){
-
-                callback  = animation;
-                animation = false;
-            }
-
-            var $element = $(this);
-            $element.removeClass('ui-activation--seen').addClass('ui-animation '+( animation && animation.length ? ' ui-animation--'+animation:''));
-
-            self.onAnimationEnded($element, function(){
-
-                $element.alterClass('ui-animation--*');
-
-                if( animation && animation.length && $element.hasDataAttr('animation') )
-                    $element.addClass('ui-animation--'+$element.data('animation'));
-
-                if( callback )
-                    callback.call($element);
-            });
-
-            $element.addClass('ui-animation--active').show();
-        };
-    }
-
 
     self.__construct();
 };
