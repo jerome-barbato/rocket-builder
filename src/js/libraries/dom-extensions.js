@@ -64,16 +64,16 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
         else
             elem.append('<img src="{{ asset.medias.root }}sizers/' + size + '.png" class="ui-sizer">');
     }
-    else if ( typeof window.APP != "undefined" ){
+    else if ( typeof app != "undefined" ){
 
         if( elem.is('img') ){
 
-            elem.attr('src', window.APP.asset.medias.root+'sizers/' + size + '.png');
+            elem.attr('src', app.asset.medias.root+'sizers/' + size + '.png');
             elem.addClass('ui-sizer');
             elem.css('backgroundImage', "url('"+attrs.src+"')");
         }
         else
-            elem.append('<img src="' + window.APP.asset.medias.root + 'sizers/' + size + '.png" class="ui-sizer">');
+            elem.append('<img src="' + app.asset.medias.root + 'sizers/' + size + '.png" class="ui-sizer">');
     }
 });
 
@@ -149,11 +149,9 @@ dom.compiler.register('attribute', 'hide-on', function(elem, attrs){
 
     if( attrs.hideOn && attrs.hideOn.length ) {
 
-        var hideOn = attrs.hideOn;
+        var hideOn = attrs.hideOn.replace(' ', '-');
 
-        var hideOn_map = hideOn.split(' ');
-
-        elem.addClass('ui-hide--' + hideOn_map.join(' ui-hide--'));
+        elem.addClass('ui-hide--' + hideOn);
     }
 });
 
@@ -167,13 +165,13 @@ dom.compiler.register('attribute', 'blocks-src', function(elem, attrs){
     }
     else{
 
-        if( typeof window.APP == "undefined" ) {
+        if( typeof app == "undefined" ) {
 
             console.warn('asset.medias.blocks is not defined');
             elem.attr('src', attrs.blocksSrc);
         }
         else {
-            elem.attr('src', window.APP.asset.medias.blocks + attrs.blocksSrc);
+            elem.attr('src', app.asset.medias.blocks + attrs.blocksSrc);
         }
     }
 });
@@ -188,13 +186,13 @@ dom.compiler.register('attribute', 'icons-src', function(elem, attrs){
     }
     else{
 
-        if( typeof window.APP == "undefined" ) {
+        if( typeof app == "undefined" ) {
 
             console.warn('asset.medias.icons is not defined');
             elem.attr('src', attrs.iconsSrc);
         }
         else {
-            elem.attr('src', window.APP.asset.medias.icons + attrs.iconsSrc);
+            elem.attr('src', app.asset.medias.icons + attrs.iconsSrc);
         }
     }
 });
@@ -209,13 +207,13 @@ dom.compiler.register('attribute', 'pages-src', function(elem, attrs){
     }
     else{
 
-        if( typeof widow.APP == "undefined" ) {
+        if( typeof app == "undefined" ) {
 
             console.warn('asset.medias.pages is not defined');
             elem.attr('src', attrs.pagesSrc);
         }
         else {
-            elem.attr('src', window.APP.asset.medias.pages + attrs.pagesSrc);
+            elem.attr('src', app.asset.medias.pages + attrs.pagesSrc);
         }
     }
 });
@@ -230,13 +228,13 @@ dom.compiler.register('attribute', 'components-src', function(elem, attrs){
     }
     else{
 
-        if( typeof window.APP == "undefined" ) {
+        if( typeof app == "undefined" ) {
 
             console.warn('asset.medias.components is not defined');
             elem.attr('src', attrs.componentsSrc);
         }
         else {
-            elem.attr('src', window.APP.asset.medias.components + attrs.componentsSrc);
+            elem.attr('src', app.asset.medias.components + attrs.componentsSrc);
         }
     }
 });
@@ -251,13 +249,34 @@ dom.compiler.register('attribute', 'tmp-src', function(elem, attrs){
     }
     else{
 
-        if( typeof window.APP == "undefined" ) {
+        if( typeof app == "undefined" ) {
 
             console.warn('asset.medias.tmp is not defined');
             elem.attr('src', attrs.tmpSrc);
         }
         else {
-            elem.attr('src', window.APP.asset.medias.tmp + attrs.tmpSrc);
+            elem.attr('src', app.asset.medias.tmp + attrs.tmpSrc);
+        }
+    }
+})
+
+
+
+dom.compiler.register('attribute', 'misc-src', function(elem, attrs){
+
+    if (window.precompile){
+
+        elem.attr('src', '{{ asset.medias.misc }}' + attrs.miscSrc);
+    }
+    else{
+
+        if( typeof app == "undefined" ) {
+
+            console.warn('asset.medias.tmp is not defined');
+            elem.attr('src', attrs.miscSrc);
+        }
+        else {
+            elem.attr('src', app.asset.medias.misc + attrs.miscSrc);
         }
     }
 });
@@ -275,7 +294,7 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
             hideOn = "desktop tablet";
 
         if (showOn == "desktop")
-            hideOn = "mobile tablet";
+            hideOn = "mobile-tablet";
 
         if (showOn == "tablet")
             hideOn = "mobile desktop";
@@ -307,7 +326,7 @@ dom.compiler.register('element', 'vcenter', function(elem){
 
     var $parent = elem.parent();
 
-    if( $parent.is('div') || $parent.is('header') || $parent.is('article') || $parent.is('footer') )
+    if( $parent.is('div') || $parent.is('header') || $parent.is('article') || $parent.is('footer') || $parent.is('main') )
         return '<div class="valign"><div class="valign__middle"><transclude/></div></div>';
     else
         return '<span class="valign"><span class="valign__middle"><transclude/></span></span>';

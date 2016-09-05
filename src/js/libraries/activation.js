@@ -264,8 +264,7 @@ var UIActivation = function(){
             self._activate(element, scrollTop);
         });
     };
-
-
+    
 
     self._addAttr = function(elem, value, id, name){
 
@@ -274,7 +273,13 @@ var UIActivation = function(){
 
         if( value.indexOf(':') > -1 && value.indexOf('{') == -1 ) {
 
-            var values = JSON.parse('{"' + value.replace(/ /g, '","').replace(/:/g, '":"') + '"}');
+            var values = {d:false, m:false, t:false};
+
+            try {
+
+                values = JSON.parse('{"' + attrs[id].replace(/ /g, '","').replace(/:/g, '":"') + '"}');
+
+            } catch (e) {}
 
             if (values.d)
                 elem.attr('data-'+name, values.d);

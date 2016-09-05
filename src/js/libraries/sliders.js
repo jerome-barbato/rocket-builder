@@ -551,7 +551,12 @@ var UISliders = function () {
         if( $slider.attr('id') == undefined )
             $slider.attr('id', guid('slider'));
 
-        var context = $slider.data('context') ? JSON.parse('{' + $slider.data('context').replace(/'/g, '"') + '}') : {};
+        var context = {};
+
+        try {
+            context = $slider.data('context') ? JSON.parse('{' + $slider.data('context').replace(/'/g, '"') + '}') : {};
+        } catch(e) {}
+
         context.$element = $slider;
 
         $slider.removeAttr('data-context');

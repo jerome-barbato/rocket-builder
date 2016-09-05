@@ -106,4 +106,6 @@ var angularLight = function(){
 };
 
 var angulight = new angularLight();
-var app = { services : {} };
+var app       = app || {};
+
+app.services = {};

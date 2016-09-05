@@ -25,8 +25,8 @@ var UIMap = function(){
 
     self.config = {
         marker : {
-            url       : APP.asset.medias.icons+'marker@2x.png',
-            hover_url : APP.asset.medias.icons+'marker--hover@2x.png',
+            url       : app.asset.medias.icons+'marker@2x.png',
+            hover_url : app.asset.medias.icons+'marker--hover@2x.png',
             width  : 45,
             height : 65
         },
