@@ -22,6 +22,21 @@
             if( args.length && typeof args[0] != "undefined" ){
 
                 //todo: better regexp to replace indexOf('<')
+
+                // Convert argument to jQuery instance
+
+                if ( args[0] instanceof $ || ( typeof args[0] == "string" && args[0].indexOf('<') >=0 ) ) {
+
+                    args[0] = args[0] instanceof $ ? args[0] : $(args[0]);
+                    ret = fct.apply(context, args);
+
+                    $(document).trigger('DOMNodeUpdated', args);
+
+                } else {
+
+                    ret = fct.apply(context, args);
+                }
+                /*
                 if( typeof args[0] == "string" && args[0].indexOf('<') == -1 ){
 
                     ret = fct.apply(context, args);
@@ -33,6 +48,7 @@
 
                     $(document).trigger('DOMNodeUpdated', args);
                 }
+                */
             }
             else{
 
@@ -62,7 +78,7 @@
 
             var $elem = $(this);
 
-            if( typeof $elem.data('initialized') == "undefined" && !$elem.parents('template').length ){
+            if( typeof $elem.data('initialized') == "undefined" && !$elem.parents('template').length && !$elem.is('template') ){
 
                 $elem.data('initialized', true);
                 callback.call(this);
@@ -96,3 +112,4 @@
         };
     }
 })();
+

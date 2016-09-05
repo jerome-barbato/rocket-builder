@@ -7,7 +7,7 @@
     "type": "git",
     "url": "ssh://git@bitbucket.org:Metabolism/rocket-builder.git"
   },
-  "devDependencies": {
+  "optionalDependencies": {
     "del": "^2.2.1",
     "fs-path": "0.0.22",
     "gulp": "^3.9.1",
@@ -24,5 +24,16 @@
     "jsdom": "^9.4.1",
     "through2": "^2.0.1",
     "wrench": "^1.5.9"
+  },
+  "devDependencies": {
+    "gulp-jasmine": "^2.4.0",
+    "gulp-notify": "^2.2.0",
+    "jquery": "^3.1.0",
+    "karma": "^1.2.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-jasmine-jquery": "^0.1.1",
+    "karma-jsdom-launcher": "^4.0.0",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-spec-reporter": "0.0.26"
   }
 }

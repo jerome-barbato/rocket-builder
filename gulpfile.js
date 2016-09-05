@@ -52,7 +52,7 @@ var getArg = function(key) {
     var next = process.argv[index + 1];
 
     return (index < 0) ? null : (!next || next[0] === "-") ? true : next;
-}
+};
 
 
 /**

@@ -61,7 +61,7 @@ var Config = module.exports = {
                 js       : [],
                 sass     : Config.src_path+"sass/*.scss",
                 template : Config.src_path+"template/**/*.twig",
-                html     : Config.public_path+"views/**/*.html"
+                html     : Config.public_path+"views/**/*.html",
             },
             dest : {
                 js       : Config.public_path+"js",
