@@ -50,8 +50,7 @@ dom.compiler.register('attribute', 'background', function(elem, attrs){
 
 dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
-    var size   = attrs.sizer.replace('/', 'x');
-    var _class = attrs.class;
+    var size = attrs.sizer.replace('/', 'x');
 
     if (window.precompile){
 
