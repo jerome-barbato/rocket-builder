@@ -65,9 +65,12 @@ var UIActivation = function(){
 
         if( $items.length && $element.data('animation') == 'stack' ){
 
+            console.log($items.length)
+
             var i = 0;
 
             $items.one(self.context.animationEnd, function(){
+                console.log(i)
 
                 i++;
 
@@ -78,7 +81,6 @@ var UIActivation = function(){
         else{
 
             $element.one(self.context.animationEnd, function(){
-
                 if( callback )
                     callback();
             });
@@ -243,7 +245,7 @@ var UIActivation = function(){
                     }
                 });
 
-                element.$.addClass('ui-activation--active');
+                element.$.removeClass('ui-activation--reset').addClass('ui-activation--active');
 
                 element.active = true;
 
@@ -340,9 +342,15 @@ var UIActivation = function(){
             self._addAttr(elem, attrs.delay, 'delay');
         });
 
+        dom.compiler.register('attribute', 'transition-delay', function(elem, attrs) {
+
+            self._addAttr(elem, attrs.transitionDelay, 'transition-delay');
+        });
+
         dom.compiler.register('attribute', 'easing', function(elem, attrs) {
 
-            self._addAttr(elem, attrs.easing, 'easing');
+            if( attrs.easing != "ease-in-out-cubic" )
+                self._addAttr(elem, attrs.easing, 'easing');
         });
 
         dom.compiler.register('attribute', 'visibility', function(elem, attrs) {
