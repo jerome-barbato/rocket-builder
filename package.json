@@ -11,6 +11,7 @@
     "del": "^2.2.1",
     "fs-path": "0.0.22",
     "gulp": "^3.9.1",
+    "gulp-util": "^3.0.7",
     "gulp-concat": "^2.6.0",
     "gulp-css-globbing": "^0.1.8",
     "gulp-load-plugins": "^1.2.4",
@@ -23,6 +24,7 @@
     "gulp-watch": "^4.3.8",
     "jsdom": "^9.4.1",
     "through2": "^2.0.1",
-    "wrench": "^1.5.9"
+    "wrench": "^1.5.9",
+    "chalk": "^1.1.3"
   }
 }
