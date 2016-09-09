@@ -40,14 +40,33 @@ module.exports = function(config) {
                 watched: true,
                 served: true,
                 included: true },
+            { pattern: "src/test/fixtures/*.js",
+                watched: true,
+                served: true,
+                included: false
+            },
+
+            // serve core JS fixtures
+            { pattern: "src/test/fixtures/core/libraries/*.js",
+                watched: false,
+                served: true,
+                included: false
+            },
+            { pattern: "src/test/fixtures/core/polyfill/*.js",
+                watched: false,
+                served: true,
+                included: false
+            },
+            { pattern: "src/test/fixtures/core/vendors/*.js",
+                watched: false,
+                served: true,
+                included: false
+            },
 
             // dependencies
             'src/js/vendors/jquery.min.js',
 
             "src/test/helpers/fixtures.js",
-
-            // app
-            //'src/js/polyfill/jquery.initialize.js',
 
             // test
             'src/test/spec/*.js'

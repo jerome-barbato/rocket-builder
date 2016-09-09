@@ -15,6 +15,21 @@
         var after       = $.fn.after;
         var before      = $.fn.before;
 
+        var hasContainer = function( content ){
+
+            var is_string = typeof content == "string";
+
+            if( !is_string )
+                return false;
+
+            var has_container = content.charAt(0) == '<' && content.slice(-1) == '>';
+
+            if( !has_container && content.indexOf('<') >=0 && typeof app != 'undefined' && app.debug )
+                console.warn('Initialize: You are manipulating an element without container, initialize will not run');
+
+            return has_container;
+        };
+
         var updateDom = function (fct, args, context) {
 
             var ret = false;
@@ -25,7 +40,13 @@
 
                 // Convert argument to jQuery instance
 
-                if ( args[0] instanceof $ || ( typeof args[0] == "string" && args[0].indexOf('<') >=0 ) ) {
+                /*<div class="">
+                 <youtube href="mylink"/>
+                See link below
+                <youtube href="mylink"/>ee link below<a>dd</a>
+                 */
+
+                if ( args[0] instanceof $ || hasContainer( args[0] ) ) {
 
                     args[0] = args[0] instanceof $ ? args[0] : $(args[0]);
                     ret = fct.apply(context, args);
@@ -66,8 +87,7 @@
         $.fn.before      = function () { return updateDom(before, arguments, this) };
 
         $(document).ready(function(){
-            if( typeof DOMCompiler == "undefined" )
-                $(document).trigger('DOMNodeUpdated', [$('body')]);
+            $(document).trigger('DOMNodeUpdated', [$('body'), 'initialize']);
         });
 
         $.fn.initialized = function(){

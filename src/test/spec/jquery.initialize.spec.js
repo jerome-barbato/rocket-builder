@@ -12,6 +12,25 @@ describe('jQuery Initialize', function(){
 
     describe('jQuery native functions behavior', function(){
 
+        /**
+         *
+         * @param value
+         * @returns {*}
+         */
+        function manipulationBareObj( value ) {
+            return value;
+        }
+
+        /**
+         *
+         * @param value
+         * @returns {Function}
+         */
+        function manipulationFunctionReturningObj( value ) {
+            return function() {
+                return value;
+            };
+        }
 
         /**
          replaceWith
@@ -24,7 +43,7 @@ describe('jQuery Initialize', function(){
 
         beforeEach(function() {
 
-            loadFixtures('manipulation.html');
+            loadFixtures('core/polyfill/jquery.initialize.js', 'manipulation.html');
         });
 
         describe('$.replaceWith()', function(){
@@ -47,7 +66,7 @@ describe('jQuery Initialize', function(){
             });
 
 
-            it('Should replace with appenned htmlNode content', function() {
+            it('Should replace with appened htmlNode content', function() {
 
                 $( "#qunit-fixture" ).append( "<div id='bar'><div id='baz'></div></div>" );
                 $( "#baz" ).replaceWith( "Baz" );
@@ -329,7 +348,7 @@ describe('jQuery Initialize', function(){
 
         });
 
-        describe('$.append', function(){
+        describe('$.append()', function(){
             var defaultText, result, message, iframe, iframeDoc, j, d,
                 $input, $radioChecked, $radioUnchecked, $radioParent, $map, $table;
 
@@ -362,85 +381,479 @@ describe('jQuery Initialize', function(){
                     expect( $( this ).is( ":checked" )).toBeTruthy();
                 } ).remove();
             });
-            /*
+
+            it('Should append a DOM node to the contents of an iframe', function(){
+
+                message = "Test for appending a DOM node to the contents of an iframe";
+                iframe = $( "#iframe" )[ 0 ];
+                iframeDoc = iframe.contentDocument || iframe.contentWindow && iframe.contentWindow.document;
+
+                try {
+                    if ( iframeDoc && iframeDoc.body ) {
+                        expect($( iframeDoc.body ).append( "<div id='success'>test</div>" )[ 0 ].lastChild.id).toEqual("success");
+                    } else {
+                        expect(true).toBeTruthy();
+                    }
+                } catch ( e ) {
+                    expect(e.message || e).toEqual(undefined);
+                }
+
+            });
+
+            it('Should be able to insert areas', function() {
+
+                appendLoadFixtures('testinit.js');
+
+                $( "<fieldset/>" ).appendTo( "#form" ).append(  "<legend id='legend'>test</legend>" );
+                jQueryHelper.t( "Append legend", "#legend", [ "legend" ] );
+
+                $map = $( "<map/>" ).append( "<area id='map01' shape='rect' coords='50,50,150,150' href='http://www.$.com/' alt='$'>" );
+
+                expect( $map[ 0 ].childNodes.length).toEqual(1);
+                expect( $map[ 0 ].firstChild.nodeName.toLowerCase()).toEqual("area");
+            });
+
+            it('Should be able to insert optgroup', function() {
+
+                $( "#select1" ).append( "<OPTION>Test</OPTION>" );
+                expect( $( "#select1 option:last-child" ).text()).toEqual("Test");
+
+                $( "#select1" ).append( "<optgroup label='optgroup'><option>optgroup</option></optgroup>" );
+                expect( $( "#select1 optgroup" ).attr( "label" )).toEqual("optgroup");
+                expect( $( "#select1 option" ).last().text()).toEqual("optgroup");
+            });
+
+            it('Should properly handle complex table process', function() {
+
+                $table = $( "#table" );
+
+                $.each( "thead tbody tfoot colgroup caption tr th td".split( " " ), function( i, name ) {
+                    $table.append( "<" + name + "/>" );
+                    expect( $table.find( name ).length).toEqual(1);
+                    expect( $.parseHTML( "<" + name + "/>" ).length).toBeTruthy();
+                } );
+
+                $( "#table colgroup" ).append( "<col/>" );
+                expect( $( "#table colgroup col" ).length).toEqual(1);
+            });
+
+            it('Should check node,textnode,comment append moved leaving just the div', function () {
 
 
-             message = "Test for appending a DOM node to the contents of an iframe";
-             iframe = $( "#iframe" )[ 0 ];
-             iframeDoc = iframe.contentDocument || iframe.contentWindow && iframe.contentWindow.document;
+                appendLoadFixtures('testinit.js');
+                $( "#form" )
+                    .append( "<select id='appendSelect1'></select>" )
+                    .append( "<select id='appendSelect2'><option>Test</option></select>" );
+                jQueryHelper.t( "Append Select", "#appendSelect1, #appendSelect2", [ "appendSelect1", "appendSelect2" ] );
 
-             try {
-             if ( iframeDoc && iframeDoc.body ) {
-             assert.equal( $( iframeDoc.body ).append( valueObj( "<div id='success'>test</div>" ) )[ 0 ].lastChild.id, "success", message );
-             } else {
-             assert.ok( true, message + " - can't test" );
-             }
-             } catch ( e ) {
-             assert.strictEqual( e.message || e, undefined, message );
-             }
+                expect( "Two nodes").toEqual($( "<div />" ).append( "Two", " nodes" ).text());
+                expect( $( "<div />" ).append( "1", "", 3 ).text()).toEqual("13");
 
-             $( "<fieldset/>" ).appendTo( "#form" ).append( valueObj( "<legend id='legend'>test</legend>" ) );
-             assert.t( "Append legend", "#legend", [ "legend" ] );
+                // using contents will get comments regular, text, and comment nodes
+                j = $( "#nonnodes" ).contents();
+                d = $( "<div/>" ).appendTo( "#nonnodes" ).append( j );
 
-             $map = $( "<map/>" ).append( valueObj( "<area id='map01' shape='rect' coords='50,50,150,150' href='http://www.$.com/' alt='$'>" ) );
+                expect( $( "#nonnodes" ).length ).toEqual(1);
+                expect( d.contents().length ).toEqual(3);
+                d.contents().appendTo( "#nonnodes" );
+                d.remove();
+                expect( $( "#nonnodes" ).contents().length).toEqual(3);
+            });
 
-             assert.equal( $map[ 0 ].childNodes.length, 1, "The area was inserted." );
-             assert.equal( $map[ 0 ].firstChild.nodeName.toLowerCase(), "area", "The area was inserted." );
+            it('Should append element with stayed checked status', function() {
 
-             $( "#select1" ).append( valueObj( "<OPTION>Test</OPTION>" ) );
-             assert.equal( $( "#select1 option:last-child" ).text(), "Test", "Appending OPTION (all caps)" );
+                $input = $( "<input type='checkbox'/>" ).prop( "checked", true ).appendTo( "#testForm" );
+                expect( $input[ 0 ].checked ).toBeTruthy();
 
-             $( "#select1" ).append( valueObj( "<optgroup label='optgroup'><option>optgroup</option></optgroup>" ) );
-             assert.equal( $( "#select1 optgroup" ).attr( "label" ), "optgroup", "Label attribute in newly inserted optgroup is correct" );
-             assert.equal( $( "#select1 option" ).last().text(), "optgroup", "Appending optgroup" );
+                $radioChecked = $( "input[type='radio'][name='R1']" ).eq( 1 );
+                $radioParent = $radioChecked.parent();
+                $radioUnchecked = $( "<input type='radio' name='R1' checked='checked'/>" ).appendTo( $radioParent );
+                $radioChecked.trigger( "click" );
+                $radioUnchecked[ 0 ].checked = false;
 
-             $table = $( "#table" );
+                $( "<div/>" ).insertBefore( $radioParent ).append( $radioParent );
 
-             $.each( "thead tbody tfoot colgroup caption tr th td".split( " " ), function( i, name ) {
-             $table.append( valueObj( "<" + name + "/>" ) );
-             assert.equal( $table.find( name ).length, 1, "Append " + name );
-             assert.ok( $.parseHTML( "<" + name + "/>" ).length, name + " wrapped correctly" );
-             } );
+                expect( $radioChecked[ 0 ].checked).toBeTruthy();
+                expect( $radioUnchecked[ 0 ].checked).toBeFalsy();
 
-             $( "#table colgroup" ).append( valueObj( "<col/>" ) );
-             assert.equal( $( "#table colgroup col" ).length, 1, "Append col" );
+                var $div = $( "<div/>" ).append( "option<area/>" );
+                expect( $div[ 0 ].childNodes.length).toEqual(2);
+            });
 
-             $( "#form" )
-             .append( valueObj( "<select id='appendSelect1'></select>" ) )
-             .append( valueObj( "<select id='appendSelect2'><option>Test</option></select>" ) );
-             assert.t( "Append Select", "#appendSelect1, #appendSelect2", [ "appendSelect1", "appendSelect2" ] );
-
-             assert.equal( "Two nodes", $( "<div />" ).append( "Two", " nodes" ).text(), "Appending two text nodes (#4011)" );
-             assert.equal( $( "<div />" ).append( "1", "", 3 ).text(), "13", "If median is false-like value, subsequent arguments should not be ignored" );
-
-             // using contents will get comments regular, text, and comment nodes
-             j = $( "#nonnodes" ).contents();
-             d = $( "<div/>" ).appendTo( "#nonnodes" ).append( j );
-
-             assert.equal( $( "#nonnodes" ).length, 1, "Check node,textnode,comment append moved leaving just the div" );
-             assert.equal( d.contents().length, 3, "Check node,textnode,comment append works" );
-             d.contents().appendTo( "#nonnodes" );
-             d.remove();
-             assert.equal( $( "#nonnodes" ).contents().length, 3, "Check node,textnode,comment append cleanup worked" );
-
-             $input = $( "<input type='checkbox'/>" ).prop( "checked", true ).appendTo( "#testForm" );
-             assert.equal( $input[ 0 ].checked, true, "A checked checkbox that is appended stays checked" );
-
-             $radioChecked = $( "input[type='radio'][name='R1']" ).eq( 1 );
-             $radioParent = $radioChecked.parent();
-             $radioUnchecked = $( "<input type='radio' name='R1' checked='checked'/>" ).appendTo( $radioParent );
-             $radioChecked.trigger( "click" );
-             $radioUnchecked[ 0 ].checked = false;
-
-             $( "<div/>" ).insertBefore( $radioParent ).append( $radioParent );
-
-             assert.equal( $radioChecked[ 0 ].checked, true, "Reappending radios uphold which radio is checked" );
-             assert.equal( $radioUnchecked[ 0 ].checked, false, "Reappending radios uphold not being checked" );
-
-             assert.equal( $( "<div/>" ).append( valueObj( "option<area/>" ) )[ 0 ].childNodes.length, 2, "HTML-string with leading text should be processed correctly" );
-             */
         });
 
+        describe('$.prepend()', function() {
+
+            it('Should handle a String', function(){
+                var result, expected;
+                expected = "Try them out:";
+                result = $( "#first" ).prepend( "<b>buga</b>" );
+                expect( result.text()).toEqual("buga" + expected);
+                expect( $( "#select3" ).prepend( "<option value='prependTest'>Prepend Test</option>"  ).find( "option:first-child" ).attr( "value" )).toEqual("prependTest");
+            });
+
+            it( "Should prepend(Element)", function() {
+
+                var expected;
+                expected = "Try them out:This link has class=\"blog\": Simon Willison's Weblog";
+                $( "#sap" ).prepend( document.getElementById( "first" ) );
+                expect( $( "#sap" ).text()).toEqual(expected);
+            } );
+
+            it( "Should prepend(Array<Element>)", function( ) {
+
+                var expected;
+                expected = "Try them out:YahooThis link has class=\"blog\": Simon Willison's Weblog";
+                $( "#sap" ).prepend( [ document.getElementById( "first" ), document.getElementById( "yahoo" ) ] );
+                expect( $( "#sap" ).text()).toEqual(expected);
+            } );
+
+            it( "Should prepend($)", function( ) {
+
+                var expected;
+                expected = "YahooTry them out:This link has class=\"blog\": Simon Willison's Weblog";
+                $( "#sap" ).prepend( $( "#yahoo, #first" ) );
+                expect( $( "#sap" ).text()).toEqual(expected);
+            } );
+
+            it( "Should prepend(Array<$>)", function( ) {
+
+                var expected;
+                expected = "Try them out:GoogleYahooThis link has class=\"blog\": Simon Willison's Weblog";
+                $( "#sap" ).prepend( [ $( "#first" ), $( "#yahoo, #google" ) ] );
+                expect( $( "#sap" ).text()).toEqual(expected);
+            } );
+
+            it( "Should prepend(Function) with incoming value -- String", function( ) {
+
+                var defaultText, old, result;
+
+                defaultText = "Try them out:";
+                old = $( "#first" ).html();
+                result = $( "#first" ).prepend( function( i, val ) {
+                    expect( val, old, "Make sure the incoming value is correct." );
+                    return "<b>buga</b>";
+                } );
+
+                expect( result.text() ).toEqual( "buga" + defaultText);
+
+                old = $( "#select3" ).html();
+
+                expect( $( "#select3" ).prepend( function( i, val ) {
+                    expect( val, old, "Make sure the incoming value is correct." );
+                    return "<option value='prependTest'>Prepend Test</option>";
+                } ).find( "option:first-child" ).attr( "value" )).toEqual("prependTest");
+            } );
+
+            it( "Should prepend(Function) with incoming value -- Element", function( ) {
+
+                var old, expected;
+                expected = "Try them out:This link has class=\"blog\": Simon Willison's Weblog";
+                old = $( "#sap" ).html();
+
+                $( "#sap" ).prepend( function( i, val ) {
+                    expect( val, old, "Make sure the incoming value is correct." );
+                    return document.getElementById( "first" );
+                } );
+
+                expect( $( "#sap" ).text()).toEqual(expected);
+            } );
+
+            it( "Should prepend(Function) with incoming value -- Array<Element>", function( ) {
+
+                var old, expected;
+                expected = "Try them out:YahooThis link has class=\"blog\": Simon Willison's Weblog";
+                old = $( "#sap" ).html();
+
+                $( "#sap" ).prepend( function( i, val ) {
+                    expect( val, old, "Make sure the incoming value is correct." );
+                    return [ document.getElementById( "first" ), document.getElementById( "yahoo" ) ];
+                } );
+
+                expect( $( "#sap" ).text()).toEqual(expected);
+            } );
+
+            it( "Should prepend(Function) with incoming value -- $", function( ) {
+
+                var old, expected;
+                expected = "YahooTry them out:This link has class=\"blog\": Simon Willison's Weblog";
+                old = $( "#sap" ).html();
+
+                $( "#sap" ).prepend( function( i, val ) {
+                    expect( val, old, "Make sure the incoming value is correct." );
+                    return $( "#yahoo, #first" );
+                } );
+
+                expect( $( "#sap" ).text()).toEqual(expected);
+            } );
+        });
+
+        describe('$.before()', function() {
+
+            it( "Should execute before(String)", function(  ) {
+
+                var expected;
+
+                expected = "This is a normal link: bugaYahoo";
+                $( "#yahoo" ).before( manipulationBareObj( "<b>buga</b>" ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before(Element)", function( ) {
+
+                var expected;
+
+                expected = "This is a normal link: Try them out:Yahoo";
+                $( "#yahoo" ).before( manipulationBareObj( document.getElementById( "first" ) ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before(Array<Element>)", function(  ) {
+
+                var expected;
+                expected = "This is a normal link: Try them out:diveintomarkYahoo";
+                $( "#yahoo" ).before( manipulationBareObj( [ document.getElementById( "first" ), document.getElementById( "mark" ) ] ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before($)", function(  ) {
+
+
+
+                var expected;
+                expected = "This is a normal link: diveintomarkTry them out:Yahoo";
+                $( "#yahoo" ).before( manipulationBareObj( $( "#mark, #first" ) ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before(Array<$>)", function(  ) {
+
+
+
+                var expected;
+                expected = "This is a normal link: Try them out:GooglediveintomarkYahoo";
+                $( "#yahoo" ).before( manipulationBareObj( [ $( "#first" ), $( "#mark, #google" ) ] ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before(Function) -- Returns String", function(  ) {
+
+
+
+                var expected;
+
+                expected = "This is a normal link: bugaYahoo";
+                $( "#yahoo" ).before( manipulationFunctionReturningObj( "<b>buga</b>" ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before(Function) -- Returns Element", function(  ) {
+
+
+
+                var expected;
+
+                expected = "This is a normal link: Try them out:Yahoo";
+                $( "#yahoo" ).before( manipulationFunctionReturningObj( document.getElementById( "first" ) ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before(Function) -- Returns Array<Element>", function(  ) {
+
+
+
+                var expected;
+                expected = "This is a normal link: Try them out:diveintomarkYahoo";
+                $( "#yahoo" ).before( manipulationFunctionReturningObj( [ document.getElementById( "first" ), document.getElementById( "mark" ) ] ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before(Function) -- Returns $", function(  ) {
+
+
+
+                var expected;
+                expected = "This is a normal link: diveintomarkTry them out:Yahoo";
+                $( "#yahoo" ).before( manipulationFunctionReturningObj( $( "#mark, #first" ) ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before(Function) -- Returns Array<$>", function(  ) {
+
+
+
+                var expected;
+                expected = "This is a normal link: Try them out:GooglediveintomarkYahoo";
+                $( "#yahoo" ).before( manipulationFunctionReturningObj( [ $( "#first" ), $( "#mark, #google" ) ] ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute before(no-op)", function(  ) {
+
+                var set;
+                set = $( "<div/>" ).before( "<span>test</span>" );
+                expect( set[ 0 ].nodeName.toLowerCase()).toEqual("div");
+                expect( set.length).toEqual(1);
+            } );
+
+            it( "Should execute before and after w/ empty object (#10812)", function(  ) {
+
+                var res;
+
+                res = $( "#notInTheDocument" ).before( "(" ).after( ")" );
+                expect( res.length).toEqual(0);
+            } );
+
+            it( "Should execute .before() and .after() disconnected node", function(  ) {
+
+                expect( $( "<input type='checkbox'/>" ).before( "<div/>" ).length).toEqual(1);
+                expect( $( "<input type='checkbox'/>" ).after( "<div/>" ).length).toEqual(1);
+            } );
+
+            it( "Should execute insert with .before() on disconnected node last", function(  ) {
+
+                var expectedBefore = "This is a normal link: bugaYahoo";
+
+                $( "#yahoo" ).add( "<span/>" ).before( "<b>buga</b>" );
+                expect( $( "#en" ).text()).toEqual(expectedBefore);
+            } );
+
+            it( "Should execute insert with .before() on disconnected node first", function(  ) {
+
+                var expectedBefore = "This is a normal link: bugaYahoo";
+
+                $( "<span/>" ).add( "#yahoo" ).before( "<b>buga</b>" );
+                expect( $( "#en" ).text()).toEqual(expectedBefore);
+            } );
+
+        });
+
+        describe('$.after()', function() {
+
+            it( "Should execute insert with .before() on disconnected node last", function() {
+
+                var expectedAfter = "This is a normal link: Yahoobuga";
+
+                $( "#yahoo" ).add( "<span/>" ).after( "<b>buga</b>" );
+                expect( $( "#en" ).text()).toEqual(expectedAfter);
+            } );
+
+            it( "Should execute insert with .before() on disconnected node last", function() {
+
+                var expectedAfter = "This is a normal link: Yahoobuga";
+
+                $( "<span/>" ).add( "#yahoo" ).after( "<b>buga</b>" );
+                expect( $( "#en" ).text()).toEqual(expectedAfter);
+            } );
+
+
+            it( "Should execute after(String)", function() {
+
+                var expected = "This is a normal link: Yahoobuga";
+                $( "#yahoo" ).after( "<b>buga</b>" );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute after(Element)", function() {
+
+                var expected = "This is a normal link: YahooTry them out:";
+                $( "#yahoo" ).after( document.getElementById( "first" ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute after(Array<Element>)", function() {
+
+                var expected = "This is a normal link: YahooTry them out:diveintomark";
+                $( "#yahoo" ).after( [ document.getElementById( "first" ), document.getElementById( "mark" ) ] );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute after($)", function() {
+
+                var expected = "This is a normal link: YahooTry them out:Googlediveintomark";
+                $( "#yahoo" ).after( [ $( "#first" ), $( "#mark, #google" ) ] );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute after(Function) returns String", function() {
+
+                var expected = "This is a normal link: Yahoobuga",
+                    val = manipulationFunctionReturningObj;
+                $( "#yahoo" ).after( val( "<b>buga</b>" ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute after(Function) returns Element", function() {
+
+                var expected = "This is a normal link: YahooTry them out:",
+                    val = manipulationFunctionReturningObj;
+                $( "#yahoo" ).after( val( document.getElementById( "first" ) ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute after(Function) returns Array<Element>", function() {
+
+                var expected = "This is a normal link: YahooTry them out:diveintomark",
+                    val = manipulationFunctionReturningObj;
+                $( "#yahoo" ).after( val( [ document.getElementById( "first" ), document.getElementById( "mark" ) ] ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute after(Function) returns $", function() {
+
+                var expected = "This is a normal link: YahooTry them out:Googlediveintomark",
+                    val = manipulationFunctionReturningObj;
+                $( "#yahoo" ).after( val( [ $( "#first" ), $( "#mark, #google" ) ] ) );
+                expect( $( "#en" ).text()).toEqual(expected);
+            } );
+
+            it( "Should execute after(disconnected node)", function() {
+
+                var set = $( "<div/>" ).before( "<span>test</span>" );
+                expect( set[ 0 ].nodeName.toLowerCase()).toEqual("div");
+                expect( set.length).toEqual(1);
+            } );
+        });
+
+    });
+
+    describe('Declarative behavior', function() {
+
+        it('Should run initialize even if dom is not ready', function(){
+
+            loadFixtures('core/polyfill/jquery.initialize.js', 'before.html');
+
+            expect($('main').hasClass('test')).toBeTruthy();
+        });
+
+        it('Should run initialize when called in document ready callback', function(){
+
+            loadFixtures('core/polyfill/jquery.initialize.js', 'after.html');
+
+            expect($('main').hasClass('test')).toBeTruthy();
+        });
+
+        it('Should run initialize when called in window load callback', function(done){
+
+            loadFixtures('core/polyfill/jquery.initialize.js', 'load.html');
+
+            //todo: one day try to remove it...
+            $(window).load();
+
+            setTimeout(function(){
+                expect($('main').hasClass('test')).toBeTruthy();
+                done();
+            });
+        });
+        it('Should run initialize when called anytime', function(done){
+
+            loadFixtures('core/polyfill/jquery.initialize.js', 'anytime.html');
+
+            setTimeout(function(){
+                expect($('main').hasClass('test')).toBeTruthy();
+                done();
+            }, 600);
+        });
     });
 
 });

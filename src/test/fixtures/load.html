@@ -11,6 +11,12 @@
 <main>
     My name is toto
 </main>
-
+<script>
+    $(window).load(function(){
+        $('main').initialize(function(){
+            $(this).addClass('test');
+        });
+    })
+</script>
 </body>
 </html>

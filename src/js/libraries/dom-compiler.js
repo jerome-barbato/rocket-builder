@@ -155,7 +155,11 @@ var DOMCompiler = function(){
         self._cleanAttributes($dom);
 
         if( raw_init != $dom.html() ){
-            setTimeout(function(){ $(document).trigger('DOMNodeUpdated', [$dom, 'dom-compiler']) });
+
+            setTimeout(function(){
+
+                $(document).trigger('DOMNodeUpdated', [$dom, 'dom-compiler']);
+            });
         }
 
         if( window._DEBUG ){
@@ -246,7 +250,7 @@ var DOMCompiler = function(){
             $(document)
                 .ready(function(){ self.run( $('body') ) })
                 .on('DOMNodeUpdated', function(e, $node, caller){
-                    if( caller != "dom-compiler" )
+                    if( caller != "dom-compiler" && caller != "initialize" )
                         self.run( $node )
                 });
         }
