@@ -81,6 +81,15 @@ var angularLight = function(){
 
             $(this).removeAttr('data-if');
         });
+
+        $('[data-if-not]').initialize(function(){
+
+            var condition = $(this).data('if-not');
+            if( condition == "true" || condition == "1" || condition )
+                $(this).remove();
+
+            $(this).removeAttr('data-if-not');
+        });
     };
 
 
@@ -99,6 +108,11 @@ var angularLight = function(){
         dom.compiler.register('attribute', 'if', function (elem, attrs) {
 
             elem.attr('data-if', attrs.if);
+        });
+
+        dom.compiler.register('attribute', 'if-not', function (elem, attrs) {
+
+            elem.attr('data-if-not', attrs.ifNot);
         });
     }
 
