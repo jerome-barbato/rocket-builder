@@ -34,17 +34,9 @@
 
             var ret = false;
 
-            if( args.length && typeof args[0] != "undefined" ){
+            if( context.length && args.length && typeof args[0] != "undefined" ){
 
                 //todo: better regexp to replace indexOf('<')
-
-                // Convert argument to jQuery instance
-
-                /*<div class="">
-                 <youtube href="mylink"/>
-                See link below
-                <youtube href="mylink"/>ee link below<a>dd</a>
-                 */
 
                 if ( args[0] instanceof $ || hasContainer( args[0] ) ) {
 
@@ -57,19 +49,6 @@
 
                     ret = fct.apply(context, args);
                 }
-                /*
-                if( typeof args[0] == "string" && args[0].indexOf('<') == -1 ){
-
-                    ret = fct.apply(context, args);
-                }
-                else{
-
-                    args[0] = args[0] instanceof $ ? args[0] : $(args[0]);
-                    ret = fct.apply(context, args);
-
-                    $(document).trigger('DOMNodeUpdated', args);
-                }
-                */
             }
             else{
 
@@ -97,11 +76,12 @@
         var initialize = function(callback){
 
             var $elem = $(this);
+            var initialized = typeof $elem.data('initialized') == "undefined" ? $elem.data('initialized') : false;
 
-            if( typeof $elem.data('initialized') == "undefined" && !$elem.parents('template').length && !$elem.is('template') ){
+            if( (!initialized || initialized != this.selector ) && !$elem.parents('template').length && !$elem.is('template') ){
 
-                $elem.data('initialized', true);
-                callback.call(this);
+                    $elem.data('initialized', this.selector);
+                    callback.call(this);
             }
         };
 

@@ -1,14 +1,14 @@
 /**
  * Created by dreimus on 01/09/16.
  *
+ * JQuery Initialize function unit tests.
+ * Part of these tests are copied from Jquery unit tests.
  *
  * @see https://github.com/jquery/jquery/blob/master/test/unit/manipulation.js
  */
 
-
-
-
 describe('jQuery Initialize', function(){
+
 
     describe('jQuery native functions behavior', function(){
 
@@ -845,6 +845,7 @@ describe('jQuery Initialize', function(){
                 done();
             });
         });
+
         it('Should run initialize when called anytime', function(done){
 
             loadFixtures('core/polyfill/jquery.initialize.js', 'anytime.html');
@@ -856,69 +857,152 @@ describe('jQuery Initialize', function(){
         });
     });
 
+    describe('Execution', function() {
+
+        beforeEach(function() {
+            loadFixtures('core/polyfill/jquery.initialize.js', 'simple_sample.html');
+        });
+
+        it('Should add the class "initialized" to the given element', function(){
+
+            var $main = $('main');
+
+            var $el = $('<div><h1>This is a random<b>element</b></h1></div>');
+
+            $el.initialize(function() {
+                $(this).addClass("initialized");
+            });
+            expect( $el.hasClass('initialized') ).toBe(true);
+        });
+
+        it('Should should watch every appending for the given rule ans execute it', function(){
+
+            var $main = $('main');
+
+            $('.turkey').initialize(function() {
+                $(this).addClass("initialized");
+            });
+
+            var $el = $('<div class="turkey"><h1>This is a random<b>element</b></h1></div>');
+
+            $main.append($el);
+            expect( $('.turkey').hasClass('initialized') ).toBe(true);
+        });
+
+        it('Should process on depth', function() {
+            var el    = "<div class='bresaola'><p>This is a bresaolaom element.</p></div>",
+                el2   = "<div><p class='bresaola'>This is a bresaolaom element.</p></div>",
+                el3   = "<div><p class='bresaola'>This is a bresaolaom element.</p><p class='bresaola'>This is a bresaolaom element.</p></div>",
+                el4   = "<div class='bresaola'>This is a bresaolaom element.</div><div class='bresaola'>This is a bresaolaom element.</div>",
+                el5   = "<div><p class='bresaola'>This is a bresaolaom element.</p></div><div class='bresaola'>This is a bresaolaom element.</div>",
+                el6   = "<div class='bresaola'>This is a bresaolaom element.</div><div class='bresaola'>This is a bresaolaom element.</div>",
+                el7   = "<div><p class='bresaola'>This is a bresaolaom element.</p></div><div class='bresaola'>This is a bresaolaom element.</div>";
+
+            var $main = $('main');
+            $('.bresaola').initialize(function() {
+                $(this).addClass("initialized");
+            });
+
+            $main.append(el)
+                 .append(el2)
+                 .append(el3)
+                 .append(el4)
+                 .append(el5)
+                 .append(el6)
+                 .append(el7);
+
+            expect($('.initialized').length).toEqual(12);
+        });
+
+        it('Shouldn\'t process templates', function() {
+
+            var el   = "<template><p class='kevin'>This is a kevinom element.</p></template>",
+                el2   = "<template class='kevin'>This is a kevinom element.</template>",
+                el3   = "<template class='kevin'><p class='kevin'>This is a kevinom element.</p></template>",
+                el4   = "<div><template class='kevin'><p class='kevin'>This is a kevinom element.</p></template></div>",
+                el5   = "<div class='kevin'><template class='kevin'><p class='kevin'>This is a kevinom element.</p></template></div>";
+
+            var $main = $('main');
+            $('.kevin').initialize(function() {
+                $(this).addClass("initialized");
+            });
+
+
+
+            $main.append(el)
+                .append(el2)
+                .append(el3)
+                .append(el4)
+                .append(el5);
+
+            expect($('.initialized').length).toEqual(1);
+
+            var encapsulated = '<div class="doner"><p>This is an example <span class="doner">of donner.</span></p></div>';
+
+            $('.doner').initialize(function() {
+                var innerHTML = $(this).html();
+                $(this).html('<template>' + innerHTML + '</template>');
+                $(this).addClass('initialized');
+            });
+
+            $main.append(encapsulated);
+
+            expect($('.initialized').length).toEqual(2);
+
+        });
+
+        it('Should process recursively', function() {
+
+            var el = '<div class="capicola"><h1>Simplecapicola</h1><div class="replace_me"></div></div>';
+
+            var $main = $('main');
+
+
+            $('.capicola').initialize(function() {
+
+                $(this).find('.replace_me').html('<div class="capicola">I have been replaced</div>');
+
+                $(this).addClass('initialized');
+            });
+
+            $main.append(el);
+
+            expect($('.initialized').length).toEqual(2);
+
+        });
+
+        it('Shouldn\'t conflict', function(done) {
+
+            var el = '<div class="picanha shank"><div class="shank"></div><div class="picanha"></div></div>';
+
+
+
+            $('.shank').initialize(function() {
+
+                $(this).children('.picanha').addClass('initialized');
+
+                $(this).addClass('initialized');
+            });
+
+            $('.picanha').initialize(function() {
+
+                $(this).html('<div>toto</div>');
+                $(this).addClass('initialized2');
+            });
+
+
+
+            $("main").append(el);
+
+
+            setTimeout(function() {
+                expect($('.initialized').length).toEqual(1);
+                expect($('.initialized2').length).toEqual(1);
+                done();
+
+            }, 500);
+        });
+
+    });
+
 });
-
-/*
-
-
- it('Should add the class "initialized" to the element.', function(){
-
- $('.random_el').initialize(function(done) {
- $(this).addClass("initialized");
- });
- $main.append(randomEl);
- expect( $('.random_el').hasClass('initialized') ).toBe(true);
- });
-
- it('Should trigger the event exacly four times', function(done) {
-
- var counter = 0;
-
- $(document).on('DOMNodeUpdated', function() {
- counter++;
- });
-
- $('.random_el').initialize(function() { });
-
- $main.append(randomEl);
- $main.html(randomEl);
- $main.after(randomEl);
-
- setTimeout(function(){
-
- expect(counter).toEqual(4);
- done();
- });
- });
-
- it('Should trigger the event recursively', function (done) {
-
- })
-
-
- var randomEl    = "<div class='random_el'><p>This is a random element.</p></div>",
- randomEl2   = "<div><p class='random_el'>This is a random element.</p></div>",
- randomEl3   = "<div><p class='random_el'>This is a random element.</p><p class='random_el'>This is a random element.</p></div>",
- randomEl4   = "<div class='random_el'>This is a random element.</div><div class='random_el'>This is a random element.</div>",
- randomEl5   = "<div><p class='random_el'>This is a random element.</p></div><div class='random_el'>This is a random element.</div>",
- randomEl6   = "<template><p class='random_el'>This is a random element.</p></template>",
- randomEl7   = "<template class='random_el'>This is a random element.</template>",
- randomEl8   = "<template class='random_el'><p class='random_el'>This is a random element.</p></template>",
- randomEl9   = "<div><p class='random_el'>This is a random element.</p><p class='random_el1'>This is a random element.</p></div>",
- randomEl10   = "<div><p class='random_el'>This is a random element.<span class='random_el1'>This is a random element.</span></p></div>",
- randomEl11   = "<div><p class='random_el random_el1'>This is a random element.</p></div>",
- main        = false;
-
- <div class="toto"></div>
-
-
-
- <div directive="toto"></div>
-
-
- $('body').append('<div class="toto"></div>');
- $('.toto').append('<div class="toto"></div>');
- $('.toto').replaceWith('<div class="toto"></div>');
-
-
- */
