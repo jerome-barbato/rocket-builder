@@ -1,4 +1,7 @@
 # Rocket Builder #
+
+Version 2.2.1
+
 INTRODUCTION
 ------------
 
@@ -95,6 +98,12 @@ Current maintainers:
  
 CHANGELOG
 -----------
+
+
+### 2.2.1 ###
+* Unit tests supports with Jasmine
+  * JQuery initialize
+
 ### 2.2 ###
 * added create ( block and component ) task
 * new dependency fs-path
