@@ -30,7 +30,7 @@ var UIToggle = function (config) {
         auto_close : false,
         open_first : false,
         animate    : true,
-        speed      : 400,
+        speed      : 300,
         easing     : 'easeInOutCubic'
     };
 

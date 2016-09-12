@@ -33,17 +33,13 @@ Number.prototype.format = function(n, x) {
 
 
 
-if (typeof console == "undefined") {
-    window.console = {
-        log: function () {}
-    };
-}
+if (typeof console == "undefined")
+    window.console = { log: function () {}, time: function () {}, error: function () {}};
 
 
 
-if (typeof Modernizr == "undefined") {
+if (typeof Modernizr == "undefined")
     window.Modernizr = false;
-}
 
 
 

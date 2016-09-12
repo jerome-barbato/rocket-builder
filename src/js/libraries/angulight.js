@@ -65,9 +65,6 @@ var angularLight = function(){
 
     self.__construct = function(){
 
-        window.app = window.app || {};
-        app.services = {};
-
         $('[data-directive]').initialize(function(){
             self._run('directive', $(this) );
         });
@@ -83,6 +80,15 @@ var angularLight = function(){
                 $(this).remove();
 
             $(this).removeAttr('data-if');
+        });
+
+        $('[data-if-not]').initialize(function(){
+
+            var condition = $(this).data('if-not');
+            if( condition == "true" || condition == "1" || condition )
+                $(this).remove();
+
+            $(this).removeAttr('data-if-not');
         });
     };
 
@@ -103,9 +109,17 @@ var angularLight = function(){
 
             elem.attr('data-if', attrs.if);
         });
+
+        dom.compiler.register('attribute', 'if-not', function (elem, attrs) {
+
+            elem.attr('data-if-not', attrs.ifNot);
+        });
     }
 
     $(document).ready(self.__construct);
 };
 
 var angulight = new angularLight();
+var app       = app || {};
+
+app.services = {};
