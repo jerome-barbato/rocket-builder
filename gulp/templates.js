@@ -9,16 +9,10 @@ var gulp    = require('gulp'),
     config  = require('./config'),
     gutil   = require('gulp-util'),
     chalk   = require('chalk'),
-    $       = require('gulp-load-plugins')(
-        {
-            pattern: ['gulp-*', 'jsdom', 'through2'],
-            rename: {
-                'through2' : 'through',
-                'gulp-angular-htmlify' : 'htmlify',
-                'gulp-angular-templatecache' : 'templatecache'
-            }
-        }
-    );
+    $       = {
+        through: require('through2'),
+        jsdom:   require('jsdom')
+        };
 
 function loadDep(){
 
