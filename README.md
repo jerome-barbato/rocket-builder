@@ -1,6 +1,6 @@
 # Rocket Builder #
 
-Version 2.2.1
+Version 2.2.2
 
 INTRODUCTION
 ------------
@@ -40,6 +40,7 @@ Fresh install
 INSTALLATION
 ------------
 
+####Download
 * Option n°1 : NPM
 
 In dependecies field from your package.json, please send us your ssh key.
@@ -51,6 +52,23 @@ In dependecies field from your package.json, please send us your ssh key.
 * Option n°2 : Git 
 
         git clone git@bitbucket.org:Metabolism/rocket-builder.git builder
+####Dependencies
+Depending on what usage you will do of the builder, two options are availables :
+
+* Minimum dependencies
+  * Preprocessors CSS
+  * Preprocessors HTML
+  * Linting
+
+        cd builder
+        npm install --production
+
+* Install full dependencies
+  * Preprocessors CSS
+  * Preprocessors HTML
+  * Linting
+  * Tests modules
+  
         cd builder
         npm install
         
