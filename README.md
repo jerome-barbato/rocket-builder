@@ -94,38 +94,4 @@ This project is the full property of Metabolism Agency ( http://metabolism.fr )
 
 Current maintainers:
  * Jérôme Barbato - jerome@metabolism.fr
- * Paul Coudeville - paul@metabolism.fr 
- 
-CHANGELOG
------------
-
-
-### 2.2.1 ###
-* Unit tests supports with Jasmine
-  * JQuery initialize
-
-### 2.2 ###
-* added create ( block and component ) task
-* new dependency fs-path
-### 2.1 ###
-* Environment can now be set as environment variable.
-
-Arguments addition:
-* --production | -p : Enable assets compression
-* --no-watch        : Disable src assets watching
-* --framework 'name'      : Specific framework behavior ( rocket, silex, wordpress )
-* --theme 'name' : Specific theme behavior
-
-### 2.1 ###
-* added protect html attribute to write inline twig ex : <input protect="{{ required ? 'required' }}">
-### 2.0 ###
-* removed from core module
-### 1.5 ###
- * moved gulpfiles and package to core, added builder symlink
-### 1.4 ###
- * refractoring, partialing, unity test addition, Rocket html compiler
-### 1.3 ###
- * added front.config parsing
-### 1.2 ###
- * changed gulp-ruby-sass to gulp-sass
- * added gulp-css-globbing to allow @import '*'
+ * Paul Coudeville - paul@metabolism.fr
