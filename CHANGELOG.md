@@ -6,9 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 2.2.2  - 2016-09-13 ##
 ### Added ###
-* Unit tests supports with Jasmine
-  * JQuery initialize
-  
+* Linting task with Google Javascript standards ( usage of ESLint )
+
 ## 2.2.1  - 2016-09-16 ##
 ### Added ###
 * Unit tests supports with Jasmine
