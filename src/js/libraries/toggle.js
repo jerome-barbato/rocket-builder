@@ -127,7 +127,7 @@ var UIToggles = function () {
             var context = $toggle.data('context') ? JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') : {};
             context.$element = $toggle;
 
-            $toggle.removeAttr('data-context');
+            //$toggle.removeAttr('data-context');
 
             that.toggles.push( new UIToggle(context) );
         }

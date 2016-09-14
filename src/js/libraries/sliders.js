@@ -345,8 +345,11 @@ var UISlider = function (config) {
 
         if( window.jQuery.fn.fit ){
 
-            that.context.$current_slide.find('.ui-fit__object').fit();
-            that.context.$next_slide.find('.ui-fit__object').fit();
+            setTimeout(function(){
+
+                that.context.$current_slide.find('.ui-fit__cover, .ui-fit__contain').fit();
+                that.context.$next_slide.find('.ui-fit__cover, .ui-fit__contain').fit();
+            },10);
         }
 
         that._animate(animate, function () {

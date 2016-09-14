@@ -4,18 +4,22 @@
 
     overflow: hidden; position: relative;
 
-    .mod--object-fit &__object{
-      width: 100%; height: 100%; overflow: hidden;
-      &--cover{ object-fit: cover }
-      &--contain{ object-fit: contain }
+    .mod--object-fit &{
+      &__cover, &__contain{ width: 100%; height: 100%; overflow: hidden }
+      &__cover{ object-fit: cover }
+      &__contain{ object-fit: contain }
     }
 
     .mod--no-object-fit &{
-      &__object{
+      &__cover, &__contain{
         position: relative; visibility: hidden;
+        &[style]{ visibility: visible}
       }
     }
   }
+
+  .ui-sizer + &.ui-fit__cover, .ui-sizer + &.ui-fit__contain{ position: overlay() }
+
 }
 
 

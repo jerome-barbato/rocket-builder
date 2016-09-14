@@ -15,41 +15,37 @@
 
 var UIFit = function() {
 
-    var that = this;
+    var self = this;
 
-    that.$elements = false;
-    that.timeout   = false;
-    that.warn      = false;
+    self.timeout   = false;
+    self.warn      = false;
 
-    that.selector  = {
-        parent:'ui-fit',
-        object:'ui-fit__object'
-    };
+    self.selector  = 'ui-fit';
 
 
     /* Public methods. */
-    that.compute = function( $element ) {
+    self.compute = function( $element ) {
 
-        if( !$element.is(':visible') ) return;
+        if( $element.data('waiting') ) return;
 
-        var $container       = $element.closest('.'+that.selector.parent);
+        var $container       = $element.parent();
         var container_width  = $container.width();
         var container_height = $container.height();
         var container_ratio  = container_width/container_height;
 
-        that._getRatio($element, function( element_ratio ){
+        self._getRatio($element, function( element_ratio ){
 
-            if( $element.hasClass(that.selector.object+"--contain") ){
+            if( $element.hasClass(self.selector+"__contain") ){
 
                 if( element_ratio < container_ratio ) {
 
                     var width = Math.round(container_height*element_ratio);
-                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
+                    $element.css({width:width, height:container_height});
                 }
                 else {
 
                     var height = Math.round(container_width/element_ratio);
-                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
+                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px'});
                 }
 
             }else{
@@ -57,12 +53,12 @@ var UIFit = function() {
                 if( element_ratio > container_ratio ) {
 
                     var width = Math.round(container_height*element_ratio);
-                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:0});
+                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px'});
                 }
                 else {
 
                     var height = Math.round(container_width/element_ratio);
-                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:0});
+                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px'});
                 }
             }
         });
@@ -74,22 +70,32 @@ var UIFit = function() {
     /**
      *
      */
-    that._init = function() {
+    self._init = function() {
 
-        that.$elements = $('.'+that.selector.object);
-
-        that.$elements.each(function() {
+        $('.'+self.selector+'__cover, .'+self.selector+'__contain').each(function() {
 
             var $element = $(this);
 
-            if( !$element.data('ratio') )
-                that._getRatio($element);
+            $element.data('waiting', false);
+
+            if( !$element.data('ratio') ) {
+
+                self._getRatio($element, function () {
+
+                    self.compute($element);
+                });
+            }
+            else
+                self.compute($element);
+
+            $(document).on('loaded', function(){ self.compute($element) });
+            $(window).resize(function(){ self.compute($element) });
         });
     };
 
 
 
-    that._getRatio = function( $element, callback ){
+    self._getRatio = function( $element, callback ){
 
         if( $element.data('ratio') ){
 
@@ -103,10 +109,10 @@ var UIFit = function() {
 
         if( isNaN(ratio) ){
 
-            if( !that.warn ){
+            if( !self.warn ){
 
                 console.warn("there was a prb computing an image ratio, please be sure to specify width/height in the html to avoid resize on image loading");
-                that.warn = true;
+                self.warn = true;
             }
 
             var getNaturalDimensions = function(){
@@ -114,6 +120,8 @@ var UIFit = function() {
                 var width    = parseInt($element.naturalWidth());
                 var height   = parseInt($element.naturalHeight());
                 var ratio    = Math.round( (width/height)*100 )/100;
+
+                $element.data('waiting', false);
 
                 if( !isNaN(ratio) ){
 
@@ -124,10 +132,15 @@ var UIFit = function() {
                 }
             };
 
-            if( $element.prop('complete') )
+            if( $element.prop('complete') ){
+
                 getNaturalDimensions();
-            else
+            }
+            else{
+
+                $element.data('waiting', true);
                 $element.load(getNaturalDimensions);
+            }
         }
         else{
 
@@ -140,28 +153,12 @@ var UIFit = function() {
 
 
 
-    that._computeAll = function(){
-
-        setTimeout(function(){
-
-            $('.'+that.selector.object).each(function() {
-
-                that.compute($(this));
-            });
-        });
-    };
-
-
-
-    that.__construct = function(){
+    self.__construct = function(){
 
         if( Modernizr && Modernizr.objectfit )
             return;
 
-        $(document).on('boot', that._init);
-        $(document).on('loaded', that._computeAll);
-
-        $(window).resize(that._computeAll);
+        $(document).ready(self._init);
     };
 
 
@@ -170,8 +167,8 @@ var UIFit = function() {
 
         dom.compiler.register('attribute', 'object-fit', function (elem, attrs) {
 
-            elem.parent().addClass(that.selector.parent);
-            elem.addClass(that.selector.object + ' ' + that.selector.object + '--' + (attrs.objectFit.length ? attrs.objectFit : 'cover'));
+            elem.parent().addClass(self.selector);
+            elem.addClass(self.selector + '__' + (attrs.objectFit.length ? attrs.objectFit : 'cover'));
         });
     }
 
@@ -193,7 +190,7 @@ var UIFit = function() {
         };
     }
 
-    that.__construct();
+    self.__construct();
 };
 
 

@@ -134,8 +134,6 @@ var UIPopin = function(config){
 
     that._remove = function( $popin ){
 
-        $(window).enableScroll();
-
         if( !$popin || !$popin.length ) return;
 
         var $body = $('body');
@@ -166,7 +164,7 @@ var UIPopin = function(config){
                 $popin.hide();
         }
 
-        $body.removeClass('ui-popin--added');
+        $body.removeClass('ui-popin--added ui-popin--adding');
     };
 
 
@@ -176,7 +174,7 @@ var UIPopin = function(config){
         var $popin   = $(that.config.html.popin);
         var $body    = $('body');
         var $content = $popin.find('.ui-popin__content');
-        
+
         $content.append(content);
 
         if( !$content.find('.ui-popin__close').length )
@@ -196,8 +194,6 @@ var UIPopin = function(config){
 
 
     that._show = function( $popin ) {
-
-        $(window).disableScroll();
 
         var $body = $('body');
 
