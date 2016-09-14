@@ -9,24 +9,18 @@ var gulp    = require('gulp'),
     config  = require('./config'),
     gutil   = require('gulp-util'),
     chalk   = require('chalk'),
-    $       = require('gulp-load-plugins')(
-        {
-            pattern: ['gulp-*', 'jsdom', 'through2'],
-            rename: {
-                'through2' : 'through',
-                'gulp-angular-htmlify' : 'htmlify',
-                'gulp-angular-templatecache' : 'templatecache'
-            }
-        }
-    );
-
+    $       = {
+        through: require('through2'),
+        jsdom:   require('jsdom')
+        };
 
 function loadDep(){
 
     var src = [];
 
-    var front_config = JSON.parse(fs.readFileSync(config.paths.base.config));
-    var needed_core  = front_config.compiler;
+    var needed_core  = config.front.compiler;
+
+    src.push( fs.readFileSync(config.paths.base.src+'js/core/vendors/browser.js', 'utf-8') );
 
     needed_core.vendors.forEach(function(library){
 
@@ -52,30 +46,38 @@ function compile(html, scripts, callback) {
 
     var virtualConsole = $.jsdom.createVirtualConsole().sendTo(console);
 
-    html = html.replace(/<template /g,'<xtemplate ').replace(/<\/template>/g,'</xtemplate>');
+    if( html.indexOf('<!-- jsdom:disabled -->') != -1 ){
 
-    $.jsdom.env({
-        html           : html,
-        src            : scripts,
-        virtualConsole : virtualConsole,
-        done           : function (err, window) {
+        html = html.replace('<!-- jsdom:disabled -->','');
+        callback(new Buffer(html));
+    }
+    else {
 
-            window.precompile = true;
-            var $             = window.$;
-            var compiler      = window.dom.compiler;
-            var $body         = $('body');
+        html = html.replace(/<template /g, '<xtemplate ').replace(/<\/template>/g, '</xtemplate>');
 
-            //todo: find a better way
-            if( $('html').attr('lang') == undefined ) {
+        $.jsdom.env({
+            html           : html,
+            src            : scripts,
+            virtualConsole : virtualConsole,
+            done : function (err, window) {
+
+                window.precompile    = true;
+                window._DEBUG        = false;
+                window.compact_class = config.front.compiler.compact;
+
+                var $        = window.$;
+                var compiler = window.dom.compiler;
+                var $body    = $('body');
 
                 compiler.run($body);
                 html = $body.html();
-            }
 
-            html = html.replace(/<xtemplate /g,'<template ').replace(/<\/xtemplate>/g,'</template>');
-            callback(new Buffer(html));
-        }
-    });
+                html = html.replace(/<xtemplate /g, '<template ').replace(/<\/xtemplate>/g, '</template>');
+                html = html.replace(/protect=\"([^"]*)\"/g, "$1");
+                callback(new Buffer(html));
+            }
+        });
+    }
 }
 
 
@@ -86,9 +88,9 @@ function compileFiles() {
 
     return $.through.obj(function(file, enc, cb) {
 
-        var html = file.contents.toString('utf8');
+        var raw_html = file.contents.toString('utf8');
 
-        compile(html, scripts, function(compiled_html){
+        compile(raw_html, scripts, function(compiled_html){
 
             file.contents = compiled_html;
             cb(null, file);

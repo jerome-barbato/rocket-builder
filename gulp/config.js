@@ -61,7 +61,7 @@ var Config = module.exports = {
                 js       : [],
                 sass     : Config.src_path+"sass/*.scss",
                 template : Config.src_path+"template/**/*.twig",
-                html     : Config.public_path+"views/**/*.html"
+                html     : Config.public_path+"views/**/*.html",
             },
             dest : {
                 js       : Config.public_path+"js",
@@ -70,11 +70,14 @@ var Config = module.exports = {
             },
             watch : {
                 js       : Config.src_path+"js/**/*.js",
+                js_app   : [Config.src_path+"js/app/**/*.js", Config.src_path+"js/app.js"],
+                js_core  : [Config.src_path+"js/core/**/*.js"],
                 sass     : Config.src_path+"sass/**/*.scss",
                 template : Config.src_path+"template/**/*.twig"
             }
         };
 
+        Config.front = JSON.parse(fs.readFileSync(Config.paths.base.config));
 
             /*console.log("Status: \n" +
                 "Path to config : " + Config.paths.base.config +
@@ -91,8 +94,7 @@ var Config = module.exports = {
      */
     addCoreDependencies : function addCoreDependencies() {
 
-        var front_config = JSON.parse(fs.readFileSync(Config.paths.base.config));
-        var needed_core  = front_config.app;
+        var needed_core  = Config.front.app;
 
         // Define js src order from front config
         needed_core.vendors.forEach(function(library){
@@ -113,9 +115,9 @@ var Config = module.exports = {
             Config.paths.src.js.push(Config.src_path+'js/core/libraries/'+library+'.js');
         });
 
-        Config.paths.src.js.push(Config.src_path+'js/app.js');
-        Config.paths.src.js.push(Config.src_path+'js/app/**/*.js');
         Config.paths.src.js.push(Config.src_path+'js/vendors/**/*.js');
+        Config.paths.src.js.push(Config.src_path+'js/app/**/*.js');
+        Config.paths.src.js.push(Config.src_path+'js/app.js');
     },
 
     /**

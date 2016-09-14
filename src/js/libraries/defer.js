@@ -17,18 +17,18 @@
 
 var UIDefer = function () {
 
-    var that = this;
+    var self = this;
 
-    that.__construct = function(){
+    self.__construct = function(){
 
-        $('.ui-defer').each(function(){
+        $('.ui-defer').initialize(function(){
 
             $(this).attr('src', $(this).data('src') );
-            $(this).removeAttr('data-src');
+            $(this).removeAttr('data-src').removeClass('ui-defer');
         });
     };
 
-    $(document).on('loaded', that.__construct);
+    self.__construct();
 
 
     if( typeof DOMCompiler !== "undefined" ) {

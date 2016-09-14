@@ -15,15 +15,14 @@
 
 var DOMCompiler = function(){
 
-    var that = this;
+    var self = this;
 
-    that.dom_attributes         = [];
-    that.dom_attributes_filters = [];
-    that.dom_elements           = [];
-    that.debug                  = false;
+    self.dom_attributes         = [];
+    self.dom_attributes_filters = [];
+    self.dom_elements           = [];
 
 
-    that.attr = function(elem, attr, value){
+    self.attr = function(elem, attr, value){
 
         if( window.precompile )
             elem.attr('data-'+attr, value);
@@ -32,7 +31,7 @@ var DOMCompiler = function(){
     };
 
 
-    that._getAttributes = function(element){
+    self._getAttributes = function(element){
 
         var attributes = {};
 
@@ -42,7 +41,7 @@ var DOMCompiler = function(){
 
             if( window.precompile )
                 value = value.replace(/\{\{ /g, '{{').replace(/ \}\}/g, '}}').replace(/ \? /g, '?').replace(/ : /g, ':').replace(/ \| /g, '|').replace(/ ~ /g, '~');
-            
+
             attributes[_.camelCase(element.attributes[i].name)] = value;
         }
 
@@ -51,70 +50,85 @@ var DOMCompiler = function(){
 
 
 
-    that._compileAttributes = function($dom){
+    self._compileAttributes = function($dom){
 
-        that.dom_attributes.forEach(function(dom_attribute){
+        self.dom_attributes.forEach(function(dom_attribute){
 
             var compiler = _.camelCase(dom_attribute);
 
+            if( $dom.is('['+dom_attribute+']') )
+                self[compiler]($dom, self._getAttributes($dom[0]) );
+
             $dom.find('['+dom_attribute+']').each(function(){
 
-                that[compiler]( $(this), that._getAttributes(this) );
+                self[compiler]( $(this), self._getAttributes(this) );
             });
         });
     };
 
 
 
-    that._compileAttributesFilters = function($dom){
+    self._compileAttributesFilters = function($dom){
 
-        that.dom_attributes_filters.forEach(function(dom_attributes_filter){
+        self.dom_attributes_filters.forEach(function(dom_attributes_filter){
 
             var compiler = _.camelCase(dom_attributes_filter);
 
             $dom.find('['+dom_attributes_filter+']').each(function(){
 
-                that[compiler]( $(this), that._getAttributes(this) );
+                self[compiler]( $(this), self._getAttributes(this) );
             });
         });
     };
 
 
 
-    that._compileElements = function($dom){
+    self._compileElement = function(dom, dom_element){
 
-        that.dom_elements.forEach(function(dom_element){
+        var compiler = _.camelCase(dom_element);
+
+        var $template = $(self[compiler]($(dom), self._getAttributes(dom)));
+        var html      = $(dom).html();
+
+        $template.find('transclude').replaceWith(html);
+
+        for(var i=0; i<dom.attributes.length; i++){
+
+            if( dom.attributes[i].name != 'class' ) {
+                if (dom.attributes[i].name != 'context')
+                    $template.attr(dom.attributes[i].name, dom.attributes[i].value);
+            }
+            else
+                $template.addClass(dom.attributes[i].value);
+        }
+
+        self._compileElements($template);
+
+        $(dom).replaceWith($template);
+    };
+
+
+    self._compileElements = function($dom){
+
+        self.dom_elements.forEach(function(dom_element){
+
+            if( $dom.is(dom_element) )
+                self._compileElement($dom[0], dom_element);
 
             $dom.find(dom_element).each(function(){
-
-                var compiler = _.camelCase(dom_element);
-
-                var $template = $(that[compiler]($(this), that._getAttributes(this)));
-                var html      = $(this).html();
-
-                $template.find('transclude').replaceWith(html);
-
-                if( $(this).attr('class') && $(this).attr('class').length )
-                    $template.addClass($(this).attr('class'));
-
-                if( $(this).attr('id') && $(this).attr('id').length )
-                    $template.attr('id', $(this).attr('id'));
-
-                if( $(this).attr('style') && $(this).attr('style').length )
-                    $template.attr('style', $(this).attr('style'));
-
-                that._compileElements($template);
-
-                $(this).replaceWith($template);
+                self._compileElement(this, dom_element)
             });
         });
     };
 
 
 
-    that._cleanAttributes = function($dom){
+    self._cleanAttributes = function($dom){
 
-        that.dom_attributes.forEach(function (dom_attribute) {
+        self.dom_attributes.forEach(function (dom_attribute) {
+
+            if( $dom.is('[' + dom_attribute + ']') )
+                $dom.removeAttr(dom_attribute);
 
             $dom.find('[' + dom_attribute + ']').each(function () {
 
@@ -125,31 +139,39 @@ var DOMCompiler = function(){
 
 
 
-    that.run = function( $dom ){
+    self.run = function( $dom ){
 
-        if( that.debug )
+        var raw_init = $dom.html();
+
+        if( window._DEBUG )
             console.time('dom compilation');
-        
+
         $dom = $dom.not('template');
 
-        that._compileElements($dom);
-        that._compileAttributes($dom);
-        that._compileAttributesFilters($dom);
+        self._compileElements($dom);
+        self._compileAttributes($dom);
+        self._compileAttributesFilters($dom);
 
-        that._cleanAttributes($dom);
+        self._cleanAttributes($dom);
 
-        $(document).trigger('dom-compiled');
+        if( raw_init != $dom.html() ){
 
-        if( that.debug ){
+            setTimeout(function(){
+
+                $(document).trigger('DOMNodeUpdated', [$dom, 'dom-compiler']);
+            });
+        }
+
+        if( window._DEBUG ){
 
             console.timeEnd('dom compilation');
-            console.info('dom element count : '+$dom.find('*').length);
+            console.info('dom element count : '+($dom.find('*').length+$dom.length));
         }
     };
 
 
 
-    that.register = function(type, attribute, link){
+    self.register = function(type, attribute, link, main){
 
         var name = _.camelCase(attribute);
 
@@ -157,20 +179,20 @@ var DOMCompiler = function(){
 
             case 'attribute':
 
-                that.dom_attributes.push(attribute);
-                that._addAngularDirective('A', name, link, that.dom_attributes.length);
+                self.dom_attributes.push(attribute);
+                self._addAngularDirective('A', name, link, main, self.dom_attributes.length);
                 break;
 
             case 'filter':
 
-                that.dom_attributes_filters.push(attribute);
-                that._addAngularDirective('F', name, link, that.dom_attributes_filters.length);
+                self.dom_attributes_filters.push(attribute);
+                self._addAngularDirective('F', name, link, main, self.dom_attributes_filters.length);
                 break;
 
             case 'element':
 
-                that.dom_elements.push(attribute);
-                that._addAngularDirective('E', name, link, that.dom_elements.length);
+                self.dom_elements.push(attribute);
+                self._addAngularDirective('E', name, link, main, self.dom_elements.length);
                 break;
         }
 
@@ -179,28 +201,36 @@ var DOMCompiler = function(){
 
 
 
-    that._addAngularDirective = function(restrict, name, link, priority){
+    self._addAngularDirective = function(restrict, name, link, main, priority){
 
         if( !window.angular ) return;
 
         if( restrict == "A" || restrict == "F" ){
 
-            that.angular_module.directive(name, [function() {
+            self.angular_module.directive(name, [function() {
                 return {
                     restrict: "A", scope: false, priority:1000-priority,
                     link: {
                         pre: function(scope, elem, attrs) { link(elem, attrs) },
-                        post: function(scope, elem) { if( restrict == "A" ) elem.removeAttr(_.kebabCase(name)) }
+                        post: function(scope, elem) {
+                            if( typeof main != "undefined" ) main(elem);
+                            if( restrict == "A" ) elem.removeAttr(_.kebabCase(name))
+                        }
                     }
                 }
             }]);
         }
         else{
 
-            that.angular_module.directive(name, [function() {
+            self.angular_module.directive(name, [function() {
                 return {
                     restrict: restrict, scope: false, priority:1000-priority, transclude:true,
-                    template: link, replace: true
+                    template: link, replace: true,
+                    link: {
+                        post: function(scope, elem) {
+                            if( typeof main != "undefined" ) main(elem);
+                        }
+                    }
                 }
             }]);
         }
@@ -213,20 +243,22 @@ var DOMCompiler = function(){
     /**
      *
      */
-    that.__construct =  function() {
+    self.__construct =  function() {
 
         if( !window.angular ){
 
-            $(document).ready(function(){
-
-                that.run( $('body') );
-            });
+            $(document)
+                .ready(function(){ self.run( $('body') ) })
+                .on('DOMNodeUpdated', function(e, $node, caller){
+                    if( caller != "dom-compiler" && caller != "initialize" )
+                        self.run( $node )
+                });
         }
         else{
 
-            that.angular_module = angular.module('dom-compiler', []);
+            self.angular_module = angular.module('dom-compiler', []);
 
-            that.angular_module.directive('transclude', [function () {
+            self.angular_module.directive('transclude', [function () {
                 return {
                     terminal: true, restrict: 'EA', link: function ($scope, $element, $attr, ctrl, transclude) {
 
@@ -248,7 +280,7 @@ var DOMCompiler = function(){
         }
     };
 
-    that.__construct();
+    self.__construct();
 };
 
 var dom = dom || {};

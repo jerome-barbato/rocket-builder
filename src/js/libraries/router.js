@@ -17,12 +17,12 @@
  **/
 var UIRouter = function(){
 
-    var that = this;
+    var self = this;
 
 
     /* Public */
 
-    that.config = {
+    self.config = {
         animations : {
             enter:'fade-in',
             leave:'fade-out'
@@ -30,7 +30,7 @@ var UIRouter = function(){
         scroll_to_top:false
     };
 
-    that.context = {
+    self.context = {
         pages : false,
         current_path  : '',
         previous_path : '',
@@ -40,48 +40,48 @@ var UIRouter = function(){
 
     /* Contructor. */
 
-    that.__construct =  function(){
+    self.__construct =  function(){
 
         $(window).on('hashchange', function() {
 
-            that.gotoPath( that._getPath(), function(){
+            self.gotoPath( self._getPath(), function(){
 
-                if( that.config.scroll_to_top )
+                if( self.config.scroll_to_top )
                     $(window).scrollTop(0);
             } );
         });
 
-        that.context.pages    = $('.ui-router');
-        that.context.triggers = $('[href^="#/"]');
+        self.context.pages    = $('.ui-router');
+        self.context.triggers = $('[href^="#/"]');
 
         if( location.hash && location.hash.indexOf('/') == 1 )
-            that.gotoPath( that._getPath() );
+            self.gotoPath( self._getPath() );
         else
-            location.hash = that._findDefaultPath();
+            location.hash = self._findDefaultPath();
     };
 
 
     /* Private */
 
-    that._setActiveTriggers = function(){
+    self._setActiveTriggers = function(){
 
-        $('body').removeClass('ui-route--' + that.context.previous_path.replace(/\//g, '_')).addClass('ui-route--' + that.context.current_path.replace(/\//g, '_'));
+        $('body').removeClass('ui-route--' + self.context.previous_path.replace(/\//g, '_')).addClass('ui-route--' + self.context.current_path.replace(/\//g, '_'));
 
-        that.context.triggers.removeClass('ui-route--active');
+        self.context.triggers.removeClass('ui-route--active');
 
         var path  = [];
 
-        $.each(that.context.current_path.split('/'), function(index, element){
+        $.each(self.context.current_path.split('/'), function(index, element){
 
             path.push(element);
-            that.context.triggers.filter('[href="#/' + path.join('/') + '"]').addClass('ui-route--active');
+            self.context.triggers.filter('[href="#/' + path.join('/') + '"]').addClass('ui-route--active');
         })
     };
 
 
-    that.gotoPath = function( path, callback ) {
+    self.gotoPath = function( path, callback ) {
 
-        var $page = that.context.pages.filter("[data-page='" + path + "']");
+        var $page = self.context.pages.filter("[data-page='" + path + "']");
 
         if( path && path.length && $page.length ){
 
@@ -94,14 +94,14 @@ var UIRouter = function(){
             }
             else {
 
-                that.context.previous_path = that.context.current_path;
-                that.context.current_path  = path;
+                self.context.previous_path = self.context.current_path;
+                self.context.current_path  = path;
 
-                that._setActiveTriggers();
+                self._setActiveTriggers();
 
                 path = path.split('/');
 
-                var previous_path = that.context.previous_path.split('/');
+                var previous_path = self.context.previous_path.split('/');
 
                 var complete_prev_path = [];
                 var complete_new_path  = [];
@@ -116,14 +116,14 @@ var UIRouter = function(){
 
                         if (previous_path[index] != new_path) {
 
-                            that._unloadPage(complete_prev_path.join('/'));
+                            self._unloadPage(complete_prev_path.join('/'));
                             previous_path = [];
                         }
                     }
 
                     if (previous_path.length < index || previous_path[index] != new_path){
 
-                        that._loadPage(complete_new_path.join('/'));
+                        self._loadPage(complete_new_path.join('/'));
                         loaded_pages++;
 
                         if( loaded_pages == path.length && callback )
@@ -135,10 +135,10 @@ var UIRouter = function(){
     };
 
 
-    that._unloadPage = function( path, callback ) {
+    self._unloadPage = function( path, callback ) {
 
-        var $page       = that.context.pages.filter("[data-page='" + path + "']");
-        var leave_class = 'ui-router--animate ui-router--'+that.config.animations.leave+' ui-router--leave';
+        var $page       = self.context.pages.filter("[data-page='" + path + "']");
+        var leave_class = 'ui-router--animate ui-router--'+self.config.animations.leave+' ui-router--leave';
 
         var unloadComplete = function(){
 
@@ -153,9 +153,9 @@ var UIRouter = function(){
 
         if( $page && $page.length ){
 
-            if( that.config.animations && that.config.animations.leave ){
+            if( self.config.animations && self.config.animations.leave ){
 
-                $page.unbind(that.context.animation_end).one(that.context.animation_end, unloadComplete);
+                $page.unbind(self.context.animation_end).one(self.context.animation_end, unloadComplete);
                 $page.addClass(leave_class);
             }
             else{
@@ -166,16 +166,16 @@ var UIRouter = function(){
     };
 
 
-    that._loadPage = function( path, callback ) {
+    self._loadPage = function( path, callback ) {
 
-        var $page = that.context.pages.filter("[data-page='" + path + "']");
+        var $page = self.context.pages.filter("[data-page='" + path + "']");
 
         if ( $page ) {
 
-            if( that.config.animations && that.config.animations.enter ){
+            if( self.config.animations && self.config.animations.enter ){
 
-                var enter_class = 'ui-router--animate ui-router--'+that.config.animations.enter+' ui-router--enter';
-                $page.unbind(that.context.animation_end).one(that.context.animation_end, function(){
+                var enter_class = 'ui-router--animate ui-router--'+self.config.animations.enter+' ui-router--enter';
+                $page.unbind(self.context.animation_end).one(self.context.animation_end, function(){
 
                     $page.removeClass(enter_class);
 
@@ -198,7 +198,7 @@ var UIRouter = function(){
     };
 
 
-    that._findDefaultPath = function( $page ) {
+    self._findDefaultPath = function( $page ) {
 
         var path = '';
 
@@ -213,21 +213,21 @@ var UIRouter = function(){
             var $subpage = $page.find(".ui-router--default").first();
 
             if( $subpage.length )
-                return that._findDefaultPath( $subpage )
+                return self._findDefaultPath( $subpage )
         }
 
         return '/'+path;
     };
 
 
-    that._getPath = function() {
+    self._getPath = function() {
 
         var path = false;
 
         if ( location.hash )
             path  = location.hash.replace("#/", "");
 
-        if( that.context.current_path != path )
+        if( self.context.current_path != path )
             return path;
 
         return false;
@@ -251,7 +251,7 @@ var UIRouter = function(){
         });
     }
 
-    $(document).on('boot', that.__construct);
+    $(document).on('boot', self.__construct);
 };
 
 

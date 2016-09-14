@@ -1,53 +1,42 @@
 //v1.0
 
 $animation-duration : $transition-duration*2;
-$animation-delay    : 0.05s;
+$animation-delay    : $transition-duration/6;
 
 @mixin lib-animation{
 
   [when-visible],[animation],[delay],[easing]{ visibility: hidden }
 
-  .ui-animation{
-    animation-duration: $animation-duration; animation-timing-function: $ease-out-cubic;
-    animation-play-state: paused; animation-fill-mode: both; backface-visibility: hidden;
-
-    &--stack{
-      animation: none!important; will-change: unset; backface-visibility: visible;
-      .ui-animation { animation-name: slide-up; will-change: opacity, transform }
+  @each $name, $properties in $animations{
+    [data-animation="#{$name}"]{
+      animation: $name $animation-duration $ease-out-cubic both;
+      will-change: unquote($properties); backface-visibility: hidden;
     }
-
-    &--active{
-      &, .ui-animation{ animation-play-state: running }
+    @media #{$media-tablet} {
+      [data-tablet-animation="#{$name}"]{ animation-name: #{$name}; will-change: unquote($properties) }
     }
-
-    @each $name, $properties in $animations{
-      &--#{$name}{ animation-name: #{$name}!important; will-change: unquote($properties) }
-      @media #{$media-tablet} {
-        &--tablet--#{$name}{ animation-name: #{$name}!important; will-change: unquote($properties) }
-      }
-      @media #{$media-mobile} {
-        &--mobile--#{$name}{ animation-name: #{$name}!important; will-change: unquote($properties) }
-      }
+    @media #{$media-mobile} {
+      [data-mobile-animation="#{$name}"]{ animation-name: #{$name}; will-change: unquote($properties) }
     }
+  }
 
-    @for $i from 0 through 35{
-      &--delay-#{$i}{ animation-delay: $animation-delay*$i }
-      @media #{$media-tablet} {
-        &--tablet--delay-#{$i}{ animation-delay: $animation-delay*$i }
-      }
-      @media #{$media-mobile} {
-        &--mobile--delay-#{$i}{ animation-delay: $animation-delay*$i }
-      }
+  @for $i from 0 through 35{
+    [data-delay="#{$i}"]{ animation-delay: $animation-delay*$i }
+    @media #{$media-tablet} {
+      [data-tablet-delay="#{$i}"]{ animation-delay: $animation-delay*$i }
     }
+    @media #{$media-mobile} {
+      [data-mobile-delay="#{$i}"]{ animation-delay: $animation-delay*$i }
+    }
+  }
 
-    @each $name, $easing in $easings{
-      &--easing-#{$name}{ animation-timing-function: $easing }
-      @media #{$media-tablet} {
-        &--tablet--easing-#{$name}{ animation-timing-function: $easing }
-      }
-      @media #{$media-mobile} {
-        &--mobile--easing-#{$name}{ animation-timing-function: $easing }
-      }
+  @each $name, $easing in $easings{
+    [data-easing="#{$name}"]{ animation-timing-function: $easing }
+    @media #{$media-tablet} {
+      [data-tablet-easing="#{$name}"]{ animation-timing-function: $easing }
+    }
+    @media #{$media-mobile} {
+      [data-mobile-easing="#{$name}"]{ animation-timing-function: $easing }
     }
   }
 }

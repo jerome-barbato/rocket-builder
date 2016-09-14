@@ -19,11 +19,11 @@
 
 var UIShare = function(){
 
-    var that = this;
+    var self = this;
 
     /* Public */
 
-    that.facebook = function( link, scrape ){
+    self.facebook = function( link, scrape ){
 
         if( scrape && typeof FB !== 'undefined' ) {
 
@@ -42,38 +42,38 @@ var UIShare = function(){
             else{
 
                 var url = 'http://www.facebook.com/sharer.php?u=' + encodeURIComponent(link);
-                that._openWindow(url, 'facebookwindow', 533, 355);
+                self._openWindow(url, 'facebookwindow', 533, 355);
             }
         }
     };
 
 
-    that.twitter = function( link, text, share_link ){
+    self.twitter = function( link, text, share_link ){
 
         var url = 'https://twitter.com/intent/tweet?text='+encodeURIComponent(text);
 
         if( share_link )
             url += '&url='+encodeURIComponent(link);
 
-        that._openWindow(url, 'twitterwindow', 550, 254);
+        self._openWindow(url, 'twitterwindow', 550, 254);
     };
 
 
-    that.linkedin = function(link, title, summary){
+    self.linkedin = function(link, title, summary){
 
         var url     = 'https://www.linkedin.com/shareArticle?mini=true&url='+encodeURIComponent(link)+'&title='+encodeURIComponent(title)+'&summary='+encodeURIComponent(summary);
-        that._openWindow(url, 'linkedinwindow', 560, 510);
+        self._openWindow(url, 'linkedinwindow', 560, 510);
     };
 
 
-    that.gplus = function( link ){
+    self.gplus = function( link ){
 
         var url = 'https://plus.google.com/share?url='+encodeURIComponent(link);
-        that._openWindow(url, 'gpluswindow', 518, 572);
+        self._openWindow(url, 'gpluswindow', 518, 572);
     };
 
 
-    that.pinterest = function( link, media, description ){
+    self.pinterest = function( link, media, description ){
 
         var url = 'http://www.pinterest.com/pin/create/button/?url='+encodeURIComponent(link);
 
@@ -83,11 +83,11 @@ var UIShare = function(){
         if(description)
             url += '&description='+encodeURIComponent(description);
 
-        that._openWindow(url, 'pinterestwindow', 750, 533);
+        self._openWindow(url, 'pinterestwindow', 750, 533);
     };
 
 
-    that.mail = function(link, subject, body){
+    self.mail = function(link, subject, body){
 
         var url = 'mailto:?';
 
@@ -127,7 +127,7 @@ var UIShare = function(){
     /* Private */
 
 
-    that._openWindow = function(url, name, width, height) {
+    self._openWindow = function(url, name, width, height) {
 
         var screenLeft=0, screenTop=0;
 
@@ -173,7 +173,7 @@ var UIShare = function(){
     /**
      *
      */
-    that.__construct =  function(){
+    self.__construct =  function(){
 
         $(document).on('click', '.ui-share', function(e){
 
@@ -186,7 +186,7 @@ var UIShare = function(){
 
                 var scrape = $(this).hasDataAttr('scrape') ? $(this).data('scrape') : false;
 
-                that.facebook(link, scrape);
+                self.facebook(link, scrape);
             }
             else if( $(this).hasClass('ui-share--twitter') ){
 
@@ -195,35 +195,35 @@ var UIShare = function(){
 
                 share_link = share_link != "false" && share_link;
 
-                that.twitter(link, text, share_link);
+                self.twitter(link, text, share_link);
             }
             else if( $(this).hasClass('ui-share--linkedin') ){
 
                 var title   = $(this).hasDataAttr('title') ? $(this).data('title') : '';
                 var summary = $(this).hasDataAttr('summary') ? $(this).data('summary') : '';
 
-                that.linkedin(link, title, summary);
+                self.linkedin(link, title, summary);
             }
             else if( $(this).hasClass('ui-share--pinterest') ){
 
                 var media       = $(this).hasDataAttr('media') ? $(this).data('media') : false;
                 var description = $(this).hasDataAttr('description') ? $(this).data('description') : false;
 
-                that.pinterest( link, media, description );
+                self.pinterest( link, media, description );
             }
             else if( $(this).hasClass('ui-share--gplus') ){
 
-                that.gplus(link);
+                self.gplus(link);
             }
         });
 
-        $('.ui-share--mail').each(function(){
+        $('.ui-share--mail').initialize(function(){
 
             var link     = $(this).attr('href');
             var subject  = $(this).hasDataAttr('subject') ? $(this).data('subject') : false;
             var body     = $(this).hasDataAttr('body') ? $(this).data('body') : false;
 
-            $(this).attr('href', that.mail(link, subject, body));
+            $(this).attr('href', self.mail(link, subject, body));
         });
     };
 
@@ -236,7 +236,7 @@ var UIShare = function(){
         });
     }
 
-    $(document).on('boot', that.__construct);
+    $(document).on('boot', self.__construct);
 };
 
 var ui = ui || {};

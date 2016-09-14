@@ -9,3 +9,8 @@
 ._clearfix, .clearfix {
   @include clearfix()
 }
+
+// Text
+@mixin text($type) {
+  @extend .text, .text--#{$type};
+}

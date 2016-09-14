@@ -1,0 +1,12 @@
+@mixin lib-toggle{
+  .ui-toggle{
+    &__handler{ cursor: pointer }
+    &__content{ display: none; transition: allow(opacity, 0.4s); opacity: 0 }
+    &--active &__content{ opacity: 1; transition: none }
+  }
+}
+
+
+@if( index($libraries, 'toggle') ){
+  @include lib-toggle;
+}

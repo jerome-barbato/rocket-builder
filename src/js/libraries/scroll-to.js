@@ -17,9 +17,9 @@
 
 var UIScroll = function () {
 
-    var that = this;
+    var self = this;
 
-    that.config = {
+    self.config = {
         speed     : 500,
         easeIn    : 'easeOutCubic',
         easeOut   : 'easeInCubic',
@@ -30,50 +30,59 @@ var UIScroll = function () {
             offset : 'ui-scroll-offset',
             target : 'ui-scroll--target'
         },
-        force_offset : false
+        force_offset : false,
+        user_anchor  : true
     };
 
-    that.targets     = [];
-    that.offset      = 0;
-    that.scroll_top  = 0;
+    self.targets     = [];
+    self.offset      = 0;
+    self.scroll_top  = 0;
 
 
 
-    that._setupEvents = function(){
+    self._setupEvents = function(){
 
-        $(document).on('click','.'+that.config.class.link, function(e){
+        $(document).on('click','.'+self.config.class.link, function(e){
 
-            e.preventDefault();
+            if( $(this).attr('href').indexOf('http') == -1 ) {
 
-            var target = $(this).attr('href');
-            that.scrollTo(target, true);
+                e.preventDefault();
+
+                var target = self.config.user_anchor ? $(this).attr('href') : $(this).data('ui-href');
+                self.scrollTo(target, true);
+            }
         });
 
-        $(window).scroll(that._setActive).resize(that._resize);
+        $(window).scroll(self._setActive).resize(self._resize);
     };
 
 
-    that.scrollTo = function(id, animate){
+    self.scrollTo = function(id, animate){
 
         var target = 0;
 
-        if( id == "#top" )
+        if( $(id).length )
+            target = $(id).offset().top;
+        else if( id == "#top" )
             target = 0;
         else if( id == "#next" )
             target = $(window).height();
         else
-            target = $(id).offset().top;
+        {
+            $(document).trigger('ui-scroll', [id, false]);
+            return;
+        }
 
-        var scroll_to = target - that._computeOffset();
+        var scroll_to = target - self._computeOffset();
 
         $(document).trigger('ui-scroll', [id, target]);
 
         if( animate ){
 
-            var scroll_diff = Math.abs(that.scroll_top - scroll_to);
+            var scroll_diff = Math.abs(self.scroll_top - scroll_to);
             var velocity    = Math.sqrt(scroll_diff/$(window).height());
 
-            $('html, body').animate({scrollTop:scroll_to}, Math.max(200, velocity*that.config.speed), that.config.easeInOut, function(){
+            $('html, body').stop().animate({scrollTop:scroll_to}, Math.max(200, velocity*self.config.speed), self.config.easeInOut, function(){
 
                 $(document).trigger('ui-scroll');
             });
@@ -85,15 +94,15 @@ var UIScroll = function () {
     };
 
 
-    that._computeOffset = function(){
+    self._computeOffset = function(){
 
-        if( that.config.force_offset ){
+        if( self.config.force_offset ){
 
-            that.offset = that.config.force_offset;
-            return that.config.force_offset;
+            self.offset = self.config.force_offset;
+            return self.config.force_offset;
         }
 
-        var $offset = $('.'+that.config.class.offset);
+        var $offset = $('.'+self.config.class.offset);
         var offset  = 0;
 
         $offset.each(function(){
@@ -102,50 +111,50 @@ var UIScroll = function () {
                 offset += $(this).outerHeight();
         });
 
-        that.offset = offset+that.config.offset;
+        self.offset = offset+self.config.offset;
 
-        return that.offset;
+        return self.offset;
     };
 
 
 
-    that._setActive = function(){
+    self._setActive = function(){
 
-        that.scroll_top = $(window).scrollTop() + that.offset;
+        self.scroll_top = $(window).scrollTop() + self.offset;
 
-        for (var i in that.targets) {
+        for (var i in self.targets) {
 
-            var target = that.targets[i];
+            var target = self.targets[i];
 
-            if( target.top <= that.scroll_top ){
+            if( target.top <= self.scroll_top ){
 
                 if( !target.seen ){
 
-                    target.$link.addClass(that.config.class.link+'--seen');
-                    target.$.addClass(that.config.class.link+'--seen ');
+                    target.$link.addClass(self.config.class.link+'--seen');
+                    target.$.addClass(self.config.class.link+'--seen ');
                     target.seen = true;
                 }
             }
             else if( target.seen ){
 
-                target.$link.removeClass(that.config.class.link+'--seen');
-                target.$.removeClass(that.config.class.link+'--seen ');
+                target.$link.removeClass(self.config.class.link+'--seen');
+                target.$.removeClass(self.config.class.link+'--seen ');
                 target.seen = false;
             }
 
-            if( target.top <= that.scroll_top && target.bottom > that.scroll_top ){
+            if( target.top <= self.scroll_top && target.bottom > self.scroll_top ){
 
                 if( !target.active ){
 
-                    target.$link.addClass(that.config.class.link+'--active');
-                    target.$.addClass(that.config.class.link+'--active ');
+                    target.$link.addClass(self.config.class.link+'--active');
+                    target.$.addClass(self.config.class.link+'--active ');
                     target.active = true;
                 }
             }
             else if( target.active ){
 
-                target.$link.removeClass(that.config.class.link+'--active');
-                target.$.removeClass(that.config.class.link+'--active ');
+                target.$link.removeClass(self.config.class.link+'--active');
+                target.$.removeClass(self.config.class.link+'--active ');
                 target.active = false;
             }
         }
@@ -153,9 +162,14 @@ var UIScroll = function () {
 
 
 
-    that.add = function( elem ){
+    self.add = function( elem ){
 
-        var target  = elem.attr('href').split('#');
+        var raw_target  = self.config.user_anchor ? elem.attr('href') : elem.data('ui-href');
+
+        if( !raw_target || !raw_target.length )
+            return;
+
+        var target  = raw_target.split('#');
         var current = window.location.href.split('#');
 
         if( target[0].length && target[0] != current[0] ){
@@ -165,11 +179,12 @@ var UIScroll = function () {
         }
         else{
 
-            elem.attr('href', '#'+target[1]);
+            if( self.config.user_anchor )
+                elem.attr('href', '#'+target[1]);
         }
 
         var element = {
-            anchor  : elem.attr('href'),
+            anchor  : self.config.user_anchor ? elem.attr('href') : elem.data('ui-href'),
             $link   : elem,
             seen    : false,
             current : false
@@ -179,49 +194,49 @@ var UIScroll = function () {
 
         if( element.$.length ){
 
-            element.$.addClass(that.config.class.target);
+            element.$.addClass(self.config.class.target);
 
             element.bottom =  element.top+element.$.height();
             element.bottom =  element.top+element.$.height();
 
-            that.targets.push(element);
+            self.targets.push(element);
         }
 
     };
 
 
 
-    that._resize = function(){
+    self._resize = function(){
 
-        for (var i in that.targets) {
+        for (var i in self.targets) {
 
-            var target    = that.targets[i];
+            var target    = self.targets[i];
 
             target.top    = target.$.offset().top;
             target.bottom = target.top+target.$.height();
         }
 
-        that._computeOffset();
-        that._setActive();
+        self._computeOffset();
+        self._setActive();
     };
 
 
 
 
-    that._handleHash = function(){
+    self._handleHash = function(){
 
         $(window).on('hashchange', function(e){
 
-            if( window.location.hash.indexOf('#/') == -1 ){
+            if( window.location.hash.indexOf('#/') == -1 && !window.location.hash.match(/^#!?\//) ){
 
                 var $target = $(window.location.hash);
 
-                if( $target.length && $target.hasClass(that.config.class.target) ){
+                if( $target.length && $target.hasClass(self.config.class.target) ){
 
                     e.preventDefault();
 
-                    //that.scrollTo(window.location.hash, false);
-                    setTimeout(function(){ that.scrollTo(window.location.hash, true) });
+                    //self.scrollTo(window.location.hash, false);
+                    setTimeout(function(){ self.scrollTo(window.location.hash, true) });
                 }
             }
         })
@@ -233,27 +248,31 @@ var UIScroll = function () {
     /**
      *
      */
-    that.__construct = function () {
-        
+    self.__construct = function () {
+
+        if( window.precompile )
+            return;
+
+        $('.'+self.config.class.link).initialize(function(){
+            self.add($(this))
+        });
+
         $(document).on('boot', function(){
 
-            $('.'+that.config.class.link).each(function(){
-                that.add($(this))
-            });
-
-            that._handleHash();
+            self._handleHash();
         });
 
         $(document).on('loaded', function(){
 
-            that._computeOffset();
-            that.scroll_top = that.offset;
+            self._computeOffset();
+            self.scroll_top = self.offset;
 
-            that._resize();
-            that._setupEvents();
+            self._resize();
 
             $(window).trigger('hashchange');
         });
+
+        self._setupEvents();
     };
 
 
@@ -262,17 +281,29 @@ var UIScroll = function () {
 
         dom.compiler.register('attribute', 'scroll-to', function (elem, attrs) {
 
-            elem.addClass(that.config.class.link).attr('href', '#'+attrs.scrollTo);
+            if( attrs.scrollTo.indexOf('http') != -1 ){
+
+                elem.attr('href', attrs.scrollTo);
+            }
+            else{
+
+                elem.addClass(self.config.class.link);
+
+                if( self.config.user_anchor )
+                    elem.attr('href', '#'+attrs.scrollTo);
+                else
+                    dom.compiler.attr(elem, 'ui-href', '#'+attrs.scrollTo);
+            }
         });
 
         dom.compiler.register('attribute', 'fixed-header', function (elem, attrs) {
 
-            elem.addClass(that.config.class.offset);
+            elem.addClass(self.config.class.offset);
         });
     }
 
 
-    that.__construct();
+    self.__construct();
 };
 
 

@@ -16,9 +16,9 @@
 
 var UIDetectScroll = function(){
 
-    var that = this;
+    var self = this;
 
-    that.context = {
+    self.context = {
         init                  : false,
         elements              : [],
         $window               : $(window),
@@ -34,7 +34,7 @@ var UIDetectScroll = function(){
         bottom_reached        : false
     };
 
-    that.config = {
+    self.config = {
         class     :{
             offset : 'ui-scroll-offset',
             detect : 'ui-detect-scroll'
@@ -43,30 +43,32 @@ var UIDetectScroll = function(){
     };
 
 
-    that.add = function ( $element ) {
+    self.add = function ( $element ) {
 
-        if( !$element || !$element.length || $element.data(that.config.class.detect+'--initialized') )
+        if( !$element || !$element.length )
             return;
 
         var element = {
             $          : $element,
-            position   : $element.data('detect-scroll'),
+            position   : $element.hasDataAttr('detect-scroll') ? $element.data('detect-scroll') : 'top-reached',
             top        : $element.offset().top,
             reached    : false
         };
 
         element.bottom = element.top + $element.outerHeight();
 
-        that.context.elements.push(element);
+        self.context.elements.push(element);
+
+        self._detect();
     };
 
 
 
-    that._resize = function(){
+    self._resize = function(){
 
-        for (var i in that.context.elements) {
+        for (var i in self.context.elements) {
 
-            var element = that.context.elements[i];
+            var element = self.context.elements[i];
 
             if( !element.reached ){
 
@@ -75,19 +77,19 @@ var UIDetectScroll = function(){
             }
         }
 
-        that.context.window_height   = $(that.context.$window).height();
-        that.context.document_height = $(document).height();
+        self.context.window_height   = $(self.context.$window).height();
+        self.context.document_height = $(document).height();
 
-        that._computeOffset();
+        self._computeOffset();
     };
 
 
-    that._computeOffset = function(){
+    self._computeOffset = function(){
 
-        if( that.config.force_offset )
+        if( self.config.force_offset )
             return;
 
-        var $offset = $('.'+that.config.class.offset);
+        var $offset = $('.'+self.config.class.offset);
         var offset  = 0;
 
         $offset.each(function(){
@@ -96,91 +98,91 @@ var UIDetectScroll = function(){
                 offset += $(this).outerHeight();
         });
 
-        that.context.offset = offset;
+        self.context.offset = offset;
     };
 
 
-    that._detectScrollDirectionChange = function (scroll_top) {
+    self._detectScrollDirectionChange = function (scroll_top) {
 
-        that.context.scroll_down = scroll_top > that.context.scroll_top;
-        that.context.scroll_top  = scroll_top;
+        self.context.scroll_down = scroll_top > self.context.scroll_top;
+        self.context.scroll_top  = scroll_top;
 
-        if( that.context.scroll_down && !that.context.scroll_class_added ){
+        if( self.context.scroll_down && !self.context.scroll_class_added ){
 
-            if( !that.context.scroll_dir_changed_at || that.context.scroll_dir_changed_at > that.context.scroll_top  )
-                that.context.scroll_dir_changed_at = that.context.scroll_top;
+            if( !self.context.scroll_dir_changed_at || self.context.scroll_dir_changed_at > self.context.scroll_top  )
+                self.context.scroll_dir_changed_at = self.context.scroll_top;
 
-            if( that.context.scroll_dir_changed_at + that.context.offset < that.context.scroll_top ){
+            if( self.context.scroll_dir_changed_at + self.context.offset < self.context.scroll_top ){
 
-                that.context.scroll_dir_changed_at = false;
-                that.context.scroll_class_added    = true;
+                self.context.scroll_dir_changed_at = false;
+                self.context.scroll_class_added    = true;
 
-                that.context.$body.addClass('scroll--down').removeClass('scroll--up')
+                self.context.$body.addClass('scroll--down').removeClass('scroll--up')
             }
         }
 
-        if( !that.context.scroll_down && that.context.scroll_class_added ){
+        if( !self.context.scroll_down && self.context.scroll_class_added ){
 
-            if( !that.context.scroll_dir_changed_at || that.context.scroll_dir_changed_at < that.context.scroll_top )
-                that.context.scroll_dir_changed_at = that.context.scroll_top;
+            if( !self.context.scroll_dir_changed_at || self.context.scroll_dir_changed_at < self.context.scroll_top )
+                self.context.scroll_dir_changed_at = self.context.scroll_top;
 
-            if( that.context.scroll_dir_changed_at - that.context.offset > that.context.scroll_top || that.context.scroll_top <= that.context.offset){
+            if( self.context.scroll_dir_changed_at - self.context.offset > self.context.scroll_top || self.context.scroll_top <= self.context.offset){
 
-                that.context.scroll_dir_changed_at = false;
-                that.context.scroll_class_added    = false;
+                self.context.scroll_dir_changed_at = false;
+                self.context.scroll_class_added    = false;
 
-                that.context.$body.addClass('scroll--up').removeClass('scroll--down');
+                self.context.$body.addClass('scroll--up').removeClass('scroll--down');
             }
         }
     };
 
 
-    that._detectScrollBoundReached = function (scroll_top) {
+    self._detectScrollBoundReached = function (scroll_top) {
 
-        if( scroll_top <= 1 && !that.context.top_reached ){
+        if( scroll_top <= 1 && !self.context.top_reached ){
 
-            that.context.top_reached = true;
-            that.context.$body.addClass('scroll--top-reached').removeClass('scroll--body');
+            self.context.top_reached = true;
+            self.context.$body.addClass('scroll--top-reached').removeClass('scroll--body');
         }
 
-        if( scroll_top > 1 && that.context.top_reached ) {
+        if( scroll_top > 1 && self.context.top_reached ) {
 
-            that.context.top_reached = false;
-            that.context.$body.removeClass('scroll--top-reached').addClass('scroll--body');
+            self.context.top_reached = false;
+            self.context.$body.removeClass('scroll--top-reached').addClass('scroll--body');
         }
 
-        if( scroll_top+that.context.window_height >= that.context.document_height && !that.context.bottom_reached ){
+        if( scroll_top+self.context.window_height >= self.context.document_height && !self.context.bottom_reached ){
 
-            that.context.bottom_reached = true;
-            that.context.$body.addClass('scroll--bottom-reached');
+            self.context.bottom_reached = true;
+            self.context.$body.addClass('scroll--bottom-reached');
         }
 
-        if( scroll_top+that.context.window_height < that.context.document_height && that.context.bottom_reached){
+        if( scroll_top+self.context.window_height < self.context.document_height && self.context.bottom_reached){
 
-            that.context.bottom_reached = false;
-            that.context.$body.removeClass('scroll--bottom-reached');
+            self.context.bottom_reached = false;
+            self.context.$body.removeClass('scroll--bottom-reached');
         }
     };
 
 
-    that._detect = function () {
+    self._detect = function () {
 
-        var scrollTop = that.context.$window.scrollTop();
+        var scrollTop = self.context.$window.scrollTop();
 
-        that._detectScrollBoundReached(scrollTop);
-        that._detectScrollDirectionChange(scrollTop);
+        self._detectScrollBoundReached(scrollTop);
+        self._detectScrollDirectionChange(scrollTop);
 
-        for (var i in that.context.elements) {
+        for (var i in self.context.elements) {
 
-            var element  = that.context.elements[i];
+            var element  = self.context.elements[i];
 
-            if( !element.reached && (element.position=='top-reached' ? element.top : element.bottom ) <= scrollTop+that.context.offset ){
+            if( !element.reached && (element.position=='top-reached' ? element.top : element.bottom ) <= scrollTop+self.context.offset ){
 
                 element.reached = true;
                 element.$.addClass(element.position);
                 $(document).trigger('ui-top-reached', [true, element.id]);
             }
-            else if( element.reached && (element.position=='top-reached' ? element.top : element.bottom ) > scrollTop+that.context.offset ){
+            else if( element.reached && (element.position=='top-reached' ? element.top : element.bottom ) > scrollTop+self.context.offset ){
 
                 element.reached = false;
                 element.$.removeClass(element.position);
@@ -196,24 +198,21 @@ var UIDetectScroll = function(){
     /**
      *
      */
-    that.__construct =  function(){
+    self.__construct =  function(){
 
-        if( that.config.force_offset )
-            that.context.offset = that.config.force_offset;
-
-        $(document).on('boot', function(){
-
-            $('.'+that.config.class.detect).each(function(){
-                that.add($(this))
-            });
-        });
+        if( self.config.force_offset )
+            self.context.offset = self.config.force_offset;
 
         $(document).on('loaded', function(){
 
-            that._resize();
-            that._detect();
+            $('.'+self.config.class.detect).each(function(){
+                self.add( $(this) )
+            });
 
-            that.context.$window.on('scroll', that._detect).on('resize', that._resize);
+            self._resize();
+            self._detect();
+
+            self.context.$window.on('scroll', self._detect).on('resize', self._resize);
         });
     };
 
@@ -223,11 +222,7 @@ var UIDetectScroll = function(){
         dom.compiler.register('attribute', 'detect-scroll', function (elem, attrs) {
 
             elem.addClass('ui-detect-scroll');
-
-            if( window.precompile )
-                elem.attr('data-detect-scroll', attrs.detectScroll);
-            else
-                elem.data('detect-scroll', attrs.detectScroll);
+            dom.compiler.attr(elem, 'detect-scroll', attrs.detectScroll);
         });
 
         dom.compiler.register('attribute', 'fixed-header', function (elem, attrs) {
@@ -241,7 +236,7 @@ var UIDetectScroll = function(){
 
 
     /* Public */
-    that.__construct();
+    self.__construct();
 };
 
 var ui = ui || {};

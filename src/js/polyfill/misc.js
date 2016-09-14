@@ -3,7 +3,22 @@ String.prototype.repeat = function(num) {
     return new Array(isNaN(num)? 1 : ++num).join(this);
 };
 
+/**
+ * Replace double brackets fields in String with data values.
+ * @param data values to assign.
+ */
+String.prototype.populate = function(data) {
+    var content = this.toString();
+    $.each(data, function(id, key){
 
+        if( Array.isArray(key) )
+            key = key.join('|');
+
+        content = content.split('[['+id+']]').join(key);
+    });
+
+    return content;
+};
 
 /**
  * Number.prototype.format(n, x)
@@ -18,17 +33,13 @@ Number.prototype.format = function(n, x) {
 
 
 
-if (typeof console == "undefined") {
-    window.console = {
-        log: function () {}
-    };
-}
+if (typeof console == "undefined")
+    window.console = { log: function () {}, time: function () {}, error: function () {}};
 
 
 
-if (typeof Modernizr == "undefined") {
+if (typeof Modernizr == "undefined")
     window.Modernizr = false;
-}
 
 
 

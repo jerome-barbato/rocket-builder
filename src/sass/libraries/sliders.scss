@@ -114,6 +114,12 @@
       }
 
 
+      //none
+      &--previous{
+        .ui-slider--animation-none &{ display: block }
+      }
+
+
       //crossfade
       &--current{
         .ui-slider--animation-crossfade.ui-slider--animating &{ animation-name: fade-in; animation-duration: $ui-slider-speed*4 }

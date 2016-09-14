@@ -9,7 +9,7 @@
   }
 
   .g-row{
-    @extend ._clearfix; display: block;
+    @extend ._clearfix; display: block; position: relative;
     @if variable-exists(grid-row-padding) { padding: $grid-row-padding }
     @if variable-exists(grid-row-margin) { &+&{ margin-top: $grid-row-margin } }
     &--top{ align-items: flex-start }
@@ -23,7 +23,7 @@
         @for $j from 1 through 8{
           @for $i from 2 through 8{
             @if $j < $i{
-              &--#{$j}_in_#{$i}{ flex-basis: ((100%*$j)/$i) }
+              &--#{$j}_#{$i}{ flex-basis: ((100%*$j)/$i) }
             }
           }
         }
@@ -33,16 +33,21 @@
 
   .g-col{
     float: left; width: 100%; border-collapse: collapse; display: block;
+    position: relative;
     @if variable-exists(grid-col-padding) { padding: $grid-col-padding }
-    @for $j from 1 through 8{
-      @for $i from 2 through 8{
+    @for $j from 1 through 10{
+      @for $i from 2 through 10{
         @if $j < $i{
-          &--#{$j}_in_#{$i}{ max-width: ((100%*$j)/$i) }
-          &---#{$j}_in_#{$i}{ margin-left: ((100%*$j)/$i) }
+          &--#{$j}_#{$i}{ max-width: ((100%*$j)/$i) }
+          &---#{$j}_#{$i}{ margin-left: ((100%*$j)/$i) }
         }
       }
     }
   }
+}
+
+@mixin break-grid(){
+  max-width: none; float: none
 }
 
 

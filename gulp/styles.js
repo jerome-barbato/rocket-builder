@@ -1,8 +1,14 @@
 'use strict';
 
-var gulp        = require('gulp');
-var config      = require('./config');
-var $           = require('gulp-load-plugins')();
+var gulp        = require('gulp'),
+    config      = require('./config'),
+    $           = {
+        sourcemaps  : require('gulp-sourcemaps'),
+        cssGlobbing : require('gulp-css-globbing'),
+        sass        : require('gulp-sass'),
+        pleeease    : require('gulp-pleeease'),
+        size        : require('gulp-size')
+    };
 
 
 
