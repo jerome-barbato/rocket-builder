@@ -1,0 +1,42 @@
+$font_path: '#{$public-path}/fonts';
+$font-families : ();
+
+@each $font in $fonts {
+
+  $family   : nth($font, 1);
+  $src      : nth($font, 2);
+  $weight   : nth($font, 3);
+  $style    : nth($font, 4);
+  $stretch  : nth($font, 5);
+  $fallback : nth($font, 6);
+
+  @font-face {
+    font-family: "#{$family}";
+    src: url('#{$font_path}/#{$src}.eot');
+    src: url('#{$font_path}/#{$src}.eot?#iefix') format('embedded-opentype'),
+    url('#{$font_path}/#{$src}.woff') format('woff'),
+    url('#{$font_path}/#{$src}.ttf') format('truetype'),
+    url('#{$font_path}/#{$src}.svg##{$src}') format('svg');
+    font-weight: #{$weight};
+    font-style: #{$style};
+    font-stretch: #{$stretch};
+  }
+
+  @if not map-has-key($font-families, $family){
+    $newFont: ($family: $fallback);
+    $font-families : map-merge($font-families, $newFont);
+  }
+}
+
+//include font with fallback
+@mixin font($name:false) {
+
+  @each $family, $fallback in $font-families {
+
+    @if( to-lower-case($family) == to-lower-case($name) ){
+
+      font-family: $family, $fallback;
+    }
+  }
+}
+

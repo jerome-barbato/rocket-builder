@@ -10,19 +10,7 @@
 
 var gulp    = require('gulp'),
     fs      = require('fs'),
-    config  = require('./gulp/config'),
-    wrench  = require('wrench'),
-    $       = require('gulp-load-plugins')(
-        {
-            pattern: ['gulp-*', 'jsdom', 'through2'],
-            rename: {
-                'through2' : 'through',
-                'gulp-angular-htmlify': 'htmlify',
-                'gulp-angular-templatecache': 'templatecache'
-            }
-        }
-
-    );
+    config  = require('./gulp/config');
 
 
 
@@ -30,29 +18,13 @@ var gulp    = require('gulp'),
  *  This will load all js or coffee files in the gulp directory
  *  in order to load all gulp tasks
  */
-wrench.readdirSyncRecursive('./gulp').filter(function(file) {
+var files = fs.readdirSync('./gulp');
+for (var i in files) {
+    if (files[i].split('.').pop() == 'js') {
+        require('./gulp/'+files[i]);
+    }
+}
 
-    return (/\.js$/i).test(file);
-
-}).map(function(file) {
-
-    require('./gulp/' + file);
-});
-
-
-
-/**
- * retrieve node arguments, given with "gulp" command
- * @param key
- * @returns {*}
- */
-var getArg = function(key) {
-
-    var index = process.argv.indexOf(key);
-    var next = process.argv[index + 1];
-
-    return (index < 0) ? null : (!next || next[0] === "-") ? true : next;
-};
 
 
 /**
@@ -71,7 +43,7 @@ gulp.task('default', [], function () {
     var templates = "compile::templates";
 
     /** Harlem Check **/
-    if (getArg("--production") || getArg("-p")){
+    if ( config.environment != 'development' ){
 
         styles  = "compress::style";
         scripts = "compress::scripts";
@@ -90,7 +62,7 @@ gulp.task('default', [], function () {
             gulp.start(scripts);
         });
 
-        gulp.watch(config.paths.watch.js_core, function() {
+        gulp.watch(config.paths.watch.js_vendors, function() {
 
             gulp.start(scripts);
             gulp.start(templates);

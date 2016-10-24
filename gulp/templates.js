@@ -8,33 +8,22 @@ var gulp    = require('gulp'),
     fs      = require('fs'),
     config  = require('./config'),
     gutil   = require('gulp-util'),
+    gif     = require('gulp-if'),
     chalk   = require('chalk'),
     $       = {
-        through: require('through2'),
-        jsdom:   require('jsdom')
-        };
+        through : require('through2'),
+        jsdom   : require('jsdom')
+    };
 
 function loadDep(){
 
     var src = [];
 
-    var needed_core  = config.front.compiler;
+    src.push( fs.readFileSync(config.paths.base.src+'js/vendors/browser.js', 'utf-8') );
 
-    src.push( fs.readFileSync(config.paths.base.src+'js/core/vendors/browser.js', 'utf-8') );
+    config.paths.src.js.compiler.forEach(function(library){
 
-    needed_core.vendors.forEach(function(library){
-
-        src.push( fs.readFileSync(config.paths.base.src+'js/core/vendors/'+library+'.min.js', 'utf-8') );
-    });
-
-    needed_core.polyfill.forEach(function(library){
-
-        src.push( fs.readFileSync(config.paths.base.src+'js/core/polyfill/'+library+'.js', 'utf-8') );
-    });
-
-    needed_core.libraries.forEach(function(library){
-
-        src.push( fs.readFileSync(config.paths.base.src+'js/core/libraries/'+library+'.js', 'utf-8') );
+        src.push( fs.readFileSync(library, 'utf-8') );
     });
 
     return src;
@@ -61,9 +50,7 @@ function compile(html, scripts, callback) {
             virtualConsole : virtualConsole,
             done : function (err, window) {
 
-                window.precompile    = true;
-                window._DEBUG        = false;
-                window.compact_class = config.front.compiler.compact;
+                window.precompile = true;
 
                 var $        = window.$;
                 var compiler = window.dom.compiler;
@@ -111,11 +98,11 @@ gulp.task('watch::templates', function() {
         var filename  = path_array[path_array.length-1];
 
         path_array.pop();
-        var filepath  = path_array.join('/').replace('resources/src/template', 'views');
+        var filepath  = path_array.join('/').replace(config.ressource_path+'src/template', 'views');
         gutil.log("Compiled '"+chalk.blue(filename)+"'");
 
         return gulp.src(event.path)
-            .pipe(compileFiles())
+            .pipe(gif(config.front.compile, compileFiles()))
             .pipe(gulp.dest(filepath));
     });
 });
@@ -128,6 +115,6 @@ gulp.task('watch::templates', function() {
 gulp.task('compile::templates', function() {
 
     return gulp.src(config.paths.src.template)
-        .pipe(compileFiles())
+        .pipe(gif(config.front.compile, compileFiles()))
         .pipe(gulp.dest(config.paths.dest.template));
 });

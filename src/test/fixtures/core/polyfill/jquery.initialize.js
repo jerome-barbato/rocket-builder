@@ -81,15 +81,12 @@
 
             if( (!initialized || initialized != this.selector ) && !$elem.parents('template').length && !$elem.is('template') ){
 
-                $elem.data('initialized', this.selector);
-                callback.call(this);
+                    $elem.data('initialized', this.selector);
+                    callback.call(this);
             }
         };
 
         $.fn.initialize = function(callback){
-
-            if( typeof callback == 'undefined' )
-                return;
 
             $(this).each(function(){
 

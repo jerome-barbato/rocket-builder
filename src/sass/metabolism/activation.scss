@@ -1,0 +1,34 @@
+//require activation.js/animations.scss
+
+@mixin lib-activation {
+
+  [data-animation]{
+    &.ux-activation{
+      [data-animation]{ animation-play-state: paused }
+      &--active, &--seen, &--reset{ [data-animation]{ animation-play-state: running} }
+    }
+  }
+
+  @each $name, $properties in $animations{
+    [data-animation="#{$name}"]{
+      &.ux-activation{ animation-play-state: paused;
+        &--active, &--seen, &--reset{ animation-play-state: running }
+        &--reset{ animation-name: un-#{$name} }
+      }
+    }
+    [data-animation].ux-activation--reset{
+      [data-animation="#{$name}"]{ animation-name: un-#{$name} }
+      @media #{$media-tablet} {
+        [data-tablet-animation="#{$name}"]{ animation-name: un-#{$name} }
+      }
+      @media #{$media-mobile} {
+        [data-mobile-animation="#{$name}"]{ animation-name: un-#{$name} }
+      }
+    }
+  }
+}
+
+
+@if( index($libraries, 'activation') ){
+  @include lib-activation;
+}

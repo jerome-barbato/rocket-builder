@@ -4,8 +4,10 @@
  */
 
 // Dependencies
-var gutil       = require('gulp-util');
-var fs          = require('fs');
+var gutil   = require('gulp-util'),
+    fs      = require('fs'),
+    gulp    = require('gulp');
+
 var getArg      = function(key) {
 
     var index = process.argv.indexOf(key);
@@ -43,14 +45,20 @@ var Config = module.exports = {
                 Config.app_path    = "../app/";
                 break;
             case "wordpress":
+                Config.app_path    = "../";
+                break;
+            case "bedrock":
                 Config.app_path    = "../../../web/app/themes/" + Config.theme_name + "/app/";
                 break;
             default:
-                Config.app_path    = "../app/";
+                Config.app_path    = "../../app/";
         }
 
-        Config.src_path    = Config.app_path+"resources/src/";
-        Config.public_path = Config.app_path+"resources/public/";
+        Config.ressource_path = Config.framework == 'wordpress' ? '' : 'resources/';
+
+        Config.src_path    = Config.app_path+Config.ressource_path+"src/";
+        Config.public_path = Config.app_path+Config.ressource_path+"public/";
+
         Config.paths = {
             base : {
                 config   : Config.app_path+'config/front.config',
@@ -58,10 +66,13 @@ var Config = module.exports = {
                 public   : Config.public_path
             },
             src : {
-                js       : [],
+                js       : {
+                    app      : [],
+                    compiler : []
+                },
                 sass     : Config.src_path+"sass/*.scss",
                 template : Config.src_path+"template/**/*.twig",
-                html     : Config.public_path+"views/**/*.html",
+                html     : Config.public_path+"views/**/*.html"
             },
             dest : {
                 js       : Config.public_path+"js",
@@ -69,21 +80,15 @@ var Config = module.exports = {
                 template : Config.app_path+"views"
             },
             watch : {
-                js       : Config.src_path+"js/**/*.js",
-                js_app   : [Config.src_path+"js/app/**/*.js", Config.src_path+"js/app.js"],
-                js_core  : [Config.src_path+"js/core/**/*.js"],
-                sass     : Config.src_path+"sass/**/*.scss",
-                template : Config.src_path+"template/**/*.twig"
+                js         : Config.src_path+"js/**/*.js",
+                js_app     : [Config.src_path+"js/app/**/*.js", Config.src_path+"js/app.js"],
+                js_vendors : [Config.src_path+"js/vendors/**/*.js"],
+                sass       : Config.src_path+"sass/**/*.scss",
+                template   : Config.src_path+"template/**/*.twig"
             }
         };
 
         Config.front = JSON.parse(fs.readFileSync(Config.paths.base.config));
-
-            /*console.log("Status: \n" +
-                "Path to config : " + Config.paths.base.config +
-                "\nEnv : " + Config.environment +
-                "\nFramework : " + Config.framework +
-                "\nTheme : " + Config.theme_name);*/
     },
 
 
@@ -92,32 +97,47 @@ var Config = module.exports = {
      * we add them by merging two objects
      * @TODO: Optimize
      */
-    addCoreDependencies : function addCoreDependencies() {
+    addVendors : function addVendors() {
 
-        var needed_core  = Config.front.app;
+        Config.front.vendors.app.forEach(function(library){
 
-        // Define js src order from front config
-        needed_core.vendors.forEach(function(library){
+            if( typeof library == 'string' ){
 
-            Config.paths.src.js.push(Config.src_path+'js/core/vendors/'+library+'.min.js');
+                Config.paths.src.js.app.push(Config.src_path+'js/vendors/'+library+'.js');
+            }
+            else{
 
-            if( library == "angular" || library == "jquery" )
-                Config.paths.src.js.push(Config.src_path+'js/core/vendors/'+library+'/**/*.js');
+                for ( var path in library ){
+
+                    library[path].forEach(function(element){
+
+                        Config.paths.src.js.app.push(Config.src_path+'js/vendors/'+path+'/'+element+'.js');
+                    });
+                }
+            }
         });
 
-        needed_core.polyfill.forEach(function(library){
+        Config.paths.src.js.app.push(Config.src_path+'js/app/**/*.js');
+        Config.paths.src.js.app.push(Config.src_path+'js/app.js');
 
-            Config.paths.src.js.push(Config.src_path+'js/core/polyfill/'+library+'.js');
+        Config.front.vendors.compiler.forEach(function(library){
+
+            if( typeof library == 'string' ){
+
+                Config.paths.src.js.compiler.push(Config.src_path+'js/vendors/'+library+'.js');
+            }
+            else{
+
+                for ( var path in library ){
+
+                    library[path].forEach(function(element){
+
+                        Config.paths.src.js.compiler.push(Config.src_path+'js/vendors/'+path+'/'+element+'.js');
+                    });
+                }
+            }
         });
 
-        needed_core.libraries.forEach(function(library){
-
-            Config.paths.src.js.push(Config.src_path+'js/core/libraries/'+library+'.js');
-        });
-
-        Config.paths.src.js.push(Config.src_path+'js/vendors/**/*.js');
-        Config.paths.src.js.push(Config.src_path+'js/app/**/*.js');
-        Config.paths.src.js.push(Config.src_path+'js/app.js');
     },
 
     /**
@@ -132,7 +152,17 @@ var Config = module.exports = {
         };
     },
 
-    /**
+    fileExists : function fileExists(filename) {
+        try{
+            fs.accessSync(filename);
+            return true;
+        }catch(e){
+            return false;
+        }
+    },
+
+
+/**
      * Initilization
      */
     init : function init() {
@@ -147,19 +177,36 @@ var Config = module.exports = {
             Config.environment = 'development';
 
         // Framework
-        if (getArg("--framework"))
+        if (getArg("--framework")) {
+
             Config.framework = getArg("--framework");
+        }
+        else {
+
+            if(Config.fileExists('../../../../wp-content')) {
+
+                Config.framework = 'wordpress';
+
+            } else if (Config.fileExists('../rocket-builder')) {
+
+                Config.framework = 'bedrock';
+            }
+        }
+
+        gutil.log("Framework '"+Config.framework+"' detected");
+        gutil.log("Initializing...'");
+
 
         // Theme name
         if (getArg("--theme"))
             Config.theme_name = getArg("--theme");
 
         // Watching mode
-        if (getArg("--no-watch") || Config.environment == "production")
+        if (getArg("--no-watch") || Config.environment != "development")
             Config.watching_mode = false;
 
         Config.load();
-        Config.addCoreDependencies();
+        Config.addVendors();
     }
 };
 

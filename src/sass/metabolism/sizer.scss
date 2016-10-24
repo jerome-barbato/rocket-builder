@@ -1,0 +1,13 @@
+@mixin lib-sizer{
+
+  .ux-sizer{
+    width: 100%; height: auto; display: block;
+    background-size: cover; background-position: center; background-repeat: no-repeat;
+    &+.ux-fit__object{ position: overlay() }
+  }
+}
+
+
+@if( index($libraries, 'sizer') ){
+  @include lib-sizer;
+}

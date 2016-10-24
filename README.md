@@ -1,7 +1,5 @@
 # Rocket Builder #
 
-Version 2.2.2
-
 INTRODUCTION
 ------------
 
