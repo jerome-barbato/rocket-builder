@@ -1,6 +1,11 @@
 {
-  "name": "metabolism/rocket-builder",
-  "version": "master",
-  "type": "rocket-module",
-  "description": "Rocket Builder by Metabolism"
+  "name":"rocket/builder",
+  "version":"3.0.0",
+  "description": "Rocket Builder by Metabolism",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "ssh://git@git.metabolism.fr/rocket/builder.git"
+    }
+  ]
 }
