@@ -411,12 +411,14 @@ var UXSlider = function(config) {
                 i++;
                 if( i == $animatedSlides.length ){
 
+                    $animatedSlides.off(self.context.animationEnd);
                     self._removeMod(self.config.$element, 'slider', 'animating');
                     callback();
                 }
             });
 
             if( !self.config.use_transition || !$animatedSlides.length){
+
                 self._removeMod(self.config.$element, 'slider', 'animating');
                 callback();
             }

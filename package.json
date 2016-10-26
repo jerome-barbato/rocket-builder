@@ -28,6 +28,8 @@
     "gulp-if": "^2.0.1"
   },
   "devDependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
     "gulp-foreach": "^0.1.0",
     "gulp-jasmine": "^2.4.0",
     "gulp-notify": "^2.2.0",

@@ -74,14 +74,18 @@
             return typeof $(this).data('initialized') != "undefined" && $(this).data('initialized');
         };
 
-        var initialize = function(callback){
+        var initialize = function(selector, callback){
 
             var $elem = $(this);
-            var initialized = typeof $elem.data('initialized') == "undefined" ? $elem.data('initialized') : false;
 
-            if( (!initialized || initialized != this.selector ) && !$elem.parents('template').length && !$elem.is('template') ){
+            var initialized = typeof $elem.data('initialized') != 'undefined' ? JSON.parse($elem.data('initialized')) : [];
 
-                $elem.data('initialized', this.selector);
+            if( (!initialized.length || initialized.indexOf(selector) == -1 ) && !$elem.parents('template').length && !$elem.is('template') ){
+
+                initialized.push(selector);
+
+                $elem.data('initialized', JSON.stringify(initialized));
+
                 callback.call(this);
             }
         };
@@ -91,12 +95,13 @@
             if( typeof callback == 'undefined' )
                 return;
 
+            var selector = this.selector;
+
             $(this).each(function(){
 
-                initialize.call(this, callback);
+                initialize.call(this, selector, callback);
             });
 
-            var selector = this.selector;
 
             $(document).on('DOMNodeUpdated', function(e, $node){
 
@@ -106,11 +111,11 @@
                 $node.each(function() {
 
                     if( $(this).is(selector) )
-                        initialize.call(this, callback);
+                        initialize.call(this, selector, callback);
                 });
 
                 $node.find(selector).each(function(){
-                    initialize.call(this, callback);
+                    initialize.call(this, selector, callback);
                 });
             })
         };

@@ -56,23 +56,23 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
         if( elem.is('img') ){
 
-            elem.attr('src', '{{ asset.medias }}sizers/' + size + '.png');
+            elem.attr('src', '{{ asset.public }}medias/sizers/' + size + '.png');
             elem.addClass('ux-sizer');
             elem.css('backgroundImage', "url('"+attrs.src+"')");
         }
         else
-            elem.append('<img src="{{ asset.medias }}sizers/' + size + '.png" class="ux-sizer">');
+            elem.append('<img src="{{ asset.public }}medias/sizers/' + size + '.png" class="ux-sizer">');
     }
     else if ( typeof app != "undefined" && 'asset' in app  ){
 
         if( elem.is('img') ){
 
-            elem.attr('src', app.asset.medias+'sizers/' + size + '.png');
+            elem.attr('src', app.asset.public + 'medias/sizers/' + size + '.png');
             elem.addClass('ux-sizer');
             elem.css('backgroundImage', "url('"+attrs.src+"')");
         }
         else
-            elem.append('<img src="' + app.asset.medias + 'sizers/' + size + '.png" class="ux-sizer">');
+            elem.append('<img src="' + app.asset.public + 'medias/sizers/' + size + '.png" class="ux-sizer">');
     }
 });
 
@@ -186,7 +186,7 @@ dom.compiler.register('attribute', 'blocks-src', function(elem, attrs){
 
     if (window.precompile){
 
-        elem.attr('src', '{{ asset.medias }}blocks/' + attrs.blocksSrc);
+        elem.attr('src', '{{ asset.public }}medias/blocks/' + attrs.blocksSrc);
     }
     else{
 
@@ -196,7 +196,7 @@ dom.compiler.register('attribute', 'blocks-src', function(elem, attrs){
             elem.attr('src', attrs.blocksSrc);
         }
         else {
-            elem.attr('src', app.asset.medias + 'block/' + attrs.blocksSrc);
+            elem.attr('src', app.asset.public + 'medias/block/' + attrs.blocksSrc);
         }
     }
 });
@@ -207,7 +207,7 @@ dom.compiler.register('attribute', 'icons-src', function(elem, attrs){
 
     if (window.precompile){
 
-        elem.attr('src', '{{ asset.medias }}icons/' + attrs.iconsSrc);
+        elem.attr('src', '{{ asset.public }}medias/icons/' + attrs.iconsSrc);
     }
     else{
 
@@ -217,7 +217,7 @@ dom.compiler.register('attribute', 'icons-src', function(elem, attrs){
             elem.attr('src', attrs.iconsSrc);
         }
         else {
-            elem.attr('src', app.asset.medias + 'icons/' + attrs.iconsSrc);
+            elem.attr('src', app.asset.public + 'medias/icons/' + attrs.iconsSrc);
         }
     }
 });
@@ -228,7 +228,7 @@ dom.compiler.register('attribute', 'pages-src', function(elem, attrs){
 
     if (window.precompile){
 
-        elem.attr('src', '{{ asset.medias }}pages/' + attrs.pagesSrc);
+        elem.attr('src', '{{ asset.public }}medias/pages/' + attrs.pagesSrc);
     }
     else{
 
@@ -238,7 +238,7 @@ dom.compiler.register('attribute', 'pages-src', function(elem, attrs){
             elem.attr('src', attrs.pagesSrc);
         }
         else {
-            elem.attr('src', app.asset.medias + 'pages/' + attrs.pagesSrc);
+            elem.attr('src', app.asset.public + 'medias/pages/' + attrs.pagesSrc);
         }
     }
 });
@@ -249,7 +249,7 @@ dom.compiler.register('attribute', 'components-src', function(elem, attrs){
 
     if (window.precompile){
 
-        elem.attr('src', '{{ asset.medias }}components/' + attrs.componentsSrc);
+        elem.attr('src', '{{ asset.public }}medias/components/' + attrs.componentsSrc);
     }
     else{
 
@@ -259,7 +259,7 @@ dom.compiler.register('attribute', 'components-src', function(elem, attrs){
             elem.attr('src', attrs.componentsSrc);
         }
         else {
-            elem.attr('src', app.asset.medias + 'components/' + attrs.componentsSrc);
+            elem.attr('src', app.asset.public + 'medias/components/' + attrs.componentsSrc);
         }
     }
 });
@@ -270,7 +270,7 @@ dom.compiler.register('attribute', 'tmp-src', function(elem, attrs){
 
     if (window.precompile){
 
-        elem.attr('src', '{{ asset.medias }}tmp/' + attrs.tmpSrc);
+        elem.attr('src', '{{ asset.public }}medias/tmp/' + attrs.tmpSrc);
     }
     else{
 
@@ -280,7 +280,7 @@ dom.compiler.register('attribute', 'tmp-src', function(elem, attrs){
             elem.attr('src', attrs.tmpSrc);
         }
         else {
-            elem.attr('src', app.asset.medias + 'tmp/' + attrs.tmpSrc);
+            elem.attr('src', app.asset.public + 'medias/tmp/' + attrs.tmpSrc);
         }
     }
 })
@@ -291,7 +291,7 @@ dom.compiler.register('attribute', 'misc-src', function(elem, attrs){
 
     if (window.precompile){
 
-        elem.attr('src', '{{ asset.medias }}misc/' + attrs.miscSrc);
+        elem.attr('src', '{{ asset.public }}medias/misc/' + attrs.miscSrc);
     }
     else{
 
@@ -301,7 +301,7 @@ dom.compiler.register('attribute', 'misc-src', function(elem, attrs){
             elem.attr('src', attrs.miscSrc);
         }
         else {
-            elem.attr('src', app.asset.medias + 'misc/' + attrs.miscSrc);
+            elem.attr('src', app.asset.public + 'medias/misc/' + attrs.miscSrc);
         }
     }
 });
