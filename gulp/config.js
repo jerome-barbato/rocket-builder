@@ -40,24 +40,10 @@ var Config = module.exports = {
     load: function load() {
 
         // Application root path differ for each framework
-        switch (Config.framework) {
-            case "silex":
-                Config.app_path    = "../app/";
-                break;
-            case "wordpress":
-                Config.app_path    = "../";
-                break;
-            case "bedrock":
-                Config.app_path    = "../../../web/app/themes/" + Config.theme_name + "/app/";
-                break;
-            default:
-                Config.app_path    = "../../../app/";
-        }
+        Config.app_path    = "../../../";
 
-        Config.ressource_path = Config.framework == 'wordpress' ? '' : 'resources/';
-
-        Config.src_path    = Config.app_path+Config.ressource_path+"src/";
-        Config.public_path = Config.app_path+Config.ressource_path+"public/";
+        Config.src_path    = Config.app_path+"src/asset/";
+        Config.public_path = Config.app_path+"web/public/";
 
         Config.paths = {
             base : {
@@ -77,7 +63,7 @@ var Config = module.exports = {
             dest : {
                 js       : Config.public_path+"js",
                 css      : Config.public_path+"css",
-                template : Config.app_path+"views"
+                template : Config.app_path+"web/views"
             },
             watch : {
                 js         : Config.src_path+"js/**/*.js",
