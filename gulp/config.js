@@ -51,7 +51,7 @@ var Config = module.exports = {
                 Config.app_path    = "../../../web/app/themes/" + Config.theme_name + "/app/";
                 break;
             default:
-                Config.app_path    = "../../app/";
+                Config.app_path    = "../../../app/";
         }
 
         Config.ressource_path = Config.framework == 'wordpress' ? '' : 'resources/';

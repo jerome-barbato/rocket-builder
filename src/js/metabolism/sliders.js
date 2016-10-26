@@ -96,6 +96,18 @@ var UXSlider = function(config) {
     };
 
 
+    self.pause = function(){
+
+        clearInterval(self.context.interval);
+    };
+
+
+    self.resume = function(){
+
+        self._startAutoplay();
+    };
+
+
 
     /* Private. */
 
@@ -141,14 +153,18 @@ var UXSlider = function(config) {
 
 
         if( self.config.preload )
-            self.config.$element.append('<div class="'+self.classnames.preload+'"/>');
+            self.config.$element.append('<div class="'+self.classnames.preload+'"/>', false);
 
         self._sync();
         self._initArrows();
         self._initPagination();
-        self._show(Math.min(self.context.slide_count, self.config.start_slide), false);
         self._preload();
-        self._startAutoplay();
+
+        $(window).load(function(){
+
+            self._show(Math.min(self.context.slide_count, self.config.start_slide), false);
+            self._startAutoplay();
+        });
     };
 
 
@@ -411,12 +427,14 @@ var UXSlider = function(config) {
                 i++;
                 if( i == $animatedSlides.length ){
 
+                    $animatedSlides.off(self.context.animationEnd);
                     self._removeMod(self.config.$element, 'slider', 'animating');
                     callback();
                 }
             });
 
             if( !self.config.use_transition || !$animatedSlides.length){
+
                 self._removeMod(self.config.$element, 'slider', 'animating');
                 callback();
             }
@@ -443,8 +461,8 @@ var UXSlider = function(config) {
 
         if (!self.context.$arrows.length && self.context.slide_count > 1) {
 
-            self.context.$arrows_container.append('<a class="'+self.classnames.arrow+' '+self.classnames.arrow+'--right"></a>');
-            self.context.$arrows_container.prepend('<a class="'+self.classnames.arrow+' '+self.classnames.arrow+'--left"></a>');
+            self.context.$arrows_container.append('<a class="'+self.classnames.arrow+' '+self.classnames.arrow+'--right"></a>', false);
+            self.context.$arrows_container.prepend('<a class="'+self.classnames.arrow+' '+self.classnames.arrow+'--left"></a>', false);
 
             self.context.$arrows = self.context.$arrows_container.find('.'+self.classnames.arrow);
         }
@@ -503,7 +521,7 @@ var UXSlider = function(config) {
 
             //force load to memory
             if( Modernizr && Modernizr.csstransforms3d )
-                self.config.$element.find('.'+self.classnames.preload).append('<img src="'+$element.data('src')+'"/>');
+                self.config.$element.find('.'+self.classnames.preload).append('<img src="'+$element.data('src')+'"/>', false);
 
             if( $element.is('img') )
                 $element.attr('src', $element.data('src'));
@@ -524,7 +542,7 @@ var UXSlider = function(config) {
             var a = '<a></a>';
             var $pagination = self.config.$element.findClosest('.'+self.classnames.pagination, '.'+self.classnames.slider);
 
-            $pagination.append(a.repeat(self.context.slide_count));
+            $pagination.append(a.repeat(self.context.slide_count), false);
 
             self.context.$pagination = $pagination.find('> a');
         }
@@ -580,6 +598,20 @@ var UXSliders = function() {
 
             slider.goto(slideId, animate, callback)
         }
+    };
+
+
+    self.pause = function(sliderId){
+
+        if( self.sliders[sliderId] )
+            self.sliders[sliderId].pause();
+    };
+
+
+    self.resume = function(sliderId){
+
+        if( self.sliders[sliderId] )
+            self.sliders[sliderId].resume();
     };
 
 

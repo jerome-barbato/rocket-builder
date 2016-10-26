@@ -4,8 +4,10 @@
 
     if( window.angular || window.precompile ) {
 
-        if( window.jQuery )
+        if( window.jQuery ){
+
             $.fn.initialize = function(){};
+        }
     }
     else if(window.jQuery) {
 
@@ -44,7 +46,8 @@
                     args[0] = args[0] instanceof $ ? args[0] : $(args[0]);
                     ret = fct.apply(context, args);
 
-                    $(document).trigger('DOMNodeUpdated', args);
+                    if( args.length > 1 && args[1] !== false )
+                        $(document).trigger('DOMNodeUpdated', args);
 
                 } else {
 
@@ -74,45 +77,56 @@
             return typeof $(this).data('initialized') != "undefined" && $(this).data('initialized');
         };
 
-        var initialize = function(callback){
+        var initialize = function(selector, callback){
 
             var $elem = $(this);
-            var initialized = typeof $elem.data('initialized') == "undefined" ? $elem.data('initialized') : false;
 
-            if( (!initialized || initialized != this.selector ) && !$elem.parents('template').length && !$elem.is('template') ){
+            var initialized = typeof $elem.data('initialized') != 'undefined' ? JSON.parse($elem.data('initialized')) : [];
 
-                $elem.data('initialized', this.selector);
+            if( (!initialized.length || initialized.indexOf(selector) == -1 ) && !$elem.parents('template').length && !$elem.is('template') ){
+
+                initialized.push(selector);
+
+                $elem.data('initialized', JSON.stringify(initialized));
+
                 callback.call(this);
             }
         };
 
         $.fn.initialize = function(callback){
 
-            if( typeof callback == 'undefined' )
-                return;
+            if( typeof callback != 'undefined' ) {
 
-            $(this).each(function(){
+                var selector = this.selector;
 
-                initialize.call(this, callback);
-            });
+                if (typeof app != 'undefined' && 'debug' in app && app.debug > 3)
+                    console.info('Initialize ' + selector);
 
-            var selector = this.selector;
+                $(this).each(function () {
 
-            $(document).on('DOMNodeUpdated', function(e, $node){
-
-                if( typeof app != 'undefined' && 'debug' in app && app.debug > 3 )
-                    console.info('Initialize '+selector);
-
-                $node.each(function() {
-
-                    if( $(this).is(selector) )
-                        initialize.call(this, callback);
+                    initialize.call(this, selector, callback);
                 });
 
-                $node.find(selector).each(function(){
-                    initialize.call(this, callback);
+                $(document).on('DOMNodeUpdated', function (e, $node) {
+
+                    if (typeof app != 'undefined' && 'debug' in app && app.debug > 3)
+                        console.info('DOMNodeUpdated triggered for ' + selector, $node);
+
+                    $node.each(function () {
+
+                        if ($(this).is(selector))
+                            initialize.call(this, selector, callback);
+                    });
+
+                    $node.find(selector).each(function () {
+                        initialize.call(this, selector, callback);
+                    });
                 });
-            })
+            }
+            else{
+
+                $(document).trigger('DOMNodeUpdated', [$(this), 'initialize']);
+            }
         };
     }
 })();

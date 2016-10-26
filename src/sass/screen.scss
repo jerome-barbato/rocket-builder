@@ -1,0 +1,41 @@
+/*
+  Rocket Boilerplate
+
+  Do not edit directly, this file is a symlink from rocket/builder
+  Copy it first if needed
+
+  Version
+  3.0.0
+*/
+
+
+// App config
+@import "app/environment";
+@import "app/config";
+
+
+// Vendors
+@import "vendors/**/*";
+
+
+// App
+
+
+// Patterns
+@import "app/patterns/**/*";
+
+
+// Layout
+@import "app/layout/**/*";
+
+
+// Components
+@import "app/components/**/*";
+
+
+// Blocks
+@import "app/blocks/**/*";
+
+
+// Pages
+@import "app/pages/**/*";

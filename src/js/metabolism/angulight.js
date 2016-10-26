@@ -21,7 +21,7 @@ var angularLight = function(){
         else
             self.context[type+'s'][id] = callback;
 
-        $('[data-'+type+'="'+id+'"]').initialize();
+        self._run( type, $('[data-'+type+'="'+id+'"]'));
     };
 
     self._run = function(type, $element){

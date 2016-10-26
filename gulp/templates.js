@@ -10,6 +10,7 @@ var gulp    = require('gulp'),
     gutil   = require('gulp-util'),
     gif     = require('gulp-if'),
     chalk   = require('chalk'),
+    del     = require('del'),
     $       = {
         through : require('through2'),
         jsdom   : require('jsdom')
@@ -107,6 +108,15 @@ gulp.task('watch::templates', function() {
     });
 });
 
+
+/**
+ * Clean compiled views folder
+ */
+
+gulp.task('clean:views', function () {
+
+    return del([config.paths.dest.template+'/*'], {force: true});
+});
 
 
 /**
