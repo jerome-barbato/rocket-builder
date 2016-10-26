@@ -102,7 +102,7 @@
                 if (typeof app != 'undefined' && 'debug' in app && app.debug > 3)
                     console.info('Initialize ' + selector);
 
-                $(this).each(function () {
+                $(this).each(function(){
 
                     initialize.call(this, selector, callback);
                 });
@@ -121,6 +121,7 @@
                     $node.find(selector).each(function () {
                         initialize.call(this, selector, callback);
                     });
+
                 });
             }
             else{
