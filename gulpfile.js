@@ -18,7 +18,9 @@ var gulp    = require('gulp'),
  *  This will load all js or coffee files in the gulp directory
  *  in order to load all gulp tasks
  */
+
 var files = fs.readdirSync('./gulp');
+
 for (var i in files) {
     if (files[i].split('.').pop() == 'js') {
         require('./gulp/'+files[i]);
@@ -31,6 +33,7 @@ for (var i in files) {
  *  Default task clean temporaries directories and launch the
  *  main optimization build task
  */
+
 gulp.task('default', [], function () {
 
     // Quick access for style compilation
@@ -77,5 +80,4 @@ gulp.task('default', [], function () {
 
         gulp.start("watch::templates");
     }
-
 });

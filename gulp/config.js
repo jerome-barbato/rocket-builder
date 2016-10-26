@@ -6,7 +6,8 @@
 // Dependencies
 var gutil   = require('gulp-util'),
     fs      = require('fs'),
-    gulp    = require('gulp');
+    gulp    = require('gulp'),
+    yaml    = require('js-yaml');
 
 var getArg      = function(key) {
 
@@ -23,31 +24,21 @@ var Config = module.exports = {
     environment     : (process.env.WWW_ENV ? process.env.WWW_ENV : "development"),
     // Enable watching for changes in src files
     watching_mode   : true,
-    // Framework parameter can be rocket, wordpress or silex
-    framework       : "rocket",
-    // Theme name will help to find src for compilation
-    theme_name      : "meta",
     // Application root path
-    app_path        : "../app/",
+    app_path        : "../../../",
     // Src assets paths
-    src_path        : "",
+    src_path        : "../../../src/asset/",
     // Public assets paths
-    public_path     : "",
+    public_path     : "../../../web/public/",
     // Global config file
-    paths           : "",
+    paths           : {},
 
     /** Load function will set configuration variables */
     load: function load() {
 
-        // Application root path differ for each framework
-        Config.app_path    = "../../../";
-
-        Config.src_path    = Config.app_path+"src/asset/";
-        Config.public_path = Config.app_path+"web/public/";
-
         Config.paths = {
             base : {
-                config   : Config.app_path+'config/front.config',
+                config   : Config.app_path+'config/front.yml',
                 src      : Config.src_path,
                 public   : Config.public_path
             },
@@ -74,7 +65,7 @@ var Config = module.exports = {
             }
         };
 
-        Config.front = JSON.parse(fs.readFileSync(Config.paths.base.config));
+        Config.front = yaml.safeLoad(fs.readFileSync(Config.paths.base.config));
     },
 
 
@@ -162,30 +153,8 @@ var Config = module.exports = {
         if (getArg("--development") || getArg("-d"))
             Config.environment = 'development';
 
-        // Framework
-        if (getArg("--framework")) {
 
-            Config.framework = getArg("--framework");
-        }
-        else {
-
-            if(Config.fileExists('../../../../wp-content')) {
-
-                Config.framework = 'wordpress';
-
-            } else if (Config.fileExists('../rocket-builder')) {
-
-                Config.framework = 'bedrock';
-            }
-        }
-
-        gutil.log("Framework '"+Config.framework+"' detected");
-        gutil.log("Initializing...'");
-
-
-        // Theme name
-        if (getArg("--theme"))
-            Config.theme_name = getArg("--theme");
+        gutil.log("Loading...");
 
         // Watching mode
         if (getArg("--no-watch") || Config.environment != "development")
