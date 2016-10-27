@@ -99,7 +99,8 @@ gulp.task('watch::templates', function() {
         var filename  = path_array[path_array.length-1];
 
         path_array.pop();
-        var filepath  = path_array.join('/').replace(config.ressource_path+'src/template', 'views');
+        var filepath  = path_array.join('/').replace('src/asset/template', 'web/views');
+
         gutil.log("Compiled '"+chalk.blue(filename)+"'");
 
         return gulp.src(event.path)

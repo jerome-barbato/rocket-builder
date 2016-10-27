@@ -28,6 +28,8 @@ var Config = module.exports = {
     app_path        : "../../../",
     // Src assets paths
     src_path        : "../../../src/asset/",
+    // Src assets paths
+    web_path        : "../../../web/",
     // Public assets paths
     public_path     : "../../../web/public/",
     // Global config file
