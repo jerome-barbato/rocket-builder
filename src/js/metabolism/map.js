@@ -25,8 +25,8 @@ var UXMap = function(){
 
     self.config = {
         marker : {
-            url       : app.asset.medias+'icons/marker@2x.png',
-            hover_url : app.asset.medias+'icons/marker--hover@2x.png',
+            url       : app.asset+'/media/icons/marker@2x.png',
+            hover_url : app.asset+'/media/icons/marker--hover@2x.png',
             width  : 45,
             height : 65
         },

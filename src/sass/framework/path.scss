@@ -1,24 +1,24 @@
 // Path
-$misc-path    :  $public-path+'medias/misc/';
-$pages-path   :  $public-path+'medias/pages/';
-$blocks-path  :  $public-path+'medias/blocks/';
-$tmp-path     :  $public-path+'medias/tmp/';
-$icons-path   :  $public-path+'medias/icons/';
-$fonts-path   :  $public-path+'fonts/';
+$misc-path    :  $public-path+'media/misc/';
+$pages-path   :  $public-path+'media/page/';
+$blocks-path  :  $public-path+'media/block/';
+$tmp-path     :  $public-path+'media/tmp/';
+$icons-path   :  $public-path+'media/icon/';
+$fonts-path   :  $public-path+'font/';
 
-@function pages-url($path){
+@function page-url($path){
   @return url( $pages-path + $path )
 }
 
-@function blocks-url($path){
+@function block-url($path){
   @return url( $blocks-path + $path )
 }
 
-@function medias-url($path){
-  @return url( $public-path + 'medias/' + $path )
+@function media-url($path){
+  @return url( $public-path + 'media/' + $path )
 }
 
-@function fonts-url($path){
+@function font-url($path){
   @return url( $fonts-path + $path )
 }
 
@@ -26,7 +26,7 @@ $fonts-path   :  $public-path+'fonts/';
   @return url( $tmp-path + $path )
 }
 
-@function icons-url($path){
+@function icon-url($path){
   @return url( $icons-path + $path )
 }
 

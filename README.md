@@ -1,4 +1,4 @@
-# Rocket Builder #
+# Rocket Builder
 
 INTRODUCTION
 ------------
