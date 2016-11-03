@@ -1,7 +1,6 @@
 //v1.0
 
-$animation-duration : $transition-duration*2;
-$animation-delay    : $transition-duration/6;
+$animation-delay : $animation-duration/10;
 
 @mixin lib-animation{
 
