@@ -17,7 +17,7 @@ gulp.task('lint::scripts', function() {
 
     for (var i in config.paths.src.js.all) {
         var path = config.paths.src.js.all[i];
-        if (path.indexOf("vendors") === -1) {
+        if (path.indexOf("vendor") === -1) {
             sources_path.push(path);
         }
     }
@@ -60,7 +60,7 @@ gulp.task('compress::scripts', function(){
 
 gulp.task('compress::script::browser', function(){
 
-    return gulp.src([config.paths.base.src+'js/vendors/modernizr.js', config.paths.base.src+'js/vendors/browser.js'])
+    return gulp.src([config.paths.base.src+'js/vendor/modernizr.js', config.paths.base.src+'js/vendor/browser.js'])
         .pipe($.concat('browser.min.js'))
         .pipe($.uglify().on('error', config.errorHandler('Scripts')))
         .pipe(gulp.dest(config.paths.dest.js));

@@ -20,7 +20,7 @@ function loadDep(){
 
     var src = [];
 
-    src.push( fs.readFileSync(config.paths.base.src+'js/vendors/browser.js', 'utf-8') );
+    src.push( fs.readFileSync(config.paths.base.src+'js/vendor/browser.js', 'utf-8') );
 
     config.paths.src.js.compiler.forEach(function(library){
 

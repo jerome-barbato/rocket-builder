@@ -61,7 +61,7 @@ var Config = module.exports = {
             watch : {
                 js         : Config.src_path+"js/**/*.js",
                 js_app     : [Config.src_path+"js/app/**/*.js", Config.src_path+"js/app.js"],
-                js_vendors : [Config.src_path+"js/vendors/**/*.js"],
+                js_vendors : [Config.src_path+"js/vendor/**/*.js"],
                 sass       : Config.src_path+"sass/**/*.scss",
                 template   : Config.src_path+"template/**/*.twig"
             }
@@ -78,11 +78,11 @@ var Config = module.exports = {
      */
     addVendors : function addVendors() {
 
-        Config.front.vendors.app.forEach(function(library){
+        Config.front.vendor.app.forEach(function(library){
 
             if( typeof library == 'string' ){
 
-                Config.paths.src.js.app.push(Config.src_path+'js/vendors/'+library+'.js');
+                Config.paths.src.js.app.push(Config.src_path+'js/vendor/'+library+'.js');
             }
             else{
 
@@ -90,7 +90,7 @@ var Config = module.exports = {
 
                     library[path].forEach(function(element){
 
-                        Config.paths.src.js.app.push(Config.src_path+'js/vendors/'+path+'/'+element+'.js');
+                        Config.paths.src.js.app.push(Config.src_path+'js/vendor/'+path+'/'+element+'.js');
                     });
                 }
             }
@@ -99,11 +99,11 @@ var Config = module.exports = {
         Config.paths.src.js.app.push(Config.src_path+'js/app/**/*.js');
         Config.paths.src.js.app.push(Config.src_path+'js/app.js');
 
-        Config.front.vendors.compiler.forEach(function(library){
+        Config.front.vendor.compiler.forEach(function(library){
 
             if( typeof library == 'string' ){
 
-                Config.paths.src.js.compiler.push(Config.src_path+'js/vendors/'+library+'.js');
+                Config.paths.src.js.compiler.push(Config.src_path+'js/vendor/'+library+'.js');
             }
             else{
 
@@ -111,7 +111,7 @@ var Config = module.exports = {
 
                     library[path].forEach(function(element){
 
-                        Config.paths.src.js.compiler.push(Config.src_path+'js/vendors/'+path+'/'+element+'.js');
+                        Config.paths.src.js.compiler.push(Config.src_path+'js/vendor/'+path+'/'+element+'.js');
                     });
                 }
             }
