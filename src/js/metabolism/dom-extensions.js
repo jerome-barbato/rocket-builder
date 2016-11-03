@@ -40,14 +40,6 @@ dom.compiler.register('filter', 'height', function(elem, attrs){
 
 
 
-dom.compiler.register('attribute', 'background', function(elem, attrs){
-
-    if( 'background' in attrs && attrs.background.length )
-        elem.css('backgroundImage', "url('"+attrs.background+"')");
-});
-
-
-
 dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
     var size = attrs.sizer.replace('/', 'x');
@@ -82,6 +74,13 @@ dom.compiler.register('attribute', 'background-color', function(elem, attrs){
 
     if( 'backgroundColor' in attrs && attrs.backgroundColor.length )
         elem.css("backgroundColor" , attrs.backgroundColor);
+});
+
+
+dom.compiler.register('attribute', 'background', function(elem, attrs){
+
+    if( 'background' in attrs && attrs.background.length )
+        elem.css("backgroundImage" , 'url("'+attrs.background+'")');
 });
 
 
@@ -185,7 +184,8 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
 
         if (window.precompile){
 
-            elem.attr('src', "{{ asset_url('/media/"+type+"/" + attrs[type+'Src']+"') }}");
+            var src = attrs[type+'Src'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+            elem.attr('src', "{{ asset_url('/media/"+type+"/" + src + "') }}");
         }
         else{
 
@@ -195,7 +195,29 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
                 elem.attr('src', attrs[type+'Src']);
             }
             else {
-                elem.attr('src', app.asset + '/media/block/' + attrs[type+'Src']);
+
+                elem.attr('src', app.asset + '/media/'+type+'/' + attrs[type+'Src']);
+            }
+        }
+    });
+
+    dom.compiler.register('attribute', type+'-background', function(elem, attrs){
+
+        if (window.precompile){
+
+            var src = attrs[type+'Background'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+            elem.attr('style', "background-image:url('{{ asset_url('/media/"+type+"/" + src + "') }}')");
+        }
+        else{
+
+            if( typeof app == "undefined" || ! 'asset' in app  ) {
+
+                console.warn('app.asset not defined');
+                elem.css('backgroundImage',  'url("'+attrs[type+'Background']+'")');
+            }
+            else {
+
+                elem.css('backgroundImage', "url('"+app.asset + "/media/" + type + "/" + attrs[type+'Src']+"')");
             }
         }
     });

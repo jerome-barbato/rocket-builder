@@ -24,6 +24,7 @@
   &:-ms-input-placeholder      {@content}
 }
 
+//borders
 @mixin borders($size:1px, $color:false){
   position: relative;
   &:after { left: 0; top:0; border-top: $size solid; border-left: $size solid }
@@ -33,6 +34,31 @@
     display: block; z-index: 0; box-sizing: border-box;
     @if( $color ){
       border-color: $color;
+    }
+  }
+}
+
+
+// Text
+@mixin text($type) {
+  @extend .text, .text--#{$type};
+}
+
+
+// Button
+@mixin button($type) {
+  @extend .button, .button--#{$type};
+}
+
+
+//include font with fallback
+@mixin font($name:false) {
+
+  @each $family, $fallback in $font-families {
+
+    @if( to-lower-case($family) == to-lower-case($name) ){
+
+      font-family: $family, $fallback;
     }
   }
 }

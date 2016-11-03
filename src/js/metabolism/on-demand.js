@@ -229,10 +229,12 @@ var UXOnDemand = function(){
 
         dom.compiler.register('attribute', 'on-demand', function(elem, attrs) {
 
+            var src = elem.attr('src');
+
             if( elem.is('img') )
                 elem.attr('src', "{{ blank() }}");
 
-            elem.attr('data-src', attrs.onDemand);
+            elem.attr('data-src', attrs.onDemand.length ? attrs.onDemand : src );
 
         }, self.add);
     }
