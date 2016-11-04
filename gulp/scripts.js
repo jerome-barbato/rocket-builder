@@ -60,7 +60,7 @@ gulp.task('compress::scripts', function(){
 
 gulp.task('compress::script::browser', function(){
 
-    return gulp.src([config.paths.base.src+'js/vendor/modernizr.js', config.paths.base.src+'js/vendor/browser.js'])
+    return gulp.src([config.paths.asset+'/js/vendor/modernizr.js', config.paths.asset+'/js/vendor/browser.js'])
         .pipe($.concat('browser.min.js'))
         .pipe($.uglify().on('error', config.errorHandler('Scripts')))
         .pipe(gulp.dest(config.paths.dest.js));

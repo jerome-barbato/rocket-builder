@@ -1,6 +1,6 @@
 
 /**
- * Configuration
+ * configuration
  */
 
 // Dependencies
@@ -17,7 +17,7 @@ var getArg      = function(key) {
     return (index < 0) ? null : (!next || next[0] === "-") ? true : next;
 };
 
-var Config = module.exports = {
+var config = module.exports = {
 
     /** Attributes */
     // Retrieving environment from environment variable
@@ -25,49 +25,44 @@ var Config = module.exports = {
     // Enable watching for changes in src files
     watching_mode   : true,
     // Application root path
-    app_path        : "../../../",
-    // Src assets paths
-    src_path        : "../../../src/asset/",
-    // Src assets paths
-    web_path        : "../../../web/",
-    // Public assets paths
-    public_path     : "../../../web/public/",
+    base_path        : "../../..",
     // Global config file
     paths           : {},
 
     /** Load function will set configuration variables */
     load: function load() {
 
-        Config.paths = {
-            base : {
-                config   : Config.app_path+'config/front.yml',
-                src      : Config.src_path,
-                public   : Config.public_path
+        config.front = yaml.safeLoad(fs.readFileSync(config.base_path+'/config/builder.yml'));
+
+        config.paths.asset  = config.base_path+config.front.paths.asset;
+        config.paths.public = config.base_path+config.front.paths.public;
+        config.paths.views  = config.base_path+config.front.paths.views;
+
+        config.paths.css_to_sass = '../../src/sass/';
+
+        config.paths.src = {
+            js : {
+                app      : [],
+                compiler : []
             },
-            src : {
-                js       : {
-                    app      : [],
-                    compiler : []
-                },
-                sass     : Config.src_path+"sass/*.scss",
-                template : Config.src_path+"template/**/*.twig",
-                html     : Config.public_path+"views/**/*.html"
-            },
-            dest : {
-                js       : Config.public_path+"js",
-                css      : Config.public_path+"css",
-                template : Config.app_path+"web/views"
-            },
-            watch : {
-                js         : Config.src_path+"js/**/*.js",
-                js_app     : [Config.src_path+"js/app/**/*.js", Config.src_path+"js/app.js"],
-                js_vendors : [Config.src_path+"js/vendor/**/*.js"],
-                sass       : Config.src_path+"sass/**/*.scss",
-                template   : Config.src_path+"template/**/*.twig"
-            }
+            sass     : config.paths.asset+"/sass/*.scss",
+            template : config.paths.asset+"/template/**/*.twig",
+            html     : config.paths.public+"/views/**/*.html"
         };
 
-        Config.front = yaml.safeLoad(fs.readFileSync(Config.paths.base.config));
+        config.paths.dest = {
+            js       : config.paths.public+"/js",
+            css      : config.paths.public+"/css",
+            template : config.paths.views
+        };
+
+        config.paths.watch = {
+            js         : config.paths.asset+"/js/**/*.js",
+            js_app     : [config.paths.asset+"/js/app/**/*.js", config.paths.asset+"/js/app.js"],
+            js_vendors : [config.paths.asset+"/js/vendor/**/*.js"],
+            sass       : config.paths.asset+"/sass/**/*.scss",
+            template   : config.paths.asset+"/template/**/*.twig"
+        };
     },
 
 
@@ -78,11 +73,11 @@ var Config = module.exports = {
      */
     addVendors : function addVendors() {
 
-        Config.front.vendor.app.forEach(function(library){
+        config.front.vendor.app.forEach(function(library){
 
             if( typeof library == 'string' ){
 
-                Config.paths.src.js.app.push(Config.src_path+'js/vendor/'+library+'.js');
+                config.paths.src.js.app.push(config.paths.asset+'/js/vendor/'+library+'.js');
             }
             else{
 
@@ -90,20 +85,20 @@ var Config = module.exports = {
 
                     library[path].forEach(function(element){
 
-                        Config.paths.src.js.app.push(Config.src_path+'js/vendor/'+path+'/'+element+'.js');
+                        config.paths.src.js.app.push(config.paths.asset+'/js/vendor/'+path+'/'+element+'.js');
                     });
                 }
             }
         });
 
-        Config.paths.src.js.app.push(Config.src_path+'js/app/**/*.js');
-        Config.paths.src.js.app.push(Config.src_path+'js/app.js');
+        config.paths.src.js.app.push(config.paths.asset+'/js/app/**/*.js');
+        config.paths.src.js.app.push(config.paths.asset+'/js/app.js');
 
-        Config.front.vendor.compiler.forEach(function(library){
+        config.front.vendor.compiler.forEach(function(library){
 
             if( typeof library == 'string' ){
 
-                Config.paths.src.js.compiler.push(Config.src_path+'js/vendor/'+library+'.js');
+                config.paths.src.js.compiler.push(config.paths.asset+'/js/vendor/'+library+'.js');
             }
             else{
 
@@ -111,7 +106,7 @@ var Config = module.exports = {
 
                     library[path].forEach(function(element){
 
-                        Config.paths.src.js.compiler.push(Config.src_path+'js/vendor/'+path+'/'+element+'.js');
+                        config.paths.src.js.compiler.push(config.paths.asset+'/js/vendor/'+path+'/'+element+'.js');
                     });
                 }
             }
@@ -149,22 +144,22 @@ var Config = module.exports = {
         /** Parameters evaluation **/
         // Production mode
         if (getArg("--production") || getArg("-p"))
-            Config.environment = 'production';
+            config.environment = 'production';
 
         // dev mode
         if (getArg("--development") || getArg("-d"))
-            Config.environment = 'development';
+            config.environment = 'development';
 
 
         gutil.log("Loading...");
 
         // Watching mode
-        if (getArg("--no-watch") || Config.environment != "development")
-            Config.watching_mode = false;
+        if (getArg("--no-watch") || config.environment != "development")
+            config.watching_mode = false;
 
-        Config.load();
-        Config.addVendors();
+        config.load();
+        config.addVendors();
     }
 };
 
-Config.init();
+config.init();
