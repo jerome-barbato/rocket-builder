@@ -1,9 +1,9 @@
 'use strict';
 
-var gulp = require('gulp'),
-    conf = require('./config'),
-    del  = require('del');
+var gulp   = require('gulp'),
+    config = require('./config'),
+    del    = require('del');
 
 gulp.task('clean', function () {
-    return del([conf.paths.dest.js, conf.paths.dest.css], {force:true});
+    return del([config.paths.dest.js, config.paths.dest.css], {force:true});
 });

@@ -32,31 +32,31 @@ gulp.task('create', function() {
 
 
     var path = {
-        template : config.src_path+'template/',
-        sass : config.src_path+'sass/app/'+type+'s/'
+        template : config.paths.asset+'/template',
+        sass : config.paths.asset+'/sass/app/'+type
     };
 
     try {
         fs.statSync(path.template);
     } catch (e) {
-        path.template = config.app_path+'views/';
+        path.template = config.paths.web+'/views';
     }
 
-    path.template += type+'s/';
+    path.template += '/'+type;
 
     try {
-        fs.statSync(path.template+name+'.phtml.twig');
+        fs.statSync(path.template+'/'+name+'.phtml.twig');
         gutil.log(chalk.red('This template allready exists'));
     } catch (e) {
-        fs_path.writeFile(path.template+name+'.phtml.twig', "<div block=\""+name.replace(/\//g, '-')+"\">\n\t\n</div>");
+        fs_path.writeFile(path.template+'/'+name+'.phtml.twig', "<div block=\""+name.replace(/\//g, '-')+"\">\n\t\n</div>");
         gutil.log(chalk.green('Template created'));
     }
 
     try {
-        fs.statSync(path.sass+name+'.scss');
+        fs.statSync(path.sass+'/'+name+'.scss');
         gutil.log(chalk.red('This stylesheet allready exists'));
     } catch (e) {
-        fs_path.writeFile(path.sass+name+'.scss', "."+name.replace(/\//g, '-')+"{\n\t\n}");
+        fs_path.writeFile(path.sass+'/'+name+'.scss', "."+name.replace(/\//g, '-')+"{\n\t\n}");
         gutil.log(chalk.green('Stylesheet created'));
     }
 });

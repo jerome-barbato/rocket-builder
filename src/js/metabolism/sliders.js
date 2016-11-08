@@ -66,9 +66,10 @@ var UXSlider = function(config) {
         indices           : { current : -1 },
         is_animating      : false,
         is_visible        : false,
-        interval          : false,
+        timer             : false,
         count             : false,
         loop              : 0,
+        paused            : false,
         window_height     : 0,
         $window           : false,
         animationEnd   : 'animationend.ux-slider oanimationend.ux-slider webkitAnimationEnd.ux-slider MSAnimationEnd.ux-slider'
@@ -96,16 +97,8 @@ var UXSlider = function(config) {
     };
 
 
-    self.pause = function(){
-
-        clearInterval(self.context.interval);
-    };
-
-
-    self.resume = function(){
-
-        self._startAutoplay();
-    };
+    self.pause = function(){ self.context.paused = true };
+    self.resume = function(){ self.context.paused = false };
 
 
 
@@ -163,7 +156,6 @@ var UXSlider = function(config) {
         $(window).load(function(){
 
             self._show(Math.min(self.context.slide_count, self.config.start_slide), false);
-            self._startAutoplay();
         });
     };
 
@@ -199,15 +191,14 @@ var UXSlider = function(config) {
 
 
 
-    self._startAutoplay = function() {
+    self._autoplay = function() {
 
         if ( !self.config.autoplay || self.config.autoplay < 500 || self.context.slide_count < 2 )
             return;
 
-        if (self.context.interval)
-            clearInterval(self.context.interval);
+        clearTimeout(self.context.timer);
 
-        self.context.interval = setInterval(function() {
+        self.context.timer = setTimeout(function() {
 
             if( self.context.is_visible )
                 self._show(self.context.indices.current + 1, true);
@@ -220,17 +211,8 @@ var UXSlider = function(config) {
 
     self._setupEvents = function() {
 
-        if (self.config.autoplay && self.config.hold) {
-
-            self.config.$element.hover(function() {
-
-                clearInterval(self.context.interval);
-
-            }, function() {
-
-                self._startAutoplay();
-            });
-        }
+        if ( self.config.autoplay && self.config.hold )
+            self.config.$element.hover(function() { self.pause() }, function() { self.resume() });
 
         if ( $.isFunction($.fn.swipe) && self.context.slide_count > 1 &&
             ( (self.config.swipe_desktop && browser.desktop)
@@ -275,11 +257,8 @@ var UXSlider = function(config) {
         var targetScroll = scrollTop+self.context.window_height*0.8;
         var is_visible   = self.context.offset <= targetScroll;
 
-        if( is_visible && !self.context.is_visible ){
-
-            clearInterval(self.context.interval);
-            self._startAutoplay();
-        }
+        if( is_visible && !self.context.is_visible )
+            self._autoplay();
 
         self.context.is_visible = is_visible;
     };
@@ -334,6 +313,8 @@ var UXSlider = function(config) {
 
 
     self._show = function(index, animate, callback) {
+
+        clearTimeout(self.context.timer);
 
         if (self.context.is_animating || self.context.indices.current == index ) return;
 
@@ -397,6 +378,7 @@ var UXSlider = function(config) {
             self.context.is_animating = false;
 
             self._preload();
+            self._autoplay();
 
             if( callback )
                 callback();

@@ -1,4 +1,4 @@
-# Rocket Builder #
+# Rocket Builder
 
 ## Documentation
 * [Changelog](doc/changelog.md)

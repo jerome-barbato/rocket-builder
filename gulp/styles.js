@@ -29,7 +29,7 @@ gulp.task('compile::style', function () {
         }).on('error', config.errorHandler('Pleeease')))
         .pipe($.sourcemaps.write('./', {
             includeContent: false,
-            sourceRoot: '../../src/sass/'
+            sourceRoot: config.paths.css_to_sass
         }))
         .pipe(gulp.dest(config.paths.dest.css))
 });

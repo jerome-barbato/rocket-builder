@@ -57,14 +57,14 @@ module.exports = function(config) {
                 served: true,
                 included: false
             },
-            { pattern: "src/test/fixtures/core/vendors/*.js",
+            { pattern: "src/test/fixtures/core/vendor/*.js",
                 watched: false,
                 served: true,
                 included: false
             },
 
             // dependencies
-            'src/js/vendors/jquery.min.js',
+            'src/js/vendor/jquery.min.js',
 
             "src/test/helpers/fixtures.js",
 

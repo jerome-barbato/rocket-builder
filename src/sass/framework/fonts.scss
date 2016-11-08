@@ -1,4 +1,4 @@
-$font_path: '#{$public-path}/fonts';
+$font_path: '#{$public-path}/font';
 $font-families : ();
 
 @each $font in $fonts {
@@ -25,18 +25,6 @@ $font-families : ();
   @if not map-has-key($font-families, $family){
     $newFont: ($family: $fallback);
     $font-families : map-merge($font-families, $newFont);
-  }
-}
-
-//include font with fallback
-@mixin font($name:false) {
-
-  @each $family, $fallback in $font-families {
-
-    @if( to-lower-case($family) == to-lower-case($name) ){
-
-      font-family: $family, $fallback;
-    }
   }
 }
 

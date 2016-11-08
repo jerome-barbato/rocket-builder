@@ -1,5 +1,5 @@
 {
-  "name":"rocket/builder",
+  "name":"metabolism/rocket-builder",
   "version":"3.0.0",
   "description": "Rocket Builder by Metabolism",
   "repositories": [

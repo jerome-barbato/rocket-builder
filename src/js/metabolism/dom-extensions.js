@@ -18,7 +18,7 @@ var dom = dom || {};
 
 dom.compiler.register('filter', 'width', function(elem, attrs){
 
-    if( attrs.width.indexOf('/') > -1 ){
+    if( 'width' in attrs && attrs.width.indexOf('/') > -1 ){
 
         var width = attrs.width.split('/');
         if( width.length == 2 )
@@ -30,20 +30,12 @@ dom.compiler.register('filter', 'width', function(elem, attrs){
 
 dom.compiler.register('filter', 'height', function(elem, attrs){
 
-    if( attrs.height.indexOf('/') > -1 ){
+    if( 'height' in attrs && attrs.height.indexOf('/') > -1 ){
 
         var height = attrs.height.split('/');
         if( height.length == 2 )
             elem.attr('height', Math.round(parseInt(height[0])/parseInt(height[1])));
     }
-});
-
-
-
-dom.compiler.register('attribute', 'background', function(elem, attrs){
-
-    if( attrs.background && attrs.background.length )
-        elem.css('backgroundImage', "url('"+attrs.background+"')");
 });
 
 
@@ -56,23 +48,23 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
         if( elem.is('img') ){
 
-            elem.attr('src', '{{ asset.public }}medias/sizers/' + size + '.png');
+            elem.attr('src', "{{ asset_url('/media/sizer/" + size + ".png') }}");
             elem.addClass('ux-sizer');
             elem.css('backgroundImage', "url('"+attrs.src+"')");
         }
         else
-            elem.append('<img src="{{ asset.public }}medias/sizers/' + size + '.png" class="ux-sizer">');
+            elem.append('<img src="{{ asset_url(\'/media/sizer/' + size + '.png\') }}" class="ux-sizer">');
     }
     else if ( typeof app != "undefined" && 'asset' in app  ){
 
         if( elem.is('img') ){
 
-            elem.attr('src', app.asset.public + 'medias/sizers/' + size + '.png');
+            elem.attr('src', app.asset + '/media/sizer/' + size + '.png');
             elem.addClass('ux-sizer');
             elem.css('backgroundImage', "url('"+attrs.src+"')");
         }
         else
-            elem.append('<img src="' + app.asset.public + 'medias/sizers/' + size + '.png" class="ux-sizer">');
+            elem.append('<img src="' + app.asset + '/media/sizer/' + size + '.png" class="ux-sizer">');
     }
 });
 
@@ -80,15 +72,22 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
 dom.compiler.register('attribute', 'background-color', function(elem, attrs){
 
-    if( attrs.backgroundColor && attrs.backgroundColor.length )
+    if( 'backgroundColor' in attrs && attrs.backgroundColor.length )
         elem.css("backgroundColor" , attrs.backgroundColor);
+});
+
+
+dom.compiler.register('attribute', 'background', function(elem, attrs){
+
+    if( 'background' in attrs && attrs.background.length )
+        elem.css("backgroundImage" , 'url("'+attrs.background+'")');
 });
 
 
 
 dom.compiler.register('attribute', 'icon', function(elem, attrs){
 
-    if( attrs.icon && attrs.icon.length )
+    if( 'icon' in attrs && attrs.icon.length )
         elem.addClass('icon icon--'+attrs.icon);
 });
 
@@ -96,7 +95,7 @@ dom.compiler.register('attribute', 'icon', function(elem, attrs){
 
 dom.compiler.register('attribute', 'icon-after', function(elem, attrs){
 
-    if( attrs.iconAfter && attrs.iconAfter.length )
+    if( 'iconAfter' in attrs && attrs.iconAfter.length )
         elem.addClass('icon-after icon-after--'+attrs.iconAfter);
 });
 
@@ -104,7 +103,7 @@ dom.compiler.register('attribute', 'icon-after', function(elem, attrs){
 
 dom.compiler.register('attribute', 'icon-before', function(elem, attrs){
 
-    if( attrs.iconBefore && attrs.iconBefore.length )
+    if( 'iconBefore' in attrs && attrs.iconBefore.length )
         elem.addClass('icon icon--'+attrs.iconBefore);
 });
 
@@ -112,7 +111,7 @@ dom.compiler.register('attribute', 'icon-before', function(elem, attrs){
 
 dom.compiler.register('attribute', 'text', function(elem, attrs){
 
-    if( attrs.text && attrs.text.length )
+    if( 'text' in attrs && attrs.text.length )
         elem.addClass('text text--'+attrs.text);
 });
 
@@ -120,7 +119,7 @@ dom.compiler.register('attribute', 'text', function(elem, attrs){
 
 dom.compiler.register('attribute', 'button', function(elem, attrs){
 
-    if( attrs.button && attrs.button.length )
+    if( 'button' in attrs && attrs.button.length )
         elem.addClass('button button--'+attrs.button);
 });
 
@@ -128,7 +127,7 @@ dom.compiler.register('attribute', 'button', function(elem, attrs){
 
 dom.compiler.register('attribute', 'align', function(elem, attrs){
 
-    if( attrs.align && attrs.align.length ){
+    if( 'align' in attrs && attrs.align.length ){
 
         elem.addClass('align-'+attrs.align);
     }
@@ -138,7 +137,7 @@ dom.compiler.register('attribute', 'align', function(elem, attrs){
 
 dom.compiler.register('attribute', 'hide-on', function(elem, attrs){
 
-    if( attrs.hideOn && attrs.hideOn.length ) {
+    if( 'hideOn' in attrs && attrs.hideOn.length ) {
 
         var hideOn = attrs.hideOn.indexOf('{{')==-1 ? attrs.hideOn.replace(' ', '-') : attrs.hideOn;
 
@@ -150,7 +149,7 @@ dom.compiler.register('attribute', 'hide-on', function(elem, attrs){
 
 dom.compiler.register('attribute', 'show-on', function(elem, attrs){
 
-    if( attrs.showOn && attrs.showOn.length ) {
+    if( 'showOn' in attrs && attrs.showOn.length ) {
 
         var showOn = attrs.showOn;
         var hideOn = false;
@@ -166,144 +165,62 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
 
         if( hideOn ){
 
-            if( attrs.hideOn.indexOf('{{')==-1 ){
+            if( hideOn.indexOf('{{')==-1 ){
 
                 var hideOn_map = hideOn.split(' ');
                 elem.addClass('ux-hide ux-hide--' + hideOn_map.join(' ux-hide--'));
             }
             else{
 
-                elem.addClass('ux-hide ux-hide--' + attrs.hideOn);
+                elem.addClass('ux-hide ux-hide--' + hideOn);
             }
         }
     }
 });
 
+['block', 'icon', 'icon', 'page', 'component', 'tmp', 'misc'].map(function(type){
 
+    dom.compiler.register('attribute', type+'-src', function(elem, attrs){
 
+        if (window.precompile){
 
-dom.compiler.register('attribute', 'blocks-src', function(elem, attrs){
-
-    if (window.precompile){
-
-        elem.attr('src', '{{ asset.public }}medias/blocks/' + attrs.blocksSrc);
-    }
-    else{
-
-        if( typeof app == "undefined" || ! 'asset' in app  ) {
-
-            console.warn('app.asset not defined');
-            elem.attr('src', attrs.blocksSrc);
+            var src = attrs[type+'Src'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+            elem.attr('src', "{{ asset_url('/media/"+type+"/" + src + "') }}");
         }
-        else {
-            elem.attr('src', app.asset.public + 'medias/block/' + attrs.blocksSrc);
+        else{
+
+            if( typeof app == "undefined" || ! 'asset' in app  ) {
+
+                console.warn('app.asset not defined');
+                elem.attr('src', attrs[type+'Src']);
+            }
+            else {
+
+                elem.attr('src', app.asset + '/media/'+type+'/' + attrs[type+'Src']);
+            }
         }
-    }
-});
+    });
 
+    dom.compiler.register('attribute', type+'-background', function(elem, attrs){
 
+        if (window.precompile){
 
-dom.compiler.register('attribute', 'icons-src', function(elem, attrs){
-
-    if (window.precompile){
-
-        elem.attr('src', '{{ asset.public }}medias/icons/' + attrs.iconsSrc);
-    }
-    else{
-
-        if( typeof app == "undefined" || ! 'asset' in app ) {
-
-            console.warn('app.asset is not defined');
-            elem.attr('src', attrs.iconsSrc);
+            var src = attrs[type+'Background'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+            elem.attr('style', "background-image:url('{{ asset_url('/media/"+type+"/" + src + "') }}')");
         }
-        else {
-            elem.attr('src', app.asset.public + 'medias/icons/' + attrs.iconsSrc);
+        else{
+
+            if( typeof app == "undefined" || ! 'asset' in app  ) {
+
+                console.warn('app.asset not defined');
+                elem.css('backgroundImage',  'url("'+attrs[type+'Background']+'")');
+            }
+            else {
+
+                elem.css('backgroundImage', "url('"+app.asset + "/media/" + type + "/" + attrs[type+'Src']+"')");
+            }
         }
-    }
-});
-
-
-
-dom.compiler.register('attribute', 'pages-src', function(elem, attrs){
-
-    if (window.precompile){
-
-        elem.attr('src', '{{ asset.public }}medias/pages/' + attrs.pagesSrc);
-    }
-    else{
-
-        if( typeof app == "undefined" || ! 'asset' in app  ) {
-
-            console.warn('app.asset is not defined');
-            elem.attr('src', attrs.pagesSrc);
-        }
-        else {
-            elem.attr('src', app.asset.public + 'medias/pages/' + attrs.pagesSrc);
-        }
-    }
-});
-
-
-
-dom.compiler.register('attribute', 'components-src', function(elem, attrs){
-
-    if (window.precompile){
-
-        elem.attr('src', '{{ asset.public }}medias/components/' + attrs.componentsSrc);
-    }
-    else{
-
-        if( typeof app == "undefined" || ! 'asset' in app  ) {
-
-            console.warn('app.asset is not defined');
-            elem.attr('src', attrs.componentsSrc);
-        }
-        else {
-            elem.attr('src', app.asset.public + 'medias/components/' + attrs.componentsSrc);
-        }
-    }
-});
-
-
-
-dom.compiler.register('attribute', 'tmp-src', function(elem, attrs){
-
-    if (window.precompile){
-
-        elem.attr('src', '{{ asset.public }}medias/tmp/' + attrs.tmpSrc);
-    }
-    else{
-
-        if( typeof app == "undefined" || ! 'asset' in app  ) {
-
-            console.warn('app.asset is not defined');
-            elem.attr('src', attrs.tmpSrc);
-        }
-        else {
-            elem.attr('src', app.asset.public + 'medias/tmp/' + attrs.tmpSrc);
-        }
-    }
-})
-
-
-
-dom.compiler.register('attribute', 'misc-src', function(elem, attrs){
-
-    if (window.precompile){
-
-        elem.attr('src', '{{ asset.public }}medias/misc/' + attrs.miscSrc);
-    }
-    else{
-
-        if( typeof app == "undefined" || ! 'asset' in app  ) {
-
-            console.warn('app.asset is not defined');
-            elem.attr('src', attrs.miscSrc);
-        }
-        else {
-            elem.attr('src', app.asset.public + 'medias/misc/' + attrs.miscSrc);
-        }
-    }
+    });
 });
 
 

@@ -20,7 +20,7 @@ function loadDep(){
 
     var src = [];
 
-    src.push( fs.readFileSync(config.paths.base.src+'js/vendors/browser.js', 'utf-8') );
+    src.push( fs.readFileSync(config.paths.asset+'/js/vendor/browser.js', 'utf-8') );
 
     config.paths.src.js.compiler.forEach(function(library){
 
@@ -99,7 +99,7 @@ gulp.task('watch::templates', function() {
         var filename  = path_array[path_array.length-1];
 
         path_array.pop();
-        var filepath  = path_array.join('/').replace(config.ressource_path+'src/template', 'views');
+        var filepath  = path_array.join('/').replace(config.front.paths.asset+'/template', config.front.paths.views);
         gutil.log("Compiled '"+chalk.blue(filename)+"'");
 
         return gulp.src(event.path)

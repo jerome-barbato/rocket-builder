@@ -29,8 +29,10 @@ var angularLight = function(){
         if( app.debug > 2 )
             console.time('angulight:run');
 
-        var data = $element.data(type).split('(');
+        if( typeof $element == "undefined" || ! $element || !$element.length )
+            return false;
 
+        var data   = $element.data(type).split('(');
         var name   = _.camelCase( data[0] );
         var params = [$element];
 
