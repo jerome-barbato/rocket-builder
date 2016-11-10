@@ -5,8 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 3.0.1 - 2016-11-10 ##
+### Added ###
+* Compilation and minification of assets files to web folder.
 ### Fixed ###
-Clean is now del.sync to avoid compilation collision
+* Clean is now del.sync to avoid compilation collision
 
 ## 3.0.0 - 2016-11-08 ##
 ### Updated ###
