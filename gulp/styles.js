@@ -47,7 +47,8 @@ gulp.task('compress::style', function () {
         .pipe($.sass().on('error', config.errorHandler('Sass')))
         .pipe($.pleeease({
             mqpacker: true,
-            browsers: ["last 3 versions"]
+            browsers: ["last 3 versions"],
+            out: 'screen.min.css'
         }).on('error', config.errorHandler('Pleeease')))
         .pipe(gulp.dest(config.paths.dest.css))
         .pipe($.size({showFiles: true}));

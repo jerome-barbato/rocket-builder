@@ -36,28 +36,19 @@ for (var i in files) {
 
 gulp.task('default', [], function () {
 
-    // Quick access for style compilation
-    var styles    = "compile::style";
-
     // Quick access for scripts compilation
     var scripts   = "concat::scripts";
 
     // Quick access for template compilation
     var templates = "compile::templates";
 
-    /** Harlem Check **/
-    if ( config.environment != 'development' ){
-
-        styles  = "compress::style";
-        scripts = "compress::scripts";
-    }
-
     gulp.start("clean:views");
 
-    gulp.start(scripts);
+    gulp.start("concat::scripts");
     gulp.start("compress::script::browser");
 
-    gulp.start(styles);
+    gulp.start("compile::style");
+    gulp.start("compress::style");
     gulp.start(templates);
 
     if (config.watching_mode){
@@ -75,7 +66,8 @@ gulp.task('default', [], function () {
 
         gulp.watch(config.paths.watch.sass, function() {
 
-            gulp.start(styles);
+            gulp.start("compile::style");
+            gulp.start("compress::style");
         });
 
         gulp.start("watch::templates");
