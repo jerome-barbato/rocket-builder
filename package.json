@@ -1,6 +1,6 @@
 {
   "name": "rocket-builder",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "SASS, JS and HTML Compiler with some usefull task",
   "main": "gulpfile.js",
   "repository": {

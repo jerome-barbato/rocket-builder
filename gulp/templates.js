@@ -115,7 +115,7 @@ gulp.task('watch::templates', function() {
 
 gulp.task('clean:views', function () {
 
-    return del([config.paths.dest.template+'/*'], {force: true});
+    return del.sync([config.paths.dest.template+'/*'], {force: true});
 });
 
 
