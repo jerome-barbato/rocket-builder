@@ -52,8 +52,6 @@ gulp.task('default', [], function () {
         scripts = "compress::scripts";
     }
 
-    gulp.start("clean:views");
-
     gulp.start(scripts);
     gulp.start("compress::script::browser");
 
