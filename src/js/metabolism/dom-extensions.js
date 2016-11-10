@@ -236,17 +236,6 @@ dom.compiler.register('attribute', 'remove-on', function(elem, attrs){
 });
 
 
-
-dom.compiler.register('attribute', 'vcenter', function(elem){
-
-    if( elem.is('div') || elem.is('header') || elem.is('article') || elem.is('footer') || elem.is('main') )
-        elem.wrapInner('<div class="valign"><div class="valign__middle"></div></div>');
-    else
-        elem.wrapInner('<span class="valign"><span class="valign__middle"></span></span>');
-});
-
-
-
 dom.compiler.register('element', 'vcenter', function(elem){
 
     var $parent = elem.parent();
@@ -257,6 +246,14 @@ dom.compiler.register('element', 'vcenter', function(elem){
         return '<span class="valign"><span class="valign__middle"><transclude/></span></span>';
 });
 
+
+dom.compiler.register('attribute', 'vcenter', function(elem){
+
+    if( elem.is('div') || elem.is('header') || elem.is('article') || elem.is('footer') || elem.is('main') )
+        elem.wrapInner('<div class="valign"><div class="valign__middle"></div></div>');
+    else
+        elem.wrapInner('<span class="valign"><span class="valign__middle"></span></span>');
+});
 
 
 dom.compiler.register('element', 'youtube-embed', function(elem, attrs){

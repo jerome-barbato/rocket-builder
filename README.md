@@ -1,5 +1,9 @@
 # Rocket Builder
 
+## Documentation
+* [Changelog](doc/changelog.md)
+* [Coding Standards](doc/coding-standard.md)
+
 INTRODUCTION
 ------------
 
