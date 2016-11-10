@@ -110,12 +110,19 @@ gulp.task('watch::templates', function() {
 
 
 /**
+ * Clean compiled views folder
+ */
+
+gulp.task('clean:views', function () {
+
+    return del.sync([config.paths.dest.template+'/*'], {force: true});
+});
+
+
+/**
  * Rocket directives post-processing with Rocket Dom Compiler
  */
 gulp.task('compile::templates', function() {
-
-    // Remove compiled views folder
-    del([config.paths.dest.template+'/*'], {force: true});
 
     return gulp.src(config.paths.src.template)
         .pipe(gif(config.front.compile, compileFiles()))
