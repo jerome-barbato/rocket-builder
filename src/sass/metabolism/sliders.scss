@@ -39,7 +39,6 @@
     &__pagination  a {
       display: inline-block;
       cursor: pointer; user-select: none;
-      transition: background $ease-in-out-cubic $speed-fast;
     }
 
     &__arrows {

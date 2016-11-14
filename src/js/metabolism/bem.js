@@ -22,10 +22,16 @@ var BEM = function(){
     self._configure = function(type, elem, block_class_name, element_class_name){
 
         var single_binding = false;
+        var double_binding = false;
 
         if( typeof element_class_name != 'undefined' && element_class_name.length ) {
 
-            if( element_class_name.substring(0,1) == ':'){
+            if( element_class_name.substring(0,2) == '::'){
+
+                double_binding = true;
+                element_class_name = element_class_name.substring(2);
+            }
+            else if( element_class_name.substring(0,1) == ':'){
 
                 single_binding = true;
                 element_class_name = element_class_name.substring(1);
@@ -39,12 +45,20 @@ var BEM = function(){
         elem.data(':bem', single_binding ? block_class_name : block_class_name+element_class_name);
         elem.data('bem', block_class_name+element_class_name);
 
-        var depth = elem.data('bem').split('__').length;
+        if( elem.data('bem').split('__').length > 3 )
+            console.warn(elem.data('bem')+' : BEM depth is important, please use single/double binding');
 
-        if( depth > 3 )
-            console.warn(elem.data('bem')+' : BEM depth is important, please use single binding');
+        if( double_binding ){
 
-        elem.addClass(block_class_name+element_class_name);
+            var bem = block_class_name.split('__');
+
+            if( bem.length > 1 )
+                bem.pop();
+
+            elem.addClass(bem.join('__')+element_class_name);
+        }
+        else
+            elem.addClass(block_class_name+element_class_name);
 
         if( self.debug )
             elem.attr('is', type);

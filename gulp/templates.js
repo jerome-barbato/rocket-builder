@@ -91,15 +91,16 @@ function compileFiles() {
 /**
  * Rocket directives post-processing with Rocket Dom Compiler
  */
-gulp.task('watch::templates', function() {
+gulp.task('template::watch', function() {
 
-    return gulp.watch(config.paths.src.template, function(event) {
+    gulp.watch(config.paths.src.template, function(event){
 
         var path_array = event.path.split('/');
         var filename  = path_array[path_array.length-1];
 
         path_array.pop();
         var filepath  = path_array.join('/').replace(config.front.paths.asset+'/template', config.front.paths.views);
+
         gutil.log("Compiled '"+chalk.blue(filename)+"'");
 
         return gulp.src(event.path)
@@ -113,7 +114,7 @@ gulp.task('watch::templates', function() {
  * Clean compiled views folder
  */
 
-gulp.task('clean:views', function () {
+gulp.task('views::clean', function () {
 
     return del.sync([config.paths.dest.template+'/*'], {force: true});
 });
@@ -122,7 +123,7 @@ gulp.task('clean:views', function () {
 /**
  * Rocket directives post-processing with Rocket Dom Compiler
  */
-gulp.task('compile::templates', function() {
+gulp.task('templates::compile', function() {
 
     return gulp.src(config.paths.src.template)
         .pipe(gif(config.front.compile, compileFiles()))

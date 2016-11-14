@@ -34,42 +34,13 @@ for (var i in files) {
  *  main optimization build task
  */
 
-gulp.task('default', [], function () {
-
-    // Quick access for scripts compilation
-    var scripts   = "concat::scripts";
-
-    // Quick access for template compilation
-    var templates = "compile::templates";
-
-    gulp.start("clean:views");
-
-    gulp.start("concat::scripts");
-    gulp.start("compress::script::browser");
-
-    gulp.start("compile::style");
-    gulp.start("compress::style");
-    gulp.start(templates);
+gulp.task('default', ["views::clean", "script::browser", "script::vendor", "script::app", "style::compile", "templates::compile"], function () {
 
     if (config.watching_mode){
 
-        gulp.watch(config.paths.watch.js_app, function() {
-
-            gulp.start(scripts);
-        });
-
-        gulp.watch(config.paths.watch.js_vendors, function() {
-
-            gulp.start(scripts);
-            gulp.start(templates);
-        });
-
-        gulp.watch(config.paths.watch.sass, function() {
-
-            gulp.start("compile::style");
-            gulp.start("compress::style");
-        });
-
-        gulp.start("watch::templates");
+        gulp.start("template::watch");
+        gulp.watch(config.paths.watch.js_app, ["script::app"]);
+        gulp.watch(config.paths.watch.js_vendors, ["script::vendor", "templates::compile"]);
+        gulp.watch(config.paths.watch.sass, ["style::compile"]);
     }
 });

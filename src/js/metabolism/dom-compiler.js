@@ -21,6 +21,24 @@ var DOMCompiler = function(){
     self.dom_attributes_filters = [];
     self.dom_elements           = [];
 
+    self.camelCase = function(str) {
+
+        return str
+            .replace(/-/g, ' ')
+            .replace(/\s(.)/g, function($1) { return $1.toUpperCase(); })
+            .replace(/\s/g, '')
+            .replace(/^(.)/, function($1) { return $1.toLowerCase(); });
+    };
+
+    self.kebabCase = function(str) {
+
+        return str
+            .replace(/([a-z][A-Z])/g, function(match) { return match.substr(0, 1) + '-' + match.substr(1, 1).toLowerCase() })
+            .toLowerCase()
+            .replace(/[^-a-z0-9]+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-$/, '');
+    };
 
     self.attr = function(elem, attr, value){
 
@@ -42,7 +60,7 @@ var DOMCompiler = function(){
             if( window.precompile )
                 value = value.replace(/\{\{ /g, '{{').replace(/ \}\}/g, '}}');
 
-            attributes[_.camelCase(element.attributes[i].name)] = value.trim();
+            attributes[self.camelCase(element.attributes[i].name)] = value.trim();
         }
 
         return attributes;
@@ -54,7 +72,7 @@ var DOMCompiler = function(){
 
         self.dom_attributes.forEach(function(dom_attribute){
 
-            var compiler = _.camelCase(dom_attribute);
+            var compiler = self.camelCase(dom_attribute);
 
             if( $dom.is('['+dom_attribute+']') )
                 self[compiler]($dom, self._getAttributes($dom[0]) );
@@ -72,7 +90,7 @@ var DOMCompiler = function(){
 
         self.dom_attributes_filters.forEach(function(dom_attributes_filter){
 
-            var compiler = _.camelCase(dom_attributes_filter);
+            var compiler = self.camelCase(dom_attributes_filter);
 
             $dom.find('['+dom_attributes_filter+']').each(function(){
 
@@ -85,7 +103,7 @@ var DOMCompiler = function(){
 
     self._compileElement = function(dom, dom_element){
 
-        var compiler = _.camelCase(dom_element);
+        var compiler = self.camelCase(dom_element);
 
         var $template = $(self[compiler]($(dom), self._getAttributes(dom)));
         var html      = $(dom).html();
@@ -173,7 +191,7 @@ var DOMCompiler = function(){
 
     self.register = function(type, attribute, link, main){
 
-        var name = _.camelCase(attribute);
+        var name = self.camelCase(attribute);
 
         switch (type){
 
@@ -214,7 +232,7 @@ var DOMCompiler = function(){
                         pre: function(scope, elem, attrs) { link(elem, attrs) },
                         post: function(scope, elem) {
                             if( typeof main != "undefined" ) $timeout(function(){ main(elem) });
-                            if( restrict == "A" ) elem.removeAttr(_.kebabCase(name))
+                            if( restrict == "A" ) elem.removeAttr(self.kebabCase(name))
                         }
                     }
                 }

@@ -33,35 +33,73 @@ gulp.task('lint::scripts', function() {
 /**
  *
  */
-gulp.task('concat::scripts', function(){
+gulp.task('script::app', function(){
 
-    return gulp.src(config.paths.src.js.app)
-        .pipe($.concat('app.js'))
-        .pipe($.sourcemaps.init())
-        .pipe($.sourcemaps.write('./', {
-            includeContent: false,
-            sourceRoot: config.paths.src+'js/'
-        }))
-        .pipe(gulp.dest(config.paths.dest.js))
+    if( config.environment == 'development' ){
+
+        return gulp.src(config.paths.src.js.app, { base: config.paths.asset })
+            .pipe($.sourcemaps.init())
+            .pipe($.concat('app.js'))
+            .pipe($.sourcemaps.write('./', {
+                includeContent: false,
+                sourceRoot: config.paths.sm_asset
+            }))
+            .pipe(gulp.dest(config.paths.dest.js))
+    }
+    else{
+
+        return gulp.src(config.paths.src.js.app)
+            .pipe($.concat('app.js'))
+            .pipe($.uglify().on('error', config.errorHandler('Scripts')))
+            .pipe(gulp.dest(config.paths.dest.js))
+            .pipe($.size({showFiles: true}));
+    }
 });
 
 
+gulp.task('script::vendor', function(){
 
-gulp.task('compress::scripts', function(){
+    if( config.environment == 'development' ) {
 
-    return gulp.src(config.paths.src.js.app)
-        .pipe($.concat('app.js'))
-        .pipe($.uglify().on('error', config.errorHandler('Scripts')))
-        .pipe(gulp.dest(config.paths.dest.js))
-        .pipe($.size({showFiles: true}));
+        return gulp.src(config.paths.src.js.vendor, { base: config.paths.asset })
+            .pipe($.sourcemaps.init())
+            .pipe($.concat('vendor.js'))
+            .pipe($.sourcemaps.write('./', {
+                includeContent: false,
+                sourceRoot: config.paths.sm_asset
+            }))
+            .pipe(gulp.dest(config.paths.dest.js))
+    }
+    else{
+
+        return gulp.src(config.paths.src.js.vendor)
+            .pipe($.concat('vendor.js'))
+            .pipe($.uglify().on('error', config.errorHandler('Scripts')))
+            .pipe(gulp.dest(config.paths.dest.js))
+            .pipe($.size({showFiles: true}));
+    }
 });
 
 
+gulp.task('script::browser', function(){
 
-gulp.task('compress::script::browser', function(){
+    if( config.environment == 'development' ) {
 
-    return gulp.src([config.paths.asset+'/js/vendor/modernizr.js', config.paths.asset+'/js/vendor/browser.js'])
-        .pipe($.concat('browser.min.js'))
-        .pipe($.uglify().on('error', config.errorHandler('Scripts')))
-        .pipe(gulp.dest(config.paths.dest.js));
+        return gulp.src([config.paths.asset + '/js/vendor/modernizr.js', config.paths.asset + '/js/vendor/browser.js'], { base: config.paths.asset })
+            .pipe($.sourcemaps.init())
+            .pipe($.concat('browser.js'))
+            .pipe($.sourcemaps.write('./', {
+                includeContent: false,
+                sourceRoot: config.paths.sm_asset
+            }))
+            .pipe(gulp.dest(config.paths.dest.js));
+    }
+    else{
+
+        return gulp.src([config.paths.asset + '/js/vendor/modernizr.js', config.paths.asset + '/js/vendor/browser.js'])
+            .pipe($.concat('browser.js'))
+            .pipe($.uglify().on('error', config.errorHandler('Scripts')))
+            .pipe(gulp.dest(config.paths.dest.js))
+            .pipe($.size({showFiles: true}));
+    }
 });

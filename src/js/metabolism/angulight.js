@@ -12,9 +12,16 @@ var angularLight = function(){
     self.controller = function(id, callback){ self._register('controller', id, callback) };
     self.directive  = function(id, callback){ self._register('directive', id, callback) };
 
+    self.camelCase = function(str) {
+        return str
+            .replace(/\s(.)/g, function($1) { return $1.toUpperCase(); })
+            .replace(/\s/g, '')
+            .replace(/^(.)/, function($1) { return $1.toLowerCase(); });
+    };
+
     self._register  = function(type, id, callback){
 
-        id = _.camelCase(id);
+        id = self.camelCase(id);
 
         if( typeof self.context[type+'s'][id] != "undefined")
             console.error('Angulight: '+type+' '+id+' allready exist');
@@ -33,7 +40,7 @@ var angularLight = function(){
             return false;
 
         var data   = $element.data(type).split('(');
-        var name   = _.camelCase( data[0] );
+        var name   = self.camelCase( data[0] );
         var params = [$element];
 
        if( data.length == 2  ){

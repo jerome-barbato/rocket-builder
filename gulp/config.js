@@ -34,14 +34,16 @@ var config = module.exports = {
 
         config.front = yaml.safeLoad(fs.readFileSync(config.base_path+'/config/builder.yml'));
 
-        config.paths.asset  = config.base_path+config.front.paths.asset;
-        config.paths.public = config.base_path+config.front.paths.public;
-        config.paths.views  = config.base_path+config.front.paths.views;
+        config.paths.sm_asset  = "../.."+config.front.paths.asset;
+        config.paths.asset     = config.base_path+config.front.paths.asset;
+        config.paths.public    = config.base_path+config.front.paths.public;
+        config.paths.views     = config.base_path+config.front.paths.views;
 
         config.paths.css_to_sass = '../../src/sass/';
 
         config.paths.src = {
             js : {
+                vendor   : [],
                 app      : [],
                 compiler : []
             },
@@ -77,7 +79,7 @@ var config = module.exports = {
 
             if( typeof library == 'string' ){
 
-                config.paths.src.js.app.push(config.paths.asset+'/js/vendor/'+library+'.js');
+                config.paths.src.js.vendor.push(config.paths.asset+'/js/vendor/'+library+'.js');
             }
             else{
 
@@ -85,7 +87,7 @@ var config = module.exports = {
 
                     library[path].forEach(function(element){
 
-                        config.paths.src.js.app.push(config.paths.asset+'/js/vendor/'+path+'/'+element+'.js');
+                        config.paths.src.js.vendor.push(config.paths.asset+'/js/vendor/'+path+'/'+element+'.js');
                     });
                 }
             }

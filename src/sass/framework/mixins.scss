@@ -2,7 +2,6 @@
 @mixin scrollbar($size, $primary, $secondary: lighten($primary, 25%), $radius-thumb: 0, $radius-track: 0) {
   &::-webkit-scrollbar {
     width:  $size;
-    height: $size;
   }
 
   &::-webkit-scrollbar-thumb {

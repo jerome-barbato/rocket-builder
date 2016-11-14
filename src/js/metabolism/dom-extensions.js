@@ -168,11 +168,11 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
             if( hideOn.indexOf('{{')==-1 ){
 
                 var hideOn_map = hideOn.split(' ');
-                elem.addClass('ux-hide ux-hide--' + hideOn_map.join(' ux-hide--'));
+                elem.addClass('ux-hide--' + hideOn_map.join(' ux-hide--'));
             }
             else{
 
-                elem.addClass('ux-hide ux-hide--' + hideOn);
+                elem.addClass('ux-hide--' + hideOn);
             }
         }
     }
