@@ -67,13 +67,9 @@ var UXMap = function($map, template, config, callback){
      */
     self.__construct =  function( $map, template, config, callback ) {
 
-        $(document).on('maps.google.initialized', function(){
+        self.config = $.extend(true, self.config, config);
 
-            self.config = $.extend(true, self.config, config);
-
-            self.init($map, template, callback);
-        });
-
+        self.init($map, template, callback);
         return self;
     };
 
@@ -281,5 +277,3 @@ var UXMap = function($map, template, config, callback){
 
     return self.__construct( $map, template, config, callback );
 };
-
-function mapsGI(){ $(document).trigger('maps.google.initialized') }

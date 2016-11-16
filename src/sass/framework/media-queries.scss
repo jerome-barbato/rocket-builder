@@ -14,6 +14,7 @@ $media-tablet-only      : "screen and (min-width: "+($screen-mobile + 1px)+") an
 
 $media-not-mobile       : "screen and (min-width: "+($screen-mobile + 1px)+")";
 $media-mobile           : "screen and (max-width: "+$screen-mobile+")";
+$media-mobile-small     : "screen and (max-width: "+$screen-mobile-small+")";
 $media-mobile-portrait  : "screen and (max-width: "+$screen-mobile+") and (orientation: portrait)";
 $media-mobile-landscape : "screen and (max-width: "+$screen-mobile+") and (orientation: landscape)";
 

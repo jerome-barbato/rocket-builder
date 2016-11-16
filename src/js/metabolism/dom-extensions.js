@@ -50,10 +50,12 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
             elem.attr('src', "{{ asset_url('/media/sizer/" + size + ".png') }}");
             elem.addClass('ux-sizer');
-            elem.css('backgroundImage', "url('"+attrs.src+"')");
+
+            if( 'src' in attrs )
+                elem.css('backgroundImage', "url('"+attrs.src+"')");
         }
         else
-            elem.append('<img src="{{ asset_url(\'/media/sizer/' + size + '.png\') }}" class="ux-sizer">');
+            elem.prepend('<div class="ux-sizer" data-ratio="'+attrs.sizer+'">');
     }
     else if ( typeof app != "undefined" && 'asset' in app  ){
 
@@ -61,10 +63,12 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
             elem.attr('src', app.asset + '/media/sizer/' + size + '.png');
             elem.addClass('ux-sizer');
-            elem.css('backgroundImage', "url('"+attrs.src+"')");
+
+            if( 'src' in attrs )
+                elem.css('backgroundImage', "url('"+attrs.src+"')");
         }
         else
-            elem.append('<img src="' + app.asset + '/media/sizer/' + size + '.png" class="ux-sizer">');
+            elem.prepend('<div class="ux-sizer" data-ratio="'+attrs.sizer+'">');
     }
 });
 

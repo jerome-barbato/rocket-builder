@@ -1,12 +1,37 @@
 @mixin lib-sizer{
 
-  .ux-sizer{
+  img.ux-sizer{
     width: 100%; height: auto; display: block;
     background-size: cover; background-position: center; background-repeat: no-repeat;
     &+.ux-fit__object{ position: overlay() }
   }
+  div.ux-sizer{
+    width: 100%;
+    &+img[data-fit]{ position: absolute; left: 0; top: 0 }
+    &[data-ratio="4/3"]{ padding-top: (3/4)*100% }
+    &[data-ratio="1/1"]{ padding-top: 100% }
+  }
 }
 
+@mixin aspect-ratio($ratio) {
+  position: relative;
+  &:before {
+    display: block; content: ""; width: 100%;
+    padding-top: (1/$ratio) * 100%;
+  }
+}
+
+@mixin remaining-aspect-ratio($ratio, $remain) {
+  position: relative;
+  &:before {
+    display: block; content: ""; width: 100%;
+    padding-top: ((((1/$ratio))*(1-$remain))/$remain) * 100%;
+  }
+}
+
+@mixin remove-aspect-ratio() {
+  &:before { display: none }
+}
 
 @if( index($libraries, 'sizer') ){
   @include lib-sizer;
