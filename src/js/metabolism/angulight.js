@@ -19,6 +19,7 @@ var angularLight = function(){
             .replace(/^(.)/, function($1) { return $1.toLowerCase(); });
     };
 
+
     self._register  = function(type, id, callback){
 
         id = self.camelCase(id);
@@ -31,12 +32,10 @@ var angularLight = function(){
         self._run( type, $('[data-'+type+'="'+id+'"]'));
     };
 
+
     self._run = function(type, $element){
 
-        if( app.debug > 2 )
-            console.time('angulight:run');
-
-        if( typeof $element == "undefined" || ! $element || !$element.length )
+        if( typeof $element == "undefined" || !$element || !$element.length )
             return false;
 
         var data   = $element.data(type).split('(');
@@ -85,18 +84,21 @@ var angularLight = function(){
 
             if( name in self.context[type+'s'] ){
 
-            var fct = self.context[type+'s'][name];
-                var instance = self._guid();
+                if( app.debug > 2 )
+                    console.time('angulight:run');
 
-                $element.data('angulight-instance', instance);
+                var fct = self.context[type+'s'][name];
+
+                $element.data('angulight-instance', self._guid());
                 self.context.instances[instance] = new (Function.prototype.bind.apply(fct, [null].concat(params)));
+
+
+                if( app.debug > 2 ){
+
+                    console.log(name, params);
+                    console.timeEnd('angulight:run')
+                }
             }
-        }
-
-        if( app.debug > 2 ){
-
-            console.log(name, params);
-            console.timeEnd('angulight:run')
         }
     };
 

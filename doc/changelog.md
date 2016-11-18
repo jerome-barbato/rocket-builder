@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.0.2 - 2016-11-18 ##
+### Removed ###
+mod-- modernizr class prefix + reduced feature detection ( removed svg, canvas, video ...)
+### Added ###
+* Object position now supported 
+
+      <img src="" object-fit="cover" object-position="bottom left">
+
 ## 3.0.1 - 2016-11-10 ##
 ### Added ###
 * Compilation and minification of assets files to web folder.

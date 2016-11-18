@@ -19,19 +19,19 @@ var UXDetectScroll = function(){
     var self = this;
 
     self.context = {
-        init                  : false,
-        elements              : [],
-        $window               : $(window),
-        $body                 : $('body'),
-        window_height         : 0,
-        document_height       : 0,
-        scroll_top            : 0,
-        scroll_down           : false,
-        scroll_class_added    : false,
-        scroll_dir_changed_at : 0,
-        offset                : 0,
-        top_reached           : false,
-        bottom_reached        : false
+        init                    : false,
+        elements                : [],
+        $window                 : $(window),
+        $body                   : $('body'),
+        window_height           : 0,
+        document_height         : 0,
+        scroll_top              : 0,
+        scroll_down             : false,
+        in_between              : false,
+        scroll_dir_changed_at   : 0,
+        offset                  : 0,
+        top_reached             : true,
+        bottom_reached          : false
     };
 
     self.config = {
@@ -105,36 +105,15 @@ var UXDetectScroll = function(){
 
     self._detectScrollDirectionChange = function(scroll_top) {
 
-        self.context.scroll_down = scroll_top > self.context.scroll_top;
+        var scroll_down = scroll_top > self.context.scroll_top;
         self.context.scroll_top  = scroll_top;
 
-        if( self.context.scroll_down && !self.context.scroll_class_added ){
+        if( scroll_down && !self.context.scroll_down )
+            self.context.$body.addClass('scroll--down').removeClass('scroll--up');
+        else if( !scroll_down && self.context.scroll_down )
+            self.context.$body.addClass('scroll--up').removeClass('scroll--down');
 
-            if( !self.context.scroll_dir_changed_at || self.context.scroll_dir_changed_at > self.context.scroll_top  )
-                self.context.scroll_dir_changed_at = self.context.scroll_top;
-
-            if( self.context.scroll_dir_changed_at + self.context.offset < self.context.scroll_top ){
-
-                self.context.scroll_dir_changed_at = false;
-                self.context.scroll_class_added    = true;
-
-                self.context.$body.addClass('scroll--down').removeClass('scroll--up')
-            }
-        }
-
-        if( !self.context.scroll_down && self.context.scroll_class_added ){
-
-            if( !self.context.scroll_dir_changed_at || self.context.scroll_dir_changed_at < self.context.scroll_top )
-                self.context.scroll_dir_changed_at = self.context.scroll_top;
-
-            if( self.context.scroll_dir_changed_at - self.context.offset > self.context.scroll_top || self.context.scroll_top <= self.context.offset){
-
-                self.context.scroll_dir_changed_at = false;
-                self.context.scroll_class_added    = false;
-
-                self.context.$body.addClass('scroll--up').removeClass('scroll--down');
-            }
-        }
+        self.context.scroll_down = scroll_down;
     };
 
 
@@ -142,26 +121,24 @@ var UXDetectScroll = function(){
 
         if( scroll_top <= 1 && !self.context.top_reached ){
 
-            self.context.top_reached = true;
-            self.context.$body.addClass('scroll--top-reached').removeClass('scroll--between');
-        }
-
-        if( scroll_top > 1 && self.context.top_reached ) {
-
-            self.context.top_reached = false;
-            self.context.$body.removeClass('scroll--top-reached').addClass('scroll--between');
-        }
-
-        if( scroll_top+self.context.window_height >= self.context.document_height && !self.context.bottom_reached ){
-
-            self.context.bottom_reached = true;
-            self.context.$body.addClass('scroll--bottom-reached');
-        }
-
-        if( scroll_top+self.context.window_height < self.context.document_height && self.context.bottom_reached){
-
+            self.context.top_reached    = true;
+            self.context.in_between     = false;
             self.context.bottom_reached = false;
-            self.context.$body.removeClass('scroll--bottom-reached');
+            self.context.$body.addClass('scroll--top-reached').removeClass('scroll--between scroll--bottom-reached');
+        }
+        else if( scroll_top > 1 && scroll_top+self.context.window_height < self.context.document_height && !self.context.in_between ) {
+
+            self.context.top_reached    = false;
+            self.context.in_between     = true;
+            self.context.bottom_reached = false;
+            self.context.$body.addClass('scroll--between').removeClass('scroll--top-reached scroll--bottom-reached');
+        }
+        else if( scroll_top+self.context.window_height >= self.context.document_height && !self.context.bottom_reached ){
+
+            self.context.top_reached    = false;
+            self.context.in_between     = false;
+            self.context.bottom_reached = true;
+            self.context.$body.addClass('scroll--bottom-reached').removeClass('scroll--between scroll--top-reached');
         }
     };
 
@@ -208,7 +185,7 @@ var UXDetectScroll = function(){
             self.add( $(this) )
         });
 
-        $(document).on('loaded', self._resize);
+        $(document).on('boot', self._resize);
 
         self.context.$window
             .on('scroll', self._detect)

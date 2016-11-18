@@ -6,7 +6,7 @@
  *   - Metabolism <jerome@metabolism.fr>
  *
  * License: GPL
- * Version: 1.1
+ * Version: 1.2
  *
  * Requires:
  *   - jQuery
@@ -28,39 +28,63 @@ var UXFit = function() {
 
         if( $element.data('waiting') ) return;
 
-        var $container       = $element.parent();
-        var container_width  = $container.width();
-        var container_height = $container.height();
-        var container_ratio  = container_width/container_height;
+        var $container  = $element.parent();
+        var container   = {width: $container.width(), height : $container.height()};
+        container.ratio = container.width/container.height;
 
         self._getRatio($element, function( element_ratio ){
 
-            if( $element.data('fit') == "contain" ){
+            var object_position = $element.hasDataAttr('object_position') ? $element.data('object_position') : 'center center';
+            object_position     = object_position.split(' ');
 
-                if( element_ratio < container_ratio ) {
+            if( object_position.length == 1 )
+                object_position.push('center');
 
-                    var width = Math.round(container_height*element_ratio);
-                    $element.css({width:width, height:container_height, top:''});
+            var position = {width:'', height:'', top:'auto', left:'auto', right:'auto', bottom:'auto'};
+
+            if( $element.data('object_fit') == "contain" ){
+
+                if( element_ratio < container.ratio ) {
+
+                    position.width = Math.round(container.height*element_ratio);
+                    position.height  = container.height;
                 }
                 else {
 
-                    var height = Math.round(container_width/element_ratio);
-                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px'});
+                    position.height = Math.round(container.width/element_ratio);
+                    position.width = container.width;
                 }
 
             }else{
 
-                if( element_ratio > container_ratio ) {
+                if( element_ratio > container.ratio ) {
 
-                    var width = Math.round(container_height*element_ratio);
-                    $element.css({width:width, height:container_height, left:(container_width-width)/2+'px', top:''});
+                    position.width  = Math.round(container.height*element_ratio);
+                    position.height = container.height;
                 }
                 else {
 
-                    var height = Math.round(container_width/element_ratio);
-                    $element.css({width:container_width, height:height, top:(container_height-height)/2+'px', left:''});
+                    position.height = Math.round(container.width/element_ratio);
+                    position.width  = container.width;
                 }
             }
+
+            if( object_position[0] == 'left' || object_position[1] == 'left' )
+                position.left = 0;
+            else if( object_position[0] == 'right' || object_position[1] == 'right' )
+                position.right = 0;
+            else
+                position.left  = (container.width-position.width)/2;
+
+
+            if( object_position[0] == 'top' || object_position[1] == 'top' )
+                position.top = 0;
+            else if( object_position[0] == 'bottom' || object_position[1] == 'bottom' )
+                position.bottom = 0;
+            else
+                position.top = (container.height-position.height)/2;
+
+            $element.css(position);
         });
     };
 
@@ -152,11 +176,9 @@ var UXFit = function() {
 
     self.__construct = function(){
 
-        $('[data-fit]').initialize(function() {
+        $('[data-object_fit]').initialize(function() {
 
-            var $element = $(this);
-
-            self._add($element);
+            self._add( $(this) );
         });
     };
 
@@ -167,7 +189,13 @@ var UXFit = function() {
         dom.compiler.register('attribute', 'object-fit', function(elem, attrs) {
 
             elem.parent().addClass(self.selector);
-            elem.attr('data-fit', attrs.objectFit.length ? attrs.objectFit : 'cover');
+            elem.attr('data-object_fit', attrs.objectFit.length ? attrs.objectFit : 'cover');
+
+            if( 'objectPosition' in attrs ){
+
+                elem.attr('data-object_position', attrs.objectPosition);
+                elem.removeAttr('object-position', attrs.objectPosition);
+            }
 
         }, self._add);
     }

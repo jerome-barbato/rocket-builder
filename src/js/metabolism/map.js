@@ -17,6 +17,8 @@
 /**
  *
  */
+var UXMapInit = false;
+
 var UXMap = function($map, template, config, callback){
 
     var self = this;
@@ -69,7 +71,28 @@ var UXMap = function($map, template, config, callback){
 
         self.config = $.extend(true, self.config, config);
 
-        self.init($map, template, callback);
+        if( !UXMapInit ){
+
+            UXMapInit = function(){ $(document).trigger('google.maps.initialized') };
+
+            $(document).on('loaded', function(){
+
+                $('head').append('<script src="http://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
+            });
+        }
+
+        if( typeof google != 'undefined' ){
+
+            self.init($map, template, callback);
+        }
+        else{
+
+            $(document).on('google.maps.initialized', function () {
+
+                self.init($map, template, callback);
+            });
+        }
+
         return self;
     };
 
@@ -277,3 +300,7 @@ var UXMap = function($map, template, config, callback){
 
     return self.__construct( $map, template, config, callback );
 };
+
+
+// disable gmap3 lib autoload
+$.gmap3(false);

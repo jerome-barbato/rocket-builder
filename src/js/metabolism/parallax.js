@@ -107,6 +107,7 @@ var UXParallax = function() {
     };
 
 
+
     self._add = function( $element ){
 
         var parallax = $element.data('parallax');
@@ -130,15 +131,15 @@ var UXParallax = function() {
      */
     self.__construct = function() {
 
-        if( browser && browser.mobile && !self.config.mobile )
+        if( (browser && browser.mobile && !self.config.mobile) || typeof requestAnimationFrame == 'undefined' )
             return;
+
+        self._setupEvents();
 
         $('[data-parallax]').initialize(function(){
 
             self._add( $(this) );
         });
-
-        self._setupEvents();
     };
 
 

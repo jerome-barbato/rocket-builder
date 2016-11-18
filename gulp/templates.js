@@ -101,11 +101,19 @@ gulp.task('template::watch', function() {
         path_array.pop();
         var filepath  = path_array.join('/').replace(config.front.paths.asset+'/template', config.front.paths.views);
 
-        gutil.log("Compiled '"+chalk.blue(filename)+"'");
+        if (event.type === 'deleted') {
 
-        return gulp.src(event.path)
-            .pipe(gif(config.front.compile, compileFiles()))
-            .pipe(gulp.dest(filepath));
+            gutil.log("Deleted '"+chalk.blue(filename)+"'");
+            return del.sync([filepath+'/'+filename], {force: true});
+        }
+        else{
+
+            gutil.log("Compiled '"+chalk.blue(filename)+"'");
+
+            return gulp.src(event.path)
+                .pipe(gif(config.front.compile, compileFiles()))
+                .pipe(gulp.dest(filepath));
+        }
     });
 });
 
