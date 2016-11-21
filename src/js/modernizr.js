@@ -1,6 +1,6 @@
 /*!
  * modernizr v3.3.1
- * Build https://modernizr.com/download?-audio-backgroundcliptext-canvas-cssanimations-cssfilters-cssmask-csstransforms3d-csstransitions-filereader-flash-objectfit-srcset-svg-svgfilters-video-webgl-mq-setclasses-dontmin-cssclassprefix:mod--
+ * Build https://modernizr.com/download?-backgroundblendmode-backgroundcliptext-cssanimations-cssfilters-cssmask-csstransforms3d-csstransitions-filereader-flash-objectfit-srcset-svgfilters-webgl-mq-setclasses-dontmin
  *
  * Copyright (c)
  *  Faruk Ates
@@ -44,7 +44,7 @@
         // Any settings that don't work as separate modules
         // can go in here as configuration.
         _config: {
-            'classPrefix': "mod--",
+            'classPrefix': '',
             'enableClasses': true,
             'enableJSClass': true,
             'usePrefixes': true
@@ -86,31 +86,6 @@
     // Overwrite name so constructor name is nicer :D
     Modernizr = new Modernizr();
 
-
-    /*!
-     {
-     "name": "SVG",
-     "property": "svg",
-     "caniuse": "svg",
-     "tags": ["svg"],
-     "authors": ["Erik Dahlstrom"],
-     "polyfills": [
-     "svgweb",
-     "raphael",
-     "amplesdk",
-     "canvg",
-     "svg-boilerplate",
-     "sie",
-     "dojogfx",
-     "fabricjs"
-     ]
-     }
-     !*/
-    /* DOC
-     Detects support for SVG in `<embed>` or `<object>` elements.
-     */
-
-    Modernizr.addTest('svg', !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect);
 
     /*!
      {
@@ -328,138 +303,6 @@
     }
 
     ;
-    /*!
-     {
-     "name" : "HTML5 Audio Element",
-     "property": "audio",
-     "tags" : ["html5", "audio", "media"]
-     }
-     !*/
-    /* DOC
-     Detects the audio element
-     */
-
-    // This tests evaluates support of the audio element, as well as
-    // testing what types of content it supports.
-    //
-    // We're using the Boolean constructor here, so that we can extend the value
-    // e.g.  Modernizr.audio     // true
-    //       Modernizr.audio.ogg // 'probably'
-    //
-    // Codec values from : github.com/NielsLeenheer/html5test/blob/9106a8/index.html#L845
-    //                     thx to NielsLeenheer and zcorpan
-
-    // Note: in some older browsers, "no" was a return value instead of empty string.
-    //   It was live in FF3.5.0 and 3.5.1, but fixed in 3.5.2
-    //   It was also live in Safari 4.0.0 - 4.0.4, but fixed in 4.0.5
-    Modernizr.addTest('audio', function() {
-        /* jshint -W053 */
-        var elem = createElement('audio');
-        var bool = false;
-
-        try {
-            if (bool = !!elem.canPlayType) {
-                bool      = new Boolean(bool);
-                bool.ogg  = elem.canPlayType('audio/ogg; codecs="vorbis"') .replace(/^no$/, '');
-                bool.mp3  = elem.canPlayType('audio/mpeg; codecs="mp3"')   .replace(/^no$/, '');
-                bool.opus  = elem.canPlayType('audio/ogg; codecs="opus"')  ||
-                    elem.canPlayType('audio/webm; codecs="opus"') .replace(/^no$/, '');
-
-                // Mimetypes accepted:
-                //   developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
-                //   bit.ly/iphoneoscodecs
-                bool.wav  = elem.canPlayType('audio/wav; codecs="1"')     .replace(/^no$/, '');
-                bool.m4a  = (elem.canPlayType('audio/x-m4a;')            ||
-                elem.canPlayType('audio/aac;'))             .replace(/^no$/, '');
-            }
-        } catch (e) { }
-
-        return bool;
-    });
-
-    /*!
-     {
-     "name": "Canvas",
-     "property": "canvas",
-     "caniuse": "canvas",
-     "tags": ["canvas", "graphics"],
-     "polyfills": ["flashcanvas", "excanvas", "slcanvas", "fxcanvas"]
-     }
-     !*/
-    /* DOC
-     Detects support for the `<canvas>` element for 2D drawing.
-     */
-
-    // On the S60 and BB Storm, getContext exists, but always returns undefined
-    // so we actually have to call getContext() to verify
-    // github.com/Modernizr/Modernizr/issues/issue/97/
-    Modernizr.addTest('canvas', function() {
-        var elem = createElement('canvas');
-        return !!(elem.getContext && elem.getContext('2d'));
-    });
-
-    /*!
-     {
-     "name": "HTML5 Video",
-     "property": "video",
-     "caniuse": "video",
-     "tags": ["html5"],
-     "knownBugs": [
-     "Without QuickTime, `Modernizr.video.h264` will be `undefined`; https://github.com/Modernizr/Modernizr/issues/546"
-     ],
-     "polyfills": [
-     "html5media",
-     "mediaelementjs",
-     "sublimevideo",
-     "videojs",
-     "leanbackplayer",
-     "videoforeverybody"
-     ]
-     }
-     !*/
-    /* DOC
-     Detects support for the video element, as well as testing what types of content it supports.
-
-     Subproperties are provided to describe support for `ogg`, `h264` and `webm` formats, e.g.:
-
-     ```javascript
-     Modernizr.video         // true
-     Modernizr.video.ogg     // 'probably'
-     ```
-     */
-
-    // Codec values from : github.com/NielsLeenheer/html5test/blob/9106a8/index.html#L845
-    //                     thx to NielsLeenheer and zcorpan
-
-    // Note: in some older browsers, "no" was a return value instead of empty string.
-    //   It was live in FF3.5.0 and 3.5.1, but fixed in 3.5.2
-    //   It was also live in Safari 4.0.0 - 4.0.4, but fixed in 4.0.5
-
-    Modernizr.addTest('video', function() {
-        /* jshint -W053 */
-        var elem = createElement('video');
-        var bool = false;
-
-        // IE9 Running on Windows Server SKU can cause an exception to be thrown, bug #224
-        try {
-            if (bool = !!elem.canPlayType) {
-                bool = new Boolean(bool);
-                bool.ogg = elem.canPlayType('video/ogg; codecs="theora"').replace(/^no$/, '');
-
-                // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
-                bool.h264 = elem.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(/^no$/, '');
-
-                bool.webm = elem.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/, '');
-
-                bool.vp9 = elem.canPlayType('video/webm; codecs="vp9"').replace(/^no$/, '');
-
-                bool.hls = elem.canPlayType('application/x-mpegURL; codecs="avc1.42E01E"').replace(/^no$/, '');
-            }
-        } catch (e) {}
-
-        return bool;
-    });
-
     /*!
      {
      "name": "WebGL",
@@ -1877,6 +1720,29 @@
 
     /*!
      {
+     "name": "CSS Background Blend Mode",
+     "property": "backgroundblendmode",
+     "caniuse": "css-backgroundblendmode",
+     "tags": ["css"],
+     "notes": [
+     {
+     "name": "CSS Blend Modes could be the next big thing in Web Design",
+     "href": " https://medium.com/@bennettfeely/css-blend-modes-could-be-the-next-big-thing-in-web-design-6b51bf53743a"
+     }, {
+     "name": "Demo",
+     "href": "http://bennettfeely.com/gradients/"
+     }
+     ]
+     }
+     !*/
+    /* DOC
+     Detects the ability for the browser to composite backgrounds using blending modes similar to ones found in Photoshop or Illustrator.
+     */
+
+    Modernizr.addTest('backgroundblendmode', prefixed('backgroundBlendMode', 'text'));
+
+    /*!
+     {
      "name": "CSS Object Fit",
      "caniuse": "object-fit",
      "property": "objectfit",
@@ -1908,5 +1774,8 @@
 
     // Leak Modernizr namespace
     window.Modernizr = Modernizr;
+
+
+    ;
 
 })(window, document);

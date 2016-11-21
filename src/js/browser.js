@@ -176,7 +176,7 @@ function css_browser_selector(u) {
     language = language.split('-');
     language = language[0];
 
-    html.className += " browser-lang-"+language;
+    html.className += " lang-"+language;
 
     var cssbs    = (b.join(' ')) + " js ";
     html.className = ( cssbs + html.className.replace(/\b(no[-|_]?)?js\b/g,"")  ).replace(/^ /, "").replace(/ +/g," ");
