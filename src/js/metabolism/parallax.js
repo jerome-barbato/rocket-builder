@@ -35,30 +35,30 @@ var UXParallax = function() {
 
     self._setupEvents = function(){
 
-        $(document).on('loaded', function(){
-
-            self._resize();
-            self._update();
-        });
+        $(document)
+            .on('boot', self._recompute)
+            .on('loaded', self._recompute);
 
         $(window)
             .scroll(function(){ requestAnimationFrame(self._update) })
-            .resize(function(){ self._resize(); requestAnimationFrame(self._update) });
+            .resize(self._recompute);
     };
 
 
 
-    self._resize = function(){
+    self._recompute = function(){
 
         self.context.window_height   = $(window).height();
         self.context.document_height = $(document).height();
 
         $.each(self.context.items, function(i, item){
 
-            item.top    = item.$.offset().top;
-            item.height = item.$.height();
+            item.top    = item.$container.offset().top - parseInt(item.$container.css('marginTop').replace('px',''));
+            item.height = item.$container.height();
             item.bottom = item.top+item.height;
         });
+
+        self._update();
     };
 
 
@@ -69,39 +69,33 @@ var UXParallax = function() {
 
         $.each(self.context.items, function(i, item){
 
+            var offset = false;
+
             if( self.context.scroll_top + self.context.window_height > item.top && item.bottom > self.context.scroll_top) {
 
                 if( item.top < self.context.window_height )
-                    item.offset = self.context.scroll_top / item.bottom;
+                    offset = self.context.scroll_top / item.bottom;
                 else
-                    item.offset = (self.context.scroll_top + self.context.window_height - item.top) / (item.bottom + self.context.window_height - item.top);
+                    offset = (self.context.scroll_top + self.context.window_height - item.top) / (item.bottom + self.context.window_height - item.top);
 
-                item.offset = item.center ? item.offset-0.5 : item.offset;
-                item.offset = (Math.round(-item.offset*1000)/1000);
-
-                if( item.offset*item.strenght == 0 )
-                    item.$.css('transform', 'none');
-                else
-                    item.$.css('transform', 'translate3d(0,'+(item.offset*item.strenght)+item.unit+',0)');
+                offset = (Math.round(offset*1000)/1000);
             }
             else{
 
-                var offset = 0;
+                offset = self.context.scroll_top + self.context.window_height > item.top;
+            }
 
-                if( self.context.scroll_top + self.context.window_height <= item.top )
-                    offset = (item.center ? 0.5 : 0)*item.strenght;
+            offset = item.invert ? 1-offset : offset;
+            offset = item.center ? offset-0.5 : offset;
+
+            if( offset !== false && item.offset != offset ){
+
+                item.offset = offset;
+
+                if( item.offset == 0 )
+                    item.$element.css('transform', 'none');
                 else
-                    offset = -(item.center ? 0.5 : 1)*item.strenght;
-
-                if( item.offset != offset ){
-
-                    item.offset = offset;
-
-                    if( item.offset == 0 )
-                        item.$.css('transform', 'none');
-                    else
-                        item.$.css('transform', 'translate3d(0,'+item.offset+item.unit+',0)');
-                }
+                    item.$element.css('transform', 'translate3d(0,'+(item.offset*item.strenght)+item.unit+',0)');
             }
         });
     };
@@ -115,11 +109,17 @@ var UXParallax = function() {
         unit = parallax.indexOf('rem') > 0 ? 'rem' : unit;
         unit = parallax.indexOf('vh') > 0 ? 'vh' : unit;
 
+        var invert = parallax.substr(0,1) == '!';
+
+        parallax = parallax.replace('!','');
+
         self.context.items.push({
-            $        : $element,
-            strenght : parseInt( parallax.replace(unit,'') ),
-            unit     : unit,
-            center   : parseInt($element.data('parallax-center'))
+            $element   : $element,
+            $container : $element.parent().hasClass('.parallax-container') ? $element.parent() : $element,
+            strenght   : parseInt( parallax.replace(unit,'') ),
+            unit       : unit,
+            invert     : invert,
+            center     : parseInt($element.data('parallax-center'))
         });
     };
 
@@ -144,6 +144,11 @@ var UXParallax = function() {
 
 
     if( typeof DOMCompiler !== "undefined" ){
+
+        dom.compiler.register('attribute', 'parallax-container', function(elem, attrs) {
+
+            elem.addClass('parallax-container');
+        });
 
         dom.compiler.register('attribute', 'parallax', function(elem, attrs) {
 
