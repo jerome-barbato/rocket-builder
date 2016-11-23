@@ -54,6 +54,7 @@ var UXParallax = function() {
         $.each(self.context.items, function(i, item){
 
             item.top    = item.$container.offset().top - parseInt(item.$container.css('marginTop').replace('px',''));
+            item.top    = item.start_at !== false ? item.top : item.top;
             item.height = item.$container.height();
             item.bottom = item.top+item.height;
         });
@@ -92,7 +93,7 @@ var UXParallax = function() {
 
                 item.offset = offset;
 
-                if( item.offset == 0 )
+                if( item.offset < 0.01 )
                     item.$element.css('transform', 'none');
                 else
                     item.$element.css('transform', 'translate3d(0,'+(item.offset*item.strenght)+item.unit+',0)');
@@ -116,13 +117,16 @@ var UXParallax = function() {
 
         self.context.items.push({
             $element   : $element,
-            $container : $element.parent().hasClass('.parallax-container') ? $element.parent() : $element,
+            $container : $element.parent().hasClass('parallax-container') ? $element.parent() : $element,
             strenght   : parseInt( parallax.replace(unit,'') ),
             unit       : unit,
             invert     : invert,
-            center     : parseInt($element.data('parallax-center'))
+            center     : $element.hasDataAttr('parallax-center') ? parseInt($element.data('parallax-center')) : false,
+            start_at   : $element.hasDataAttr('parallax-start') ? parseInt($element.data('parallax-start')) : false
         });
     };
+
+
 
     /* Contructor. */
 
@@ -165,6 +169,12 @@ var UXParallax = function() {
 
                 dom.compiler.attr(elem, 'parallax-center', attrs.parallaxCenter || attrs.parallaxCenter == "true" ? "1" : "0");
                 elem.removeAttr('parallax-center');
+            }
+
+            if( attrs.parallaxStart ){
+
+                dom.compiler.attr(elem, 'parallax-start', attrs.parallaxStart);
+                elem.removeAttr('parallax-start');
             }
 
         }, self._add);

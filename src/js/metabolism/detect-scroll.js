@@ -65,7 +65,7 @@ var UXDetectScroll = function(){
 
     self._resize = function(){
 
-        for (var i=0; i< self.context.elements.length; i++) {
+        for (var i=0; i < self.context.elements.length; i++) {
 
             var element = self.context.elements[i];
 
@@ -119,14 +119,14 @@ var UXDetectScroll = function(){
 
     self._detectScrollBoundReached = function(scroll_top) {
 
-        if( scroll_top <= 1 && !self.context.top_reached ){
+        if( scroll_top <= 5 && !self.context.top_reached ){
 
             self.context.top_reached    = true;
             self.context.in_between     = false;
             self.context.bottom_reached = false;
             self.context.$body.addClass('scroll--top-reached').removeClass('scroll--between scroll--bottom-reached');
         }
-        else if( scroll_top > 1 && scroll_top+self.context.window_height < self.context.document_height && !self.context.in_between ) {
+        else if( scroll_top > 5 && scroll_top+self.context.window_height < self.context.document_height && !self.context.in_between ) {
 
             self.context.top_reached    = false;
             self.context.in_between     = true;
