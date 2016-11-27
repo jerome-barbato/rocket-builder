@@ -20,10 +20,10 @@
 
         var hasContainer = function( content ){
 
-            var is_string = typeof content == "string";
-
-            if( !is_string )
+            if( typeof content != "string" )
                 return false;
+
+            content = content.trim();
 
             var has_container = content.charAt(0) == '<' && content.slice(-1) == '>';
 
@@ -46,8 +46,10 @@
                     args[0] = args[0] instanceof $ ? args[0] : $(args[0]);
                     ret = fct.apply(context, args);
 
-                    if( args.length > 1 && args[1] !== false )
-                        $(document).trigger('DOMNodeUpdated', args);
+                    if( args.length == 1 || args[1] !== false )
+                        setTimeout(function(){
+                            $(document).trigger('DOMNodeUpdated', args);
+                        });
 
                 } else {
 
@@ -62,6 +64,7 @@
             return ret;
         };
 
+        //todo : remove
         $.fn.html        = function() { return updateDom(html, arguments, this) };
         $.fn.replaceWith = function() { return updateDom(replaceWith, arguments, this) };
         $.fn.append      = function() { return updateDom(append, arguments, this) };

@@ -9,6 +9,8 @@
     width: 100%;
     &+img[data-object_fit]{ position: absolute; left: 0; top: 0 }
     &[data-ratio="4/3"]{ padding-top: (3/4)*100% }
+    &[data-ratio="3/4"]{ padding-top: (4/3)*100% }
+    &[data-ratio="16/9"]{ padding-top: (9/16)*100% }
     &[data-ratio="1/1"]{ padding-top: 100% }
   }
 }

@@ -43,7 +43,7 @@ var UXPopin = function(){
         $popin  : false,
         id      : false,
         context : {
-            remove : false
+            remove : true
         },
         transitionEnd : 'webkitTransitionEnd.ux-popin transitionend.ux-popin msTransitionEnd.ux-popin oTransitionEnd.ux-popin',
         html : {
@@ -114,10 +114,16 @@ var UXPopin = function(){
             e.preventDefault();
             var context = {};
 
-            try {
-                context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
-            } catch(e) {}
+            if( $(this).data('context') ){
 
+                try {
+                    context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
+                } catch(e) {}
+            }
+            else{
+
+                context = $(this).data();
+            }
 
             self.add($(this).data('popin'), false, context);
         });
@@ -127,7 +133,9 @@ var UXPopin = function(){
 
     self._remove = function(){
 
-        self.config.$popin.remove();
+        if( self.config.$popin.length )
+            self.config.$popin.remove();
+
         self.config.id = self.config.$popin = false;
         self.config.context = {};
     };

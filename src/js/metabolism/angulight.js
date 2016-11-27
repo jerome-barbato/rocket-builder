@@ -4,13 +4,16 @@ var angularLight = function(){
 
     self.context = {
         controllers : {},
-        directives  : {},
         instances   : {},
         templates   : {}
     };
 
     self.controller = function(id, callback){ self._register('controller', id, callback) };
-    self.directive  = function(id, callback){ self._register('directive', id, callback) };
+
+    self.template   = function(id){
+
+        return (id in self.context.templates) ? self.context.templates[id]: '';
+    };
 
     self.camelCase = function(str) {
         return str
@@ -29,7 +32,7 @@ var angularLight = function(){
         else
             self.context[type+'s'][id] = callback;
 
-        self._run( type, $('[data-'+type+'="'+id+'"]'));
+        self._run( type, $('[data-'+type+'="'+id+'"], [data-'+type+'^="'+id+'("]'));
     };
 
 
@@ -88,8 +91,9 @@ var angularLight = function(){
                     console.time('angulight:run');
 
                 var fct = self.context[type+'s'][name];
+                var instance = self._guid();
 
-                $element.data('angulight-instance', self._guid());
+                $element.data('angulight-instance', instance);
                 self.context.instances[instance] = new (Function.prototype.bind.apply(fct, [null].concat(params)));
 
 
@@ -121,11 +125,6 @@ var angularLight = function(){
         });
 
 
-        $('[data-directive]').initialize(function(){
-            self._run('directive', $(this) );
-        });
-
-
         $('[data-controller]').initialize(function(){
             self._run('controller', $(this) );
         });
@@ -145,6 +144,7 @@ var angularLight = function(){
             $(this).removeAttr('data-if');
         });
 
+
         $('[data-if-not]').initialize(function(){
 
             var condition = $(this).data('if-not');
@@ -163,9 +163,11 @@ var angularLight = function(){
             elem.attr('data-controller', attrs.controller);
         });
 
+        // Compatibility
         dom.compiler.register('attribute', 'directive', function(elem, attrs) {
 
-            elem.attr('data-directive', attrs.directive);
+            console.log('Angulight directive has been removed please une controller instead');
+            elem.attr('data-controller', attrs.directive);
         });
 
         dom.compiler.register('attribute', 'repeater', function(elem, attrs) {

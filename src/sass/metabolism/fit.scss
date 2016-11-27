@@ -15,13 +15,16 @@
   [data-object_fit="cover"]{ object-fit: cover }
   [data-object_fit="contain"]{ object-fit: contain }
 
+  [data-object_position="top"]{ object-position: top }
   [data-object_position="top left"]{ object-position: top left }
   [data-object_position="top center"]{ object-position: top center }
   [data-object_position="top right"]{ object-position: top right }
 
+  [data-object_position="center"]{ object-position: center }
   [data-object_position="center left"]{ object-position: center left }
   [data-object_position="center right"]{ object-position: center right }
 
+  [data-object_position="bottom"]{ object-position: bottom }
   [data-object_position="bottom left"]{ object-position: bottom left }
   [data-object_position="bottom center"]{ object-position: bottom center }
   [data-object_position="bottom right"]{ object-position: bottom right }

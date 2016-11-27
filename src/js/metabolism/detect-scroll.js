@@ -119,26 +119,44 @@ var UXDetectScroll = function(){
 
     self._detectScrollBoundReached = function(scroll_top) {
 
-        if( scroll_top <= 5 && !self.context.top_reached ){
+        if( !self.context.document_height || !self.context.window_height )
+            return;
 
-            self.context.top_reached    = true;
-            self.context.in_between     = false;
-            self.context.bottom_reached = false;
-            self.context.$body.addClass('scroll--top-reached').removeClass('scroll--between scroll--bottom-reached');
+        if( scroll_top <= 5 ){
+
+            if( !self.context.top_reached ) {
+
+                self.context.top_reached    = true;
+                self.context.in_between     = false;
+                self.context.bottom_reached = false;
+                self.context.$body.addClass('scroll--top-reached').removeClass('scroll--between scroll--bottom-reached');
+
+                self.context.$body.trigger('ux-scroll.top-reached');
+            }
         }
-        else if( scroll_top > 5 && scroll_top+self.context.window_height < self.context.document_height && !self.context.in_between ) {
+        else if( scroll_top > 5 && scroll_top+self.context.window_height < self.context.document_height ) {
 
-            self.context.top_reached    = false;
-            self.context.in_between     = true;
-            self.context.bottom_reached = false;
-            self.context.$body.addClass('scroll--between').removeClass('scroll--top-reached scroll--bottom-reached');
+            if( !self.context.in_between ) {
+
+                self.context.top_reached = false;
+                self.context.in_between = true;
+                self.context.bottom_reached = false;
+                self.context.$body.addClass('scroll--between').removeClass('scroll--top-reached scroll--bottom-reached');
+
+                self.context.$body.trigger('ux-scroll.between');
+            }
         }
-        else if( scroll_top+self.context.window_height >= self.context.document_height && !self.context.bottom_reached ){
+        else if( scroll_top+self.context.window_height >= self.context.document_height ){
 
-            self.context.top_reached    = false;
-            self.context.in_between     = false;
-            self.context.bottom_reached = true;
-            self.context.$body.addClass('scroll--bottom-reached').removeClass('scroll--between scroll--top-reached');
+            if( !self.context.bottom_reached ){
+
+                self.context.top_reached    = false;
+                self.context.in_between     = false;
+                self.context.bottom_reached = true;
+                self.context.$body.addClass('scroll--bottom-reached').removeClass('scroll--between scroll--top-reached');
+
+                self.context.$body.trigger('ux-scroll.bottom-reached');
+            }
         }
     };
 
@@ -148,23 +166,27 @@ var UXDetectScroll = function(){
         var scrollTop = self.context.$window.scrollTop();
 
         self._detectScrollBoundReached(scrollTop);
-        self._detectScrollDirectionChange(scrollTop);
+        //self._detectScrollDirectionChange(scrollTop);
 
         for (var i=0; i< self.context.elements.length; i++) {
 
             var element  = self.context.elements[i];
 
-            if( !element.reached && (element.position=='top-reached' ? element.top : element.bottom ) <= scrollTop+self.context.offset ){
+            if( (element.position=='top-reached' ? element.top : element.bottom ) <= scrollTop+self.context.offset ){
 
-                element.reached = true;
-                element.$.addClass(element.position);
-                $(document).trigger('ux-top-reached', [true, element.id]);
+                if( !element.reached ){
+
+                    element.reached = true;
+                    element.$.addClass(element.position);
+                }
             }
-            else if( element.reached && (element.position=='top-reached' ? element.top : element.bottom ) > scrollTop+self.context.offset ){
+            else if( (element.position=='top-reached' ? element.top : element.bottom ) > scrollTop+self.context.offset ){
 
-                element.reached = false;
-                element.$.removeClass(element.position);
-                $(document).trigger('ux-top-reached', [false, element.id]);
+                if( element.reached ){
+
+                    element.reached = false;
+                    element.$.removeClass(element.position);
+                }
             }
         }
     };

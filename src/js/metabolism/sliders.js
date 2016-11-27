@@ -153,6 +153,8 @@ var UXSlider = function(config) {
         self._initPagination();
         self._preload();
 
+        setTimeout(function(){ self.config.$element.addClass('ux-slider--loaded') });
+
         $(window).load(function(){
 
             self._show(Math.min(self.context.slide_count, self.config.start_slide), false);

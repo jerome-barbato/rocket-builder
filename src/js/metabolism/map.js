@@ -34,7 +34,9 @@ var UXMap = function($map, template, config, callback){
             label     : true
         },
         overlay : {
-            properties : []
+            html       : '',
+            x          : 0,
+            y          : 0
         },
         map : {
             center            :[25,0],
@@ -67,33 +69,27 @@ var UXMap = function($map, template, config, callback){
     /**
      *
      */
-    self.__construct =  function( $map, template, config, callback ) {
+    self.__construct =  function( $map, config, callback ) {
 
         self.config = $.extend(true, self.config, config);
 
         if( !UXMapInit ){
 
             UXMapInit = function(){ $(document).trigger('google.maps.initialized') };
-
-            $(document).on('loaded', function(){
-
-                $('head').append('<script src="http://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
-            });
+            $('head').append('<script src="http://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
         }
 
-        if( typeof google != 'undefined' ){
+        if( typeof google != 'undefined' && 'maps' in google ){
 
-            self.init($map, template, callback);
+            self.init($map, callback);
         }
         else{
 
             $(document).on('google.maps.initialized', function () {
 
-                self.init($map, template, callback);
+                self.init($map, callback);
             });
         }
-
-        return self;
     };
 
 
@@ -101,7 +97,7 @@ var UXMap = function($map, template, config, callback){
     /**
      *
      */
-    self.init = function( $map, template, callback ) {
+    self.init = function( $map, callback ) {
 
         self.config.map.mapTypeId = google.maps.MapTypeId[self.config.map.mapTypeId];
 
@@ -119,20 +115,20 @@ var UXMap = function($map, template, config, callback){
             labelOrigin : new google.maps.Point(self.config.marker.width/2, self.config.marker.height*0.65)
         };
 
-        self.config.overlay.html = template;
-        self.context.gmap = $map.gmap3(self.config.map);
-        self.context.map  = $map.gmap3('get');
+        self.context.gmap       = $map.gmap3(self.config.map);
+        self.context.map        = $map.gmap3('get');
+        self.context.googleMap  = self.context.map.get(0);
 
         google.maps.event.addListener(self.context.map, 'zoom_changed', function() {
 
-            var zoomLevel = self.context.map.getZoom();
+            var zoomLevel = self.context.googleMap.getZoom();
             $(document).trigger('ux-map.zoom',[self.context.map, zoomLevel]);
         });
 
         self.context.init = true;
 
         if( callback )
-            callback();
+            callback(self);
     };
 
 
@@ -142,8 +138,8 @@ var UXMap = function($map, template, config, callback){
      */
     self.zoomIn = function() {
 
-        if(self.context.map.getZoom() < 21 )
-            self.context.map.setZoom( self.context.map.getZoom()+1 );
+        if(self.context.googleMap.getZoom() < 21 )
+            self.context.googleMap.setZoom( self.context.googleMap.getZoom()+1 );
     };
 
 
@@ -152,8 +148,8 @@ var UXMap = function($map, template, config, callback){
      */
     self.zoomOut = function() {
 
-        if(self.context.map.getZoom() >  3)
-            self.context.map.setZoom( self.context.map.getZoom()-1 );
+        if(self.context.googleMap.getZoom() >  3)
+            self.context.googleMap.setZoom( self.context.googleMap.getZoom()-1 );
     };
 
 
@@ -178,6 +174,28 @@ var UXMap = function($map, template, config, callback){
 
         self.context.overlay = false;
         self.context.has_overlay = false;
+    };
+
+
+
+    self.setPosition = function(address, zoom){
+
+        if( typeof address == 'object' ){
+
+            var latLng = new google.maps.LatLng(address.coords.latitude, address.coords.longitude);
+            self.context.googleMap.panTo(latLng);
+            self.context.googleMap.setZoom(zoom);
+        }
+        else{
+
+            self.context.gmap.latlng({address:address})
+                .then(function (result) {
+
+                    var latLng = new google.maps.LatLng(result.lat(), result.lng());
+                    self.context.googleMap.panTo(latLng);
+                    self.context.googleMap.setZoom(zoom);
+                });
+        }
     };
 
 
@@ -236,8 +254,6 @@ var UXMap = function($map, template, config, callback){
 
                 mouseover: function(marker){
 
-                    self.context.marker = marker;
-
                     marker.setIcon(marker.icon_hover);
                     $(document).trigger('ux-map.over', [self.context.map, marker.index]);
                 },
@@ -248,11 +264,12 @@ var UXMap = function($map, template, config, callback){
                         marker.setIcon(marker.icon_out);
 
                         $(document).trigger('ux-map.out', [self.context.map, marker.index]);
-
-                        self.context.marker = false;
                     }
                 },
                 click: function(marker){
+
+                    if( self.context.marker )
+                        self.context.marker.setIcon(self.context.marker.icon_out);
 
                     self.context.marker = marker;
 
@@ -268,20 +285,18 @@ var UXMap = function($map, template, config, callback){
 
                         var html = self.config.overlay.html;
 
-                        $.each(self.config.overlay.properties, function(i, key) {
-                            html = html.split('[[' + key + ']]').join(marker[key]);
-                        });
+                        html = html.populate(marker);
 
                         self.context.gmap.overlay({
                             position: marker.getPosition(),
                             content: html,
-                            y: -70,
-                            x: 35
+                            y: self.config.overlay.y,
+                            x: self.config.overlay.x
 
                         }).then(function(overlay) {
 
                             self.context.overlay = overlay;
-                            overlay.$.find('.close').click(function() {
+                            overlay.$.find('[data-close]').click(function() {
 
                                 marker.setIcon(marker.icon_out);
                                 self.context.marker = false;
@@ -298,7 +313,7 @@ var UXMap = function($map, template, config, callback){
             self.context.gmap.fit();
     };
 
-    return self.__construct( $map, template, config, callback );
+    self.__construct( $map, template, config, callback );
 };
 
 
