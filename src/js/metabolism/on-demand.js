@@ -128,6 +128,7 @@ var UXOnDemand = function(){
 
                     })(element);
 
+                    element.$.attr('src', '');
                     element.$.attr('src', element.src);
 
                     break;

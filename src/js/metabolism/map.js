@@ -76,7 +76,19 @@ var UXMap = function($map, template, config, callback){
         if( !UXMapInit ){
 
             UXMapInit = function(){ $(document).trigger('google.maps.initialized') };
-            $('head').append('<script src="http://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
+
+            if( document.readyState == 'complete' ){
+
+                $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
+            }
+            else{
+
+                $(window).load(function(){
+
+                    $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
+                });
+            }
+
         }
 
         if( typeof google != 'undefined' && 'maps' in google ){

@@ -58,6 +58,10 @@ input, textarea {
   outline: none;
 }
 
+input, button {
+  -webkit-appearance: none
+}
+
 textarea {
   resize: none;
 }

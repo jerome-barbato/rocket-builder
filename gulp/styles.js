@@ -26,7 +26,7 @@ gulp.task('style::compile', function () {
             .pipe($.pleeease({
                 minifier: false,
                 mqpacker: true,
-                browsers: ["last 3 versions"]
+                browsers: ["last 3 versions", "iOS 8"]
             }).on('error', config.errorHandler('Pleeease')))
             .pipe($.sourcemaps.write('./', {
                 includeContent: false,
@@ -41,7 +41,7 @@ gulp.task('style::compile', function () {
             .pipe($.sass().on('error', config.errorHandler('Sass')))
             .pipe($.pleeease({
                 mqpacker: true,
-                browsers: ["last 3 versions"]
+                browsers: ["last 3 versions", "iOS 8"]
             }).on('error', config.errorHandler('Pleeease')))
             .pipe(gulp.dest(config.paths.dest.css))
             .pipe($.size({showFiles: true}));
