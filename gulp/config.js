@@ -44,6 +44,7 @@ var config = module.exports = {
         config.paths.src = {
             js : {
                 vendor   : [],
+                browser  : [],
                 app      : [],
                 compiler : []
             },
@@ -75,23 +76,43 @@ var config = module.exports = {
      */
     addVendors : function addVendors() {
 
-        config.front.vendor.app.forEach(function(library){
+        if( config.front.vendor.app ) {
 
-            if( typeof library == 'string' ){
+            config.front.vendor.app.forEach(function (library) {
 
-                config.paths.src.js.vendor.push(config.paths.asset+'/js/vendor/'+library+'.js');
-            }
-            else{
+                if (typeof library == 'string') {
 
-                for ( var path in library ){
-
-                    library[path].forEach(function(element){
-
-                        config.paths.src.js.vendor.push(config.paths.asset+'/js/vendor/'+path+'/'+element+'.js');
-                    });
+                    config.paths.src.js.vendor.push(config.paths.asset + '/js/vendor/' + library + '.js');
                 }
-            }
-        });
+                else {
+
+                    for (var path in library) {
+
+                        library[path].forEach(function (element) {
+
+                            config.paths.src.js.vendor.push(config.paths.asset + '/js/vendor/' + path + '/' + element + '.js');
+                        });
+                    }
+                }
+            });
+        }
+        else{
+
+            config.paths.src.js.vendor = false;
+        }
+
+
+        if( config.front.vendor.browser ) {
+
+            config.front.vendor.browser.forEach(function (library) {
+
+                    config.paths.src.js.browser.push(config.paths.asset + '/js/vendor/' + library + '.js');
+            });
+        }
+        else{
+
+            config.paths.src.js.browser = false;
+        }
 
         config.paths.src.js.app.push(config.paths.asset+'/js/app/**/*.js');
         config.paths.src.js.app.push(config.paths.asset+'/js/app.js');

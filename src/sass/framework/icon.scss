@@ -1,4 +1,4 @@
-.icon:before, .icon-after:after{
+.ux-icon:before, .ux-icon-after:after{
   font-family: icons, sans-serif;
   font-style: normal !important;
   font-weight: normal !important;
@@ -14,8 +14,8 @@
   $id      : nth($icon, 1);
   $content : nth($icon, 2);
 
-  .icon-after--#{$id}:after,
-  .icon--#{$id}:before{ content: $content }
+  .ux-icon-after--#{$id}:after,
+  .ux-icon--#{$id}:before{ content: $content }
 }
 
 
@@ -24,17 +24,17 @@
 
   @if($extend){
     @if($position == 'before'){
-      @extend .icon;
+      @extend .ux-icon;
     }
     @else{
-      @extend .icon-after;
+      @extend .ux-icon-after;
     }
   }
 
   @if($position == 'before'){
-    @extend .icon--#{$name};
+    @extend .ux-icon--#{$name};
   }
   @else{
-    @extend .icon-after--#{$name};
+    @extend .ux-icon-after--#{$name};
   }
 }

@@ -59,6 +59,9 @@ gulp.task('script::app', function(){
 
 gulp.task('script::vendor', function(){
 
+    if( !config.paths.src.js.vendor )
+        return true;
+
     if( config.environment == 'development' ) {
 
         return gulp.src(config.paths.src.js.vendor, { base: config.paths.asset })
@@ -83,9 +86,12 @@ gulp.task('script::vendor', function(){
 
 gulp.task('script::browser', function(){
 
+    if( !config.paths.src.js.browser )
+        return true;
+
     if( config.environment == 'development' ) {
 
-        return gulp.src([config.paths.asset + '/js/vendor/modernizr.js', config.paths.asset + '/js/vendor/browser.js'], { base: config.paths.asset })
+        return gulp.src(config.paths.src.js.browser, { base: config.paths.asset })
             .pipe($.sourcemaps.init())
             .pipe($.concat('browser.js'))
             .pipe($.sourcemaps.write('./', {

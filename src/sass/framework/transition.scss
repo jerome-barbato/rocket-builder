@@ -19,14 +19,4 @@
   @return $will-change+unquote('; transition-duration:')+$speed+unquote('; transition-timing-function:')+$easing+unquote('; backface-visibility:hidden')+unquote('; will-change:')+$will-change;
 }
 
-$transition-delay    : $transition-duration/6;
-
-@for $i from 0 through 35{
-  [data-transition-delay="#{$i}"]{ transition-delay: $transition-delay*$i }
-  @media #{$media-tablet} {
-    [data-transition-tablet-delay="#{$i}"]{ transition-delay: $transition-delay*$i }
-  }
-  @media #{$media-mobile} {
-    [data-transition-mobile-delay="#{$i}"]{ transition-delay: $transition-delay*$i }
-  }
-}
+$transition-delay : $transition-duration/6;
