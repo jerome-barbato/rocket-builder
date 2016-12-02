@@ -102,6 +102,10 @@ var UXOnDemand = function(){
     self._loaded = function(element){
 
         element.$.removeClass(self.selector+'--loading').addClass(self.selector+'--loaded');
+
+        if( $.fn.fit )
+            element.$.fit(true);
+
         element.loaded = true;
 
         self.applyPlayState(element, $(window).scrollTop());

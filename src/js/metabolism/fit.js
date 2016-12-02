@@ -69,6 +69,8 @@ var UXFit = function() {
                 }
             }
 
+            container = {width: $container.outerWidth(), height : $container.outerHeight()};
+
             if( object_position[0] == 'left' || object_position[1] == 'left' )
                 position.left = 0;
             else if( object_position[0] == 'right' || object_position[1] == 'right' )
@@ -211,11 +213,11 @@ var UXFit = function() {
 
         window.jQuery.fn.fit = function(recompute_ratio) {
 
+            if( !$(this).hasDataAttr('object_fit') || (Modernizr && Modernizr.objectfit) )
+                return;
+
             if( typeof recompute_ratio == "undefined" )
                 recompute_ratio = false;
-
-            if( Modernizr && Modernizr.objectfit )
-                return;
 
             $(this).each(function() {
 

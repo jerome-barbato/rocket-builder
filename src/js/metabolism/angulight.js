@@ -32,7 +32,10 @@ var angularLight = function(){
         else
             self.context[type+'s'][id] = callback;
 
-        self._run( type, $('[data-'+type+'="'+id+'"], [data-'+type+'^="'+id+'("]'));
+        $('[data-'+type+'="'+id+'"], [data-'+type+'^="'+id+'("]').each(function(){
+
+            self._run( type, $(this));
+        });
     };
 
 

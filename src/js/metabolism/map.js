@@ -131,6 +131,14 @@ var UXMap = function($map, template, config, callback){
         self.context.map        = $map.gmap3('get');
         self.context.googleMap  = self.context.map.get(0);
 
+        if( !browser.mobile )
+        {
+            var $loader = $('<div class="ux-map-loader"><div class="valign"><div class="valign__middle">Click to use the map</div></div></div>');
+
+            $map.append($loader, false);
+            $loader.click(function () { $loader.hide() });
+        }
+
         google.maps.event.addListener(self.context.map, 'zoom_changed', function() {
 
             var zoomLevel = self.context.googleMap.getZoom();
