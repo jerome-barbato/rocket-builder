@@ -12,7 +12,7 @@
  * v2.0
  * css animations only, removed IE9 compat
  * v2.1
- * renamed ux-slider to ux-slider
+ * renamed ui-slider to ux-slider
  *
  * Requires:
  *   - jQuery
@@ -184,9 +184,9 @@ var UXSlider = function(config) {
 
     self._sync = function(){
 
-        $(document).on('ux-slider.updated', function(e, slideId, index){
+        $('#'+self.config.sync).on('ux-slider.updated', function(e, index){
 
-            if( slideId == self.config.sync && index != self.context.indices.current )
+            if( index != self.context.indices.current )
                 self._show(index, true);
         });
     };
@@ -325,7 +325,7 @@ var UXSlider = function(config) {
 
         self.context.is_animating = true;
 
-        $(document).trigger('ux-slider.updated', [self.config.$element.attr('id'), index, self.context.indices.current]);
+        self.config.$element.trigger('ux-slider.updated', [index, self.context.indices.current]);
 
         self.context.$current_slide = self.context.$slides.eq(self.context.indices.current);
 
