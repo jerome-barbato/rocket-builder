@@ -3,10 +3,6 @@
   "version": "1.5.0",
   "description": "SASS, JS and HTML Compiler with some usefull task",
   "main": "gulpfile.js",
-  "repository": {
-    "type": "git",
-    "url": "ssh://git@bitbucket.org:Metabolism/rocket-builder.git"
-  },
   "optionalDependencies": {
     "chalk": "^1.1.3",
     "del": "^2.2.2",

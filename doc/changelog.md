@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+<<<<<<< HEAD
 =======
 
 ## 3.0.4 - 2016-12-14 ##
@@ -11,6 +12,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 on demand resize function
 ### Updated
 jquery.touchSwipe.js to 1.6.18 and re-integrated in polyfill folder
+
+=======
+
+## 3.0.5 - 2016-12-14 ##
+### Fixed
+on demand resize function
+### Updated
+jquery.touchSwipe.js to 1.6.18 and re-integrated in polyfill folder
+
+
+## 3.0.4 - 2016-12-07 ##
+### Updated
+* UXSlider - ux-slider.updated is now triggered on the slider itself
+### Added
+* SCSS - transition library to allow data-transition-delay
 
 
 ## 3.0.3 - 2016-12-07 ##
