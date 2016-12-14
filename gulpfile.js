@@ -1,9 +1,7 @@
 /**
  * Gulp config
- * @version: 1.5
  * @author: Metabolism
  *
- * CHANGELOG:
  */
 
 'use strict';

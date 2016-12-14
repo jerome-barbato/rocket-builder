@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+=======
+
+## 3.0.4 - 2016-12-14 ##
+### Fixed
+on demand resize function
+### Updated
+jquery.touchSwipe.js to 1.6.18 and re-integrated in polyfill folder
+
+
+## 3.0.3 - 2016-12-07 ##
+Public release
+
+
 ## 3.0.2 - 2016-11-18 ##
 ### Removed ###
 mod-- modernizr class prefix + reduced feature detection ( removed svg, canvas, video ...)
@@ -12,11 +25,13 @@ mod-- modernizr class prefix + reduced feature detection ( removed svg, canvas, 
 
       <img src="" object-fit="cover" object-position="bottom left">
 
+
 ## 3.0.1 - 2016-11-10 ##
 ### Added ###
 * Compilation and minification of assets files to web folder.
 ### Fixed ###
 * Clean is now del.sync to avoid compilation collision
+
 
 ## 3.0.0 - 2016-11-08 ##
 ### Updated ###
@@ -27,6 +42,7 @@ mod-- modernizr class prefix + reduced feature detection ( removed svg, canvas, 
 * Template compilation
 * Slider autoplay
 * DOM Compiler
+
 
 ## 2.3.2 - 2016-10-03 ##
 ### Fixed ###

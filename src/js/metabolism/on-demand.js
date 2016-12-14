@@ -85,7 +85,7 @@ var UXOnDemand = function(){
 
         self.context.window_height = $(window).height();
 
-        for (var i=0; i< self.context.elements; i++) {
+        for (var i=0; i< self.context.elements.length; i++) {
 
             var element  = self.context.elements[i];
             var top      = element.use_parent ? element.$parent.offset().top : element.$.offset().top;
@@ -217,6 +217,7 @@ var UXOnDemand = function(){
 
 
         $(window).on('scroll', self._loadAll).on('resize', function(){
+
             self._resize();
             self._loadAll()
         });
