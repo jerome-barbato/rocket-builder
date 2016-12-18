@@ -34,7 +34,6 @@ var config = module.exports = {
 
         config.builder = yaml.safeLoad(fs.readFileSync(config.base_path+'/config/builder.yml'));
 
-
         // Start backward compatibility
         if( 'compile' in config.builder )
             config.builder['compile-template'] = config.builder.compile;
@@ -45,10 +44,12 @@ var config = module.exports = {
             config.builder.template = {vendor:config.builder.vendor.compiler};
         }
 
-        if( !'style' in config.builder )
+        if( 'style' in config.builder == false )
             config.builder.style = {browsers:["last 3 versions", "iOS 8"]};
         // End backward
 
+        if( 'browsers' in config.builder.style == false )
+            config.builder.style.browsers = ["last 3 versions", "iOS 8"];
 
         config.paths.sm_asset  = "../.."+config.builder.paths.asset;
         config.paths.asset     = config.base_path+config.builder.paths.asset;

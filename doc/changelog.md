@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.1.2 - 2016-12-18 ##
+### Fixed
+Gulp Backward compatibility
+
 ## 3.1.1 - 2016-12-18 ##
 ### Updated
 popin.js - create a new instance of UXPopin each time
