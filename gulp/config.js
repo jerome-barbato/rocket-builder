@@ -35,14 +35,15 @@ var config = module.exports = {
         config.builder = yaml.safeLoad(fs.readFileSync(config.base_path+'/config/builder.yml'));
 
         // Start backward compatibility
-        if( 'compile' in config.builder )
-            config.builder['compile-template'] = config.builder.compile;
-
         if( 'vendor' in config.builder ){
 
             config.builder.script = {vendor:config.builder.vendor.app};
             config.builder.template = {vendor:config.builder.vendor.compiler};
         }
+
+        if( 'compile' in config.builder )
+            config.builder.template.compile = config.builder.compile;
+
 
         if( 'style' in config.builder == false )
             config.builder.style = {browsers:["last 3 versions", "iOS 8"]};
@@ -176,7 +177,7 @@ var config = module.exports = {
     },
 
 
-/**
+    /**
      * Initilization
      */
     init : function init() {

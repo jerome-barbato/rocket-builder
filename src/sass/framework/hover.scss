@@ -121,7 +121,7 @@
 
   position: relative; z-index: 1;
   transition: allow( border-color color );
-  
+
   &:after {
     content: ''; transition: allow( transform );
     transform-origin: center bottom; position: overlay(); z-index: -1;
@@ -166,7 +166,38 @@
     color: $color;
     background: $bg-color;
     transition-delay: 0s;
-    
+
+    &:after, &:before { transform: none }
+  }
+}
+
+
+
+
+
+
+@mixin hover--draw($bg-color, $offset:0) {
+  position: relative;
+
+  &:after, &:before {
+    content: ''; transition: allow( border-color transform , $transition-duration*2 );
+    transform-origin: center bottom; position: absolute; transform: scale(0);
+    left: $offset; top: $offset; bottom: $offset; right: $offset; pointer-events: none;
+  }
+
+  &:after {
+    border-top: 1px solid $bg-color;
+    border-left: 1px solid $bg-color;
+    transform-origin: 0 0;
+  }
+
+  &:before {
+    border-bottom: 1px solid $bg-color;
+    border-right: 1px solid $bg-color;
+    transform-origin: 100% 100%;
+  }
+
+  .desktop &:hover {
     &:after, &:before { transform: none }
   }
 }

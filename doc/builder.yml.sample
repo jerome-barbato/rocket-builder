@@ -1,6 +1,3 @@
-compile-template: true
-
-
 paths:
   asset: /src/asset
   public: /web/public
@@ -42,6 +39,7 @@ script:
 
 
 template:
+  compile: true
   vendor:
     - jquery:
       - jquery

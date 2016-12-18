@@ -111,7 +111,7 @@ gulp.task('template::watch', function() {
             gutil.log("Compiled '"+chalk.blue(filename)+"'");
 
             return gulp.src(event.path)
-                .pipe(gif(config.builder['compile-template'], compileFiles()))
+                .pipe(gif(config.builder.template.compile, compileFiles()))
                 .pipe(gulp.dest(filepath));
         }
     });
@@ -134,6 +134,6 @@ gulp.task('views::clean', function () {
 gulp.task('templates::compile', function() {
 
     return gulp.src(config.paths.src.template)
-        .pipe(gif(config.builder['compile-template'], compileFiles()))
+        .pipe(gif(config.builder.template.compile, compileFiles()))
         .pipe(gulp.dest(config.paths.dest.template));
 });
