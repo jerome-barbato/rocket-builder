@@ -99,7 +99,7 @@ gulp.task('template::watch', function() {
         var filename  = path_array[path_array.length-1];
 
         path_array.pop();
-        var filepath  = path_array.join('/').replace(config.front.paths.asset+'/template', config.front.paths.views);
+        var filepath  = path_array.join('/').replace(config.builder.paths.asset+'/template', config.builder.paths.views);
 
         if (event.type === 'deleted') {
 
@@ -111,7 +111,7 @@ gulp.task('template::watch', function() {
             gutil.log("Compiled '"+chalk.blue(filename)+"'");
 
             return gulp.src(event.path)
-                .pipe(gif(config.front.compile, compileFiles()))
+                .pipe(gif(config.builder['compile-template'], compileFiles()))
                 .pipe(gulp.dest(filepath));
         }
     });
@@ -134,6 +134,6 @@ gulp.task('views::clean', function () {
 gulp.task('templates::compile', function() {
 
     return gulp.src(config.paths.src.template)
-        .pipe(gif(config.front.compile, compileFiles()))
+        .pipe(gif(config.builder['compile-template'], compileFiles()))
         .pipe(gulp.dest(config.paths.dest.template));
 });

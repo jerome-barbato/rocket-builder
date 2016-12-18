@@ -32,12 +32,28 @@ var config = module.exports = {
     /** Load function will set configuration variables */
     load: function load() {
 
-        config.front = yaml.safeLoad(fs.readFileSync(config.base_path+'/config/builder.yml'));
+        config.builder = yaml.safeLoad(fs.readFileSync(config.base_path+'/config/builder.yml'));
 
-        config.paths.sm_asset  = "../.."+config.front.paths.asset;
-        config.paths.asset     = config.base_path+config.front.paths.asset;
-        config.paths.public    = config.base_path+config.front.paths.public;
-        config.paths.views     = config.base_path+config.front.paths.views;
+
+        // Start backward compatibility
+        if( 'compile' in config.builder )
+            config.builder['compile-template'] = config.builder.compile;
+
+        if( 'vendor' in config.builder ){
+
+            config.builder.script = {vendor:config.builder.vendor.app};
+            config.builder.template = {vendor:config.builder.vendor.compiler};
+        }
+
+        if( !'style' in config.builder )
+            config.builder.style = {browsers:["last 3 versions", "iOS 8"]};
+        // End backward
+
+
+        config.paths.sm_asset  = "../.."+config.builder.paths.asset;
+        config.paths.asset     = config.base_path+config.builder.paths.asset;
+        config.paths.public    = config.base_path+config.builder.paths.public;
+        config.paths.views     = config.base_path+config.builder.paths.views;
 
         config.paths.css_to_sass = '../../src/sass/';
 
@@ -76,9 +92,9 @@ var config = module.exports = {
      */
     addVendors : function addVendors() {
 
-        if( config.front.vendor.app ) {
+        if( config.builder.script.vendor ) {
 
-            config.front.vendor.app.forEach(function (library) {
+            config.builder.script.vendor.forEach(function (library) {
 
                 if (typeof library == 'string') {
 
@@ -102,11 +118,11 @@ var config = module.exports = {
         }
 
 
-        if( config.front.vendor.browser ) {
+        if( 'browser' in config.builder.script ) {
 
-            config.front.vendor.browser.forEach(function (library) {
+            config.builder.script.browser.forEach(function (library) {
 
-                    config.paths.src.js.browser.push(config.paths.asset + '/js/vendor/' + library + '.js');
+                config.paths.src.js.browser.push(config.paths.asset + '/js/vendor/' + library + '.js');
             });
         }
         else{
@@ -117,7 +133,8 @@ var config = module.exports = {
         config.paths.src.js.app.push(config.paths.asset+'/js/app/**/*.js');
         config.paths.src.js.app.push(config.paths.asset+'/js/app.js');
 
-        config.front.vendor.compiler.forEach(function(library){
+
+        config.builder.template.vendor.forEach(function(library){
 
             if( typeof library == 'string' ){
 
@@ -134,7 +151,6 @@ var config = module.exports = {
                 }
             }
         });
-
     },
 
     /**

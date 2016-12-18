@@ -119,6 +119,9 @@ var UXSlider = function(config) {
      */
     self._setupContext = function() {
 
+        if( self.config.$element.attr('id') == undefined )
+            self.config.$element.attr('id', guid('slider'));
+
         self.context.$slides_container     = self.config.$element.findClosest('.'+self.classnames.slides, '.'+self.classnames.slider);
         self.context.$slides               = self.context.$slides_container.findClosest('.'+self.classnames.slide, '.'+self.classnames.slider);
         self.context.$pagination_container = self.config.$element.findClosest('.'+self.classnames.pagination, '.'+self.classnames.slider);
@@ -148,7 +151,9 @@ var UXSlider = function(config) {
         if( self.config.preload )
             self.config.$element.append('<div class="'+self.classnames.preload+'"/>', false);
 
-        self._sync();
+        if( self.config.sync )
+            self._sync();
+
         self._initArrows();
         self._initPagination();
         self._preload();
@@ -239,6 +244,25 @@ var UXSlider = function(config) {
             .scroll(self._checkVisibility);
 
         $(document).on('loaded', self._computeOffset);
+
+
+        self.config.$element.on('ux-slider.update', function(e, index){
+
+            if( index != self.context.indices.current )
+                self._show(index, true);
+        });
+
+
+        self.config.$element.on('ux-slider.autoplay', function(e, state){
+
+            if( !self.config.autoplay )
+                return;
+
+            if( state )
+                self.resume();
+            else
+                self.pause();
+        });
     };
 
 
@@ -521,10 +545,11 @@ var UXSlider = function(config) {
 
     self._initPagination = function() {
 
+        var $pagination = self.config.$element.findClosest('.'+self.classnames.pagination, '.'+self.classnames.slider);
+
         if (!self.context.$pagination.length &&self.context.slide_count > 1) {
 
             var a = '<a></a>';
-            var $pagination = self.config.$element.findClosest('.'+self.classnames.pagination, '.'+self.classnames.slider);
 
             $pagination.append(a.repeat(self.context.slide_count), false);
 
@@ -545,6 +570,7 @@ var UXSlider = function(config) {
 };
 
 
+
 /*
  Sliders Mananger
  */
@@ -552,50 +578,20 @@ var UXSliders = function() {
 
     var self = this;
 
-    self.sliders = {};
-
-
     self.add = function( $slider ){
-
-        if( $slider.attr('id') == undefined )
-            $slider.attr('id', guid('slider'));
 
         var context = {};
 
         try {
+
             context = $slider.data('context') ? JSON.parse('{' + $slider.data('context').replace(/'/g, '"') + '}') : {};
+            $slider.removeAttr('data-context');
+
         } catch(e) {}
 
         context.$element = $slider;
 
-        $slider.removeAttr('data-context');
-
-        self.sliders[$slider.attr('id')] = new UXSlider(context);
-    };
-
-
-    self.goto = function(sliderId, slideId, animate, callback){
-
-        if( self.sliders[sliderId] ){
-
-            var slider = self.sliders[sliderId];
-
-            slider.goto(slideId, animate, callback)
-        }
-    };
-
-
-    self.pause = function(sliderId){
-
-        if( self.sliders[sliderId] )
-            self.sliders[sliderId].pause();
-    };
-
-
-    self.resume = function(sliderId){
-
-        if( self.sliders[sliderId] )
-            self.sliders[sliderId].resume();
+        new UXSlider(context);
     };
 
 

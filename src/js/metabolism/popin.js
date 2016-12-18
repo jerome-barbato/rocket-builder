@@ -6,7 +6,7 @@
  *   - Metabolism <jerome@metabolism.fr>
  *
  * License: GPL
- * Version: 1.4
+ * Version: 2.0
  *
  * Requires:
  *   - jQuery
@@ -19,87 +19,64 @@
  *   Added popin-template directive when the popin is allready in the dom ( ex: nested ux-view )
  *   Empty ux-view on close if not removed
  *
+ *   #2.0
+ *   Each popin is now a new instance
+ *
  **/
 
-var UXPopin = function(){
+var UXPopin = function(id, content, context){
 
-    var self = this;
+    var self   = this;
+    var $body  = $('body');
+    var $popin = false;
+    var transitionEnd = 'webkitTransitionEnd.ux-popin transitionend.ux-popin msTransitionEnd.ux-popin oTransitionEnd.ux-popin';
+
+    /* Public */
+
+    var config = {
+        id     : false,
+        html   : {
+
+            popin : '<div class="ux-popin">'+
+                      '<div class="valign"><div class="valign__middle ux-popin__overlay">'+
+                        '<div class="ux-popin__content"></div>'+
+                      '</div></div>'+
+                    '</div>',
+            close : '<a class="ux-popin__close"></a>'
+        }
+    };
+
+
+    self.context = {
+        remove : true
+    };
+
+
+    self.show = function(){
+
+        show();
+    };
+
+    self.close = function(){
+
+        close();
+    };
 
     /* Contructor. */
 
     /**
      *
      */
-    self.__construct =  function(){
+    var construct =  function(){
 
-        self._setupEvents();
+        self.context = $.extend(self.context, context);
+
+        if( typeof(content) == "undefined" || content === false )
+            content = $('template#'+id).html();
+
+        add(content);
+        setupEvents();
     };
-
-
-    /* Public */
-
-    self.config = {
-        $body   : $('body'),
-        $popin  : false,
-        id      : false,
-        context : {
-            remove : true
-        },
-        transitionEnd : 'webkitTransitionEnd.ux-popin transitionend.ux-popin msTransitionEnd.ux-popin oTransitionEnd.ux-popin',
-        html : {
-
-            popin:'<div class="ux-popin"><div class="valign"><div class="valign__middle ux-popin__overlay"><div class="ux-popin__content"></div></div></div></div>',
-            close : '<a class="ux-popin__close"></a>'
-        }
-    };
-
-    self.context = {};
-
-
-    self.add = function( id, content, context ){
-
-        if( self.config.id ){
-
-            if( self.config.id == id && self.context == context ){
-
-                self.show(self.config.id);
-                return;
-            }
-            else{
-
-                self._remove();
-            }
-        }
-
-        self.config.id = id;
-        self.context = $.extend(self.config.context, context);
-
-        self._add(content);
-    };
-
-
-
-    self.show = function( id ){
-
-        if( id == self.config.id )
-            self._show();
-    };
-
-
-
-    self.getId = function(){
-
-        return self.config.id;
-    };
-
-
-
-    self.close = function( id ){
-
-        if( typeof id == 'undefined' || id == self.config.id )
-            self._close();
-    };
-
 
 
     /* Private. */
@@ -107,97 +84,82 @@ var UXPopin = function(){
     /**
      *
      */
-    self._setupEvents = function() {
+    var setupEvents = function() {
 
-        $(document).on('click', '[data-popin]', function(e) {
+        $popin.on('click keypress', function(e) {
 
-            e.preventDefault();
-            var context = {};
+            if (e.which === 13 || e.type === 'click') {
 
-            if( $(this).data('context') ){
+                if( $(e.target).hasClass('ux-popin__overlay') || $(e.target).hasClass('ux-popin__close') || $(e.target).hasClass('ux-popin-close')){
 
-                try {
-                    context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
-                } catch(e) {}
+                    $popin.off('click keypress');
+                    close();
+                }
             }
-            else{
-
-                context = $(this).data();
-            }
-
-            self.add($(this).data('popin'), false, context);
         });
     };
 
 
 
-    self._remove = function(){
+    var remove = function(){
 
-        if( self.config.$popin.length )
-            self.config.$popin.remove();
+        if( $popin.length )
+            $popin.remove();
 
-        self.config.id = self.config.$popin = false;
-        self.config.context = {};
+        $popin = self.context = self = null;
     };
 
 
-    self._close = function(){
-
-        if( !self.config.$popin ) return;
+    var close = function(){
 
         if( Modernizr && Modernizr.csstransitions ) {
 
-            self.config.$body.removeClass('ux-popin--adding').addClass('ux-popin--removing');
+            $popin.removeClass('ux-popin--adding').addClass('ux-popin--removing');
 
-            self.config.$popin.one(self.config.transitionEnd, function() {
+            $popin.one(transitionEnd, function() {
 
-                self.config.$body.removeClass('ux-popin--removing');
+                $popin.removeClass('ux-popin--removing');
 
-                $(document).trigger('ux-popin.removed', [self.config.id]);
+                $(document).trigger('ux-popin.removed', [id]);
 
                 if( self.context.remove )
-                    self._remove();
+                    remove();
                 else
-                    self.config.$popin.hide();
+                    $popin.hide();
 
-                self.config.$body.repaint();
+                $body.repaint();
             });
         }
         else{
 
             if( self.context.remove )
-                self._remove();
+                remove();
             else
                 $popin.hide();
         }
 
-        self.config.$body.removeClass('ux-popin--added');
+        $popin.removeClass('ux-popin--added');
     };
 
 
 
-    self._add = function(content){
-
-        if( typeof(content) == "undefined" || content === false )
-            content = $('template#'+self.config.id).html();
+    var add = function(content){
 
         if ( !window.angular )
             content = content.populate(self.context);
 
-        var $popin   = $(self.config.html.popin);
+        $popin = $(config.html.popin);
         var $content = $popin.find('.ux-popin__content');
 
         $content.append(content);
 
         if( !$content.find('.ux-popin__close, .ux-popin-close').length )
-            $content.append(self.config.html.close);
+            $content.append(config.html.close);
 
-        self.config.$body.append($popin);
-        $popin.addClass('ux-popin--'+self.config.id);
-
-        self.config.$popin = $popin;
-
-        if( window.angular && angular.$injector ){
+        $body.append($popin);
+        $popin.addClass('ux-popin--'+config.id);
+        
+        if( 'angular' in window && angular.$injector ){
 
             angular.$injector.invoke(function($compile, $rootScope){
 
@@ -209,47 +171,91 @@ var UXPopin = function(){
             });
         }
 
-        self._show();
+        show();
     };
 
 
 
-    self._show = function() {
+    var show = function() {
 
-        self.config.$popin.show().repaint();
+        $popin.show().repaint();
 
-        self.config.$body.addClass('ux-popin--added');
+        $popin.addClass('ux-popin--added');
 
-        $(document).trigger('ux-popin.added', [self.config.$popin, self.config.id, self.context]);
+        $(document).trigger('ux-popin.added', [$popin, id, self.context]);
 
         if( Modernizr && Modernizr.csstransitions ){
 
-            self.config.$body.addClass('ux-popin--adding');
+            $popin.addClass('ux-popin--adding');
 
-            self.config.$popin.one(self.config.transitionEnd, function() {
+            $popin.one(transitionEnd, function() {
 
-                self.config.$body.removeClass('ux-popin--adding');
+                $popin.removeClass('ux-popin--adding');
             });
         }
         else{
 
-            self.config.$body.removeClass('ux-popin--adding');
+            $popin.removeClass('ux-popin--adding');
         }
-
-
-        self.config.$popin.on('click keypress', function(e) {
-
-            if (e.which === 13 || e.type === 'click') {
-
-                if( $(e.target).hasClass('ux-popin__overlay') || $(e.target).hasClass('ux-popin__close') || $(e.target).hasClass('ux-popin-close')){
-
-                    self.config.$popin.off('click');
-                    self._close();
-                }
-            }
-        });
     };
 
+    construct();
+
+    return self;
+};
+
+
+
+var UXPopins = function(){
+
+    var self = this;
+
+    // Start backward compatibility
+
+    self.popins = {};
+
+    self.add = function(id, content, context ){
+
+        if(id in self.popins )
+            self.popins[id].close();
+
+        self.popins[id] = new UXPopin(id, content, context);
+    };
+
+
+    self.show = function( id ){
+
+        if(id in self.popins )
+            self.popins[id].show();
+    };
+
+
+    self.close = function( id ){
+
+        if(id in self.popins )
+            self.popins[id].close();
+    };
+
+    // End backward compatibility
+
+    $(document).on('click', '[data-popin]', function(e) {
+
+        e.preventDefault();
+        var context = {};
+
+        if( $(this).data('context') ){
+
+            try {
+                context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
+            } catch(e) {}
+        }
+        else{
+
+            context = $(this).data();
+        }
+
+        self.add($(this).data('popin'), false, context);
+    });
 
 
     if( typeof DOMCompiler !== "undefined" ) {
@@ -265,10 +271,7 @@ var UXPopin = function(){
             }
         });
     }
-
-
-    self.__construct();
 };
 
 var ux = ux || {};
-ux.popin = new UXPopin();
+ux.popin = new UXPopins();

@@ -1,0 +1,66 @@
+compile-template: true
+
+
+paths:
+  asset: /src/asset
+  public: /web/public
+  views: /web/views
+
+
+style:
+  browsers:
+  - last 2 versions
+  - iOS 9
+
+
+script:
+  browser:
+    - modernizr
+    - browser
+  vendor:
+    - shake
+    - jquery:
+      - jquery
+      - jquery.easing
+      - jquery.ui
+    - polyfill:
+      - jquery.utils
+      - jquery.transform3d
+      - jquery.initialize
+      - misc
+    - metabolism:
+      - activation
+      - angulight
+      - detect-scroll
+      - fit
+      - on-demand
+      - parallax
+      - scroll-to
+      - sliders
+      - mail
+      - popin
+
+
+template:
+  vendor:
+    - jquery:
+      - jquery
+    - polyfill:
+      - jquery.utils
+      - misc
+    - metabolism:
+      - dom-compiler
+      - dom-extensions
+      - bem
+      - activation
+      - angulight
+      - defer
+      - detect-scroll
+      - fit
+      - on-demand
+      - parallax
+      - scroll-to
+      - sliders
+      - mail
+      - grid
+      - popin

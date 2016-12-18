@@ -21,9 +21,8 @@
     }
 
     &--adding, &--added {
-
+      opacity: 1;
       .ux-popin {
-        opacity: 1;
         &__content, &__close { transform: none }
       }
     }

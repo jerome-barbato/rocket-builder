@@ -4,16 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-<<<<<<< HEAD
 =======
+
+## 3.1.1 - 2016-12-18 ##
+### Updated
+popin.js - create a new instance of UXPopin each time
+### Added
+window.sanitize utils fonction
+
+## 3.1.0 - 2016-12-16 ##
+### Updated
+builder.yml organization, script and template are separated
+See builder.yml.sample as reference
+### Added
+style options in builder.yml to handle css browser prefix compatibility
 
 ## 3.0.4 - 2016-12-14 ##
 ### Fixed
 on demand resize function
 ### Updated
 jquery.touchSwipe.js to 1.6.18 and re-integrated in polyfill folder
-
-=======
 
 ## 3.0.5 - 2016-12-14 ##
 ### Fixed
