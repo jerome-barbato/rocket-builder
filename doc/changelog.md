@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.1.3 - 2016-12-18 ##
+### Added
+draw hover animation
+
 ## 3.1.2 - 2016-12-18 ##
 ### Fixed
 Gulp Backward compatibility
