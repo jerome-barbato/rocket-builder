@@ -1,5 +1,16 @@
 {
   "name":"metabolism/rocket-builder",
   "version":"3.1.3",
-  "description": "Rocket Builder by Metabolism"
+  "description": "Rocket Builder by Metabolism",
+  "license": "AGPL-3.0",
+  "authors": [
+    {
+      "name": "Jérôme BARBATO",
+      "email": "jerome@metabolism.fr"
+    },
+    {
+      "name": "Paul COUDEVILLE",
+      "email": "paul@metabolism.fr"
+    }
+  ]
 }
