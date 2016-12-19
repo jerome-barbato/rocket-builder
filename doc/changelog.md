@@ -6,38 +6,43 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.1.4 - 2016-12-19 ##
+### Added
+* Added AGPL-3 License
+* Added authors to project
+
 ## 3.1.3 - 2016-12-18 ##
 ### Added
-draw hover animation
+* draw hover animation
 
 ## 3.1.2 - 2016-12-18 ##
 ### Fixed
-Gulp Backward compatibility
+* Gulp Backward compatibility
 
 ## 3.1.1 - 2016-12-18 ##
 ### Updated
-popin.js - create a new instance of UXPopin each time
+* popin.js - create a new instance of UXPopin each time
 ### Added
-window.sanitize utils fonction
+* window.sanitize utils fonction
 
 ## 3.1.0 - 2016-12-16 ##
 ### Updated
-builder.yml organization, script and template are separated
-See builder.yml.sample as reference
+* builder.yml organization, script and template are separated
+* See builder.yml.sample as reference
 ### Added
-style options in builder.yml to handle css browser prefix compatibility
+* style options in builder.yml to handle css browser prefix compatibility
 
 ## 3.0.4 - 2016-12-14 ##
 ### Fixed
-on demand resize function
+* on demand resize function
 ### Updated
-jquery.touchSwipe.js to 1.6.18 and re-integrated in polyfill folder
+* jquery.touchSwipe.js to 1.6.18 and re-integrated in polyfill folder
 
 ## 3.0.5 - 2016-12-14 ##
 ### Fixed
-on demand resize function
+* on demand resize function
 ### Updated
-jquery.touchSwipe.js to 1.6.18 and re-integrated in polyfill folder
+* jquery.touchSwipe.js to 1.6.18 and re-integrated in polyfill folder
 
 
 ## 3.0.4 - 2016-12-07 ##
@@ -48,12 +53,12 @@ jquery.touchSwipe.js to 1.6.18 and re-integrated in polyfill folder
 
 
 ## 3.0.3 - 2016-12-07 ##
-Public release
+* Public release
 
 
 ## 3.0.2 - 2016-11-18 ##
 ### Removed ###
-mod-- modernizr class prefix + reduced feature detection ( removed svg, canvas, video ...)
+* mod-- modernizr class prefix + reduced feature detection ( removed svg, canvas, video ...)
 ### Added ###
 * Object position now supported 
 
