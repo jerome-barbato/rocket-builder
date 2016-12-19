@@ -38,10 +38,10 @@ var UXPopin = function(id, content, context){
         html   : {
 
             popin : '<div class="ux-popin">'+
-                      '<div class="valign"><div class="valign__middle ux-popin__overlay">'+
-                        '<div class="ux-popin__content"></div>'+
-                      '</div></div>'+
-                    '</div>',
+            '<div class="valign"><div class="valign__middle ux-popin__overlay">'+
+            '<div class="ux-popin__content"></div>'+
+            '</div></div>'+
+            '</div>',
             close : '<a class="ux-popin__close"></a>'
         }
     };
@@ -96,6 +96,11 @@ var UXPopin = function(id, content, context){
                     close();
                 }
             }
+        });
+
+        $popin.on('ux-popin.close', function(e) {
+
+            close();
         });
     };
 
@@ -158,7 +163,7 @@ var UXPopin = function(id, content, context){
 
         $body.append($popin);
         $popin.addClass('ux-popin--'+config.id);
-        
+
         if( 'angular' in window && angular.$injector ){
 
             angular.$injector.invoke(function($compile, $rootScope){

@@ -266,68 +266,100 @@ var UXMap = function($map, template, config, callback){
                 marker.label = {text: labels[i++ % labels.length], color: 'white', fontSize:'12px'};
         });
 
-        self.context.gmap.marker(markers).then(function(markers){
+        if( 'cluster' in self.config ) {
 
-            self.context.markers = self.context.markers.concat(markers);
-
-        }).on({
-
-                mouseover: function(marker){
-
-                    marker.setIcon(marker.icon_hover);
-                    $(document).trigger('ux-map.over', [self.context.map, marker.index]);
-                },
-                mouseout: function(marker){
-
-                    if( !self.context.has_overlay ){
-
-                        marker.setIcon(marker.icon_out);
-
-                        $(document).trigger('ux-map.out', [self.context.map, marker.index]);
-                    }
-                },
-                click: function(marker){
-
-                    if( self.context.marker )
-                        self.context.marker.setIcon(self.context.marker.icon_out);
-
-                    self.context.marker = marker;
-
-                    marker.setIcon(marker.icon_hover);
-
-                    $(document).trigger('ux-map.click', [self.context.map, marker.index]);
-
-                    if( !browser.phone ){
-
-                        self.clearOverlay();
-
-                        self.context.has_overlay = true;
-
-                        var html = self.config.overlay.html;
-
-                        html = html.populate(marker);
-
-                        self.context.gmap.overlay({
-                            position: marker.getPosition(),
-                            content: html,
-                            y: self.config.overlay.y,
-                            x: self.config.overlay.x
-
-                        }).then(function(overlay) {
-
-                            self.context.overlay = overlay;
-                            overlay.$.find('[data-close]').click(function() {
-
-                                marker.setIcon(marker.icon_out);
-                                self.context.marker = false;
-
-                                self.clearOverlay();
-                                $(document).trigger('ux-map.out', [self.context.map, marker.index]);
-                            });
-                        });
+            self.context.gmap.cluster({
+                size: self.config.cluster.size,
+                markers: markers,
+                cb: function (markers) {
+                    if (markers.length > 1) {
+                        return {
+                            content: '<div class="'+self.config.cluster.class+'"><span>' + markers.length + '</span></div>',
+                            x: self.config.cluster.x,
+                            y: self.config.cluster.y
+                        };
                     }
                 }
+            })
+        }
+        else{
+
+            self.context.gmap.marker(markers).then(function(markers){
+
+                self.context.markers = self.context.markers.concat(markers);
+
             });
+        }
+
+        self.context.gmap.on({
+
+            mouseover: function(marker){
+
+                if( typeof marker == 'undefined')
+                    return;
+
+                marker.setIcon(marker.icon_hover);
+                $(document).trigger('ux-map.over', [self.context.map, marker.index]);
+            },
+            mouseout: function(marker){
+
+                if( typeof marker == 'undefined')
+                    return;
+
+                if( !self.context.has_overlay ){
+
+                    marker.setIcon(marker.icon_out);
+
+                    $(document).trigger('ux-map.out', [self.context.map, marker.index]);
+                }
+            },
+            click: function(marker){
+
+                if( typeof marker == 'undefined')
+                    return;
+
+                if( self.context.marker )
+                    self.context.marker.setIcon(self.context.marker.icon_out);
+
+                self.context.marker = marker;
+
+                marker.setIcon(marker.icon_hover);
+
+                $(document).trigger('ux-map.click', [self.context.map, marker.index]);
+
+                if( !browser.phone ){
+
+                    self.clearOverlay();
+
+                    self.context.has_overlay = true;
+
+                    var html = self.config.overlay.html;
+
+                    html = html.populate(marker);
+
+                    self.context.gmap.overlay({
+                        position: marker.getPosition(),
+                        content: html,
+                        y: self.config.overlay.y,
+                        x: self.config.overlay.x
+
+                    }).then(function(overlay) {
+
+                        self.context.overlay = overlay;
+                        overlay.$.find('[data-close]').click(function() {
+
+                            marker.setIcon(marker.icon_out);
+                            self.context.marker = false;
+
+                            self.clearOverlay();
+                            $(document).trigger('ux-map.out', [self.context.map, marker.index]);
+                        });
+                    });
+                }
+            }
+        });
+
+        /**/
 
         if( fit )
             self.context.gmap.fit();
