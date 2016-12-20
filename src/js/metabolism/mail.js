@@ -29,7 +29,7 @@ var UXMail = function(){
 
         $(this).removeAttr('data-name').removeAttr('data-domain');
 
-        if( !$(this).text().length )
+        if( $(this).text() == 'mailto' )
             $(this).text(email);
     };
 

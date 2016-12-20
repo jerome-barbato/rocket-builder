@@ -50,9 +50,11 @@ var UXDetectScroll = function(){
         var element = {
             $          : $element,
             position   : $element.hasDataAttr('detect-scroll') ? $element.data('detect-scroll') : 'top-reached',
-            top        : $element.offset().top,
+            top        : self._getOffset($element).top,
             reached    : false
         };
+
+        element.$.attr('data-top',element.top)
 
         element.bottom = element.top + $element.outerHeight();
 
@@ -71,9 +73,11 @@ var UXDetectScroll = function(){
 
             if( !element.reached ){
 
-                element.top    = element.$.offset().top;
+                element.top    = self._getOffset(element.$).top;
                 element.bottom = element.top + element.$.outerHeight();
             }
+
+            element.$.attr('data-top', element.top)
         }
 
         self.context.window_height   = $(self.context.$window).height();
@@ -191,7 +195,22 @@ var UXDetectScroll = function(){
         }
     };
 
+    self._getOffset = function( $element ){
 
+        var el = $element.get(0);
+
+        var _x = 0; var _y = 0;
+
+        while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+
+            _x += el.offsetLeft;
+            _y += el.offsetTop;
+            el = el.offsetParent;
+
+        }
+
+        return { top: _y, left: _x };
+    };
 
     /* Contructor. */
 
@@ -211,6 +230,7 @@ var UXDetectScroll = function(){
 
         self.context.$window
             .on('scroll', self._detect)
+            .on('loaded', self._resize)
             .on('resize', self._resize);
     };
 

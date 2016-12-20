@@ -6,10 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.1.6 - 2016-12-19 ##
+### Fixed
+* Detect scroll : Wrong offset detection when using css transform
+
 ## 3.1.5 - 2016-12-19 ##
 ### Added
 * Map now handle clusters
-
 
 ## 3.1.4 - 2016-12-19 ##
 ### Added
