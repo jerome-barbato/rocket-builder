@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.1.7 - 2016-12-22 ##
+### Fixed
+* Defer not working
+
 ## 3.1.6 - 2016-12-19 ##
 ### Fixed
 * Detect scroll : Wrong offset detection when using css transform

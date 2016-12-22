@@ -17,19 +17,11 @@
 
 var UXDefer = function() {
 
-    var self = this;
-
-    self.__construct = function(){
-
-        $('.ux-defer').initialize(function(){
-
-            $(this).attr('src', $(this).data('src') );
-            $(this).removeAttr('data-src').removeClass('ux-defer');
-        });
-    };
-
-    self.__construct();
-
+    $('[data-defer]').initialize(function(){
+        
+        $(this).attr('src', $(this).data('defer') );
+        $(this).removeAttr('data-defer');
+    });
 
     if( typeof DOMCompiler !== "undefined" ) {
 
@@ -41,9 +33,7 @@ var UXDefer = function() {
                     elem.attr('src', "{{ blank() }}");
 
                 if( attrs.defer )
-                    dom.compiler.attr(elem, 'src', attrs.defer);
-
-                elem.addClass('ux-defer');
+                    dom.compiler.attr(elem, 'defer', attrs.defer);
             }
         });
     }
