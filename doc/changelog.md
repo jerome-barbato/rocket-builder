@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.1.8 - 2016-12-28 ##
+### Fixed
+* Wrong popin id usage
+* Broken map clusters cleaning
+
 ## 3.1.7 - 2016-12-22 ##
 ### Fixed
 * Defer not working

@@ -55,6 +55,7 @@ var UXMap = function($map, template, config, callback){
     };
 
     self.context = {
+        cluster  : false,
         markers  : [],
         marker   : false,
         overlays : [],
@@ -176,13 +177,26 @@ var UXMap = function($map, template, config, callback){
 
     self.clearMarkers = function(){
 
-        $.each(self.context.markers, function(i, marker){
+        if( self.context.cluster ){
 
-            marker.setMap(null);
-            delete self.context.markers[i];
-        });
+            var markers = self.context.cluster.markers();
+            $.each(markers, function(i, marker){
 
-        self.context.markers = [];
+                self.context.cluster.remove(marker);
+            });
+
+            self.context.cluster = false;
+        }
+        else{
+
+            $.each(self.context.markers, function(i, marker){
+
+                marker.setMap(null);
+                delete self.context.markers[i];
+            });
+
+            self.context.markers = [];
+        }
     };
 
 
@@ -280,7 +294,12 @@ var UXMap = function($map, template, config, callback){
                         };
                     }
                 }
-            })
+
+            }).then(function(cluster){
+
+                self.context.markers = [];
+                self.context.cluster = cluster;
+            });
         }
         else{
 
@@ -327,7 +346,7 @@ var UXMap = function($map, template, config, callback){
 
                 $(document).trigger('ux-map.click', [self.context.map, marker.index]);
 
-                if( !browser.phone ){
+                if( !browser.phone || ('phone' in self.config.overlay && self.config.overlay.phone) ){
 
                     self.clearOverlay();
 

@@ -6,7 +6,8 @@
   {
     html.#{$unsupported-browser} body{
       > *{ display: none!important; visibility: hidden!important }
-      background: url("../medias/misc/not-supported.jpg") no-repeat center #f4f4f4!important;
+      background: url("../media/misc/not-supported.jpg") no-repeat center #f4f4f4!important;
+      background-size: 300px auto!important;
     }
   }
 }
