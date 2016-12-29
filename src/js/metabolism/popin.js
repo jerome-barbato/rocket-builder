@@ -34,7 +34,6 @@ var UXPopin = function(id, content, context){
     /* Public */
 
     var config = {
-        id     : false,
         html   : {
 
             popin : '<div class="ux-popin">'+
@@ -162,7 +161,7 @@ var UXPopin = function(id, content, context){
             $content.append(config.html.close);
 
         $body.append($popin);
-        $popin.addClass('ux-popin--'+config.id);
+        $popin.addClass('ux-popin--'+id);
 
         if( 'angular' in window && angular.$injector ){
 
