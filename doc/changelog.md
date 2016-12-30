@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.0 - 2016-12-30 ##
+### Changed
+* Major, popin and angulight now require template to be declared in <script type="text/template"> to solve SEO issues
+
 ## 3.1.9 - 2016-12-29 ##
 ### Fixed
 * Wrong popin id usage

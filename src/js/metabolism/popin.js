@@ -71,7 +71,7 @@ var UXPopin = function(id, content, context){
         self.context = $.extend(self.context, context);
 
         if( typeof(content) == "undefined" || content === false )
-            content = $('template#'+id).html();
+            content = $('script[type="text/template"]#'+id).html();
 
         add(content);
         setupEvents();

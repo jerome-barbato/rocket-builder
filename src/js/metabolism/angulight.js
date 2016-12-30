@@ -123,7 +123,7 @@ var angularLight = function(){
 
     self.__construct = function(){
 
-        $('template[id]').each(function(){
+        $('script[type="text/template"]').each(function(){
             self.context.templates[ $(this).attr('id') ] = $(this).html();
         });
 
