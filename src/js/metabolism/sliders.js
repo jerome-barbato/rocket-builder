@@ -142,7 +142,7 @@ var UXSlider = function(config) {
 
         self._addMod(self.config.$element, 'slider', 'animation-'+self.config.animation);
 
-        self.context.$slides_container.wrap('<div class="'+self.classnames.scroller+'"/>');
+        //self.context.$slides_container.wrap('<div class="'+self.classnames.scroller+'"/>');
 
         if (self.context.slide_count < 2)
             self.context.$arrows_container.hide();
@@ -156,14 +156,22 @@ var UXSlider = function(config) {
 
         self._initArrows();
         self._initPagination();
+        self._load();
+    };
+
+
+    self._load = function(){
+
         self._preload();
-
-        setTimeout(function(){ self.config.$element.addClass('ux-slider--loaded') });
-
-        $(window).load(function(){
-
+        var _load = function(){
             self._show(Math.min(self.context.slide_count, self.config.start_slide), false);
-        });
+            setTimeout(function(){ self.config.$element.addClass('ux-slider--loaded') });
+        };
+
+        if( document.readyState === "complete" )
+            _load();
+        else
+            $(window).load(_load);
     };
 
 

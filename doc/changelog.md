@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.1 - 2017-01-02 ##
+### Fixed
+* Popin issue : cannot be opened more than once
+* Slider initialisation when window is already loaded
+* Grid on mobile reset
+### Added
+* Slider : stack animation
+
 ## 3.2.0 - 2016-12-30 ##
 ### Changed
 * Major, popin and angulight now require template to be declared in <script type="text/template"> to solve SEO issues

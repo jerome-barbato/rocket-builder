@@ -34,6 +34,7 @@
   .g-col{
     float: left; width: 100%; border-collapse: collapse; display: block;
     position: relative;
+    @media #{$media-mobile} { max-width: none }
     @if variable-exists(grid-col-padding) { padding: $grid-col-padding }
     @for $j from 1 through 10{
       @for $i from 2 through 10{

@@ -6,7 +6,7 @@
  *   - Metabolism <jerome@metabolism.fr>
  *
  * License: GPL
- * Version: 2.0
+ * Version: 2.0.1
  *
  * Requires:
  *   - jQuery
@@ -258,7 +258,7 @@ var UXPopins = function(){
             context = $(this).data();
         }
 
-        self.add($(this).data('popin'), false, context);
+        new UXPopin($(this).data('popin'), false, context);
     });
 
 
