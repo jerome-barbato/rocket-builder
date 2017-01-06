@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 3.2.2 - 2017-01-06 ##
 ### Fixed
-* Defer now use fit on change
-* Wrong class added on slider when unique
+* Defer : now use fit on change
+* Slider : Wrong class added on slider when unique
+### Added
+* Detect scroll : added has-scrolled class
 
 ## 3.2.1 - 2017-01-02 ##
 ### Fixed

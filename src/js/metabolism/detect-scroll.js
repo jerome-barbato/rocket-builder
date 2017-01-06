@@ -145,7 +145,7 @@ var UXDetectScroll = function(){
                 self.context.top_reached = false;
                 self.context.in_between = true;
                 self.context.bottom_reached = false;
-                self.context.$body.addClass('scroll--between').removeClass('scroll--top-reached scroll--bottom-reached');
+                self.context.$body.addClass('scroll--between  has-scrolled').removeClass('scroll--top-reached scroll--bottom-reached');
 
                 self.context.$body.trigger('ux-scroll.between');
             }
