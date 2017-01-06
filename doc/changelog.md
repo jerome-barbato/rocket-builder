@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.2 - 2017-01-06 ##
+### Fixed
+* Defer now use fit on change
+
 ## 3.2.1 - 2017-01-02 ##
 ### Fixed
 * Popin issue : cannot be opened more than once

@@ -21,6 +21,9 @@ var UXDefer = function() {
         
         $(this).attr('src', $(this).data('defer') );
         $(this).removeAttr('data-defer');
+
+        if( $.fn.fit )
+            $(this).fit(true);
     });
 
     if( typeof DOMCompiler !== "undefined" ) {
