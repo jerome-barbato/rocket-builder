@@ -361,12 +361,12 @@ var UXSlider = function(config) {
 
         self.context.$current_slide = self.context.$slides.eq(self.context.indices.current);
 
-        if( self.context.indices.next >= 0 && self.context.indices.next < self.context.slide_count )
+        if( self.context.indices.next >= 0 && self.context.indices.next < self.context.slide_count && self.context.slide_count > 1 )
             self.context.$next_slide = self.context.$slides.eq(self.context.indices.next);
         else
             self.context.$next_slide = false;
 
-        if( self.context.indices.previous >= 0 && self.context.indices.previous < self.context.slide_count )
+        if( self.context.indices.previous >= 0 && self.context.indices.previous < self.context.slide_count && self.context.slide_count > 1 )
             self.context.$previous_slide = self.context.$slides.eq(self.context.indices.previous);
         else
             self.context.$previous_slide = false;
