@@ -6,9 +6,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.4 - 2017-01-10 ##
+### Added
+* Custom library for select ( for the moment ) using jQuery ui selectmenu
+
+    `<select custom>
+      <option></option>
+    </select>`
+    
+    `<select custom placeholder="Select item">
+      <option></option>
+    </select>`
+
 ## 3.2.3 - 2017-01-10 ##
 ### Added
-* Tag library for google analytics : <a tag="xx|yy|zz"></a> execute ga('send', 'event', 'xx', 'yy', 'zz');
+* Tag library for google analytics
+
+    `<a tag="xx|yy|zz"></a>` execute ga('send', 'event', 'xx', 'yy', 'zz');
 
 API :  
 - ux.tag.event('xx', 'yy', 'zz');

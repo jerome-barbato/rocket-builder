@@ -100,7 +100,7 @@ dom.compiler.register('attribute', 'icon', function(elem, attrs){
 dom.compiler.register('attribute', 'icon-after', function(elem, attrs){
 
     if( 'iconAfter' in attrs && attrs.iconAfter.length )
-        elem.addClass('ux-con-after ux-icon-after--'+attrs.iconAfter);
+        elem.addClass('ux-icon-after ux-icon-after--'+attrs.iconAfter);
 });
 
 
@@ -271,6 +271,7 @@ dom.compiler.register('element', 'youtube-embed', function(elem, attrs){
         modestbranding : 1,
         rel            : 0,
         showinfo       : 0,
+        loop           : 0,
         theme          : 'light',
         hl             : 'en',
         controls       : 1
