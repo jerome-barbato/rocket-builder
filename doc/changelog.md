@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.3 - 2017-01-10 ##
+### Added
+* Tag library for google analytics : <a tag="xx|yy|zz"></a> execute ga('send', 'event', 'xx', 'yy', 'zz');
+
+API :  
+- ux.tag.event('xx', 'yy', 'zz');
+- ux.tag.page('/url');
+
 ## 3.2.2 - 2017-01-06 ##
 ### Fixed
 * Defer : now use fit on change
