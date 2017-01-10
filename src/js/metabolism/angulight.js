@@ -48,7 +48,7 @@ var angularLight = function(){
         var name   = self.camelCase( data[0] );
         var params = [$element];
 
-       if( data.length == 2  ){
+        if( data.length == 2  ){
 
             var raw_params = data[1].replace(')','').replace(", '",",'").replace("' ,","',").split(',');
 
@@ -64,8 +64,8 @@ var angularLight = function(){
                     raw_params[i] = parseFloat(raw_params[i]);
             }
 
-           params = params.concat(raw_params);
-       }
+            params = params.concat(raw_params);
+        }
 
         if( type == 'repeater' ) {
 
@@ -112,13 +112,13 @@ var angularLight = function(){
 
     self._guid = guid || function() {
 
-        var s4 = function() {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
+            var s4 = function() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            };
+            return s4() + s4();
         };
-        return s4() + s4();
-    };
 
 
     self.__construct = function(){
@@ -148,6 +148,15 @@ var angularLight = function(){
         });
 
 
+        $('[data-remove_on]').initialize(function(){
+
+            var removeOn = $(this).data('remove_on');
+
+            if ((removeOn == "mobile" && browser.mobile) || (removeOn == "desktop" && browser.desktop) || (removeOn == "tablet" && browser.tablet) || (removeOn == "phone" && browser.phone))
+                $(this).remove();
+        });
+
+
         $('[data-if-not]').initialize(function(){
 
             var condition = $(this).data('if-not');
@@ -164,6 +173,11 @@ var angularLight = function(){
         dom.compiler.register('attribute', 'controller', function(elem, attrs) {
 
             elem.attr('data-controller', attrs.controller);
+        });
+
+        dom.compiler.register('attribute', 'remove-on', function(elem, attrs){
+
+            elem.attr('data-remove_on', attrs.removeOn);
         });
 
         // Compatibility

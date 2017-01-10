@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 3.2.5 - 2017-01-10 ##
 ### Fixed
 - console.time error on IE
-- loop on youtube embed
+- loop on youtube embed, enablejsapi option
+- remove on, migrated to angulight
 
 ## 3.2.4 - 2017-01-10 ##
 ### Added

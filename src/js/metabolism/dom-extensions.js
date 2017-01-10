@@ -44,32 +44,17 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
     var size = attrs.sizer.replace('/', 'x');
 
-    if (window.precompile){
+    if( elem.is('img') ){
 
-        if( elem.is('img') ){
+        elem.attr('src', "{{ asset_url('/media/sizer/" + size + ".png') }}");
+        elem.addClass('ux-sizer');
 
-            elem.attr('src', "{{ asset_url('/media/sizer/" + size + ".png') }}");
-            elem.addClass('ux-sizer');
-
-            if( 'src' in attrs )
-                elem.css('backgroundImage', "url('"+attrs.src+"')");
-        }
-        else
-            elem.prepend('<div class="ux-sizer" data-ratio="'+attrs.sizer+'">');
+        if( 'src' in attrs )
+            elem.css('backgroundImage', "url('"+attrs.src+"')");
     }
-    else if ( typeof app != "undefined" && 'asset' in app  ){
+    else
+        elem.prepend('<div class="ux-sizer" data-ratio="'+attrs.sizer+'">');
 
-        if( elem.is('img') ){
-
-            elem.attr('src', app.asset + '/media/sizer/' + size + '.png');
-            elem.addClass('ux-sizer');
-
-            if( 'src' in attrs )
-                elem.css('backgroundImage', "url('"+attrs.src+"')");
-        }
-        else
-            elem.prepend('<div class="ux-sizer" data-ratio="'+attrs.sizer+'">');
-    }
 });
 
 
@@ -182,61 +167,21 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
     }
 });
 
+
 ['block', 'icon', 'icon', 'page', 'component', 'tmp', 'misc'].map(function(type){
 
     dom.compiler.register('attribute', type+'-src', function(elem, attrs){
 
-        if (window.precompile){
+        var src = attrs[type+'Src'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+        elem.attr('src', "{{ asset_url('/media/"+type+"/" + src + "') }}");
 
-            var src = attrs[type+'Src'].replace('{{','\' ~ ').replace('}}',' ~ \'');
-            elem.attr('src', "{{ asset_url('/media/"+type+"/" + src + "') }}");
-        }
-        else{
-
-            if( typeof app == "undefined" || ! 'asset' in app  ) {
-
-                console.warn('app.asset not defined');
-                elem.attr('src', attrs[type+'Src']);
-            }
-            else {
-
-                elem.attr('src', app.asset + '/media/'+type+'/' + attrs[type+'Src']);
-            }
-        }
     });
 
     dom.compiler.register('attribute', type+'-background', function(elem, attrs){
 
-        if (window.precompile){
-
-            var src = attrs[type+'Background'].replace('{{','\' ~ ').replace('}}',' ~ \'');
-            elem.attr('style', "background-image:url('{{ asset_url('/media/"+type+"/" + src + "') }}')");
-        }
-        else{
-
-            if( typeof app == "undefined" || ! 'asset' in app  ) {
-
-                console.warn('app.asset not defined');
-                elem.css('backgroundImage',  'url("'+attrs[type+'Background']+'")');
-            }
-            else {
-
-                elem.css('backgroundImage', "url('"+app.asset + "/media/" + type + "/" + attrs[type+'Src']+"')");
-            }
-        }
+        var src = attrs[type+'Background'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+        elem.attr('style', "background-image:url('{{ asset_url('/media/"+type+"/" + src + "') }}')");
     });
-});
-
-
-dom.compiler.register('attribute', 'remove-on', function(elem, attrs){
-
-    if( attrs.removeOn && attrs.removeOn.length ) {
-
-        var removeOn = attrs.removeOn;
-
-        if ((removeOn == "mobile" && browser && browser.mobile) || (removeOn == "desktop" && browser && browser.desktop))
-            elem.remove();
-    }
 });
 
 
@@ -284,14 +229,13 @@ dom.compiler.register('element', 'youtube-embed', function(elem, attrs){
             options[index] =  attrs[index];
     });
 
-    // required, see the youtube doc
     if( options.loop )
         options.playlist = attrs.id;
 
     var url = 'https://www.youtube.com/v/'+attrs.id+'?'+ $.param(options);
 
     if( options.defer )
-        return '<iframe src="" data-defer="'+url+'" allowfullscreen class="youtube-embed"></iframe>';
+        return '<iframe data-src="'+url+'" allowfullscreen class="youtube-embed ux-defer"></iframe>';
     else
         return '<iframe src="'+url+'" allowfullscreen class="youtube-embed"></iframe>';
 });
