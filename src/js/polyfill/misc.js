@@ -41,11 +41,22 @@ Number.prototype.format = function(n, x) {
 
 
 
+/**
+ * Console fallback
+ */
 if (typeof console == "undefined")
-    window.console = { log: function() {}, time: function() {}, error: function() {}};
+    console = { log: function() {}, time: function() {},  timeEnd: function() {}, error: function() {}};
+
+if( typeof console.time == "undefined" ){
+
+    console.time = function(){};
+    console.timeEnd = function(){};
+}
 
 
-
+/**
+ * Modernizr fallback
+ */
 if (typeof Modernizr == "undefined")
     window.Modernizr = false;
 
