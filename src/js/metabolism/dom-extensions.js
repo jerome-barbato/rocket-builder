@@ -274,7 +274,8 @@ dom.compiler.register('element', 'youtube-embed', function(elem, attrs){
         loop           : 0,
         theme          : 'light',
         hl             : 'en',
-        controls       : 1
+        controls       : 1,
+        enablejsapi    : 0
     };
 
     $.each(options, function(index){
@@ -290,7 +291,7 @@ dom.compiler.register('element', 'youtube-embed', function(elem, attrs){
     var url = 'https://www.youtube.com/v/'+attrs.id+'?'+ $.param(options);
 
     if( options.defer )
-        return '<iframe data-src="'+url+'" allowfullscreen class="youtube-embed ux-defer"></iframe>';
+        return '<iframe src="" data-defer="'+url+'" allowfullscreen class="youtube-embed"></iframe>';
     else
         return '<iframe src="'+url+'" allowfullscreen class="youtube-embed"></iframe>';
 });
