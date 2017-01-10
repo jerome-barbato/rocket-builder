@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.5 - 2017-01-10 ##
+### Fixed
+- console.time error on IE
+
 ## 3.2.4 - 2017-01-10 ##
 ### Added
 * Custom library for select ( for the moment ) using jQuery ui selectmenu
