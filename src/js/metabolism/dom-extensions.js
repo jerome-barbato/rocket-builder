@@ -283,7 +283,11 @@ dom.compiler.register('element', 'youtube-embed', function(elem, attrs){
             options[index] =  attrs[index];
     });
 
-    var url = 'https://www.youtube.com/embed/'+attrs.id+'?'+ $.param(options);
+    // required, see the youtube doc
+    if( options.loop )
+        options.playlist = attrs.id;
+
+    var url = 'https://www.youtube.com/v/'+attrs.id+'?'+ $.param(options);
 
     if( options.defer )
         return '<iframe data-src="'+url+'" allowfullscreen class="youtube-embed ux-defer"></iframe>';
