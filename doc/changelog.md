@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.6 - 2017-01-11 ##
+### Added
+- .yarnclean
+
 ## 3.2.5 - 2017-01-10 ##
 ### Fixed
 - console.time error on IE
