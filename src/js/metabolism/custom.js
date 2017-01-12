@@ -43,13 +43,22 @@ var UXCustomInput = function() {
             $('select[data-custom]').initialize(function(){
 
                 var options = {
-                    icons: { button: "ux-icon ux-icon--selectmenu" }
+                    icons: { button: "ux-icon ux-icon--selectmenu" },
+                    change: function( event, ui ) {
+
+                        if( $(this).val().length )
+                            $element.addClass('ui-selectmenu-button-filled');
+                        else
+                            $element.removeClass('ui-selectmenu-button-filled');
+                    }
                 };
 
                 if( $(this).hasDataAttr('placeholder') )
                     options.placeholder = $(this).data('placeholder');
 
                 $(this).selectmenu(options);
+
+                var $element = $(this).selectmenu( "widget" );
             });
         }
     };
