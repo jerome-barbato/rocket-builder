@@ -32,7 +32,7 @@ var config = module.exports = {
     /** Load function will set configuration variables */
     load: function load() {
 
-        config.builder = yaml.safeLoad(fs.readFileSync(config.base_path+'/config/builder.yml'));
+        config.builder = yaml.safeLoad(fs.readFileSync(config.base_path+'/app/config/builder.yml'));
 
         // Start backward compatibility
         if( 'vendor' in config.builder ){
