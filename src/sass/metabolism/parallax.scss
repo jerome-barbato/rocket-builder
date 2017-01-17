@@ -1,7 +1,7 @@
 @mixin lib-parallax{
 
   [data-parallax]{
-    backface-visibility: hidden; will-change: transform;
+    will-change: transform;
   }
   span[data-parallax]{ display: inline-block }
 }

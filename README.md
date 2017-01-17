@@ -3,6 +3,7 @@
 ## Documentation
 * [Changelog](doc/changelog.md)
 * [Coding Standards](doc/coding-standard.md)
+(Add all the doc here)
 
 INTRODUCTION
 ------------
@@ -42,7 +43,7 @@ Fresh install
 INSTALLATION
 ------------
 
-####Download
+### Download
 * Option n°1 : NPM
 
 In dependecies field from your package.json, please send us your ssh key.
@@ -54,7 +55,7 @@ In dependecies field from your package.json, please send us your ssh key.
 * Option n°2 : Git 
 
         git clone git@bitbucket.org:Metabolism/rocket-builder.git builder
-####Dependencies
+### Dependencies
 Depending on what usage you will do of the builder, two options are availables :
 
 * Minimum dependencies
@@ -92,20 +93,6 @@ For your comfort, some arguments are available :
         Add specific behavior for a framework
     --theme "meta"
         Add specific behavior for theme
-   
-        
-Tools
------------
-
-Some tools are available thought gulp
-
-### Create ###
-
-    gulp create --block my_block
-    gulp create --block subfolder/my_block
-    
-    gulp create --component my_component
-    gulp create --component subfolder/my_component
         
 MAINTAINERS
 -----------

@@ -9,7 +9,7 @@ $animation-delay : $animation-duration/10;
   @each $name, $properties in $animations{
     [data-animation="#{$name}"]{
       animation: $name $animation-duration $ease-out-cubic both;
-      will-change: unquote($properties); backface-visibility: hidden;
+      will-change: unquote($properties);
     }
     @media #{$media-tablet} {
       [data-tablet-animation="#{$name}"]{ animation-name: #{$name}; will-change: unquote($properties) }

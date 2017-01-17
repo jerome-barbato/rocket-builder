@@ -3,7 +3,7 @@
   .ux-router{
     display: none;
     &--current{ display: block }
-    &--animate{ backface-visibility: hidden; animation-duration: $animation-duration; animation-timing-function: $ease-in-out-cubic }
+    &--animate{ will-change: transform, opacity; animation-duration: $animation-duration; animation-timing-function: $ease-in-out-cubic }
     &--enter{}
     &--leave{}
     &--fade-in{ animation-name: fade-in }

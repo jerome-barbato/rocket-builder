@@ -148,6 +148,7 @@ var UXFit = function() {
 
                 if( !isNaN(ratio) ){
 
+                    $element.attr('width', width).attr('height', height);
                     $element.data('ratio', ratio);
 
                     if( callback )
