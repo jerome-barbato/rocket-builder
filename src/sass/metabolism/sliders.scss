@@ -95,33 +95,33 @@
         #{$zoom}[data-direction="backward"] > &{ animation-name: unzoom-in }
       }
       &--previous{
-        #{$zoom}[data-direction="forward"] > * { animation-name: unzoom-out }
-        #{$zoom}[data-direction="backward"] > * { animation-name: zoom-out }
+        #{$zoom}[data-direction="forward"] > & { animation-name: unzoom-out }
+        #{$zoom}[data-direction="backward"] > & { animation-name: zoom-out }
       }
 
 
       //vertical
       $vertical : '[data-transition="vertical"]';
       &--current{
-        #{$vertical}[data-direction="forward"] > * { animation-name: slide-from-bottom }
-        #{$vertical}[data-direction="backward"] > * { animation-name: slide-from-top }
+        #{$vertical}[data-direction="forward"] > & { animation-name: slide-from-bottom }
+        #{$vertical}[data-direction="backward"] > & { animation-name: slide-from-top }
       }
       &--previous{
-        #{$vertical}[data-direction="forward"] > * { animation-name: slide-to-bottom }
-        #{$vertical}[data-direction="backward"] > * { animation-name: slide-to-top }
+        #{$vertical}[data-direction="forward"] > & { animation-name: slide-to-bottom }
+        #{$vertical}[data-direction="backward"] > & { animation-name: slide-to-top }
       }
 
 
       //stack
       $stack : '[data-transition="stack"]';
       &--current{
-        #{$stack}[data-direction="forward"] > * { animation-name: offset-by-0 }
+        #{$stack}[data-direction="forward"] > & { animation-name: offset-by-0 }
       }
       &--previous{
-        #{$stack}[data-direction="forward"] > * { animation-name: offset-by--4; z-index: 3 }
+        #{$stack}[data-direction="forward"] > & { animation-name: offset-by--4; z-index: 3 }
       }
       &--next{
-        #{$stack}[data-direction="forward"] > * { animation-name: offset-by-4 }
+        #{$stack}[data-direction="forward"] > & { animation-name: offset-by-4 }
         .ux-slider--animation-stack > * { transform: translate3d(4rem, 4rem, 0); opacity: 0.5; display: block }
       }
 
@@ -142,13 +142,13 @@
 
       //none
       &--previous{
-        [data-transition="none"] > * { display: block }
+        [data-transition="none"] > & { display: block }
       }
 
 
       //crossfade
       &--current{
-        [data-transition="crossfade"] > * { animation-name: fade-in; animation-duration: $ux-slider-speed*2 }
+        [data-transition="crossfade"] > & { animation-name: fade-in; animation-duration: $ux-slider-speed*2 }
       }
     }
   }
