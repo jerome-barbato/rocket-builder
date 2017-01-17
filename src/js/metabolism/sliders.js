@@ -331,9 +331,8 @@ var UXSlider = function(config) {
                 return false;
         }
 
-        self.context.$slides_container
-            .attr('data-direction', (direction=='right'?'forward':'backward'))
-            .attr('data-index', (parseInt(target)+1));
+        self.context.$slides_container.attr('data-direction', (direction=='right'?'forward':'backward'));
+        self.config.$element.attr('data-index', (parseInt(target)+1));
 
         self.context.direction        = direction;
         self.context.indices.current  = target;
@@ -427,7 +426,7 @@ var UXSlider = function(config) {
             if( !self.context.loop )
                 callback();
             else
-                self._addMod(self.config.$element, 'slider', 'animating');
+                self._addMod(self.context.$slides_container, 'slides', 'animating');
 
             var $animatedSlides  = self.context.$slides.filter(':visible').not(function(){
 
@@ -447,14 +446,15 @@ var UXSlider = function(config) {
 
                 if( i == $animatedSlides.length ){
 
-                    self._removeMod(self.config.$element, 'slider', 'animating');
+                    console.log(self.context.$slides_container)
+                    self._removeMod(self.context.$slides_container, 'slides', 'animating');
                     callback();
                 }
             });
 
             if( !self.config.use_transition || !$animatedSlides.length){
 
-                self._removeMod(self.config.$element, 'slider', 'animating');
+                self._removeMod(self.context.$slides_container, 'slides', 'animating');
                 callback();
             }
         }
