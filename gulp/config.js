@@ -34,6 +34,9 @@ var config = module.exports = {
 
         config.builder = yaml.safeLoad(fs.readFileSync(config.base_path+'/app/config/builder.yml'));
 
+        if( !config.builder || config.builder == undefined )
+            config.builder = yaml.safeLoad(fs.readFileSync(config.base_path+'/config/builder.yml'));
+
         // Start backward compatibility
         if( 'vendor' in config.builder ){
 
