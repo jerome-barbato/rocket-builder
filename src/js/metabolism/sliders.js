@@ -139,9 +139,10 @@ var UXSlider = function(config) {
         self._packSlides();
 
         self.config.$element.addClass('ux-preload');
-        self.config.$element.attr('data-transition', self.config.animation);
 
-        self.context.$slides_container.wrap('<div class="'+self.classnames.scroller+'"/>');
+        self.context.$slides_container
+            .attr('data-transition', self.config.animation)
+            .wrap('<div class="'+self.classnames.scroller+'"/>');
 
         if (self.context.slide_count < 2)
             self.context.$arrows_container.hide();
@@ -330,8 +331,9 @@ var UXSlider = function(config) {
                 return false;
         }
 
-        self.config.$element.attr('data-direction', (direction=='right'?'forward':'backward'));
-        self.config.$element.attr('data-index', (parseInt(target)+1));
+        self.context.$slides_container
+            .attr('data-direction', (direction=='right'?'forward':'backward'))
+            .attr('data-index', (parseInt(target)+1));
 
         self.context.direction        = direction;
         self.context.indices.current  = target;

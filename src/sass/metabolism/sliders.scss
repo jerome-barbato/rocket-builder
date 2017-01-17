@@ -5,11 +5,10 @@
     height: 100%; position: relative;
 
     &__slides {
-      width: 100%; overflow: hidden; z-index: 1;
-      position: relative; height: 100%
+      height: 100%; position: relative;
+      &[data-animation="stack"]{ overflow: visible }
     }
 
-    [data-animation="stack"] > &__slides{ overflow: visible }
 
     &__slide {
       height: 100%; position: absolute;
@@ -68,21 +67,21 @@
       //horizontal
       $horizontal : '[data-transition="horizontal"]';
       &--current{
-        #{$horizontal}[data-direction="forward"] > .ux-slider__slides > &{
+        #{$horizontal}[data-direction="forward"] > &{
           animation-name: slide-from-right;
           .ux-slider__slide__item{ animation-name: slide-from-right-only }
         }
-        #{$horizontal}[data-direction="backward"] > .ux-slider__slides > &{
+        #{$horizontal}[data-direction="backward"] > &{
           animation-name: slide-from-left;
           .ux-slider__slide__item{ animation-name: slide-from-left-only }
         }
       }
       &--previous{
-        #{$horizontal}[data-direction="forward"] > .ux-slider__slides > &{
+        #{$horizontal}[data-direction="forward"] > &{
           animation-name: slide-to-left;
           .ux-slider__slide__item{ animation-name: slide-to-left-only }
         }
-        #{$horizontal}[data-direction="backward"] > .ux-slider__slides > &{
+        #{$horizontal}[data-direction="backward"] > &{
           animation-name: slide-to-right;
           .ux-slider__slide__item{ animation-name: slide-to-right-only }
         }
@@ -92,38 +91,38 @@
       //zoom
       $zoom : '[data-transition="zoom"]';
       &--current{
-        #{$zoom}[data-direction="forward"] > .ux-slider__slides > &{ animation-name: zoom-in }
-        #{$zoom}[data-direction="backward"] > .ux-slider__slides > &{ animation-name: unzoom-in }
+        #{$zoom}[data-direction="forward"] > &{ animation-name: zoom-in }
+        #{$zoom}[data-direction="backward"] > &{ animation-name: unzoom-in }
       }
       &--previous{
-        #{$zoom}[data-direction="forward"] > .ux-slider__slides > &{ animation-name: unzoom-out }
-        #{$zoom}[data-direction="backward"] > .ux-slider__slides > &{ animation-name: zoom-out }
+        #{$zoom}[data-direction="forward"] > * { animation-name: unzoom-out }
+        #{$zoom}[data-direction="backward"] > * { animation-name: zoom-out }
       }
 
 
       //vertical
       $vertical : '[data-transition="vertical"]';
       &--current{
-        #{$vertical}[data-direction="forward"] > .ux-slider__slides > &{ animation-name: slide-from-bottom }
-        #{$vertical}[data-direction="backward"] > .ux-slider__slides > &{ animation-name: slide-from-top }
+        #{$vertical}[data-direction="forward"] > * { animation-name: slide-from-bottom }
+        #{$vertical}[data-direction="backward"] > * { animation-name: slide-from-top }
       }
       &--previous{
-        #{$vertical}[data-direction="forward"] > .ux-slider__slides > &{ animation-name: slide-to-bottom }
-        #{$vertical}[data-direction="backward"] > .ux-slider__slides > &{ animation-name: slide-to-top }
+        #{$vertical}[data-direction="forward"] > * { animation-name: slide-to-bottom }
+        #{$vertical}[data-direction="backward"] > * { animation-name: slide-to-top }
       }
 
 
       //stack
       $stack : '[data-transition="stack"]';
       &--current{
-        #{$stack}[data-direction="forward"] > .ux-slider__slides > &{ animation-name: offset-by-0 }
+        #{$stack}[data-direction="forward"] > * { animation-name: offset-by-0 }
       }
       &--previous{
-        #{$stack}[data-direction="forward"] > .ux-slider__slides > &{ animation-name: offset-by--4; z-index: 3 }
+        #{$stack}[data-direction="forward"] > * { animation-name: offset-by--4; z-index: 3 }
       }
       &--next{
-        #{$stack}[data-direction="forward"] > .ux-slider__slides > &{ animation-name: offset-by-4 }
-        .ux-slider--animation-stack > .ux-slider__slides > &{ transform: translate3d(4rem, 4rem, 0); opacity: 0.5; display: block }
+        #{$stack}[data-direction="forward"] > * { animation-name: offset-by-4 }
+        .ux-slider--animation-stack > * { transform: translate3d(4rem, 4rem, 0); opacity: 0.5; display: block }
       }
 
       @keyframes offset-by-4 {
@@ -143,13 +142,13 @@
 
       //none
       &--previous{
-        [data-transition="none"] > .ux-slider__slides > &{ display: block }
+        [data-transition="none"] > * { display: block }
       }
 
 
       //crossfade
       &--current{
-        [data-transition="crossfade"] > .ux-slider__slides > &{ animation-name: fade-in; animation-duration: $ux-slider-speed*2 }
+        [data-transition="crossfade"] > * { animation-name: fade-in; animation-duration: $ux-slider-speed*2 }
       }
     }
   }
