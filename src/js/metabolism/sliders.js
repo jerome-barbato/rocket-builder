@@ -141,6 +141,8 @@ var UXSlider = function(config) {
         self.config.$element.addClass('ux-preload');
         self.config.$element.attr('data-transition', self.config.animation);
 
+        self.context.$slides_container.wrap('<div class="'+self.classnames.scroller+'"/>');
+
         if (self.context.slide_count < 2)
             self.context.$arrows_container.hide();
 
