@@ -1,4 +1,4 @@
-//custom scrollbar colors
+// custom scrollbar colors
 @mixin scrollbar($size, $primary, $secondary: lighten($primary, 25%), $radius-thumb: 0, $radius-track: 0) {
   &::-webkit-scrollbar {
     width:  $size;
@@ -15,7 +15,15 @@
   }
 }
 
-//custom placeholder style
+// clear float
+@mixin clearfix() {
+  &:after{
+    content: '\0020'; display: block; overflow: hidden;
+    visibility: hidden; width: 0; height: 0; clear: both;
+  }
+}
+
+// custom placeholder style
 @mixin placeholder {
   &::-webkit-input-placeholder {@content}
   &:-moz-placeholder           {@content}
@@ -23,7 +31,7 @@
   &:-ms-input-placeholder      {@content}
 }
 
-//borders
+// borders
 @mixin borders($size:1px, $color:false){
   position: relative;
   &:after { left: 0; top:0; border-top: $size solid; border-left: $size solid }
@@ -50,7 +58,7 @@
 }
 
 
-//include font with fallback
+// include font with fallback
 @mixin font($name:false) {
 
   @each $family, $fallback in $font-families {

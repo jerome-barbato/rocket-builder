@@ -9,7 +9,7 @@
   }
 
   .g-row{
-    @extend ._clearfix; display: block; position: relative;
+    @include clearfix(); display: block; position: relative;
     @if variable-exists(grid-row-padding) { padding: $grid-row-padding }
     @if variable-exists(grid-row-margin) { &+&{ margin-top: $grid-row-margin } }
     &--top{ align-items: flex-start }

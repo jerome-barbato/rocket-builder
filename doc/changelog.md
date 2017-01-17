@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.7 - 2017-01-17 ##
+### Changed
+- simplified slider.js by replacing class with data- like data-animation
+### Removed
+- backface-visibility globally
+- ._clearfix extends
+
 ## 3.2.6 - 2017-01-11 ##
 ### Added
 - .yarnclean
