@@ -72,7 +72,7 @@ var UXSlider = function(config) {
         paused            : false,
         window_height     : 0,
         $window           : false,
-        animationEnd   : 'animationend.ux-slider oanimationend.ux-slider webkitAnimationEnd.ux-slider MSAnimationEnd.ux-slider'
+        animationEnd   : 'animationend oanimationend webkitAnimationEnd MSAnimationEnd'
     };
 
 
@@ -139,10 +139,7 @@ var UXSlider = function(config) {
         self._packSlides();
 
         self.config.$element.addClass('ux-preload');
-
-        self._addMod(self.config.$element, 'slider', 'animation-'+self.config.animation);
-
-        //self.context.$slides_container.wrap('<div class="'+self.classnames.scroller+'"/>');
+        self.config.$element.attr('data-transition', self.config.animation);
 
         if (self.context.slide_count < 2)
             self.context.$arrows_container.hide();
@@ -331,10 +328,8 @@ var UXSlider = function(config) {
                 return false;
         }
 
-        self._alterMod(self.config.$element, 'slider', 'direction');
-        self._addMod(self.config.$element, 'slider', 'direction-' + (direction=='right'?'forward':'backward'));
-        self._alterMod(self.config.$element, 'slider', 'index');
-        self._addMod(self.config.$element, 'slider', 'index-' + (parseInt(target)+1));
+        self.config.$element.attr('data-direction', (direction=='right'?'forward':'backward'));
+        self.config.$element.attr('data-index', (parseInt(target)+1));
 
         self.context.direction        = direction;
         self.context.indices.current  = target;
@@ -374,10 +369,10 @@ var UXSlider = function(config) {
         self._removeMod(self.context.$arrows, 'arrow', 'disabled');
 
         if ( self.context.indices.current >= self.context.slide_count-1 && !self.config.loop )
-            self._addMod(self.context.$arrows.filter(self.classnames.arrow+'--right'), 'arrow', 'disabled');
+            self._addMod(self.context.$arrows.filter('.'+self.classnames.arrow+'--right'), 'arrow', 'disabled');
 
         if( self.context.indices.current == 0 && !self.config.loop )
-            self._addMod(self.context.$arrows.filter(self.classnames.arrow+'--left'), 'arrow', 'disabled');
+            self._addMod(self.context.$arrows.filter('.'+self.classnames.arrow+'--left'), 'arrow', 'disabled');
 
         self._updateSlides(animate, callback);
         self._updatePagination();
@@ -401,10 +396,10 @@ var UXSlider = function(config) {
 
         if( window.jQuery.fn.fit ){
 
-            self.context.$current_slide.find('.ux-fit__object').fit();
+            self.context.$current_slide.find('[data-object_fit]').fit();
 
             if( self.context.$next_slide )
-                self.context.$next_slide.find('.ux-fit__object').fit();
+                self.context.$next_slide.find('[data-object_fit]').fit();
         }
 
         self._animate(animate, function() {
@@ -438,12 +433,16 @@ var UXSlider = function(config) {
 
             var i = 0;
 
-            $animatedSlides.one(self.context.animationEnd, function(){
+            $animatedSlides.on(self.context.animationEnd, function(e){
+
+                if( $(e.target).is('.'+self.classnames.slide) ){
 
                 i++;
+                    $(this).off(self.context.animationEnd);
+                }
+
                 if( i == $animatedSlides.length ){
 
-                    $animatedSlides.off(self.context.animationEnd);
                     self._removeMod(self.config.$element, 'slider', 'animating');
                     callback();
                 }
@@ -531,7 +530,7 @@ var UXSlider = function(config) {
         if (!$slide || !$slide.length)
             return false;
 
-        $slide.find('.ux-on-demand').not('.ux-on-demand--loaded').each(function() {
+        $slide.find('[data-src]').each(function() {
 
             var $element = $(this);
 
@@ -544,7 +543,7 @@ var UXSlider = function(config) {
             else
                 $element.css('backgroundImage', "url('" + $element.data('src') + "')");
 
-            $element.addClass('ux-on-demand--loaded');
+            $element.removeAttr('data-src');
         });
 
         return true;

@@ -1,6 +1,6 @@
 @mixin lib-on-demand{
   img{
-    &.ux-on-demand, &[data-src]{ opacity: 0; transition: $speed-slow opacity $ease-in-out-cubic; backface-visibility: hidden }
+    &.ux-on-demand, &[data-src]{ opacity: 0; transition: $speed-slow opacity $ease-in-out-cubic; will-change: opacity }
     &.ux-on-demand--loaded{ opacity: 1 }
   }
 }

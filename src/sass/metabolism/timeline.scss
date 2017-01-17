@@ -3,7 +3,7 @@
 
   .ux-timeline {
     position: relative;
-    &__element{ backface-visibility: hidden; will-change: transform, opacity }
+    &__element{ will-change: transform, opacity }
     &__debugger{
       position: absolute; top: 100%; margin-top: 1rem; z-index: 1; width: 100%; left: 0;
       background: rgba(0,0,0,0.2); border-radius: 5px;
