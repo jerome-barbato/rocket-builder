@@ -254,10 +254,13 @@ var UXSlider = function(config) {
         $(document).on('loaded', self._computeOffset);
 
 
-        self.config.$element.on('ux-slider.update', function(e, index){
+        self.config.$element.on('ux-slider.update', function(e, index, animate){
+
+            if( typeof animate == 'undefined')
+                animate = true;
 
             if( index != self.context.indices.current )
-                self._show(index, true);
+                self._show(index, animate);
         });
 
 

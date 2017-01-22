@@ -72,7 +72,7 @@ var DOMCompiler = function(){
 
         self.dom_attributes.forEach(function(dom_attribute){
 
-            var compiler = self.camelCase(dom_attribute);
+            var compiler = 'A'+self.camelCase(dom_attribute);
 
             if( $dom.is('['+dom_attribute+']') )
                 self[compiler]($dom, self._getAttributes($dom[0]) );
@@ -90,7 +90,7 @@ var DOMCompiler = function(){
 
         self.dom_attributes_filters.forEach(function(dom_attributes_filter){
 
-            var compiler = self.camelCase(dom_attributes_filter);
+            var compiler = 'F'+self.camelCase(dom_attributes_filter);
 
             $dom.find('['+dom_attributes_filter+']').each(function(){
 
@@ -103,7 +103,7 @@ var DOMCompiler = function(){
 
     self._compileElement = function(dom, dom_element){
 
-        var compiler = self.camelCase(dom_element);
+        var compiler = 'E'+self.camelCase(dom_element);
 
         var $template = $(self[compiler]($(dom), self._getAttributes(dom)));
         var html      = $(dom).html();
@@ -124,6 +124,7 @@ var DOMCompiler = function(){
 
         $(dom).replaceWith($template);
     };
+
 
 
     self._compileElements = function($dom){
@@ -192,29 +193,33 @@ var DOMCompiler = function(){
     self.register = function(type, attribute, link, main){
 
         var name = self.camelCase(attribute);
+        var element_type = '';
 
         switch (type){
 
             case 'attribute':
 
                 self.dom_attributes.push(attribute);
-                self._addAngularDirective('A', name, link, main, self.dom_attributes.length);
+                element_type = 'A';
+                self._addAngularDirective(element_type, name, link, main, self.dom_attributes.length);
                 break;
 
             case 'filter':
 
                 self.dom_attributes_filters.push(attribute);
-                self._addAngularDirective('F', name, link, main, self.dom_attributes_filters.length);
+                element_type = 'F';
+                self._addAngularDirective(element_type, name, link, main, self.dom_attributes_filters.length);
                 break;
 
             case 'element':
 
                 self.dom_elements.push(attribute);
-                self._addAngularDirective('E', name, link, main, self.dom_elements.length);
+                element_type = 'E';
+                self._addAngularDirective(element_type, name, link, main, self.dom_elements.length);
                 break;
         }
 
-        DOMCompiler.prototype[name] = link;
+        DOMCompiler.prototype[element_type+name] = link;
     };
 
 

@@ -1,0 +1,40 @@
+# Parallax
+
+~~~~
+<div parallax="30%"></div>
+~~~~
+
+Unit can be percentage, pixel, rem, vh
+
+### Options
+
+
+~~~~
+<div parallax="30rem"></div>
+~~~~
+
+When visible the div will translate from 0rem to 30rem
+
+~~~~
+<div parallax="!30rem"></div>
+~~~~
+
+When visible the div will translate from 30rem to 0
+
+~~~~
+<div parallax="-30rem"></div>
+~~~~
+
+When visible the div will translate from 0rem to -30rem
+
+~~~~
+<div parallax="!-30rem"></div>
+~~~~
+
+When visible the div will translate from -30rem to 0
+
+~~~~
+<div parallax="30rem" parallax-center="1"></div>
+~~~~
+
+When visible the div will translate from -15rem to 15rem

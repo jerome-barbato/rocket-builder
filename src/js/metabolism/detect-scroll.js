@@ -182,6 +182,7 @@ var UXDetectScroll = function(){
 
                     element.reached = true;
                     element.$.addClass(element.position);
+                    element.$.trigger('ux-scroll.top-reached',[true]);
                 }
             }
             else if( (element.position=='top-reached' ? element.top : element.bottom ) > scrollTop+self.context.offset ){
@@ -190,6 +191,7 @@ var UXDetectScroll = function(){
 
                     element.reached = false;
                     element.$.removeClass(element.position);
+                    element.$.trigger('ux-scroll.top-reached',[false]);
                 }
             }
         }
