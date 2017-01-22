@@ -45,13 +45,13 @@
       height: 100%; position: absolute;
       left: 0; top: 0; width: 100%;
       z-index: 1; display: none;
-      animation-duration: $ux-slider-speed;
       animation-fill-mode: both;
       animation-timing-function: $ease-in-out-cubic;
       will-change: opacity, transform;
 
       &--current{ display: block; z-index: 2 }
 
+      .ux-slider__slides--animating > &{ animation-duration: $ux-slider-speed }
       .ux-slider__slides--animating > &--previous{ display: block }
 
       &__item{
