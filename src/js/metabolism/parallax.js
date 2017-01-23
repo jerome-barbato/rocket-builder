@@ -6,7 +6,7 @@
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
  * License: GPL
- * Version: 1.0
+ * Version: 1.1
  *
  * Changelog
  *
@@ -29,6 +29,7 @@ var UXParallax = function() {
         window_height   : 0,
         document_height : 0,
         scroll_top      : 0,
+        font_size       : 10,
         items           : []
     };
 
@@ -50,12 +51,22 @@ var UXParallax = function() {
 
         self.context.window_height   = $(window).height();
         self.context.document_height = $(document).height();
+        self.context.font_size       = parseInt($('html').css('fontSize'));
 
         $.each(self.context.items, function(i, item){
 
-            item.top    = item.$container.offset().top - parseInt(item.$container.css('marginTop').replace('px',''));
             item.height = item.$container.height();
-            item.bottom = item.top+item.height;
+
+            item.gap  = item.unit == 'rem' ?
+                item.strength*self.context.font_size :
+                ( item.unit == '%' ? item.strength*item.height :
+                    ( item.unit == 'px' ? item.strength*item.height :
+                        ( item.unit == 'vh' ? item.strength*self.context.window_height : item.strength )
+                    )
+                );
+
+            item.top    = item.$container.offset().top;
+            item.bottom = item.top+item.height+(item.use_gap?item.gap:0);
         });
 
         self._update();
@@ -69,7 +80,7 @@ var UXParallax = function() {
 
         $.each(self.context.items, function(i, item){
 
-            var offset = false;
+            var offset = 0;
 
             if( self.context.scroll_top + self.context.window_height > item.top && item.bottom > self.context.scroll_top) {
 
@@ -78,23 +89,24 @@ var UXParallax = function() {
                 else
                     offset = (self.context.scroll_top + self.context.window_height - item.top) / (item.bottom + self.context.window_height - item.top);
 
-                offset = (Math.round(offset*1000)/1000);
+                offset = Math.round(offset*100)/100;
             }
             else{
 
-                offset = self.context.scroll_top + self.context.window_height > item.top;
+                offset = self.context.scroll_top + self.context.window_height > item.top ? 1 : 0;
             }
 
             offset = item.invert ? 1-offset : offset;
+            offset = item.center ? offset-0.5 : offset;
 
-            if( offset !== false && item.offset != offset ){
+            if( item.offset != offset ){
 
-                item.offset = item.center ? offset-0.5 : offset;
+                item.offset = offset;
 
                 if( !item.center && item.offset < 0.01 )
                     item.$element.css('transform', 'none');
                 else
-                    item.$element.css('transform', 'translate3d(0,'+(item.offset*item.strenght)+item.unit+',0)');
+                    item.$element.css('transform', 'translate3d(0,'+(item.offset*item.strength)+item.unit+',0)');
             }
         });
     };
@@ -116,10 +128,11 @@ var UXParallax = function() {
         self.context.items.push({
             $element   : $element,
             $container : $element.parent().hasClass('parallax-container') ? $element.parent() : $element,
-            strenght   : parseInt( parallax.replace(unit,'') ),
+            strength   : parseInt( parallax.replace(unit,'') ),
             unit       : unit,
             invert     : invert,
-            center     : $element.hasDataAttr('parallax-center') ? parseInt($element.data('parallax-center')) : false
+            center     : $element.hasDataAttr('parallax-center') ? parseInt($element.data('parallax-center')) : false,
+            use_gap    : $element.hasDataAttr('parallax-gap') ? parseInt($element.data('parallax-gap')) : true
         });
     };
 
@@ -164,8 +177,14 @@ var UXParallax = function() {
 
             if( attrs.parallaxCenter ){
 
-                dom.compiler.attr(elem, 'parallax-center', attrs.parallaxCenter || attrs.parallaxCenter == "true" ? "1" : "0");
+                dom.compiler.attr(elem, 'parallax-center', attrs.parallaxCenter == "1" || attrs.parallaxCenter == "true" ? "1" : "0");
                 elem.removeAttr('parallax-center');
+            }
+
+            if( attrs.parallaxGap ){
+
+                dom.compiler.attr(elem, 'parallax-gap', attrs.parallaxGap == "1" || attrs.parallaxGap == "true" ? "1" : "0");
+                elem.removeAttr('parallax-gap');
             }
 
         }, self._add);

@@ -38,3 +38,9 @@ When visible the div will translate from -30rem to 0
 ~~~~
 
 When visible the div will translate from -15rem to 15rem
+
+~~~~
+<div parallax="30rem" parallax-gap="0"></div>
+~~~~
+
+Do not use object gap to compute offset, usually when parallax item is within an overflow element
