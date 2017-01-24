@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.8 - 2017-01-23 ##
+### Changed
+- Fixed slider.js
+
 ## 3.2.7 - 2017-01-17 ##
 ### Changed
 - simplified slider.js by replacing class with data- like data-animation
