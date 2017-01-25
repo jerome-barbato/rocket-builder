@@ -89,7 +89,7 @@ var UXParallax = function() {
                 else
                     offset = (self.context.scroll_top + self.context.window_height - item.top) / (item.bottom + self.context.window_height - item.top);
 
-                offset = Math.round(offset*100)/100;
+                offset = Math.round(offset*1000)/1000;
             }
             else{
 
