@@ -142,9 +142,12 @@ var UXOnDemand = function(){
                     (function(elem) {
 
                         elem.$.on('loadeddata', function(){ self._loaded(elem) });
+                        elem.$.on('ended', function(){ elem.ended = true });
 
                     })(element);
 
+                    element.ended = false;
+                    element.loop  = element.$.attr('loop') == "loop";
                     element.$.attr('preload', 'auto').attr('autoplay', false);
 
                     break;
@@ -173,7 +176,7 @@ var UXOnDemand = function(){
 
             if( element.top < scrollTop+self.context.window_height && element.bottom > scrollTop){
 
-                if( !element.play ){
+                if( !element.play && (element.loop || !element.ended) ){
 
                     element.$.addClass(self.selector+'--playing').removeClass(self.selector+'--paused');
                     element.$.get(0).play();
