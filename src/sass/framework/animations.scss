@@ -57,6 +57,9 @@
 
   @keyframes pop { 0%{ opacity: 0; transform: scale(0,0) } 40%{ opacity: 1 } 60%{ transform: scale(0.9, 1.02) } 80%{ transform: scale(1.02, 0.98) } 100%{ transform: none }}
   @keyframes un-pop { 100%{ opacity: 0; transform: scale(0,0) } 80%{ opacity: 1 } 60%{ transform: scale(0.9, 1.02) } 40%{ transform: scale(1.02, 0.98) } 0%{ transform: none }}
+
+  @keyframes enlarge { 0%{ width: 0 } 100%{ width: 100% } }
+  @keyframes un-enlarge { 0%{ width: 100% } 100%{ width: 0 } }
 }
 
 
@@ -79,7 +82,8 @@ $animations :
         rotate-x    'opacity, transform',
         rotate-y    'opacity, transform',
         rotate-in   'opacity, transform',
-        pop         'opacity, transform';
+        pop         'opacity, transform',
+        enlarge     'width';
 
 $speed-very-fast : $transition-duration/2;
 $speed-fast      : $transition-duration;
