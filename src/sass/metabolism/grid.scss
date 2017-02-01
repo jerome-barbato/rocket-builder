@@ -15,7 +15,6 @@
     &--top{ align-items: flex-start }
     &--center{ align-items: center }
     &--bottom{ align-items: flex-end }
-
     &--flex{
       display: flex; flex: 0 1 auto; flex-direction: row; flex-wrap: wrap;
       .g-col{
@@ -32,10 +31,11 @@
   }
 
   .g-col{
-    float: left; width: 100%; border-collapse: collapse; display: block;
-    position: relative;
+    float: left; width: 100%; border-collapse: collapse; display: block; position: relative;
+    &:first-of-type{ padding-left: 0 }
+    &:last-of-type{ padding-right: 0 }
     @media #{$media-mobile} { max-width: none }
-    @if variable-exists(grid-col-padding) { padding: $grid-col-padding }
+    @if variable-exists(grid-col-padding) { padding: 0 $grid-col-padding }
     @for $j from 1 through 10{
       @for $i from 2 through 10{
         @if $j < $i{
@@ -57,7 +57,11 @@
   }
 
   .g-col{
-    @if ($col-padding) { padding: $col-padding }
+    @if ($col-padding) {
+      padding: 0 $col-padding;
+      &:first-of-type{ padding-left: 0 }
+      &:last-of-type{ padding-right: 0 }
+    }
   }
 }
 
