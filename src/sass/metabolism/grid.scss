@@ -2,7 +2,7 @@
 
   .grid{
     display: block;
-    @if variable-exists(grid-margin) { & + & { margin-top: $grid-margin }}
+    @if variable-exists(grid-margin) { & + & { margin-top: $grid-margin } }
     &--flex{
       .g-row{ @extend .g-row--flex }
     }
@@ -11,7 +11,7 @@
   .g-row{
     @include clearfix(); display: block; position: relative;
     @if variable-exists(grid-row-padding) { padding: $grid-row-padding }
-    @if variable-exists(grid-row-margin) { &+&{ margin-top: $grid-row-margin } }
+    @if variable-exists(grid-row-margin) { & + .g-row { margin-top: $grid-row-margin } }
     &--top{ align-items: flex-start }
     &--center{ align-items: center }
     &--bottom{ align-items: flex-end }
@@ -44,6 +44,20 @@
         }
       }
     }
+  }
+}
+
+@mixin grid($col-padding:false, $row-margin:false, $row-padding:false, $margin:false){
+
+  @if ($margin ) { & + .grid { margin-top: $margin } }
+
+  .g-row{
+    @if ($row-padding) { padding: $row-padding }
+    @if ($row-margin) { & + .g-row { margin-top: $row-margin } }
+  }
+
+  .g-col{
+    @if ($col-padding) { padding: $col-padding }
   }
 }
 

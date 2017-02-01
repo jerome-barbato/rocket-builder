@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.10 - 2017-02-01 ##
+### Fixed
+- Youtube embed url
+### Added
+- grid mixin
+
 ## 3.2.9 - 2017-01-26 ##
 ### Fixed
 - on-demand.js loading issue

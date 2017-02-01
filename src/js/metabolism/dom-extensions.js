@@ -232,7 +232,7 @@ dom.compiler.register('element', 'youtube-embed', function(elem, attrs){
     if( options.loop )
         options.playlist = attrs.id;
 
-    var url = 'https://www.youtube.com/v/'+attrs.id+'?'+ $.param(options);
+    var url = 'https://www.youtube.com/embed/'+attrs.id+'?'+ $.param(options);
     url = url.replace(/%7B/g, '{').replace(/%7D/g, '}');
 
     if( options.defer )
