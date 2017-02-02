@@ -56,7 +56,8 @@ Pause autoplay when cursor is over the slider
 
 ### Display
 ~~~~
-<slider context="'display':{desktop:1,tablet:2,mobile:4,phone:6}"></slider>
+<slider context="'display':{'desktop':1,'tablet':2,'mobile':4,'phone':6}"></slider>
+<slider context="'display':{'desktop':1,'mobile':4}"></slider>
 ~~~~
 
 Depending on the device, group slides.
