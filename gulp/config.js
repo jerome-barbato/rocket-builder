@@ -1,3 +1,4 @@
+
 /**
  * configuration
  */
@@ -137,8 +138,8 @@ var config = module.exports = {
             config.paths.src.js.browser = false;
         }
 
-        config.paths.src.js.app.push(config.paths.asset+'/js/app.js');
         config.paths.src.js.app.push(config.paths.asset+'/js/app/**/*.js');
+        config.paths.src.js.app.push(config.paths.asset+'/js/app.js');
 
 
         config.builder.template.vendor.forEach(function(library){

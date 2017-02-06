@@ -124,6 +124,7 @@ gulp.task('template::watch', function() {
 
 gulp.task('views::clean', function () {
 
+  if( config.paths.dest.template.length )
     return del.sync([config.paths.dest.template+'/*'], {force: true});
 });
 
