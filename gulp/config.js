@@ -73,7 +73,7 @@ var config = module.exports = {
                 compiler : []
             },
             sass     : config.paths.asset+"/sass/*.scss",
-            template : config.paths.asset+"/template/**/*.twig",
+            template : [config.paths.asset+"/template/**/*.twig", config.paths.asset+"/template/**/*.tpl"],
             html     : config.paths.public+"/views/**/*.html"
         };
 
@@ -88,7 +88,7 @@ var config = module.exports = {
             js_app     : [config.paths.asset+"/js/app/**/*.js", config.paths.asset+"/js/app.js"],
             js_vendors : [config.paths.asset+"/js/vendor/**/*.js"],
             sass       : config.paths.asset+"/sass/**/*.scss",
-            template   : config.paths.asset+"/template/**/*.twig"
+            template   : [config.paths.asset+"/template/**/*.twig", config.paths.asset+"/template/**/*.tpl"]
         };
     },
 

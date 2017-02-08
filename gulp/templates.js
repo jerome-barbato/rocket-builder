@@ -60,8 +60,11 @@ function compile(html, scripts, callback) {
                 compiler.run($body);
                 html = $body.html();
 
-                html = html.replace(/<xtemplate /g, '<template ').replace(/<\/xtemplate>/g, '</template>');
+                html = html.replace(/<xtemplate /g, '<script type="text/template" ').replace(/<\/xtemplate>/g, '</script>');
                 html = html.replace(/protect=\"([^"]*)\"/g, "$1");
+
+                html = html.replace(/&gt;/g, ">");
+                html = html.replace(/&lt;"/g, "<");
                 callback(new Buffer(html));
             }
         });
