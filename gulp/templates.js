@@ -4,44 +4,44 @@
  * todo: make as gulp module
  */
 
-var gulp    = require('gulp'),
-    fs      = require('fs'),
-    config  = require('./config'),
-    gutil   = require('gulp-util'),
-    gif     = require('gulp-if'),
-    chalk   = require('chalk'),
-    del     = require('del'),
-    $       = {
-        through : require('through2'),
-        jsdom   : require('jsdom')
+var gulp   = require('gulp'),
+    fs     = require('fs'),
+    config = require('./config'),
+    gutil  = require('gulp-util'),
+    gif    = require('gulp-if'),
+    chalk  = require('chalk'),
+    del    = require('del'),
+    $      = {
+        through: require('through2'),
+        jsdom  : require('jsdom')
     };
 
-function loadDep(){
+function loadDep() {
 
     var src = [];
 
-    src.push( fs.readFileSync(config.paths.asset+'/js/vendor/browser.js', 'utf-8') );
+    src.push(fs.readFileSync(config.paths.asset + '/js/vendor/browser.js', 'utf-8'));
 
-    config.paths.src.js.compiler.forEach(function(library){
+    config.paths.src.js.compiler.forEach(function (library) {
 
-        src.push( fs.readFileSync(library, 'utf-8') );
+        src.push(fs.readFileSync(library, 'utf-8'));
     });
 
     return src;
 }
 
 
-
 function compile(file, scripts, callback) {
 
-    var html = file.contents.toString('utf8');
-    var engine = file.ext == 'tpl' ? 'smarty' : 'twig';
+    var html    = file.contents.toString('utf8');
+    var extname = file.path.split('.')[file.path.split('.').length - 1];
+    var engine  = file.extname == 'tpl' ? 'smarty' : 'twig';
 
     var virtualConsole = $.jsdom.createVirtualConsole().sendTo(console);
 
-    if( html.indexOf('<!-- jsdom:disabled -->') != -1 ){
+    if (html.indexOf('<!-- jsdom:disabled -->') != -1) {
 
-        html = html.replace('<!-- jsdom:disabled -->','');
+        html = html.replace('<!-- jsdom:disabled -->', '');
         callback(new Buffer(html));
     }
     else {
@@ -49,10 +49,10 @@ function compile(file, scripts, callback) {
         html = html.replace(/<template /g, '<xtemplate ').replace(/<\/template>/g, '</xtemplate>');
 
         $.jsdom.env({
-            html           : html,
-            src            : scripts,
-            virtualConsole : virtualConsole,
-            done : function (err, window) {
+            html          : html,
+            src           : scripts,
+            virtualConsole: virtualConsole,
+            done          : function (err, window) {
 
                 window.precompile = true;
                 window.engine     = engine;
@@ -64,7 +64,8 @@ function compile(file, scripts, callback) {
                 compiler.run($body);
                 html = $body.html();
 
-                html = html.replace(/<xtemplate /g, '<script type="text/template" ').replace(/<\/xtemplate>/g, '</script>');
+                html = html.replace(/<xtemplate /g, '<script type="text/template" ')
+                           .replace(/<\/xtemplate>/g, '</script>');
                 html = html.replace(/protect=\"([^"]*)\"/g, "$1");
 
                 html = html.replace(/&gt;/g, ">");
@@ -76,14 +77,13 @@ function compile(file, scripts, callback) {
 }
 
 
-
 function compileFiles() {
 
     var scripts = loadDep();
 
-    return $.through.obj(function(file, enc, cb) {
+    return $.through.obj(function (file, enc, cb) {
 
-        compile(file, scripts, function(compiled_html){
+        compile(file, scripts, function (compiled_html) {
 
             file.contents = compiled_html;
             cb(null, file);
@@ -92,28 +92,28 @@ function compileFiles() {
 }
 
 
-
 /**
  * Rocket directives post-processing with Rocket Dom Compiler
  */
-gulp.task('template::watch', function() {
+gulp.task('template::watch', function () {
 
-    gulp.watch(config.paths.src.template, function(event){
+    gulp.watch(config.paths.src.template, function (event) {
 
         var path_array = event.path.split('/');
-        var filename  = path_array[path_array.length-1];
+        var filename   = path_array[path_array.length - 1];
 
         path_array.pop();
-        var filepath  = path_array.join('/').replace(config.builder.paths.asset+'/template', config.builder.paths.views);
+        var filepath = path_array.join('/')
+                                 .replace(config.builder.paths.asset + '/template', config.builder.paths.views);
 
         if (event.type === 'deleted') {
 
-            gutil.log("Deleted '"+chalk.blue(filename)+"'");
-            return del.sync([filepath+'/'+filename], {force: true});
+            gutil.log("Deleted '" + chalk.blue(filename) + "'");
+            return del.sync([filepath + '/' + filename], {force: true});
         }
-        else{
+        else {
 
-            gutil.log("Compiled '"+chalk.blue(filename)+"'");
+            gutil.log("Compiled '" + chalk.blue(filename) + "'");
 
             return gulp.src(event.path)
                        .pipe(gif(config.builder.template.compile, compileFiles()))
@@ -129,15 +129,16 @@ gulp.task('template::watch', function() {
 
 gulp.task('views::clean', function () {
 
-    if( config.paths.dest.template.length )
-        return del.sync([config.paths.dest.template+'/*'], {force: true});
+    if (config.paths.dest.template.length) {
+        return del.sync([config.paths.dest.template + '/*'], {force: true});
+    }
 });
 
 
 /**
  * Rocket directives post-processing with Rocket Dom Compiler
  */
-gulp.task('templates::compile', function() {
+gulp.task('templates::compile', function () {
 
     return gulp.src(config.paths.src.template)
                .pipe(gif(config.builder.template.compile, compileFiles()))

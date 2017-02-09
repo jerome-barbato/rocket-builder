@@ -5,5 +5,8 @@ var gulp   = require('gulp'),
     del    = require('del');
 
 gulp.task('clean', function () {
-    return del([config.paths.dest.js, config.paths.dest.css], {force:true});
+    return del([
+        config.paths.dest.js,
+        config.paths.dest.css
+    ], {force: true});
 });
