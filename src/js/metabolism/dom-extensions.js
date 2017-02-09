@@ -46,7 +46,15 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
     if( elem.is('img') ){
 
-        elem.attr('src', "{{ asset_url('/media/sizer/" + size + ".png') }}");
+        if( window.engine == 'twig')
+        {
+            elem.attr('src', "{{ asset_url('/media/sizer/" + size + ".png') }}");
+        }
+        else if( window.engine == 'smarty')
+        {
+            elem.attr('src', "{asset_url file='/media/sizer/" + size + ".png'}");
+        }
+
         elem.addClass('ux-sizer');
 
         if( 'src' in attrs )
@@ -172,15 +180,30 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
 
     dom.compiler.register('attribute', type+'-src', function(elem, attrs){
 
-        var src = attrs[type+'Src'].replace('{{','\' ~ ').replace('}}',' ~ \'');
-        elem.attr('src', "{{ asset_url('/media/"+type+"/" + src + "') }}");
-
+        if( window.engine == 'twig')
+        {
+            var src = attrs[type+'Src'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+            elem.attr('src', "{{ asset_url('/media/"+type+"/" + src + "') }}");
+        }
+        else if( window.engine == 'smarty')
+        {
+            var src = attrs[type+'Src'];
+            elem.attr('src', "{asset_url file='/media/"+type+"/" + src + "'}");
+        }
     });
 
     dom.compiler.register('attribute', type+'-background', function(elem, attrs){
 
-        var src = attrs[type+'Background'].replace('{{','\' ~ ').replace('}}',' ~ \'');
-        elem.attr('style', "background-image:url('{{ asset_url('/media/"+type+"/" + src + "') }}')");
+        if( window.engine == 'twig')
+        {
+            var src = attrs[type+'Background'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+            elem.attr('style', "background-image:url('{{ asset_url('/media/"+type+"/" + src + "') }}')");
+        }
+        else if( window.engine == 'smarty')
+        {
+            var src = attrs[type+'Background'];
+            elem.attr('style', "background-image:url('{asset_url file='/media/"+type+"/" + src + "'}')");
+        }
     });
 });
 

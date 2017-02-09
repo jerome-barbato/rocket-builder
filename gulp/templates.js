@@ -32,7 +32,10 @@ function loadDep(){
 
 
 
-function compile(html, scripts, callback) {
+function compile(file, scripts, callback) {
+
+    var html = file.contents.toString('utf8');
+    var engine = file.ext == 'tpl' ? 'smarty' : 'twig';
 
     var virtualConsole = $.jsdom.createVirtualConsole().sendTo(console);
 
@@ -52,6 +55,7 @@ function compile(html, scripts, callback) {
             done : function (err, window) {
 
                 window.precompile = true;
+                window.engine     = engine;
 
                 var $        = window.$;
                 var compiler = window.dom.compiler;
@@ -79,9 +83,7 @@ function compileFiles() {
 
     return $.through.obj(function(file, enc, cb) {
 
-        var raw_html = file.contents.toString('utf8');
-
-        compile(raw_html, scripts, function(compiled_html){
+        compile(file, scripts, function(compiled_html){
 
             file.contents = compiled_html;
             cb(null, file);
@@ -114,8 +116,8 @@ gulp.task('template::watch', function() {
             gutil.log("Compiled '"+chalk.blue(filename)+"'");
 
             return gulp.src(event.path)
-                .pipe(gif(config.builder.template.compile, compileFiles()))
-                .pipe(gulp.dest(filepath));
+                       .pipe(gif(config.builder.template.compile, compileFiles()))
+                       .pipe(gulp.dest(filepath));
         }
     });
 });
@@ -127,8 +129,8 @@ gulp.task('template::watch', function() {
 
 gulp.task('views::clean', function () {
 
-  if( config.paths.dest.template.length )
-    return del.sync([config.paths.dest.template+'/*'], {force: true});
+    if( config.paths.dest.template.length )
+        return del.sync([config.paths.dest.template+'/*'], {force: true});
 });
 
 
@@ -138,6 +140,6 @@ gulp.task('views::clean', function () {
 gulp.task('templates::compile', function() {
 
     return gulp.src(config.paths.src.template)
-        .pipe(gif(config.builder.template.compile, compileFiles()))
-        .pipe(gulp.dest(config.paths.dest.template));
+               .pipe(gif(config.builder.template.compile, compileFiles()))
+               .pipe(gulp.dest(config.paths.dest.template));
 });
