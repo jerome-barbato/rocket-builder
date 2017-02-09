@@ -3,14 +3,14 @@
  */
 
 try {
-    var gulp        = require('gulp');
-    var Server      = require('karma').Server;
+    var gulp   = require('gulp');
+    var Server = require('karma').Server;
 
     gulp.task('test', function (done) {
         new Server.start({
             configFile: __dirname + '/../config/karma.conf.js',
-            singleRun: true
-        }, function() {
+            singleRun : true
+        }, function () {
             done();
         });
     });

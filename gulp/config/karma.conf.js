@@ -1,13 +1,16 @@
 /**
  * Created by dreimus on 01/09/16.
  */
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
 
         // base path, that will be used to resolve files
         basePath: "..",
 
-        frameworks: ['jasmine-jquery', 'jasmine'],
+        frameworks: [
+            'jasmine-jquery',
+            'jasmine'
+        ],
 
         // test results reporter to use
         reporters: ['spec'],
@@ -17,14 +20,14 @@ module.exports = function(config) {
         // you can define custom flags
         customLaunchers: {
             'PhantomJS_custom': {
-                base: 'PhantomJS',
+                base   : 'PhantomJS',
                 options: {
                     settings: {
                         webSecurityEnabled: false
                     }
                 },
-                flags: ['--load-images=true'],
-                debug: true
+                flags  : ['--load-images=true'],
+                debug  : true
             }
         },
 
@@ -36,30 +39,36 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files: [
             // serve html fixtures
-            { pattern: "src/test/fixtures/*.html",
-                watched: true,
-                served: true,
-                included: true },
-            { pattern: "src/test/fixtures/*.js",
-                watched: true,
-                served: true,
+            {
+                pattern : "src/test/fixtures/*.html",
+                watched : true,
+                served  : true,
+                included: true
+            },
+            {
+                pattern : "src/test/fixtures/*.js",
+                watched : true,
+                served  : true,
                 included: false
             },
 
             // serve core JS fixtures
-            { pattern: "src/test/fixtures/core/libraries/*.js",
-                watched: false,
-                served: true,
+            {
+                pattern : "src/test/fixtures/core/libraries/*.js",
+                watched : false,
+                served  : true,
                 included: false
             },
-            { pattern: "src/test/fixtures/core/polyfill/*.js",
-                watched: false,
-                served: true,
+            {
+                pattern : "src/test/fixtures/core/polyfill/*.js",
+                watched : false,
+                served  : true,
                 included: false
             },
-            { pattern: "src/test/fixtures/core/vendor/*.js",
-                watched: false,
-                served: true,
+            {
+                pattern : "src/test/fixtures/core/vendor/*.js",
+                watched : false,
+                served  : true,
                 included: false
             },
 

@@ -7,9 +7,8 @@ $grid-row-margin : $grid-default-space*2 !default;
 @mixin lib-grid{
 
   .grid{
-    display: block; @include clearfix();
-    @if variable-exists(grid-padding) { padding: $grid-padding; }
-    @if variable-exists(grid-margin) { margin: $grid-margin; }
+    display: block;
+    @if variable-exists(grid-margin) { & + & { margin-top: $grid-margin } }
     &--flex{
       .g-row{ @extend .g-row--flex }
     }
@@ -19,9 +18,11 @@ $grid-row-margin : $grid-default-space*2 !default;
     @include clearfix(); display: block; position: relative;
     @if variable-exists(grid-row-padding) { padding: $grid-row-padding; }
     @if variable-exists(grid-row-margin) { & + .g-row { margin-top: $grid-row-margin; } }
+
     &--top{ align-items: flex-start }
     &--center{ align-items: center }
     &--bottom{ align-items: flex-end }
+
     &--flex{
       display: flex; flex: 0 1 auto; flex-direction: row; flex-wrap: wrap;
       .g-col{
@@ -38,9 +39,10 @@ $grid-row-margin : $grid-default-space*2 !default;
   }
 
   .g-col{
-    float: left; width: 100%; border-collapse: collapse; display: block; position: relative;
+    float: left; width: 100%; border-collapse: collapse; display: block;
+    position: relative;
     @media #{$media-mobile} { max-width: none }
-    @if variable-exists(grid-col-padding) { padding: $grid-col-padding; }
+    @if variable-exists(grid-col-padding) { padding: $grid-col-padding }
     @for $j from 1 through 10{
       @for $i from 2 through 10{
         @if $j < $i{
@@ -52,29 +54,6 @@ $grid-row-margin : $grid-default-space*2 !default;
   }
 }
 
+@mixin break-grid() { max-width: none; float: none }
 
-// @mixin grid($col-padding:false, $row-margin:false, $row-padding:false, $margin:false){
-
-//   @if ($margin ) { margin: $margin; }
-
-//   .g-row{
-//     @if ($row-padding) { padding: $row-padding; }
-//     @if ($row-margin) { & + .g-row { margin: $row-margin } }
-//   }
-
-//   .g-col{
-//     @if ($col-padding) {
-//       padding: $col-padding;
-//     }
-//   }
-// }
-
-
-@mixin break-grid(){
-  max-width: none; float: none
-}
-
-
-@if( index($libraries, 'grid') ){
-  @include lib-grid;
-}
+@if( index($libraries, 'grid') ) { @include lib-grid }
