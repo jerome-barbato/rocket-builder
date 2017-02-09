@@ -392,6 +392,9 @@ var UXSlider = function(config) {
 
         self._alterMod(self.context.$slides, 'slide');
 
+        if( animate )
+            self._addMod(self.context.$slides_container, 'slides', 'animating');
+
         if( self.context.$previous_slide )
             self._addMod(self.context.$previous_slide, 'slide', 'previous');
 
@@ -409,6 +412,9 @@ var UXSlider = function(config) {
         }
 
         self._animate(animate, function() {
+
+            if( animate )
+                self._removeMod(self.context.$slides_container, 'slides', 'animating');
 
             self.context.is_animating = false;
 
@@ -428,8 +434,6 @@ var UXSlider = function(config) {
 
             if( !self.context.loop )
                 callback();
-            else
-                self._addMod(self.context.$slides_container, 'slides', 'animating');
 
             var $animatedSlides  = self.context.$slides.filter(':visible').not(function(){
 
@@ -443,23 +447,16 @@ var UXSlider = function(config) {
 
                 if( $(e.target).is('.'+self.classnames.slide) ){
 
-                i++;
+                    i++;
                     $(this).off(self.context.animationEnd);
                 }
 
-                if( i == $animatedSlides.length ){
-
-                    console.log(self.context.$slides_container)
-                    self._removeMod(self.context.$slides_container, 'slides', 'animating');
+                if( i == $animatedSlides.length )
                     callback();
-                }
             });
 
-            if( !self.config.use_transition || !$animatedSlides.length){
-
-                self._removeMod(self.context.$slides_container, 'slides', 'animating');
+            if( !self.config.use_transition || !$animatedSlides.length)
                 callback();
-            }
         }
         else{
 
