@@ -32,9 +32,7 @@ var UXActivation = function(){
     self.config = {
         visibility  : 0.2,
         reverse     : true,
-        debug       : false,
-        tablet      : false,
-        phone       : false
+        mobile      : $('meta[name="animation-mobile"]').attr('content')=="yes"
     };
 
 
@@ -91,7 +89,7 @@ var UXActivation = function(){
         if( self.context.disable ){
 
             $element.removeAttr('data-animation').removeAttr('data-easing').removeAttr('data-delay');
-            $element.find('[data-delay]').removeAttr('data-animation').removeAttr('data-easing').removeAttr('data-delay');
+            $element.find('[data-animation]').removeAttr('data-animation').removeAttr('data-easing').removeAttr('data-delay');
             $element.addClass('ux-activation--seen');
         }
         else{
@@ -295,7 +293,7 @@ var UXActivation = function(){
      */
     self.__construct =  function() {
 
-        self.context.disable = (browser.phone && !self.config.phone) || (browser.tablet && !self.config.tablet);
+        self.context.disable = browser && browser.mobile && !self.config.mobile;
 
         $('.ux-activation').initialize(function() {
 

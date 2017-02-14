@@ -20,7 +20,7 @@ var UXParallax = function() {
     var self = this;
 
     self.config = {
-        mobile : false,
+        mobile : $('meta[name="parallax-mobile"]').attr('content')=="yes",
         type   : 'down'
     };
 
