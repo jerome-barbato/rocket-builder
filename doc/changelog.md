@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.2.13 - 2017-02-14 ##
+### Fixed
+- UX Defer now wait for window load ^^
+### Added
+- Map find nearest points + cluster optimisations
+
+## 3.2.12 - 2017-02-09 ##
+### Fixed
+- Fix slider animation
+
+## 3.2.11 - 2017-02-09 ##
+### Fixed
+- Fix slider issue
+
 ## 3.2.10 - 2017-02-01 ##
 ### Fixed
 - Youtube embed url
