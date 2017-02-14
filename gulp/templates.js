@@ -35,7 +35,7 @@ function compile(file, scripts, callback) {
 
     var html    = file.contents.toString('utf8');
     var extname = file.path.split('.')[file.path.split('.').length - 1];
-    var engine  = file.extname == 'tpl' ? 'smarty' : 'twig';
+    var engine  = extname == 'tpl' ? 'smarty' : 'twig';
 
     var virtualConsole = $.jsdom.createVirtualConsole().sendTo(console);
 
