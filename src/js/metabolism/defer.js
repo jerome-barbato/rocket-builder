@@ -17,13 +17,16 @@
 
 var UXDefer = function() {
 
-    $('[data-defer]').initialize(function(){
-        
-        $(this).attr('src', $(this).data('defer') );
-        $(this).removeAttr('data-defer');
+    $(window).load(function(){
 
-        if( $.fn.fit )
-            $(this).fit(true);
+        $('[data-defer]').initialize(function(){
+
+            $(this).attr('src', $(this).data('defer') );
+            $(this).removeAttr('data-defer');
+
+            if( $.fn.fit )
+                $(this).fit(true);
+        });
     });
 
     if( typeof DOMCompiler !== "undefined" ) {

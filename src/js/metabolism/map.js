@@ -31,7 +31,7 @@ var UXMap = function($map, template, config, callback){
             hover_url : app.asset+'/media/icon/marker--hover@2x.png',
             width     : 45,
             height    : 65,
-            label     : true
+            label_origin : 'center'
         },
         overlay : {
             html       : '',
@@ -80,13 +80,13 @@ var UXMap = function($map, template, config, callback){
 
             if( document.readyState == 'complete' ){
 
-                $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
+                $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit&libraries=geometry"></script>');
             }
             else{
 
                 $(window).load(function(){
 
-                    $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
+                    $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit&libraries=geometry"></script>');
                 });
             }
 
@@ -114,19 +114,16 @@ var UXMap = function($map, template, config, callback){
 
         self.config.map.mapTypeId = google.maps.MapTypeId[self.config.map.mapTypeId];
 
-        self.config.marker_hover = {
-            url         : self.config.marker.hover_url,
-            scaledSize  : new google.maps.Size(self.config.marker.width, self.config.marker.height),
-            anchor      : new google.maps.Point(self.config.marker.width/2, self.config.marker.height),
-            labelOrigin : new google.maps.Point(self.config.marker.width/2, self.config.marker.height*0.65)
-        };
+        self.config.marker.scaledSize = new google.maps.Size(self.config.marker.width, self.config.marker.height);
+        self.config.marker.anchor = new google.maps.Point(self.config.marker.width/2, self.config.marker.height);
 
-        self.config.marker = {
-            url         : self.config.marker.url,
-            scaledSize  : new google.maps.Size(self.config.marker.width, self.config.marker.height),
-            anchor      : new google.maps.Point(self.config.marker.width/2, self.config.marker.height),
-            labelOrigin : new google.maps.Point(self.config.marker.width/2, self.config.marker.height*0.65)
-        };
+        if( self.config.marker.label_origin ){
+
+            if( self.config.marker.label_origin == 'top' )
+                self.config.marker.labelOrigin = new google.maps.Point(self.config.marker.width/2, -20);
+            else if( self.config.marker.label_origin == 'bottom' )
+                self.config.marker.labelOrigin = new google.maps.Point(self.config.marker.width/2, self.config.marker.height+10);
+        }
 
         self.context.gmap       = $map.gmap3(self.config.map);
         self.context.map        = $map.gmap3('get');
@@ -140,10 +137,22 @@ var UXMap = function($map, template, config, callback){
             $loader.click(function () { $loader.hide() });
         }
 
-        google.maps.event.addListener(self.context.map, 'zoom_changed', function() {
+        google.maps.event.addListener(self.context.googleMap, 'zoom_changed', function() {
 
             var zoomLevel = self.context.googleMap.getZoom();
-            $(document).trigger('ux-map.zoom',[self.context.map, zoomLevel]);
+            $map.trigger('ux-map.zoom',[self.context.map, zoomLevel]);
+        });
+
+        google.maps.event.addListener(self.context.googleMap, 'bounds_changed', function() {
+
+            $map.trigger('ux-map.change');
+            setTimeout(self.updateLabel, 50);
+        });
+
+        google.maps.event.addListener(self.context.googleMap, 'idle', function() {
+
+            $map.trigger('ux-map.idle');
+            setTimeout(self.updateLabel, 50);
         });
 
         self.context.init = true;
@@ -152,6 +161,11 @@ var UXMap = function($map, template, config, callback){
             callback(self);
     };
 
+
+    self.updateLabel = function(){
+
+        $map.find("[style*='custom-label']").addClass('ux-map-label').removeAttr('style');
+    };
 
 
     /**
@@ -216,7 +230,7 @@ var UXMap = function($map, template, config, callback){
 
         if( typeof address == 'object' ){
 
-            var latLng = new google.maps.LatLng(address.coords.latitude, address.coords.longitude);
+            var latLng = new google.maps.LatLng(address.lat, address.lng);
             self.context.googleMap.panTo(latLng);
             self.context.googleMap.setZoom(zoom);
         }
@@ -237,7 +251,7 @@ var UXMap = function($map, template, config, callback){
     self.hightlightMarker = function(id, status){
 
         if( self.context.init && self.context.markers.length > id )
-            self.context.markers[id].setIcon( status ? self.config.marker_hover : self.config.marker);
+            self.context.markers[id].setIcon( status ? self.context.markers[id].marker_hover : self.context.markers[id].marker);
     };
 
 
@@ -262,23 +276,56 @@ var UXMap = function($map, template, config, callback){
     };
 
 
+    /**
+     *
+     */
+    self.findClosestMarkers = function( limit, latLng )
+    {
+        var markers = [];
 
-    self.addMarkers = function( markers, fit, icon ){
+        if( typeof latLng == 'undefined')
+            latLng = self.context.googleMap.getCenter();
 
-        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if( typeof limit == 'undefined')
+            limit = 10;
+
+        for( var i=0;i<self.context.markers.length; i++ )
+        {
+            var marker_latLng = new google.maps.LatLng(self.context.markers[i].position[0], self.context.markers[i].position[1]);
+            self.context.markers[i].distance = google.maps.geometry.spherical.computeDistanceBetween(marker_latLng, latLng);
+        }
+
+        self.context.markers.sort(function(a, b) { return a.distance - b.distance });
+
+        if( self.context.markers.length )
+        {
+            markers = self.context.markers.slice(0, limit);
+        }
+
+        return markers;
+    };
+
+
+    self.addMarkers = function( markers, fit, cb ){
 
         $.each(markers, function(i, marker){
 
-            marker.icon = $.extend({}, self.config.marker, icon ? icon(marker) : {});
+            marker.icon = $.extend({}, self.config.marker);
+
+            if( cb ){
+
+                marker = cb(marker);
+
+                if( typeof marker.label == 'string' )
+                    marker.label = { text: marker.label, fontFamily: 'custom-label' }
+            }
 
             marker.icon_out   = $.extend({}, marker.icon);
             marker.icon_hover = $.extend({}, marker.icon);
 
             marker.icon_hover.url =  marker.icon.hover_url;
-
-            if( self.config.marker.label )
-                marker.label = {text: labels[i++ % labels.length], color: 'white', fontSize:'12px'};
         });
+
 
         if( 'cluster' in self.config ) {
 
@@ -297,16 +344,24 @@ var UXMap = function($map, template, config, callback){
 
             }).then(function(cluster){
 
-                self.context.markers = [];
                 self.context.cluster = cluster;
+                self.context.markers = self.context.markers.concat(markers);
+                setTimeout(self.updateLabel, 50);
+
+            }).on({
+                click: function(marker, clusterOverlay, cluster, event){
+
+                    if (clusterOverlay)
+                        clusterOverlay.overlay.getMap().fitBounds(clusterOverlay.overlay.getBounds());
+                }
             });
         }
         else{
 
-            self.context.gmap.marker(markers).then(function(markers){
+            self.context.gmap.marker(markers).then(function(){
 
                 self.context.markers = self.context.markers.concat(markers);
-
+                setTimeout(self.updateLabel, 50);
             });
         }
 
