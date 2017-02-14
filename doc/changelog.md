@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Youtube embed url
 ### Added
 - grid mixin
+- multi template extension support
 
 ## 3.2.9 - 2017-01-26 ##
 ### Fixed

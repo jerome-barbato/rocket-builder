@@ -181,9 +181,6 @@ var UXToggles = function() {
         dom.compiler.register('attribute', 'toggle', function(elem, attrs) {
 
             elem.addClass('ux-toggle');
-
-            if( attrs.toggle.length )
-                dom.compiler.attr(elem, 'context', attrs.toggle);
         });
 
         dom.compiler.register('attribute', 'toggle-handler', function(elem) { elem.addClass('ux-toggle__handler'); });
