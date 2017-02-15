@@ -70,6 +70,8 @@ function compile(file, scripts, callback) {
 
                 html = html.replace(/&gt;/g, ">");
                 html = html.replace(/&lt;"/g, "<");
+                
+                html = html.replace(/&quot;/g, "\"");
                 callback(new Buffer(html));
             }
         });
