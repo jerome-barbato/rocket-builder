@@ -197,12 +197,14 @@ var angularLight = function(){
 
         dom.compiler.register('attribute', 'if', function(elem, attrs) {
 
-            elem.attr('data-if', attrs.if);
+            if( 'if' in attrs )
+                elem.attr('data-if', attrs['if']);
         });
 
         dom.compiler.register('attribute', 'if-not', function(elem, attrs) {
 
-            elem.attr('data-if-not', attrs.ifNot);
+            if( 'ifNot' in attrs )
+                elem.attr('data-if-not', attrs.ifNot);
         });
     }
 

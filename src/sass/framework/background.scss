@@ -1,19 +1,19 @@
 @function fit(){
-  @return  unquote("url('') no-repeat center; background-size: 100% 100%;")
+  @return  unquote("no-repeat center; background-size: 100% 100%;")
 }
 
 @function cover(){
-  @return  unquote("url('') no-repeat center; background-size: cover;")
+  @return  unquote("no-repeat center; background-size: cover;")
 }
 
 @function contain(){
-  @return  unquote("url('') no-repeat center; background-size: contain;")
+  @return  unquote("no-repeat center; background-size: contain;")
 }
 
 @function fit-height(){
-  @return  unquote("url('') no-repeat center; background-size: auto 100%;")
+  @return  unquote("no-repeat center; background-size: auto 100%;")
 }
 
 @function fit-width(){
-  @return  unquote("url('') no-repeat center; background-size: 100% auto;")
+  @return  unquote("no-repeat center; background-size: 100% auto;")
 }

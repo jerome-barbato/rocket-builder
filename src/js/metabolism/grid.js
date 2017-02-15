@@ -60,8 +60,11 @@ if( typeof DOMCompiler !== "undefined" ) {
 
         var properties = "grid";
 
-        if( attrs.mode )
-            properties += ' grid--'+attrs.mode;
+        if( attrs.mod ){
+
+          properties += ' grid--'+attrs.mod;
+          elem.removeAttr('mod');
+        }
 
         return '<div class="'+properties+'"><transclude/></div>';
     });

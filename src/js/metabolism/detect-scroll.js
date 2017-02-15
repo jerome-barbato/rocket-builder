@@ -35,7 +35,7 @@ var UXDetectScroll = function(){
     };
 
     self.config = {
-        class :{
+        'class' :{
             offset : 'ux-scroll-offset'
         },
         force_offset : false
@@ -94,7 +94,7 @@ var UXDetectScroll = function(){
         if( self.config.force_offset )
             return;
 
-        var $offset = $('.'+self.config.class.offset);
+        var $offset = $('.'+self.config['class'].offset);
         var offset  = 0;
 
         $offset.each(function(){

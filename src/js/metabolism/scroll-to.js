@@ -25,7 +25,7 @@ var UXScroll = function() {
         easeOut   : 'easeInCubic',
         easeInOut : 'easeInOutCubic',
         offset    : 0,
-        class     : {
+        'class'   : {
             link   : 'ux-scroll',
             offset : 'ux-scroll-offset',
             target : 'ux-scroll--target'
@@ -42,7 +42,7 @@ var UXScroll = function() {
 
     self._setupEvents = function(){
 
-        $(document).on('click','.'+self.config.class.link, function(e){
+        $(document).on('click','.'+self.config['class'].link, function(e){
 
             if( $(this).attr('href').indexOf('http') == -1 ) {
 
@@ -112,7 +112,7 @@ var UXScroll = function() {
             return self.config.force_offset;
         }
 
-        var $offset = $('.'+self.config.class.offset);
+        var $offset = $('.'+self.config['class'].offset);
         var offset  = 0;
 
         $offset.each(function(){
@@ -140,15 +140,15 @@ var UXScroll = function() {
 
                 if( !target.seen ){
 
-                    target.$link.addClass(self.config.class.link+'--seen');
-                    target.$.addClass(self.config.class.link+'--seen ');
+                    target.$link.addClass(self.config['class'].link+'--seen');
+                    target.$.addClass(self.config['class'].link+'--seen ');
                     target.seen = true;
                 }
             }
             else if( target.seen ){
 
-                target.$link.removeClass(self.config.class.link+'--seen');
-                target.$.removeClass(self.config.class.link+'--seen ');
+                target.$link.removeClass(self.config['class'].link+'--seen');
+                target.$.removeClass(self.config['class'].link+'--seen ');
                 target.seen = false;
             }
 
@@ -156,15 +156,15 @@ var UXScroll = function() {
 
                 if( !target.active ){
 
-                    target.$link.addClass(self.config.class.link+'--active');
-                    target.$.addClass(self.config.class.link+'--active ');
+                    target.$link.addClass(self.config['class'].link+'--active');
+                    target.$.addClass(self.config['class'].link+'--active ');
                     target.active = true;
                 }
             }
             else if( target.active ){
 
-                target.$link.removeClass(self.config.class.link+'--active');
-                target.$.removeClass(self.config.class.link+'--active ');
+                target.$link.removeClass(self.config['class'].link+'--active');
+                target.$.removeClass(self.config['class'].link+'--active ');
                 target.active = false;
             }
         }
@@ -204,7 +204,7 @@ var UXScroll = function() {
 
         if( element.$.length ){
 
-            element.$.addClass(self.config.class.target);
+            element.$.addClass(self.config['class'].target);
 
             element.bottom =  element.top+element.$.height();
             element.bottom =  element.top+element.$.height();
@@ -241,7 +241,7 @@ var UXScroll = function() {
 
                 var $target = $(window.location.hash);
 
-                if( $target.length && $target.hasClass(self.config.class.target) ){
+                if( $target.length && $target.hasClass(self.config['class'].target) ){
 
                     e.preventDefault();
 
@@ -263,7 +263,7 @@ var UXScroll = function() {
         if( window.precompile )
             return;
 
-        $('.'+self.config.class.link).initialize(function(){
+        $('.'+self.config['class'].link).initialize(function(){
             self.add($(this))
         });
 
@@ -297,7 +297,7 @@ var UXScroll = function() {
             }
             else{
 
-                elem.addClass(self.config.class.link);
+                elem.addClass(self.config['class'].link);
 
                 if( self.config.user_anchor )
                     elem.attr('href', '#'+attrs.scrollTo);
@@ -314,7 +314,7 @@ var UXScroll = function() {
 
         dom.compiler.register('attribute', 'fixed-header', function(elem, attrs) {
 
-            elem.addClass(self.config.class.offset);
+            elem.addClass(self.config['class'].offset);
         });
     }
 
