@@ -30,12 +30,12 @@ var UXDetectScroll = function(){
         in_between              : false,
         scroll_dir_changed_at   : 0,
         offset                  : 0,
-        top_reached             : true,
+        top_reached             : false,
         bottom_reached          : false
     };
 
     self.config = {
-        class     :{
+        class :{
             offset : 'ux-scroll-offset'
         },
         force_offset : false
@@ -54,7 +54,7 @@ var UXDetectScroll = function(){
             reached    : false
         };
 
-        element.$.attr('data-top',element.top)
+        element.$.attr('data-top',element.top);
 
         element.bottom = element.top + $element.outerHeight();
 
