@@ -10,7 +10,7 @@ $grid-col-count : 12 !default;
 
 @mixin lib-grid {
 
-  [data-grid] {
+  [data-grid], %grid {
     display: block; @include clearfix();
     @if variable-exists(grid-margin) { & + & { margin: $grid-margin } }
   }
@@ -49,13 +49,13 @@ $grid-col-count : 12 !default;
     }
   }
 
-  [data-row]{
+  [data-row], %row{
     @include clearfix(); display: block; position: relative;
     @if variable-exists(grid-row-padding) { padding: $grid-row-padding; }
     @if variable-exists(grid-row-margin) { & + & { margin-top: $grid-row-margin; } }
   }
 
-  [data-column] {
+  [data-column], %column {
     &:empty:after{ content:'\00a0' }
     float: left; width: 100%; border-collapse: collapse; display: block; position: relative;
     @media #{$grid-breakpoint} {
