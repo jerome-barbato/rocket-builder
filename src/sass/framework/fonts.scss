@@ -15,16 +15,22 @@ $font-families : ();
     src: url('#{$font_path}/#{$src}.eot');
     src: url('#{$font_path}/#{$src}.eot?#iefix') format('embedded-opentype'),
     url('#{$font_path}/#{$src}.woff') format('woff'),
-    url('#{$font_path}/#{$src}.ttf') format('truetype'),
     url('#{$font_path}/#{$src}.svg##{$src}') format('svg');
     font-weight: #{$weight};
     font-style: #{$style};
     font-stretch: #{$stretch};
   }
 
-  @if not map-has-key($font-families, $family){
-    $newFont: ($family: $fallback);
-    $font-families : map-merge($font-families, $newFont);
+  @if not map-has-key($font-families, to-lower-case($family)){
+    $new-font: (to-lower-case($family): '#{$family}, #{$fallback}');
+    $font-families : map-merge($font-families, $new-font);
   }
 }
 
+// include font with fallback
+@mixin font($name) {
+  $font : map-get($font-families, to-lower-case($name));
+  @if( $font ){
+    font-family: unquote($font);
+  }
+}

@@ -85,7 +85,7 @@ dom.compiler.register('attribute', 'background', function(elem, attrs){
 dom.compiler.register('attribute', 'icon', function(elem, attrs){
 
     if( 'icon' in attrs && attrs.icon.length )
-        elem.addClass('ux-icon ux-icon--'+attrs.icon);
+        elem.attr('data-icon', attrs.icon);
 });
 
 
@@ -93,7 +93,7 @@ dom.compiler.register('attribute', 'icon', function(elem, attrs){
 dom.compiler.register('attribute', 'icon-after', function(elem, attrs){
 
     if( 'iconAfter' in attrs && attrs.iconAfter.length )
-        elem.addClass('ux-icon-after ux-icon-after--'+attrs.iconAfter);
+        elem.attr('data-icon-after', attrs.iconAfter);
 });
 
 
@@ -101,7 +101,7 @@ dom.compiler.register('attribute', 'icon-after', function(elem, attrs){
 dom.compiler.register('attribute', 'icon-before', function(elem, attrs){
 
     if( 'iconBefore' in attrs && attrs.iconBefore.length )
-        elem.addClass('ux-icon ux-icon--'+attrs.iconBefore);
+        elem.attr('data-icon', attrs.iconBefore);
 });
 
 

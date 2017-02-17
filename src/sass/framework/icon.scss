@@ -2,45 +2,31 @@ $icons: false !default;
 
 @if($icons){
 
-  .ux-icon:before, .ux-icon-after:after{
-    font-family: icons, sans-serif;
-    font-style: normal !important;
-    font-weight: normal !important;
-    font-variant: normal !important;
-    text-transform: none !important;
-    line-height: 1!important;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  %icon{
+    font-family: icons, sans-serif; text-transform: none; line-height: 1;
+    font-style: normal; font-weight: normal; font-variant: normal;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   }
+
+  [data-icon]:before, [data-icon-after]:after{ @extend %icon }
 
   @each $icon in $icons {
 
     $id      : nth($icon, 1);
     $content : nth($icon, 2);
 
-    .ux-icon-after--#{$id}:after,
-    .ux-icon--#{$id}:before{ content: $content }
+    %icon-#{$id}{ content: $content }
+    [data-icon="#{$id}"]:before, [data-icon-after="#{$id}"]:after{ @extend %icon-#{$id} }
   }
 }
 
-
-
 //include icon
-@mixin icon($name:false, $position:'before', $extend:true) {
-
-  @if($extend){
-    @if($position == 'before'){
-      @extend .ux-icon;
-    }
-    @else{
-      @extend .ux-icon-after;
-    }
-  }
+@mixin icon($name, $position:'before') {
 
   @if($position == 'before'){
-    @extend .ux-icon--#{$name};
+    &:before{ @extend %icon, %icon-#{$name} }
   }
   @else{
-    @extend .ux-icon-after--#{$name};
+    &:after{ @extend %icon, %icon-#{$name} }
   }
 }
