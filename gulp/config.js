@@ -2,6 +2,8 @@
  * configuration
  */
 
+var builder_config_version = 1;
+
 // Dependencies
 var gutil = require('gulp-util'),
     fs    = require('fs'),
@@ -46,12 +48,12 @@ var config = module.exports = {
             config.builder.template = {vendor: config.builder.vendor.compiler};
         }
 
-        if ('compile' in config.builder) {
+        if ('compile' in config.builder)
             config.builder.template.compile = config.builder.compile;
-        }
 
 
-        if ('style' in config.builder == false) {
+        if ('style' in config.builder == false)
+        {
             config.builder.style = {
                 browsers: [
                     "last 3 versions",
@@ -61,7 +63,8 @@ var config = module.exports = {
         }
         // End backward
 
-        if ('browsers' in config.builder.style == false) {
+        if ('browsers' in config.builder.style == false)
+        {
             config.builder.style.browsers = [
                 "last 3 versions",
                 "iOS 8"
@@ -112,6 +115,29 @@ var config = module.exports = {
     },
 
 
+    addApp: function addApp(){
+
+        if ( typeof builder_config_version == 'undefined')
+        {
+            //backward compatibility
+            config.paths.src.js.app.push(config.paths.asset + '/js/app/**/*.js');
+            config.paths.src.js.app.push(config.paths.asset + '/js/app.js');
+        }
+
+        if (config.builder && config.builder.script && config.builder.script.app )
+        {
+            config.builder.script.app.forEach(function (element) {
+
+                config.paths.src.js.app.push(config.paths.asset + '/js/app/'+ element + '.js');
+            });
+        }
+        else {
+
+            config.paths.src.js.app = false;
+        }
+    },
+
+
     /**
      * Rocket front configuration added some paths to configuration file
      * we add them by merging two objects
@@ -119,60 +145,57 @@ var config = module.exports = {
      */
     addVendors: function addVendors() {
 
-        if (config.builder.script.vendor) {
-
-            config.builder.script.vendor.forEach(function (library) {
-
-                if (typeof library == 'string') {
-
+        if ( config.builder && config.builder.script && config.builder.script.vendor )
+        {
+            config.builder.script.vendor.forEach(function (library)
+            {
+                if (typeof library == 'string')
+                {
                     config.paths.src.js.vendor.push(config.paths.asset + '/js/vendor/' + library + '.js');
                 }
-                else {
-
-                    for (var path in library) {
-
-                        library[path].forEach(function (element) {
-
+                else
+                {
+                    for (var path in library)
+                    {
+                        library[path].forEach(function (element)
+                        {
                             config.paths.src.js.vendor.push(config.paths.asset + '/js/vendor/' + path + '/' + element + '.js');
                         });
                     }
                 }
             });
         }
-        else {
-
+        else
+        {
             config.paths.src.js.vendor = false;
         }
 
 
-        if ('browser' in config.builder.script) {
-
+        if ( config.builder &&  config.builder.script && 'browser' in config.builder.script )
+        {
             config.builder.script.browser.forEach(function (library) {
 
                 config.paths.src.js.browser.push(config.paths.asset + '/js/vendor/' + library + '.js');
             });
         }
-        else {
-
+        else
+        {
             config.paths.src.js.browser = false;
         }
 
-        config.paths.src.js.app.push(config.paths.asset + '/js/app/**/*.js');
-        config.paths.src.js.app.push(config.paths.asset + '/js/app.js');
 
-
-        config.builder.template.vendor.forEach(function (library) {
-
-            if (typeof library == 'string') {
-
+        config.builder.template.vendor.forEach(function (library)
+        {
+            if (typeof library == 'string')
+            {
                 config.paths.src.js.compiler.push(config.paths.asset + '/js/vendor/' + library + '.js');
             }
-            else {
-
-                for (var path in library) {
-
-                    library[path].forEach(function (element) {
-
+            else
+            {
+                for (var path in library)
+                {
+                    library[path].forEach(function (element)
+                    {
                         config.paths.src.js.compiler.push(config.paths.asset + '/js/vendor/' + path + '/' + element + '.js');
                     });
                 }
@@ -183,7 +206,8 @@ var config = module.exports = {
     /**
      *  Common implementation for an error handler of a Gulp plugin
      */
-    errorHandler: function errorHandler(title) {
+    errorHandler: function errorHandler(title)
+    {
         'use strict';
 
         return function (err) {
@@ -209,25 +233,23 @@ var config = module.exports = {
 
         /** Parameters evaluation **/
         // Production mode
-        if (getArg("--production") || getArg("-p")) {
+        if (getArg("--production") || getArg("-p"))
             config.environment = 'production';
-        }
 
         // dev mode
-        if (getArg("--development") || getArg("-d")) {
+        if (getArg("--development") || getArg("-d"))
             config.environment = 'development';
-        }
 
 
         gutil.log("Loading...");
 
         // Watching mode
-        if (getArg("--no-watch") || config.environment != "development") {
+        if (getArg("--no-watch") || config.environment != "development")
             config.watching_mode = false;
-        }
 
         config.load();
         config.addVendors();
+        config.addApp();
     }
 };
 

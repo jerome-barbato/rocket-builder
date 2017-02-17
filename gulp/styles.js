@@ -7,7 +7,8 @@ var gulp   = require('gulp'),
         cssGlobbing: require('gulp-css-globbing'),
         sass       : require('gulp-sass'),
         pleeease   : require('gulp-pleeease'),
-        size       : require('gulp-size')
+        size       : require('gulp-size'),
+        del        : require('del')
     };
 
 
@@ -35,6 +36,8 @@ gulp.task('style::compile', function () {
                    .pipe(gulp.dest(config.paths.dest.css))
     }
     else {
+
+        $.del.sync([config.paths.dest.css + '/*.map'], {force: true});
 
         return gulp.src(config.paths.src.sass)
                    .pipe($.cssGlobbing({extensions: ['.scss']}))

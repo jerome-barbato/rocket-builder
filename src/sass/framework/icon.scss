@@ -1,3 +1,5 @@
+$icons: false !default;
+
 @if($icons){
 
   .ux-icon:before, .ux-icon-after:after{

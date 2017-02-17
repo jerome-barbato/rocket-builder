@@ -4,10 +4,11 @@ var gulp   = require('gulp'),
     config = require('./config'),
     eslint = require('gulp-eslint'),
     $      = {
-        concat    : require('gulp-concat'),
-        sourcemaps: require('gulp-sourcemaps'),
-        uglify    : require('gulp-uglify'),
-        size      : require('gulp-size')
+        concat     : require('gulp-concat'),
+        sourcemaps : require('gulp-sourcemaps'),
+        uglify     : require('gulp-uglify'),
+        size       : require('gulp-size'),
+        del        : require('del')
     };
 
 
@@ -35,6 +36,9 @@ gulp.task('lint::scripts', function () {
  */
 gulp.task('script::app', function () {
 
+    if (!config.paths.src.js.app)
+        return true;
+
     if (config.environment == 'development') {
 
         return gulp.src(config.paths.src.js.app, {base: config.paths.asset})
@@ -59,9 +63,8 @@ gulp.task('script::app', function () {
 
 gulp.task('script::vendor', function () {
 
-    if (!config.paths.src.js.vendor) {
+    if (!config.paths.src.js.vendor)
         return true;
-    }
 
     if (config.environment == 'development') {
 
@@ -75,6 +78,8 @@ gulp.task('script::vendor', function () {
                    .pipe(gulp.dest(config.paths.dest.js))
     }
     else {
+
+        $.del.sync([config.paths.dest.js + '/*.map'], {force: true});
 
         return gulp.src(config.paths.src.js.vendor)
                    .pipe($.concat('vendor.js'))
@@ -108,9 +113,9 @@ gulp.task('script::browser', function () {
             config.paths.asset + '/js/vendor/modernizr.js',
             config.paths.asset + '/js/vendor/browser.js'
         ])
-                   .pipe($.concat('browser.js'))
-                   .pipe($.uglify().on('error', config.errorHandler('Scripts')))
-                   .pipe(gulp.dest(config.paths.dest.js))
-                   .pipe($.size({showFiles: true}));
+            .pipe($.concat('browser.js'))
+            .pipe($.uglify().on('error', config.errorHandler('Scripts')))
+            .pipe(gulp.dest(config.paths.dest.js))
+            .pipe($.size({showFiles: true}));
     }
 });
