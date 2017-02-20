@@ -188,7 +188,7 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
         else if( window.engine == 'smarty')
         {
             var src = attrs[type+'Src'];
-            elem.attr('src', '{asset_url file="/media/'+type+'/' + src + '"}');
+            elem.attr('style', 'background-image:url({asset_url file="/media/'+type+'/' + src + '"})');
         }
     });
 
