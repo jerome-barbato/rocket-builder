@@ -46,7 +46,15 @@ function compile(file, scripts, callback) {
     }
     else {
 
-        html = html.replace(/<template /g, '<xtemplate ').replace(/<\/template>/g, '</xtemplate>');
+        var escape_tags = ['template','table','tr','td','ul'];
+
+        for(var i in escape_tags){
+
+          var escape_tag = escape_tags[i];
+          html = html.split('<'+escape_tag+'>').join('<x'+escape_tag+'>');
+          html = html.split('<'+escape_tag+' ').join('<x'+escape_tag+' ');
+          html = html.split('</'+escape_tag+'>').join('</x'+escape_tag+'>');
+        }
 
         $.jsdom.env({
             html          : html,
@@ -57,21 +65,24 @@ function compile(file, scripts, callback) {
                 window.precompile = true;
                 window.engine     = engine;
 
-                var $        = window.$;
-                var compiler = window.dom.compiler;
-                var $body    = $('body');
+                var $body    = window.$('body');
 
-                compiler.run($body);
+                window.dom.compiler.run($body);
+
                 html = $body.html();
 
-                html = html.replace(/<xtemplate /g, '<script type="text/template" ')
-                           .replace(/<\/xtemplate>/g, '</script>');
-                html = html.replace(/protect=\"([^"]*)\"/g, "$1");
+              for(var i in escape_tags){
 
-                html = html.replace(/&gt;/g, ">");
-                html = html.replace(/&lt;"/g, "<");
-                
-                html = html.replace(/&quot;/g, "\"");
+                var escape_tag = escape_tags[i];
+                html = html.split('<x'+escape_tag+' ').join('<'+escape_tag+' ');
+                html = html.split('<x'+escape_tag+'>').join('<'+escape_tag+'>');
+                html = html.split('</x'+escape_tag+'>').join('</'+escape_tag+'>');
+              }
+
+                html = html.replace(/<template /g, '<script type="text/template" ').replace(/<\/template>/g, '</script>');
+                html = html.replace(/protect=\"([^"]*)\"/g, "$1");
+                html = html.replace(/&gt;/g, ">").replace(/&lt;"/g, "<").replace(/&quot;/g, "\"");
+
                 callback(new Buffer(html));
             }
         });
