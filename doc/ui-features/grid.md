@@ -11,10 +11,26 @@
 </grid>
 ~~~~
 ~~~~
-<grid mode="flex">
-   <row align-items="center">
+<grid mod="flex">
+   <row mod="center">
         <column size="1/5"></column>
         <column></column>
+    </row>
+</grid>
+~~~~
+~~~~
+<grid mod="table">
+   <row>
+        <column size="1/5" mod="bottom"></column>
+        <column></column>
+    </row>
+</grid>
+~~~~
+~~~~
+<grid>
+   <row>
+        <column size="1/5" size-tablet="1/3"></column>
+        <column size-mobile="1/2"></column>
     </row>
 </grid>
 ~~~~

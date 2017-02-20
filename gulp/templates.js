@@ -104,6 +104,9 @@ gulp.task('template::watch', function () {
         var path_array = event.path.split('/');
         var filename   = path_array[path_array.length - 1];
 
+        if( !filename || !filename.length )
+          return;
+
         path_array.pop();
         var filepath = path_array.join('/')
                                  .replace(config.builder.paths.asset + '/template', config.builder.paths.views);

@@ -60,6 +60,8 @@ if( typeof DOMCompiler !== "undefined" ) {
 
     dom.compiler.register('element', 'column', function(elem, attrs) {
 
+        var attributes = ['data-col="'+(attrs.size?attrs.size:'')+'"'];
+
         if( attrs.size )
             elem.removeAttr('size');
 
@@ -69,6 +71,16 @@ if( typeof DOMCompiler !== "undefined" ) {
             elem.removeAttr('offset-by');
         }
 
-        return '<div data-column="'+(attrs.size?attrs.size:'')+'"><transclude/></div>';
+        $.each(['tablet', 'mobile-portrait', 'mobile', 'wide', '13inch'], function(i, media){
+
+          media = media.charAt(0).toUpperCase() + media.slice(1);
+          if( attrs['size'+media] ){
+
+            attributes.push('data-col-'+media+'="'+attrs['size'+media]+'"');
+            elem.removeAttr('size-'+media);
+          }
+        });
+
+        return '<div '+attributes.join(' ')+'><transclude/></div>';
     });
 }

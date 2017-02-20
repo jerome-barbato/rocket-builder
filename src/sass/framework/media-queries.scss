@@ -20,6 +20,7 @@ $media-mobile-landscape : "screen and (max-width: "+$screen-mobile+") and (orien
 
 $media-retina           : "(-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi)";
 
+$media-queries          : ( desktop: $media-desktop, wide: $media-wide, 13inch: $media-13inch, tablet: $media-tablet, tablet-portrait: $media-tablet-portrait, mobile: $media-mobile);
 
 
 // Dummy queries for mqpaker
