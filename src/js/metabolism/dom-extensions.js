@@ -197,7 +197,7 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
         if( window.engine == 'twig')
         {
             var src = attrs[type+'Background'].replace('{{','\' ~ ').replace('}}',' ~ \'');
-            elem.attr('style', "background-image:url('{{ asset_url('/media/"+type+"/" + src + "') }}')");
+            elem.attr('style', "background-image:url({{ asset_url('/media/"+type+"/" + src + "') }})");
         }
         else if( window.engine == 'smarty')
         {
