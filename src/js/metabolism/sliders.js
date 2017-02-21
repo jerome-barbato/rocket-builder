@@ -619,7 +619,7 @@ var UXSliders = function() {
 
         dom.compiler.register('element', 'slider', function(elem, attrs) {
 
-            return '<div class="ux-slider"'+(attrs.context?' data-context="'+attrs.context+'"':'')+'><transclude/></div>';
+            return '<div class="ux-slider"'+(attrs.context?' data-context="'+attrs.context+'"':'')+' data-on_demand="false"><transclude/></div>';
 
         }, self.add);
 

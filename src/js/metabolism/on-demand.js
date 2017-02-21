@@ -24,8 +24,6 @@ var UXOnDemand = function(){
         window_height : 0
     };
 
-    self.selector = 'ux-on-demand';
-
     self.config = {
         load : 1.9
     };
@@ -33,17 +31,17 @@ var UXOnDemand = function(){
 
     self.add = function( $element ) {
 
-        if( $element.parents('.ux-preload').length )
+        if( $element.closest('[data-on_demand="false"]').length )
             return;
 
-        $element.addClass(self.selector+' '+self.selector+'--waiting');
+        $element.attr('data-on_demand', 'waiting');
 
         var use_parent = false;
         var $parent    = false;
 
-        if( $element.hasClass('ux-fit__object') ){
+        if( $element.attr('data-object_fit') != 'undefined' ){
 
-            $parent    = $element.closest('.ux-fit');
+            $parent    = $element.parent();
             use_parent = $parent.length;
         }
 
@@ -101,7 +99,7 @@ var UXOnDemand = function(){
 
     self._loaded = function(element){
 
-        element.$.removeClass(self.selector+'--loading').addClass(self.selector+'--loaded');
+        element.$.attr('data-on_demand', 'loaded');
 
         if( $.fn.fit )
             element.$.fit(true);
@@ -120,7 +118,8 @@ var UXOnDemand = function(){
         if( !element.preloaded && element.visible && element.top <= targetScroll ){
 
             element.preloaded = true;
-            element.$.removeClass(self.selector+'--waiting').addClass(self.selector+'--loading');
+
+            element.$.attr('data-on_demand', 'loading');
 
             switch( element.type ) {
 
@@ -128,7 +127,9 @@ var UXOnDemand = function(){
 
                     (function(elem) {
 
-                        elem.$.on('load', function() { self._loaded(elem) });
+                        elem.$
+                            .on('load', function() { self._loaded(elem) })
+                            .on('error', function(){ elem.$.attr('data-on_demand', 'error') });
 
                     })(element);
 
@@ -141,8 +142,10 @@ var UXOnDemand = function(){
 
                     (function(elem) {
 
-                        elem.$.on('loadeddata', function(){ self._loaded(elem) });
-                        elem.$.on('ended', function(){ elem.ended = true });
+                        elem.$
+                            .on('loadeddata', function(){ self._loaded(elem) })
+                            .on('ended', function(){ elem.ended = true })
+                            .on('error', function(){ elem.$.attr('data-on_demand', 'error') });
 
                     })(element);
 
@@ -156,7 +159,12 @@ var UXOnDemand = function(){
 
                     (function(elem) {
 
-                        $('<img/>').on('load', function() { self._loaded(elem) }).attr('src', elem.src);
+                        var $img = $('<img/>');
+
+                        $img.on('load', function() { self._loaded(elem) })
+                            .on('error', function(){ elem.$.attr('data-on_demand', 'error') });
+
+                        $img.attr('src', elem.src);
 
                     })(element);
 
@@ -164,6 +172,8 @@ var UXOnDemand = function(){
 
                     break;
             }
+
+            element.$.removeAttr('data-src');
         }
 
         self.applyPlayState(element, scrollTop);
@@ -178,14 +188,14 @@ var UXOnDemand = function(){
 
                 if( !element.play && (element.loop || !element.ended) ){
 
-                    element.$.addClass(self.selector+'--playing').removeClass(self.selector+'--paused');
+                    element.$.attr('state','playing');
                     element.$.get(0).play();
                     element.play = true;
                 }
             }
             else if( element.play ){
 
-                element.$.addClass(self.selector+'--paused').removeClass(self.selector+'--playing');
+                element.$.attr('state','paused');
                 element.$.get(0).pause();
                 element.play = false;
             }
@@ -218,13 +228,13 @@ var UXOnDemand = function(){
             self.add($(this))
         });
 
-
-        $(window).on('scroll', self._loadAll).on('resize', function(){
+        var resize = function(){
 
             self._resize();
-            self._loadAll()
-        });
+            self._loadAll();
+        };
 
+        $(window).on('scroll', self._loadAll).on('resize', resize);
 
         $(document).on('loaded', function(){
 

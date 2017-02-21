@@ -168,6 +168,53 @@ var UXShare = function(){
     };
 
 
+    self.share = function(target, element){
+
+        var $elem = $(element);
+        var link  = $elem.attr('href');
+
+        switch (target){
+
+            case 'facebook':
+
+                var scrape = $elem.hasDataAttr('scrape') ? $elem.data('scrape') : false;
+                self.facebook(link, scrape);
+                break;
+
+            case 'twitter':
+
+                var text = $elem.hasDataAttr('tweet') ? $elem.data('tweet') : '';
+                var share_link = $elem.hasDataAttr('link') ? $elem.data('link') : true;
+
+                share_link = share_link != "false" && share_link;
+
+                self.twitter(link, text, share_link);
+                break;
+
+            case 'linkedin':
+
+                var title   = $elem.hasDataAttr('title') ? $elem.data('title') : '';
+                var summary = $elem.hasDataAttr('summary') ? $elem.data('summary') : '';
+
+                self.linkedin(link, title, summary);
+                break;
+
+            case 'pinterest':
+
+                var media       = $elem.hasDataAttr('media') ? $elem.data('media') : false;
+                var description = $elem.hasDataAttr('description') ? $elem.data('description') : false;
+
+                self.pinterest( link, media, description );
+                break;
+
+            case 'gplus':
+
+                self.gplus(link);
+                break;
+        }
+    };
+
+
     /* Contructor. */
 
     /**
@@ -175,55 +222,22 @@ var UXShare = function(){
      */
     self.__construct =  function(){
 
-        $(document).on('click', '.ux-share', function(e){
+        $('[data-share_on="mail"]').initialize(function(){
 
-            if (! $(this).hasClass('ux-share--mail'))
-                e.preventDefault();
+            var target = $(this).data('share_on');
 
-            var link = $(this).attr('href');
+            if ( target == 'mail' ) {
 
-            if( $(this).hasClass('ux-share--facebook') ){
+                var link    = $(this).attr('href');
+                var subject = $(this).hasDataAttr('subject') ? $(this).data('subject') : false;
+                var body    = $(this).hasDataAttr('body') ? $(this).data('body') : false;
 
-                var scrape = $(this).hasDataAttr('scrape') ? $(this).data('scrape') : false;
-
-                self.facebook(link, scrape);
+                $(this).attr('href', self.mail(link, subject, body));
             }
-            else if( $(this).hasClass('ux-share--twitter') ){
+            else{
 
-                var text = $(this).hasDataAttr('tweet') ? $(this).data('tweet') : '';
-                var share_link = $(this).hasDataAttr('link') ? $(this).data('link') : true;
-
-                share_link = share_link != "false" && share_link;
-
-                self.twitter(link, text, share_link);
+                $(this).click(function(){ self.share(target, this) });
             }
-            else if( $(this).hasClass('ux-share--linkedin') ){
-
-                var title   = $(this).hasDataAttr('title') ? $(this).data('title') : '';
-                var summary = $(this).hasDataAttr('summary') ? $(this).data('summary') : '';
-
-                self.linkedin(link, title, summary);
-            }
-            else if( $(this).hasClass('ux-share--pinterest') ){
-
-                var media       = $(this).hasDataAttr('media') ? $(this).data('media') : false;
-                var description = $(this).hasDataAttr('description') ? $(this).data('description') : false;
-
-                self.pinterest( link, media, description );
-            }
-            else if( $(this).hasClass('ux-share--gplus') ){
-
-                self.gplus(link);
-            }
-        });
-
-        $('.ux-share--mail').initialize(function(){
-
-            var link     = $(this).attr('href');
-            var subject  = $(this).hasDataAttr('subject') ? $(this).data('subject') : false;
-            var body     = $(this).hasDataAttr('body') ? $(this).data('body') : false;
-
-            $(this).attr('href', self.mail(link, subject, body));
         });
     };
 
@@ -232,7 +246,7 @@ var UXShare = function(){
 
         dom.compiler.register('attribute', 'share-on', function(elem, attrs) {
 
-            elem.addClass('ux-share ux-share--' + attrs.shareOn);
+            elem.addClass('data-share_on', attrs.shareOn);
         });
     }
 
