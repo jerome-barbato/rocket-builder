@@ -1,6 +1,6 @@
 # Grid
 
-//todo: doc for mixin missing
+### Markup
 ~~~~
 <grid>
    <row>
@@ -41,3 +41,31 @@
     </div>
 </div>
 ~~~~
+
+### SASS
+ 
+ ~~~~
+ <div class="item">
+     <div grid>
+         <div row>
+             <div col="1/3"></div>
+         </div>
+     </div>
+ </div>
+ ~~~~
+ 
+~~~
+.item{
+
+   @include col{
+      background:#eee
+   }
+   @include row{
+      background:#fff
+   }
+   @include grid{
+      border:1px solid #000
+   }
+}
+
+~~~

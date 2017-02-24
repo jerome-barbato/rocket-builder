@@ -1,7 +1,7 @@
 /**
  * Defer
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
@@ -15,25 +15,46 @@
  *
  **/
 
-var UXDefer = function() {
+var MetaDefer = function()
+{
+    var self = this;
 
-    $('[data-defer]').initialize(function(){
-        
-        $(this).attr('src', $(this).data('defer') );
-        $(this).removeAttr('data-defer');
+    self.resizeTimeout = false;
 
-        if( $.fn.fit )
-            $(this).fit(true);
+    self.resize = function()
+    {
+        clearTimeout(self.resizeTimeout);
+        self.resizeTimeout = setTimeout(function(){ $(window).resize() }, 100);
+    };
+
+
+    $(window).load(function()
+    {
+        $('[data-defer]').initialize(function()
+        {
+            var $element = $(this);
+
+            $element
+                .on('load', self.resize)
+                .attr('src', $element.data('defer') )
+                .removeAttr('data-defer');
+
+            if( $.fn.fit )
+                $element.fit(true);
+        });
     });
 
-    if( typeof DOMCompiler !== "undefined" ) {
+    if( typeof DOMCompiler !== 'undefined' )
+    {
+        dom.compiler.register('attribute', 'defer', function(elem, attrs)
+        {
+            if( elem.is('img') )
+            {
+                if( window.precompile ){
 
-        dom.compiler.register('attribute', 'defer', function(elem, attrs) {
-
-            if( !elem.is("script") ){
-
-                if( window.precompile )
-                    elem.attr('src', "{{ blank() }}");
+                    if( typeof elem.attr('src') == 'undefined' )
+                        elem.attr('src', "{{ blank() }}");
+                }
 
                 if( attrs.defer )
                     dom.compiler.attr(elem, 'defer', attrs.defer);
@@ -43,5 +64,5 @@ var UXDefer = function() {
 };
 
 
-var ux = ux || {};
-ux.defer = new UXDefer();
+var meta = meta || {};
+meta.defer = new MetaDefer();

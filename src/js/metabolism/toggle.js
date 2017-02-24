@@ -1,7 +1,7 @@
 /**
  * Toggle
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
@@ -17,13 +17,14 @@
  *
  **/
 
-var UXToggle = function(config) {
+var MetaToggle = function(config) {
 
     var self = this;
 
     self.context = {
-        $toggle : false,
-        disable : false
+        $toggles : false,
+        $tabs    : false,
+        disable  : false
     };
 
     self.config = {
@@ -36,79 +37,101 @@ var UXToggle = function(config) {
     };
 
 
-    self._setupEvents = function(){
-
-        self.context.$toggle.on('click keypress', function(e){
-
-            if (e.which === 13 || e.type === 'click') {
-
-                var $parent = $(this).parents('.ux-toggle');
-
-                self.toggle( $parent );
+    self._setupEvents = function()
+    {
+        self.context.$toggles.on('click keypress', function(e)
+        {
+            if (e.which === 13 || e.type === 'click')
+            {
+                self.toggle( $(this).attr('href') );
 
                 if( self.config.auto_close )
-                    self.close( self.context.$toggles.not($parent) );
+                {
+                    self.context.$toggles.not( $(this) ).each(function()
+                    {
+                        self.close( $(this).attr('href') );
+                    });
+                }
             }
         });
     };
 
 
-    self.close = function( $toggle ){
+    self.close = function( id, animate ){
 
-        if( !$toggle.length )
+        var $tab = self.context.$tabs.filter(id);
+        var $toggle = self.context.$toggles.filter('[href="'+id+'"]');
+
+        if( !$tab.length )
             return;
 
-        $toggle.each(function(){
+        $tab.removeClass('active');
+        $toggle.removeClass('active');
 
-            $(this).removeClass('ux-toggle--active');
-
-            if( self.config.animate )
-                $(this).find('.ux-toggle__content').stop().slideUp(self.config.speed, self.config.easing, function(){
-                    $(document).trigger('ux-toggle.updated', ['close', $(this)])
-                });
-        });
+        if( typeof animate !='undefined' ? animate : self.config.animate )
+        {
+            $tab.stop().slideUp(self.config.speed, self.config.easing, function()
+            {
+                $(document).trigger('meta-toggle.updated', ['close', $tab])
+            });
+        }
+        else
+        {
+            $tab.hide();
+            $(document).trigger('meta-toggle.updated', ['close', $tab]);
+        }
     };
 
 
-    self.toggle = function( $toggle ){
+    self.toggle = function( id, animate )
+    {
+        var $tab = self.context.$tabs.filter(id);
 
-        if( !$toggle.length )
+        if( !$tab.length )
             return;
 
-        $toggle.each(function(){
-
-            $(this).toggleClass('ux-toggle--active');
-
-            if( self.config.animate ){
-
-                var $element = $(this).find('.ux-toggle__content');
-                var is_visible = $element.is(':visible');
-                $element.stop().slideToggle(self.config.speed, self.config.easing, function(){
-                    if( is_visible )
-                        $(document).trigger('ux-toggle.updated', ['close', $(this)])
-                });
-
-                if( !is_visible )
-                    $(document).trigger('ux-toggle.updated', ['open', $(this)])
-            }
-        });
+        if( $tab.is(':visible') )
+            self.close(id, animate);
+        else
+            self.open(id, animate);
     };
 
 
-    self.open = function( $toggle ){
+    self.open = function( id, animate )
+    {
+        var $tab = self.context.$tabs.filter(id);
+        var $toggle = self.context.$toggles.filter('[href="'+id+'"]');
 
-        if( !$toggle.length )
+        if( !$tab.length )
             return;
 
-        $toggle.each(function(){
+        $tab.addClass('active');
+        $toggle.addClass('active');
 
-            $(this).addClass('ux-toggle--active');
+        if( typeof animate !='undefined' ? animate : self.config.animate )
+        {
+            $tab.stop().slideDown(self.config.speed, self.config.easing);
+            $(document).trigger('meta-toggle.updated', ['open', $tab]);
+        }
+        else
+        {
+            $tab.show();
+            $(document).trigger('meta-toggle.updated', ['close', $tab]);
+        }
+    };
 
-            if( self.config.animate ) {
-                $(this).find('.ux-toggle__content').stop().slideDown(self.config.speed, self.config.easing);
-                $(document).trigger('ux-toggle.updated', ['open', $(this)]);
-            }
+
+    self._getElements = function()
+    {
+        self.context.$toggles = self.config.$element.find('[href^="#"]');
+
+        self.context.$tabs = $();
+        self.context.$toggles.each(function()
+        {
+            self.context.$tabs = self.context.$tabs.add( self.config.$element.find($(this).attr('href')) );
         });
+
+        self.context.$tabs.hide();
     };
 
 
@@ -117,19 +140,14 @@ var UXToggle = function(config) {
     /**
      *
      */
-    self.__construct = function(config) {
-
+    self.__construct = function(config)
+    {
         self.config = $.extend(self.config, config);
 
-        if( self.config.$element.hasClass('.ux-toggle') )
-            self.context.$toggles = self.config.$element;
-        else
-            self.context.$toggles   = self.config.$element.find('.ux-toggle');
-
-        self.context.$toggle = self.config.$element.find('.ux-toggle__handler');
+        self._getElements();
 
         if( self.config.open_first )
-            self.open( self.context.$toggles.first() );
+            self.open( self.context.$toggles.first().attr('href'), false );
 
         self._setupEvents();
     };
@@ -139,59 +157,45 @@ var UXToggle = function(config) {
 };
 
 
-var UXToggles = function() {
+var MetaToggles = function() {
 
     var self = this;
 
-    self.toggles = [];
-
-
-    self.add = function( $toggle ){
-
-        if( $toggle.data('ux-toggles--initialized') )
-            return;
-
-        $toggle.data('ux-toggles--initialized', true);
-        $toggle.find('.ux-toggle').data('ux-toggles--initialised', true);
-
+    self.add = function( $toggle )
+    {
         var context = {};
 
-        try {
-            context = $toggle.data('context') ? JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') : {};
-        } catch(e) {}
+        if( $toggle.data('context') )
+        {
+            try { context = JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') } catch(e) {}
+        }
+        else
+        {
+            context = $toggle.data();
+        }
 
         context.$element = $toggle;
 
-        $toggle.removeAttr('data-context');
-
-        self.toggles.push( new UXToggle(context) );
+        new MetaToggle(context);
     };
 
 
     /* Constructor. */
 
-    self.__construct = function() {
-
-        $('.ux-toggles').initialize(function() { self.add( $(this) ); });
+    self.__construct = function()
+    {
+        $('[data-toggles="true"]').initialize(function()
+        {
+            self.add( $(this) );
+        });
     };
 
 
-    if( typeof DOMCompiler !== 'undefined' ) {
-
-        dom.compiler.register('attribute', 'toggle', function(elem, attrs) {
-
-            elem.addClass('ux-toggle');
-        });
-
-        dom.compiler.register('attribute', 'toggle-handler', function(elem) { elem.addClass('ux-toggle__handler'); });
-        dom.compiler.register('attribute', 'toggle-content', function(elem) { elem.addClass('ux-toggle__content'); });
-
-        dom.compiler.register('attribute', 'toggles', function(elem, attrs) {
-
-            elem.addClass('ux-toggles');
-
-            if( attrs.toggles.length )
-                dom.compiler.attr(elem, 'context', attrs.toggles);
+    if( typeof DOMCompiler !== 'undefined' )
+    {
+        dom.compiler.register('attribute', 'toggles', function(elem)
+        {
+            elem.attr('data-toggles','true');
 
         },self.add);
     }
@@ -201,5 +205,5 @@ var UXToggles = function() {
 };
 
 
-var ux = ux || {};
-ux.toggles = new UXToggles();
+var meta = meta || {};
+meta.toggles = new MetaToggles();

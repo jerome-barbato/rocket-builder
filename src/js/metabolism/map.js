@@ -1,7 +1,7 @@
 /**
  * Map
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
@@ -17,9 +17,9 @@
 /**
  *
  */
-var UXMapInit = false;
+var MetaMapInit = false;
 
-var UXMap = function($map, template, config, callback){
+var MetaMap = function($map, template, config, callback){
 
     var self = this;
 
@@ -72,21 +72,28 @@ var UXMap = function($map, template, config, callback){
      */
     self.__construct =  function( $map, config, callback ) {
 
+
+        if( typeof $.gmap3 == 'undefined' ){
+
+            console.warn('gmap3 is required');
+            return;
+        }
+
         self.config = $.extend(true, self.config, config);
 
-        if( !UXMapInit ){
+        if( !MetaMapInit ){
 
-            UXMapInit = function(){ $(document).trigger('google.maps.initialized') };
+            MetaMapInit = function(){ $(document).trigger('google.maps.initialized') };
 
             if( document.readyState == 'complete' ){
 
-                $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
+                $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=MetaMapInit"></script>');
             }
             else{
 
                 $(window).load(function(){
 
-                    $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=UXMapInit"></script>');
+                    $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=MetaMapInit"></script>');
                 });
             }
 
@@ -134,7 +141,7 @@ var UXMap = function($map, template, config, callback){
 
         if( !browser.mobile )
         {
-            var $loader = $('<div class="ux-map-loader"><div class="valign"><div class="valign__middle">Click to use the map</div></div></div>');
+            var $loader = $('<div class="meta-map-loader"><div class="valign"><div class="valign__middle">Click to use the map</div></div></div>');
 
             $map.append($loader, false);
             $loader.click(function () { $loader.hide() });
@@ -143,7 +150,7 @@ var UXMap = function($map, template, config, callback){
         google.maps.event.addListener(self.context.map, 'zoom_changed', function() {
 
             var zoomLevel = self.context.googleMap.getZoom();
-            $(document).trigger('ux-map.zoom',[self.context.map, zoomLevel]);
+            $(document).trigger('meta-map.zoom',[self.context.map, zoomLevel]);
         });
 
         self.context.init = true;
@@ -318,7 +325,7 @@ var UXMap = function($map, template, config, callback){
                     return;
 
                 marker.setIcon(marker.icon_hover);
-                $(document).trigger('ux-map.over', [self.context.map, marker.index]);
+                $(document).trigger('meta-map.over', [self.context.map, marker.index]);
             },
             mouseout: function(marker){
 
@@ -329,7 +336,7 @@ var UXMap = function($map, template, config, callback){
 
                     marker.setIcon(marker.icon_out);
 
-                    $(document).trigger('ux-map.out', [self.context.map, marker.index]);
+                    $(document).trigger('meta-map.out', [self.context.map, marker.index]);
                 }
             },
             click: function(marker){
@@ -344,7 +351,7 @@ var UXMap = function($map, template, config, callback){
 
                 marker.setIcon(marker.icon_hover);
 
-                $(document).trigger('ux-map.click', [self.context.map, marker.index]);
+                $(document).trigger('meta-map.click', [self.context.map, marker.index]);
 
                 if( !browser.phone || ('phone' in self.config.overlay && self.config.overlay.phone) ){
 
@@ -371,7 +378,7 @@ var UXMap = function($map, template, config, callback){
                             self.context.marker = false;
 
                             self.clearOverlay();
-                            $(document).trigger('ux-map.out', [self.context.map, marker.index]);
+                            $(document).trigger('meta-map.out', [self.context.map, marker.index]);
                         });
                     });
                 }
@@ -387,6 +394,6 @@ var UXMap = function($map, template, config, callback){
     self.__construct( $map, template, config, callback );
 };
 
-
 // disable gmap3 lib autoload
-$.gmap3(false);
+if( typeof $.gmap3 != 'undefined' )
+    $.gmap3(false);

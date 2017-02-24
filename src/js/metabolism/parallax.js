@@ -1,7 +1,7 @@
 /**
  * Parallax
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
@@ -15,8 +15,8 @@
  *
  **/
 
-var UXParallax = function() {
-
+var MetaParallax = function()
+{
     var self = this;
 
     self.config = {
@@ -34,8 +34,8 @@ var UXParallax = function() {
     };
 
 
-    self._setupEvents = function(){
-
+    self._setupEvents = function()
+    {
         $(document)
             .on('boot', self._recompute)
             .on('loaded', self._recompute);
@@ -65,9 +65,13 @@ var UXParallax = function() {
                     )
                 );
 
+            item.gap    = (item.invert ? -1 : 1) * item.gap;
             item.top    = item.$container.offset().top;
             item.bottom = item.top+item.height+(item.use_gap?item.gap:0);
         });
+
+        if( app.debug > 2 )
+            console.log('parallax', self.context.items);
 
         self._update();
     };
@@ -195,5 +199,5 @@ var UXParallax = function() {
 };
 
 
-var ux = ux || {};
-ux.parallax = new UXParallax();
+var meta = meta || {};
+meta.parallax = new MetaParallax();

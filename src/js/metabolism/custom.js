@@ -1,7 +1,7 @@
 /**
  * Custom
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
@@ -16,14 +16,14 @@
  *
  **/
 
-var UXCustomInput = function() {
-
+var MetaCustomInput = function()
+{
     var self = this;
 
     /* Constructor. */
 
-    self.__construct = function() {
-
+    self.__construct = function()
+    {
         if( 'ui' in $ && $.ui.selectmenu ){
 
             $.widget( 'app.selectmenu', $.ui.selectmenu, {
@@ -40,10 +40,10 @@ var UXCustomInput = function() {
                 }
             });
 
-            $('select[data-custom]').initialize(function(){
-
+            $('select[data-custom]').initialize(function()
+            {
                 var options = {
-                    icons: { button: "ux-icon ux-icon--selectmenu" },
+                    icons: { button: "meta-icon meta-icon--selectmenu" },
                     change: function( event, ui ) {
 
                         if( $(this).val().length )
@@ -64,14 +64,14 @@ var UXCustomInput = function() {
     };
 
 
-    if( typeof DOMCompiler !== 'undefined' ) {
+    if( typeof DOMCompiler !== 'undefined' )
+    {
+        dom.compiler.register('attribute', 'custom', function(elem, attrs)
+        {
+            elem.attr('data-custom', 'true');
 
-        dom.compiler.register('attribute', 'custom', function(elem, attrs) {
-
-            elem.attr('data-custom', attrs.custom);
-
-            if( attrs.placeholder ){
-
+            if( attrs.placeholder )
+            {
                 elem.attr('data-placeholder', attrs.placeholder);
                 elem.removeAttr('placeholder');
             }
@@ -83,5 +83,5 @@ var UXCustomInput = function() {
 };
 
 
-var ux = ux || {};
-ux.custom = new UXCustomInput();
+var meta = meta || {};
+meta.custom = new MetaCustomInput();

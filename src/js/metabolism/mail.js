@@ -1,7 +1,7 @@
 /**
  * Mail
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
@@ -13,7 +13,7 @@
  *
  **/
 
-var UXMail = function(){
+var MetaMail = function(){
 
     var self = this;
 
@@ -29,7 +29,7 @@ var UXMail = function(){
 
         $(this).removeAttr('data-name').removeAttr('data-domain');
 
-        if( $(this).text() == 'mailto' )
+        if( $(this).text() == '@' )
             $(this).text(email);
     };
 
@@ -59,5 +59,5 @@ var UXMail = function(){
     $(document).on('boot', self.__construct);
 };
 
-var ux = ux || {};
-ux.mail = new UXMail();
+var meta = meta || {};
+meta.mail = new MetaMail();

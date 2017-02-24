@@ -43,20 +43,20 @@ $grid-col-count : 12 !default;
 
   @if( $grid-table ){
     [data-grid="table"] {
-      display: table; width: 100%; height: 100%;
+      display: table; width: 100%; height: 100%; table-layout: fixed;
       &:after{ display: none }
       @media #{$grid-mobile-breakpoint} { display: block }
       [data-row] {
-        display: table-row; height: 100%;
+        display: table-row;
         @media #{$grid-mobile-breakpoint} { display: block }
       }
       [data-col]{
         display: table-cell; height: 100%; float: none; vertical-align: top;
         @media #{$grid-mobile-breakpoint} { display: block }
       }
-      [data-col="top"] { vertical-align: top }
-      [data-col="center"] { vertical-align: middle }
-      [data-col="bottom"] { vertical-align: bottom }
+      [data-align="top"] { vertical-align: top }
+      [data-align="middle"] { vertical-align: middle }
+      [data-align="bottom"] { vertical-align: bottom }
     }
   }
 
@@ -77,8 +77,8 @@ $grid-col-count : 12 !default;
   }
 
   @for $j from 1 through $grid-col-count {
-    @for $i from 2 through $grid-col-count {
-      @if $j < $i{
+    @for $i from 1 through $grid-col-count {
+      @if $j <= $i{
         [data-col="#{$j}/#{$i}"] { width: ((100%*$j)/$i) }
         @if($grid-breakpoints){
           @each $grid-breakpoint in $grid-breakpoints{

@@ -30,11 +30,11 @@ if( typeof DOMCompiler !== "undefined" ) {
 
     dom.compiler.register('attribute', 'col', function(elem, attrs) {
 
-        elem.attr('data-column', attrs.col?attrs.col:'');
+        elem.attr('data-col', attrs.col?attrs.col:'');
 
         if( attrs.offsetBy ){
 
-            $('<div data-column="'+attrs.offsetBy+'"></div>').insertBefore(elem);
+            $('<div data-col="'+attrs.offsetBy+'"></div>').insertBefore(elem);
             elem.removeAttr('offset-by');
         }
     });
@@ -65,9 +65,15 @@ if( typeof DOMCompiler !== "undefined" ) {
         if( attrs.size )
             elem.removeAttr('size');
 
+        if( attrs.mod ){
+
+            attributes.push('data-align="'+attrs.mod+'"');
+            elem.removeAttr('mod');
+        }
+
         if( attrs.offsetBy ){
 
-            $('<div data-column="'+attrs.offsetBy+'"></div>').insertBefore(elem);
+            $('<div data-col="'+attrs.offsetBy+'"></div>').insertBefore(elem);
             elem.removeAttr('offset-by');
         }
 

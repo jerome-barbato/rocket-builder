@@ -1,0 +1,233 @@
+/**
+ * On Top
+ *
+ * Copyright (c) 2017 - Metabolism
+ * Author:
+ *   - Jérome Barbato <jerome@metabolism.fr>
+ *
+ * License: GPL
+ * Version: 2.0
+ *
+ *
+ * Requires:
+ *   - jQuery
+ *
+ **/
+
+var MetaDetect = function()
+{
+    var self = this;
+
+    self.context = {
+        init                    : false,
+        elements                : [],
+        $window                 : $(window),
+        $body                   : $('body'),
+        window_height           : 0,
+        document_height         : 0,
+        offset                  : {top:0, bottom:0},
+        top_reached             : false,
+        bottom_reached          : false,
+        in_between              : false
+    };
+
+
+    self.add = function( $element )
+    {
+        if( !$element || !$element.length )
+            return;
+
+        var element = {
+            $          : $element,
+            detect     : typeof $element.data('detect') != 'undefined' ? $element.data('detect') : 'on-top',
+            top        : $element.realOffset().top,
+            detected   : false
+        };
+
+        element.bottom = element.top + $element.outerHeight();
+
+        self.context.elements.push(element);
+
+        self._detect();
+    };
+
+
+
+    self._resize = function()
+    {
+        for (var i=0; i < self.context.elements.length; i++)
+        {
+            var element = self.context.elements[i];
+
+            if( !element.detected )
+            {
+                element.top    = element.$.realOffset().top;
+                element.bottom = element.top + element.$.outerHeight();
+            }
+        }
+
+        if( app.debug > 2 )
+            console.log('detect', self.context.elements);
+
+        self.context.window_height   = $(self.context.$window).height();
+        self.context.document_height = $(document).height();
+
+        self._computeOffset();
+        self._detect();
+    };
+
+
+
+    self._computeOffset = function()
+    {
+        self.context.offset.top = $('[data-fixed="top"]').height();
+        self.context.offset.bottom = $('[data-fixed="bottom"]').height();
+    };
+
+
+    self._detectScrollBoundReached = function(scroll_top)
+    {
+        if( !self.context.document_height || !self.context.window_height )
+            return;
+
+        if( scroll_top <= 5 )
+        {
+            if( !self.context.top_reached )
+            {
+                self.context.top_reached    = true;
+                self.context.in_between     =  self.context.bottom_reached = false;
+
+                self.context.$body.attr('data-scroll', 'top');
+                self.context.$body.trigger('meta-scroll.top');
+            }
+        }
+        else if( scroll_top > 5 && scroll_top+self.context.window_height < self.context.document_height )
+        {
+            if( !self.context.in_between )
+            {
+                self.context.bottom_reached = self.context.top_reached = false;
+                self.context.in_between = true;
+
+                self.context.$body.addClass('has-scrolled').attr('data-scroll', 'between');
+                self.context.$body.trigger('meta-scroll.between');
+            }
+        }
+        else if( scroll_top+self.context.window_height >= self.context.document_height )
+        {
+            if( !self.context.bottom_reached )
+            {
+                self.context.top_reached    =  self.context.in_between = false;
+                self.context.bottom_reached = true;
+
+                self.context.$body.attr('data-scroll', 'bottom');
+                self.context.$body.trigger('meta-scroll.bottom');
+            }
+        }
+    };
+
+
+    self._detect = function() {
+
+        var scrollTop = self.context.$window.scrollTop();
+
+        self._detectScrollBoundReached(scrollTop);
+
+        for (var i=0; i< self.context.elements.length; i++)
+        {
+            var element = self.context.elements[i];
+            var test        = -1;
+            var classprefix = '';
+
+            switch ( element.detect )
+            {
+                case 'on-top':
+
+                    test = element.top <= scrollTop+self.context.offset.top;
+                    classprefix = "is";
+                    break;
+
+                case 'appear':
+
+                    test = element.top <= scrollTop+self.context.window_height-self.context.offset.bottom;
+                    classprefix = "has";
+                    break;
+
+                case 'disappear':
+
+                    test = element.bottom <= scrollTop+self.context.offset.top;
+                    classprefix = "has";
+                    break;
+
+                case 'visible':
+
+                    test = element.top <= scrollTop+self.context.window_height-self.context.offset.bottom && element.bottom >= scrollTop+self.context.offset.top;
+                    classprefix = "is";
+                    break;
+            }
+
+            if( test != -1 )
+            {
+                if( test )
+                {
+                    if( !element.detected )
+                    {
+                        element.detected = true;
+                        element.$.addClass(classprefix+'-'+element.detect);
+                        element.$.trigger('meta-detect.'+element.detect,[true]);
+                    }
+                }
+                else
+                {
+                    if( element.detected )
+                    {
+                        element.detected = false;
+                        element.$.removeClass(classprefix+'-'+element.detect);
+                        element.$.trigger('meta-detect.'+element.detect,[false]);
+                    }
+                }
+            }
+        }
+    };
+
+    /* Contructor. */
+
+    /**
+     *
+     */
+    self.__construct =  function()
+    {
+        $('[data-detect]').initialize(function()
+        {
+            self.add( $(this) );
+        });
+
+        $(document).on('boot', self._resize);
+
+        self.context.$window
+            .on('scroll', self._detect)
+            .on('loaded', self._resize)
+            .on('resize', self._resize);
+    };
+
+
+    if( typeof DOMCompiler !== "undefined" )
+    {
+        dom.compiler.register('attribute', 'detect', function(elem, attrs)
+        {
+            elem.attr('data-detect', attrs.detect);
+
+        }, self.add);
+
+        dom.compiler.register('attribute', 'fixed', function(elem, attrs)
+        {
+            elem.attr('data-fixed', attrs.fixed?attrs.fixed:'top');
+        });
+    }
+
+
+    /* Public */
+    self.__construct();
+};
+
+var meta = meta || {};
+meta.detect = new MetaDetect();

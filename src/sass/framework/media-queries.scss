@@ -1,3 +1,11 @@
+$screen-mobile        : 767px !default;
+$screen-mobile-small  : 320px !default;
+$screen-tablet        : 1024px !default;
+$screen-13inch-height : 750px !default;
+$screen-13inch-width  : 1280px !default;
+$screen-wide-width    : 1680px !default;
+
+
 $media-desktop          : "screen and (min-width: "+($screen-tablet + 1px)+")";
 
 $media-wide             : "screen and (min-width: "+$screen-wide-width+")";

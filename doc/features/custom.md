@@ -1,5 +1,7 @@
 #Custom
 
+######file:  js/metabolism/custom.js
+
 Replace standard select with custom div to allow further personalisation
 
 ~~~~

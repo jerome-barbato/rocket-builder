@@ -3,7 +3,7 @@
 @mixin lib-transition{
 
   @for $i from 0 through 35{
-    [data-transition-delay="#{$i}"]{ transition-delay: $animation-delay*$i!important }
+    [data-transition-delay="#{$i}"]{ transition-delay: $transition-delay*$i!important }
   }
 }
 

@@ -46,8 +46,8 @@
   @keyframes unzoom-out { 0%{ opacity: 1; transform: none } 100%{ opacity: 0; transform: scale(1.2) }}
   @keyframes un-unzoom-out { 100%{ opacity: 1; transform: none } 0%{ opacity: 0; transform: scale(1.2) }}
 
-  @keyframes rotate-x { 0%{ opacity: 0; transform: perspective(400px) rotateX(-180deg) } 100%{ opacity: 1; transform: perspective(400px) }}
-  @keyframes un-rotate-x { 100%{ opacity: 0; transform: perspective(400px) rotateX(-180deg) } 0%{ opacity: 1; transform: perspective(400px) }}
+  @keyframes rotate-x { 0%{ opacity: 0; transform: perspective(400px) rotateX(-90deg) } 100%{ opacity: 1; transform: perspective(400px) }}
+  @keyframes un-rotate-x { 100%{ opacity: 0; transform: perspective(400px) rotateX(-90deg) } 0%{ opacity: 1; transform: perspective(400px) }}
 
   @keyframes rotate-y { 0%{ opacity: 0; transform: perspective(400px) rotateY(90deg) } 100%{ opacity: 1; transform: perspective(400px) }}
   @keyframes un-rotate-y { 100%{ opacity: 0; transform: perspective(400px) rotateY(90deg) } 0%{ opacity: 1; transform: perspective(400px) }}
@@ -62,6 +62,7 @@
   @keyframes un-enlarge { 0%{ width: 100% } 100%{ width: 0 } }
 }
 
+$include-animations : false!default;
 
 @if( $include-animations ){
   @include animations-keyframes;
@@ -71,6 +72,7 @@
 
 $animations :
         fade-in     'opacity',
+        fade-out    'opacity',
         slide-down  'opacity, transform',
         slide-up    'opacity, transform',
         slide-left  'opacity, transform',
@@ -84,9 +86,4 @@ $animations :
         rotate-in   'opacity, transform',
         pop         'opacity, transform',
         enlarge     'width';
-
-$speed-very-fast : $transition-duration/2;
-$speed-fast      : $transition-duration;
-$speed-slow      : $transition-duration*2;
-$speed-very-slow : $transition-duration*4;
 

@@ -1,7 +1,7 @@
 /**
  * On Demand Loader
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
@@ -14,8 +14,8 @@
  *
  **/
 
-var UXOnDemand = function(){
-
+var MetaOnDemand = function()
+{
     var self = this;
 
     self.context = {
@@ -28,9 +28,10 @@ var UXOnDemand = function(){
         load : 1.9
     };
 
+    self.resizeTimeout = false;
 
-    self.add = function( $element ) {
-
+    self.add = function( $element )
+    {
         if( $element.closest('[data-on_demand="false"]').length )
             return;
 
@@ -39,13 +40,13 @@ var UXOnDemand = function(){
         var use_parent = false;
         var $parent    = false;
 
-        if( $element.attr('data-object_fit') != 'undefined' ){
-
+        if( typeof $element.attr('data-object_fit') != 'undefined' )
+        {
             $parent    = $element.parent();
             use_parent = $parent.length;
         }
 
-        var top        = use_parent ? $parent.offset().top : $element.offset().top;
+        var top        = use_parent ? $parent.realOffset().top : $element.realOffset().top;
         var height     = use_parent ? $parent.height() : $element.height();
 
         var element = {
@@ -65,11 +66,12 @@ var UXOnDemand = function(){
         if( $element.is('img') )
             element.type = 'img';
 
-        if( $element.is('video') ){
-
+        if( $element.is('video') )
+        {
             element.type = 'video';
             $element.attr('preload', 'none');
             $element.html('<source src="'+element.src+'" type="video/mp4"><source src="'+element.src.replace('.mp4', '.webm')+'" type="video/webm">');
+            $element.removeAttr('data-src');
         }
 
         self.context.elements.push(element);
@@ -83,22 +85,25 @@ var UXOnDemand = function(){
 
         self.context.window_height = $(window).height();
 
-        for (var i=0; i< self.context.elements.length; i++) {
-
+        for (var i=0; i< self.context.elements.length; i++)
+        {
             var element  = self.context.elements[i];
-            var top      = element.use_parent ? element.$parent.offset().top : element.$.offset().top;
+            var top      = element.use_parent ? element.$parent.realOffset().top : element.$.realOffset().top;
             var height   = element.use_parent ? element.$parent.height() : element.$.height();
 
             element.top     = top;
             element.visible = element.$.is(':visible');
             element.bottom  = top+height;
         }
+
+        if( app.debug > 2 )
+            console.log('on-demand', self.context.elements);
     };
 
 
 
-    self._loaded = function(element){
-
+    self._loaded = function(element)
+    {
         element.$.attr('data-on_demand', 'loaded');
 
         if( $.fn.fit )
@@ -106,13 +111,16 @@ var UXOnDemand = function(){
 
         element.loaded = true;
 
+        clearTimeout(self.resizeTimeout);
+        self.resizeTimeout = setTimeout(function(){ $(window).resize() }, 100);
+
         self.applyPlayState(element, $(window).scrollTop());
     };
 
 
 
-    self._load = function(element, scrollTop){
-
+    self._load = function(element, scrollTop)
+    {
         var targetScroll = scrollTop + self.context.window_height*self.config.load;
 
         if( !element.preloaded && element.visible && element.top <= targetScroll ){
@@ -121,12 +129,12 @@ var UXOnDemand = function(){
 
             element.$.attr('data-on_demand', 'loading');
 
-            switch( element.type ) {
-
+            switch( element.type )
+            {
                 case 'img':
 
-                    (function(elem) {
-
+                    (function(elem)
+                    {
                         elem.$
                             .on('load', function() { self._loaded(elem) })
                             .on('error', function(){ elem.$.attr('data-on_demand', 'error') });
@@ -140,8 +148,8 @@ var UXOnDemand = function(){
 
                 case "video" :
 
-                    (function(elem) {
-
+                    (function(elem)
+                    {
                         elem.$
                             .on('loadeddata', function(){ self._loaded(elem) })
                             .on('ended', function(){ elem.ended = true })
@@ -157,8 +165,8 @@ var UXOnDemand = function(){
 
                 default :
 
-                    (function(elem) {
-
+                    (function(elem)
+                    {
                         var $img = $('<img/>');
 
                         $img.on('load', function() { self._loaded(elem) })
@@ -180,22 +188,22 @@ var UXOnDemand = function(){
     };
 
 
-    self.applyPlayState = function(element, scrollTop){
-
-        if( element.type == "video" && element.loaded ){
-
-            if( element.top < scrollTop+self.context.window_height && element.bottom > scrollTop){
-
-                if( !element.play && (element.loop || !element.ended) ){
-
-                    element.$.attr('state','playing');
+    self.applyPlayState = function(element, scrollTop)
+    {
+        if( element.type == "video" && element.loaded )
+        {
+            if( element.top < scrollTop+self.context.window_height && element.bottom > scrollTop)
+            {
+                if( !element.play && (element.loop || !element.ended) )
+                {
+                    element.$.attr('data-state','playing');
                     element.$.get(0).play();
                     element.play = true;
                 }
             }
-            else if( element.play ){
-
-                element.$.attr('state','paused');
+            else if( element.play )
+            {
+                element.$.attr('data-state','paused');
                 element.$.get(0).pause();
                 element.play = false;
             }
@@ -204,12 +212,12 @@ var UXOnDemand = function(){
     };
 
 
-    self._loadAll = function() {
-
+    self._loadAll = function()
+    {
         var scrollTop = $(window).scrollTop();
 
-        for (var i in self.context.elements) {
-
+        for (var i in self.context.elements)
+        {
             var element = self.context.elements[i];
             self._load(element, scrollTop);
         }
@@ -222,14 +230,15 @@ var UXOnDemand = function(){
     /**
      *
      */
-    self.__construct =  function(){
-
-        $('[data-src]').initialize(function(){
+    self.__construct =  function()
+    {
+        $('[data-src]').initialize(function()
+        {
             self.add($(this))
         });
 
-        var resize = function(){
-
+        var resize = function()
+        {
             self._resize();
             self._loadAll();
         };
@@ -244,13 +253,13 @@ var UXOnDemand = function(){
     };
 
 
-    if( typeof DOMCompiler !== "undefined" ) {
-
-        dom.compiler.register('attribute', 'on-demand', function(elem, attrs) {
-
+    if( typeof DOMCompiler !== "undefined" )
+    {
+        dom.compiler.register('attribute', 'on-demand', function(elem, attrs)
+        {
             var src = elem.attr('src');
 
-            if( elem.is('img') )
+            if( elem.is('img') && typeof elem.attr('src') == 'undefined' )
                 elem.attr('src', "{{ blank() }}");
 
             elem.attr('data-src', attrs.onDemand.length ? attrs.onDemand : src );
@@ -263,5 +272,5 @@ var UXOnDemand = function(){
     self.__construct();
 };
 
-var ux = ux || {};
-ux.onDemand = new UXOnDemand();
+var meta = meta || {};
+meta.onDemand = new MetaOnDemand();

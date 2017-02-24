@@ -1,5 +1,7 @@
 // Unsupported Browsers
 
+$unsupported-browsers: ie7, ie8, safari4!default;
+
 @if $unsupported-browsers{
 
   %unsupported-browser{

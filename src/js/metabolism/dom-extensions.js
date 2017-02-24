@@ -55,13 +55,13 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
             elem.attr('src', "{asset_url file='/media/sizer/" + size + ".png'}");
         }
 
-        elem.addClass('ux-sizer');
+        elem.addClass('has-sizer');
 
         if( 'src' in attrs )
             elem.css('backgroundImage', "url('"+attrs.src+"')");
     }
     else
-        elem.prepend('<div class="ux-sizer" data-ratio="'+attrs.sizer+'">');
+        elem.attr('data-sizer', attrs.sizer);
 
 });
 
@@ -136,9 +136,7 @@ dom.compiler.register('attribute', 'hide-on', function(elem, attrs){
 
     if( 'hideOn' in attrs && attrs.hideOn.length ) {
 
-        var hideOn = attrs.hideOn.indexOf('{{')==-1 ? attrs.hideOn.replace(' ', '-') : attrs.hideOn;
-
-        elem.addClass('ux-hide--' + hideOn);
+        elem.attr('data-hide_on', attrs.hideOn);
     }
 });
 
@@ -148,35 +146,22 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
 
     if( 'showOn' in attrs && attrs.showOn.length ) {
 
-        var showOn = attrs.showOn;
         var hideOn = false;
 
-        if (showOn == "mobile")
-            hideOn = "desktop tablet";
+        if (attrs.showOn == "mobile")
+            hideOn = "desktop";
+        else if (attrs.showOn == "desktop")
+            hideOn = "mobile";
+        else if (attrs.showOn == "tablet")
+            hideOn = "phone desktop";
 
-        if (showOn == "desktop")
-            hideOn = "mobile-tablet";
-
-        if (showOn == "tablet")
-            hideOn = "mobile desktop";
-
-        if( hideOn ){
-
-            if( hideOn.indexOf('{{')==-1 ){
-
-                var hideOn_map = hideOn.split(' ');
-                elem.addClass('ux-hide--' + hideOn_map.join(' ux-hide--'));
-            }
-            else{
-
-                elem.addClass('ux-hide--' + hideOn);
-            }
-        }
+        if( hideOn )
+            elem.attr('data-hide_on', hideOn);
     }
 });
 
 
-['block', 'icon', 'icon', 'page', 'component', 'tmp', 'misc'].map(function(type){
+['block', 'icon', 'page', 'component', 'tmp', 'misc'].map(function(type){
 
     dom.compiler.register('attribute', type+'-src', function(elem, attrs){
 
@@ -259,7 +244,7 @@ dom.compiler.register('element', 'youtube-embed', function(elem, attrs){
     url = url.replace(/%7B/g, '{').replace(/%7D/g, '}');
 
     if( options.defer )
-        return '<iframe data-src="'+url+'" allowfullscreen class="youtube-embed ux-defer"></iframe>';
+        return '<iframe data-src="'+url+'" allowfullscreen class="youtube-embed meta-defer"></iframe>';
     else
         return '<iframe src="'+url+'" allowfullscreen class="youtube-embed"></iframe>';
 });

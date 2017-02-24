@@ -1,7 +1,7 @@
 /**
  * Tab
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
@@ -17,8 +17,8 @@
  *
  **/
 
-var UXTab = function(config) {
-
+var MetaTab = function(config)
+{
     var self = this;
 
     self.context = {
@@ -29,84 +29,92 @@ var UXTab = function(config) {
 
     self.config = {
         $element   : false,
-        block      : ['phone']
+        inline     : false
     };
 
 
-    self._setupEvents = function(){
-
-        self.context.$tab_handlers.click(function(e){
-
+    self._setupEvents = function()
+    {
+        self.context.$tab_handlers.click(function(e)
+        {
             e.preventDefault();
-            self.open( self.context.$tab_handlers.index($(this)) );
-        });
-
-        self.context.$tabs.find('[data-tab]').click(function(e){
-
-            e.preventDefault();
-            self.open( parseInt($(this).data('tab'))-1 );
+            self.open( $(this).attr('href') );
         });
     };
 
 
-    self.open = function( i ){
+    self.open = function( id )
+    {
+        self.context.$tab_handlers.removeClass('active').filter('[href="'+id+'"]').addClass('active');
+        self.context.$tabs.hide().filter(id).show();
 
-        self.context.$tab_handlers.removeClass('ux-tabs--active').eq(i).addClass('ux-tabs--active');
-
-        self.context.$tabs.removeClass('ux-tab--active');
-
-        if( i <= self.context.$tabs.length )
-            self.context.$tabs.eq(i).addClass('ux-tab--active');
-
-        //$('html,body').animate({scrollTop: self.config.$element.offset().top - $('.ux-scroll-offset').height()}, 200, "easeInOutCubic");
-
-        self.current = i;
+        self.current = id;
 
         if( self.context.id.length )
-            cookies.set('ux-tab-'+self.context.id, i);
+            cookies.set('meta-tab-'+self.context.id, id);
     };
 
 
-    self._init = function(){
-
-        if( self.context.id ) {
-
-            var current_from_cookie = cookies.get('ux-tab-' + self.context.id);
+    self._init = function()
+    {
+        if( self.context.id )
+        {
+            var current_from_cookie = cookies.get('meta-tab-' + self.context.id);
 
             if (current_from_cookie)
                 self.open(current_from_cookie);
             else
-                self.open(0);
-        }else
-            self.open(0);
+                self.open(self.context.$tab_handlers.first().attr('href'));
+        }
+        else{
+
+            self.open(self.context.$tab_handlers.first().attr('href'));
+        }
     };
 
+
+    self._getElements = function()
+    {
+        self.context.$tab_handlers = self.config.$element.find('[href^="#"]');
+
+        self.context.$tabs = $();
+        self.context.$tab_handlers.each(function()
+        {
+            self.context.$tabs = self.context.$tabs.add( self.config.$element.find($(this).attr('href')) );
+        });
+
+        self.context.$tabs.hide();
+    };
 
     /* Contructor. */
 
     /**
      *
      */
-    self.__construct = function(config) {
+    self.__construct = function(config)
+    {
+        if( config.inline )
+            config.inline = config.inline.split(',');
 
         self.config = $.extend(self.config, config);
 
-        self.context.$tab_handlers = self.config.$element.find('.ux-tabs__handler');
-        self.context.$tabs = self.config.$element.nextAll('.ux-tab');
-        self.context.id    = self.config.$element.attr('id') || false;
+        self._getElements();
 
-        $.each(self.config.block, function(i, block){
+        self.context.id = self.config.$element.attr('id') || false;
 
-            if( browser && browser[block] ){
-
-                self.context.$tab_handlers.each(function(i){
-
+        $.each(self.config.inline, function(i, type)
+        {
+            if( browser && browser[type] )
+            {
+                self.context.$tab_handlers.each(function(i)
+                {
                     if( self.context.$tabs.length > i )
                         self.context.$tabs.eq(i).insertAfter($(this));
                 });
 
-                self.context.$tab_handlers = self.config.$element.find('.ux-tabs__handler');
-                self.context.$tabs = self.config.$element.find('.ux-tab');
+                self._getElements();
+
+                return false;
             }
         });
 
@@ -119,47 +127,49 @@ var UXTab = function(config) {
 };
 
 
-var UXTabs = function() {
-
+var MetaTabs = function()
+{
     var self = this;
 
-    self.tabs = [];
-
-
-    self.add = function( $tabs ){
-
+    self.add = function( $tabs )
+    {
         var context = {};
-        try {
-            context = $tabs.data('context') ? JSON.parse('{' + $tabs.data('context').replace(/'/g, '"') + '}') : {};
-        } catch(e) {}
+
+        if( $tabs.data('context') )
+        {
+            try { context = JSON.parse('{' + $tabs.data('context').replace(/'/g, '"') + '}') } catch(e) {}
+        }
+        else
+        {
+            context = $tabs.data();
+        }
 
         context.$element = $tabs;
 
-        $tabs.removeAttr('data-context');
-
-        self.tabs.push( new UXTab(context) );
+        new MetaTab(context);
     };
 
 
     /* Constructor. */
 
-    self.__construct = function() {
-
-        $('.ux-tabs').initialize(function() { self.add( $(this) ); });
+    self.__construct = function()
+    {
+        $('[data-tabs="true"]').initialize(function() { self.add( $(this) ); });
     };
 
 
-    if( typeof DOMCompiler !== 'undefined' ) {
+    if( typeof DOMCompiler !== 'undefined' )
+    {
+        dom.compiler.register('attribute', 'tabs', function(elem)
+        {
+            elem.attr('data-tabs', 'true');
 
-        dom.compiler.register('attribute', 'tabs', function(elem) { elem.addClass('ux-tabs'); }, self.add);
-        dom.compiler.register('attribute', 'tab', function(elem) { elem.addClass('ux-tab'); });
-        dom.compiler.register('attribute', 'tabs-handler', function(elem) { elem.addClass('ux-tabs__handler'); });
-        dom.compiler.register('element', 'tab', function() { return '<div class="ux-tab"><transclude/></div>'; });
+        }, self.add);
     }
 
     self.__construct();
 };
 
 
-var ux = ux || {};
-ux.tabs = new UXTabs();
+var meta = meta || {};
+meta.tabs = new MetaTabs();

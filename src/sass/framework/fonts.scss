@@ -1,4 +1,6 @@
-$font_path: '#{$public-path}/font';
+$public-path  : '../' !default;
+
+$font_path: '#{$public-path}/font' !default;
 $font-families : ();
 
 @each $font in $fonts {

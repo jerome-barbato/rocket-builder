@@ -1,46 +1,45 @@
 //v2
 @mixin lib-sliders{
 
-  .ux-slider{
-    height: 100%; position: relative;
+  $slider-speed : 0.4s !default;
 
-    &__slides {
-      height: 100%; position: relative;
-      &[data-animation="stack"]{ overflow: visible }
-    }
+  .swiper{
 
-    &__preload {
+    &-container{ height: 100%; position: relative }
+    &-wrapper { height: 100%; position: relative }
+
+    &-preload {
       position: absolute; user-select: none;
       top: 0; left: 0; opacity: 0.01; z-index: -1;
       img{ width: 1px; height: 1px; float: left }
     }
 
-    &__scroller{
+    &-scroller{
       width: 100%; overflow: hidden;
       position: relative; height: 100%;
       z-index: 1;
     }
 
-    &__pagination  a {
+    &-pagination  a {
       display: inline-block;
       cursor: pointer; user-select: none;
     }
 
-    &__arrows {
-      user-select: none; z-index: 4;
+    &-button {
+      &-prev{
+        cursor: pointer; position: absolute;
+        display: inline-block;
+        z-index: 5; top: 50%; right: 0
+      }
+      &-next{
+        cursor: pointer; position: absolute;
+        display: inline-block;
+        z-index: 5; top: 50%; left: 0
+      }
     }
 
-    &__arrow {
-      cursor: pointer; position: absolute;
-      display: inline-block;
-      z-index: 5; top: 50%;
 
-      &--left{ left: 0 }
-      &--right{ right: 0 }
-    }
-
-
-    &__slide{
+    &-slide{
 
       height: 100%; position: absolute;
       left: 0; top: 0; width: 100%;
@@ -51,12 +50,12 @@
 
       &--current{ display: block; z-index: 2 }
 
-      .ux-slider__slides--animating > &{ animation-duration: $ux-slider-speed }
-      .ux-slider__slides--animating > &--previous{ display: block }
+      .swiper-wrapper--animating > &{ animation-duration: $slider-speed }
+      .swiper-wrapper--animating > &--previous{ display: block }
 
       &__item{
         animation-fill-mode: both;
-        animation-duration: $ux-slider-speed;
+        animation-duration: $slider-speed;
         animation-timing-function: $ease-in-out-cubic;
         will-change: opacity, transform;
       }
@@ -66,21 +65,21 @@
       &--current{
         #{$horizontal}[data-direction="forward"] > &{
           animation-name: slide-from-right;
-          .ux-slider__slide__item{ animation-name: slide-from-right-only }
+          .swiper-slider__item{ animation-name: slide-from-right-only }
         }
         #{$horizontal}[data-direction="backward"] > &{
           animation-name: slide-from-left;
-          .ux-slider__slide__item{ animation-name: slide-from-left-only }
+          .swiper-slider__item{ animation-name: slide-from-left-only }
         }
       }
       &--previous{
         #{$horizontal}[data-direction="forward"] > &{
           animation-name: slide-to-left;
-          .ux-slider__slide__item{ animation-name: slide-to-left-only }
+          .swiper-slider__item{ animation-name: slide-to-left-only }
         }
         #{$horizontal}[data-direction="backward"] > &{
           animation-name: slide-to-right;
-          .ux-slider__slide__item{ animation-name: slide-to-right-only }
+          .swiper-slider__item{ animation-name: slide-to-right-only }
         }
       }
 
@@ -119,7 +118,7 @@
       }
       &--next{
         #{$stack}[data-direction="forward"] > & { animation-name: offset-by-4 }
-        .ux-slider--animation-stack > & { transform: translate3d(4rem, 4rem, 0); opacity: 0.5; display: block }
+        .swiper-wrapper#{$stack} > & { transform: translate3d(4rem, 4rem, 0); opacity: 0.5; display: block }
       }
 
       @keyframes offset-by-4 {
@@ -145,7 +144,7 @@
 
       //crossfade
       &--current{
-        [data-transition="crossfade"] > & { animation-name: fade-in; animation-duration: $ux-slider-speed*2 }
+        [data-transition="crossfade"] > & { animation-name: fade-in; animation-duration: $slider-speed*2 }
       }
     }
   }

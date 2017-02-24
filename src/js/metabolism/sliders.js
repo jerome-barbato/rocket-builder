@@ -1,26 +1,28 @@
 /**
  * Slider
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Jérome Barbato <jerome@metabolism.fr>
  *
  * License: GPL
- * Version: 2.1
+ * Version: 3.0
  *
  * Changelog
  * v2.0
  * css animations only, removed IE9 compat
  * v2.1
- * renamed ui-slider to ux-slider
+ * renamed ui-slider to meta-slider
+ * v3.0
+ * renamed meta-slider to swiper-container
  *
  * Requires:
  *   - jQuery
  *
  **/
 
-var UXSlider = function(config) {
-
+var MetaSlider = function(config)
+{
     var self = this;
 
     /* Contructor. */
@@ -28,16 +30,19 @@ var UXSlider = function(config) {
     /**
      *
      */
-    self.__construct = function(config) {
-
+    self.__construct = function(config)
+    {
         self.config = $.extend(self.config, config);
 
-        if( isNaN(parseInt(self.config.start_slide)) )
-            self.config.start_slide = 0;
-        else
-            self.config.start_slide = parseInt(self.config.start_slide);
+        if( self.config.display )
+        {
+            try{ self.config.display = JSON.parse('{"' +  self.config.display.replace(/:/g,'":"').replace(/,/g,'","') + '"}') } catch(e) {}
+        }
 
-        self._setupContext(config);
+        if( app.debug > 2 )
+            console.log('slider', self.config)
+
+        self._setupContext();
         self._setupEvents();
     };
 
@@ -58,7 +63,7 @@ var UXSlider = function(config) {
         sync           : false,
         load           : 1.9,
         use_transition : Modernizr && Modernizr.csstransitions,
-        display           : false
+        display        : false
     };
 
 
@@ -77,22 +82,22 @@ var UXSlider = function(config) {
 
 
     self.classnames = {
-        slider     : 'ux-slider',
-        slides     : 'ux-slider__slides',
-        slide      : 'ux-slider__slide',
-        pagination : 'ux-slider__pagination',
-        arrows     : 'ux-slider__arrows',
-        arrow      : 'ux-slider__arrow',
-        preload    : 'ux-slider__preload',
-        scroller   : 'ux-slider__scroller'
+        slider     : 'swiper-container',
+        slides     : 'swiper-wrapper',
+        slide      : 'swiper-slide',
+        pagination : 'swiper-pagination',
+        arrows     : 'swiper-buttons',
+        arrow      : 'swiper-button',
+        preload    : 'swiper-preload',
+        scroller   : 'swiper-scroller'
     };
 
 
 
     /* Public */
 
-    self.goto = function(id, animate, callback){
-
+    self.goto = function(id, animate, callback)
+    {
         self._show(id, animate, callback);
     };
 
@@ -106,8 +111,6 @@ var UXSlider = function(config) {
 
 
 
-    self._addClass    = function( $element, element){ if($element) $element.addClass(self.classnames[element]) };
-    self._removeClass = function( $element, element){ if($element) $element.removeClass(self.classnames[element]) };
     self._addMod      = function( $element, element, mod){ if($element) $element.addClass(self.classnames[element]+'--'+mod) };
     self._removeMod   = function( $element, element, mod){ if($element) $element.removeClass(self.classnames[element]+'--'+mod) };
     self._alterMod    = function( $element, element, mod){ if($element) $element.alterClass(self.classnames[element]+'--'+(mod?mod:'')+'*') };
@@ -117,8 +120,8 @@ var UXSlider = function(config) {
     /**
      *
      */
-    self._setupContext = function() {
-
+    self._setupContext = function()
+    {
         if( self.config.$element.attr('id') == undefined )
             self.config.$element.attr('id', guid('slider'));
 
@@ -126,8 +129,7 @@ var UXSlider = function(config) {
         self.context.$slides               = self.context.$slides_container.findClosest('.'+self.classnames.slide, '.'+self.classnames.slider);
         self.context.$pagination_container = self.config.$element.findClosest('.'+self.classnames.pagination, '.'+self.classnames.slider);
         self.context.$pagination           = self.context.$pagination_container.find('> a');
-        self.context.$arrows_container     = self.config.$element.findClosest('.'+self.classnames.arrows, '.'+self.classnames.slider);
-        self.context.$arrows               = self.context.$arrows_container.find('.'+self.classnames.arrow);
+        self.context.$arrows               = self.config.$element.findClosest('.'+self.classnames.arrow+'-prev, .'+self.classnames.arrow+'-next');
         self.context.slide_count           = self.context.$slides.length;
         self.context.offset                = self.config.$element.offset().top;
         self.context.$window               = $(window);
@@ -137,15 +139,13 @@ var UXSlider = function(config) {
             return false;
 
         self._packSlides();
-
-        self.config.$element.addClass('ux-preload');
-
+        
         self.context.$slides_container
             .attr('data-transition', self.config.animation)
             .wrap('<div class="'+self.classnames.scroller+'"/>');
 
         if (self.context.slide_count < 2)
-            self.context.$arrows_container.hide();
+            self.context.$arrows.hide();
 
 
         if( self.config.preload )
@@ -160,12 +160,13 @@ var UXSlider = function(config) {
     };
 
 
-    self._load = function(){
-
+    self._load = function()
+    {
         self._preload();
+
         var _load = function(){
             self._show(Math.min(self.context.slide_count, self.config.start_slide), false);
-            setTimeout(function(){ self.config.$element.addClass('ux-slider--loaded') });
+            setTimeout(function(){ self.config.$element.addClass('swiper-loaded') });
         };
 
         if( document.readyState === "complete" )
@@ -175,16 +176,16 @@ var UXSlider = function(config) {
     };
 
 
-    self._packSlides = function(){
-
-        if( self.config.display ){
-
-            $.each(['desktop','mobile','tablet','phone'], function(i, device){
-
-                if ( self.config.display[device] && self.config.display[device] > 1 && browser[device]) {
-
+    self._packSlides = function()
+    {
+        if( self.config.display )
+        {
+            $.each(['mobile','tablet','phone'], function(i, device)
+            {
+                if ( self.config.display[device] && self.config.display[device] > 1 && browser[device])
+                {
                     for (var j = 0; j < self.context.$slides.length; j += self.config.display[device])
-                        self.context.$slides.slice(j, j + self.config.display[device]).wrapAll("<div class='ux-slider__slide'></div>").children().unwrap();
+                        self.context.$slides.slice(j, j + parseInt(self.config.display[device])).wrapAll("<div class='"+self.classnames.slide+"'></div>").children().unwrap();
                 }
             });
 
@@ -195,9 +196,9 @@ var UXSlider = function(config) {
 
 
 
-    self._sync = function(){
-
-        $('#'+self.config.sync).on('ux-slider.updated', function(e, index){
+    self._sync = function()
+    {
+        $('#'+self.config.sync).on('slider.updated', function(e, index){
 
             if( index != self.context.indices.current )
                 self._show(index, true);
@@ -206,15 +207,15 @@ var UXSlider = function(config) {
 
 
 
-    self._autoplay = function() {
-
+    self._autoplay = function()
+    {
         if ( !self.config.autoplay || self.config.autoplay < 500 || self.context.slide_count < 2 )
             return;
 
         clearTimeout(self.context.timer);
 
-        self.context.timer = setTimeout(function() {
-
+        self.context.timer = setTimeout(function()
+        {
             if( self.context.is_visible )
                 self._show(self.context.indices.current + 1, true);
 
@@ -224,8 +225,8 @@ var UXSlider = function(config) {
 
 
 
-    self._setupEvents = function() {
-
+    self._setupEvents = function()
+    {
         if ( self.config.autoplay && self.config.hold )
             self.config.$element.hover(function() { self.pause() }, function() { self.resume() });
 
@@ -236,13 +237,8 @@ var UXSlider = function(config) {
         ) {
 
             self.config.$element.swipe({
-
-                swipeLeft: function() {
-                    self._show(self.context.indices.current + 1, true)
-                },
-                swipeRight: function() {
-                    self._show(self.context.indices.current - 1, true)
-                }
+                swipeLeft: function(){ self._show(self.context.indices.current + 1, true) },
+                swipeRight: function(){ self._show(self.context.indices.current - 1, true) }
             });
         }
 
@@ -254,8 +250,8 @@ var UXSlider = function(config) {
         $(document).on('loaded', self._computeOffset);
 
 
-        self.config.$element.on('ux-slider.update', function(e, index, animate){
-
+        self.config.$element.on('slider.update', function(e, index, animate)
+        {
             if( typeof animate == 'undefined')
                 animate = true;
 
@@ -264,8 +260,8 @@ var UXSlider = function(config) {
         });
 
 
-        self.config.$element.on('ux-slider.autoplay', function(e, state){
-
+        self.config.$element.on('slider.autoplay', function(e, state)
+        {
             if( !self.config.autoplay )
                 return;
 
@@ -278,8 +274,8 @@ var UXSlider = function(config) {
 
 
 
-    self._computeOffset = function(){
-
+    self._computeOffset = function()
+    {
         self.context.offset        = self.config.$element.offset().top;
         self.context.window_height = self.context.$window.height();
 
@@ -288,8 +284,8 @@ var UXSlider = function(config) {
 
 
 
-    self._checkVisibility = function(){
-
+    self._checkVisibility = function()
+    {
         var scrollTop    = self.context.$window.scrollTop();
         var targetScroll = scrollTop+self.context.window_height*0.8;
         var is_visible   = self.context.offset <= targetScroll;
@@ -302,39 +298,39 @@ var UXSlider = function(config) {
 
 
 
-    self._computeIndexes = function(target){
-
-        var direction  = self.context.indices.current > target ? 'left' : 'right';
-        var next       = direction == 'left' ? target - 1 : target + 1;
+    self._computeIndexes = function(target)
+    {
+        var direction  = self.context.indices.current > target ? 'next' : 'prev';
+        var next       = direction == 'next' ? target - 1 : target + 1;
         var current    = self.context.indices.current;
 
-        if( self.config.loop ){
-
-            if ( target >= self.context.slide_count ) {
-
+        if( self.config.loop )
+        {
+            if ( target >= self.context.slide_count )
+            {
                 target      = 0;
-                direction  = 'right';
+                direction  = 'prev';
 
-            } else if ( target < 0 ) {
-
+            } else if ( target < 0 )
+            {
                 target      = self.context.slide_count - 1;
-                direction  = 'left';
+                direction  = 'next';
             }
 
-            next = direction == 'left' ? target - 1 : target + 1;
+            next = direction == 'next' ? target - 1 : target + 1;
 
             if( next >= self.context.slide_count )
                 next = 0;
             else if ( next < 0 )
                 next = self.context.slide_count - 1;
         }
-        else {
-
+        else
+        {
             if (target >= self.context.slide_count || target < 0)
                 return false;
         }
 
-        self.context.$slides_container.attr('data-direction', (direction=='right'?'forward':'backward'));
+        self.context.$slides_container.attr('data-direction', (direction=='prev'?'forward':'backward'));
         self.config.$element.attr('data-index', (parseInt(target)+1));
 
         self.context.direction        = direction;
@@ -347,8 +343,8 @@ var UXSlider = function(config) {
 
 
 
-    self._show = function(index, animate, callback) {
-
+    self._show = function(index, animate, callback)
+    {
         clearTimeout(self.context.timer);
 
         if (self.context.is_animating || self.context.indices.current == index ) return;
@@ -358,7 +354,7 @@ var UXSlider = function(config) {
 
         self.context.is_animating = true;
 
-        self.config.$element.trigger('ux-slider.updated', [index, self.context.indices.current]);
+        self.config.$element.trigger('slider.updated', [index, self.context.indices.current]);
 
         self.context.$current_slide = self.context.$slides.eq(self.context.indices.current);
 
@@ -372,13 +368,13 @@ var UXSlider = function(config) {
         else
             self.context.$previous_slide = false;
 
-        self._removeMod(self.context.$arrows, 'arrow', 'disabled');
+        self._removeMod(self.context.$arrows, 'button', 'disabled');
 
         if ( self.context.indices.current >= self.context.slide_count-1 && !self.config.loop )
-            self._addMod(self.context.$arrows.filter('.'+self.classnames.arrow+'--right'), 'arrow', 'disabled');
+            self._addMod(self.context.$arrows.filter('.'+self.classnames.arrow+'-next'), 'button', 'disabled');
 
         if( self.context.indices.current == 0 && !self.config.loop )
-            self._addMod(self.context.$arrows.filter('.'+self.classnames.arrow+'--left'), 'arrow', 'disabled');
+            self._addMod(self.context.$arrows.filter('.'+self.classnames.arrow+'-prev'), 'button', 'disabled');
 
         self._updateSlides(animate, callback);
         self._updatePagination();
@@ -388,8 +384,8 @@ var UXSlider = function(config) {
 
 
 
-    self._updateSlides = function(animate, callback) {
-
+    self._updateSlides = function(animate, callback)
+    {
         self._alterMod(self.context.$slides, 'slide');
 
         if( animate )
@@ -403,16 +399,16 @@ var UXSlider = function(config) {
         if( self.context.$next_slide )
             self._addMod(self.context.$next_slide, 'slide', 'next');
 
-        if( window.jQuery.fn.fit ){
-
+        if( window.jQuery.fn.fit )
+        {
             self.context.$current_slide.find('[data-object_fit]').fit();
 
             if( self.context.$next_slide )
                 self.context.$next_slide.find('[data-object_fit]').fit();
         }
 
-        self._animate(animate, function() {
-
+        self._animate(animate, function()
+        {
             if( animate )
                 self._removeMod(self.context.$slides_container, 'slides', 'animating');
 
@@ -428,25 +424,25 @@ var UXSlider = function(config) {
 
 
 
-    self._animate = function(animate, callback){
-
-        if( animate ){
-
+    self._animate = function(animate, callback)
+    {
+        if( animate )
+        {
             if( !self.context.loop )
                 callback();
 
-            var $animatedSlides  = self.context.$slides.filter(':visible').not(function(){
-
+            var $animatedSlides  = self.context.$slides.filter(':visible').not(function()
+            {
                 var animation = $(this).css('animation-name');
                 return !animation || animation == "none";
             });
 
             var i = 0;
 
-            $animatedSlides.on(self.context.animationEnd, function(e){
-
-                if( $(e.target).is('.'+self.classnames.slide) ){
-
+            $animatedSlides.on(self.context.animationEnd, function(e)
+            {
+                if( $(e.target).is('.'+self.classnames.slide) )
+                {
                     i++;
                     $(this).off(self.context.animationEnd);
                 }
@@ -458,16 +454,16 @@ var UXSlider = function(config) {
             if( !self.config.use_transition || !$animatedSlides.length)
                 callback();
         }
-        else{
-
+        else
+        {
             callback();
         }
     };
 
 
 
-    self._updatePagination = function() {
-
+    self._updatePagination = function()
+    {
         self.context.$pagination.removeClass('active');
 
         if ( self.context.indices.current >= 0 )
@@ -476,23 +472,15 @@ var UXSlider = function(config) {
 
 
 
-    self._initArrows = function() {
-
-        if (!self.context.$arrows.length && self.context.slide_count > 1) {
-
-            self.context.$arrows_container.append('<a class="'+self.classnames.arrow+' '+self.classnames.arrow+'--right"></a>', false);
-            self.context.$arrows_container.prepend('<a class="'+self.classnames.arrow+' '+self.classnames.arrow+'--left"></a>', false);
-
-            self.context.$arrows = self.context.$arrows_container.find('.'+self.classnames.arrow);
-        }
-
-        self.context.$arrows.on('click keypress', function(e) {
-
-            if (e.which === 13 || e.type === 'click') {
-
+    self._initArrows = function()
+    {
+        self.context.$arrows.on('click keypress', function(e)
+        {
+            if (e.which === 13 || e.type === 'click')
+            {
                 e.preventDefault();
 
-                var inc = $(this).hasClass(self.classnames.arrow + '--left') ? -1 : 1;
+                var inc = $(this).hasClass(self.classnames.arrow + '-next') ? -1 : 1;
 
                 self._show(self.context.indices.current + inc, true);
             }
@@ -501,21 +489,21 @@ var UXSlider = function(config) {
 
 
 
-    self._preload = function() {
-
+    self._preload = function()
+    {
         var scrollTop    = self.context.$window.scrollTop();
         var targetScroll = scrollTop+self.context.window_height;
 
-        if (self.config.preload && self.context.offset <= targetScroll*self.config.load) {
-
+        if (self.config.preload && self.context.offset <= targetScroll*self.config.load)
+        {
             self._loadImage(self.context.$current_slide);
 
-            if( self.context.$next_slide && self.context.offset <= targetScroll*self.config.load ){
-
+            if( self.context.$next_slide && self.context.offset <= targetScroll*self.config.load )
+            {
                 self._loadImage(self.context.$next_slide);
 
-                if( self.config.preload > 1 ){
-
+                if( self.config.preload > 1 )
+                {
                     var $next = self.context.$next_slide.next();
 
                     if( $next.length )
@@ -529,13 +517,13 @@ var UXSlider = function(config) {
     };
 
 
-    self._loadImage = function($slide) {
-
+    self._loadImage = function($slide)
+    {
         if (!$slide || !$slide.length)
             return false;
 
-        $slide.find('[data-src]').each(function() {
-
+        $slide.find('[data-src]').each(function()
+        {
             var $element = $(this);
 
             //force load to memory
@@ -554,12 +542,12 @@ var UXSlider = function(config) {
     };
 
 
-    self._initPagination = function() {
-
+    self._initPagination = function()
+    {
         var $pagination = self.config.$element.findClosest('.'+self.classnames.pagination, '.'+self.classnames.slider);
 
-        if (!self.context.$pagination.length &&self.context.slide_count > 1) {
-
+        if (!self.context.$pagination.length &&self.context.slide_count > 1)
+        {
             var a = '<a></a>';
 
             $pagination.append(a.repeat(self.context.slide_count), false);
@@ -567,8 +555,8 @@ var UXSlider = function(config) {
             self.context.$pagination = $pagination.find('> a');
         }
 
-        self.context.$pagination.click(function(e) {
-
+        self.context.$pagination.click(function(e)
+        {
             e.preventDefault();
             self._show($(this).index(), true);
         });
@@ -585,83 +573,84 @@ var UXSlider = function(config) {
 /*
  Sliders Mananger
  */
-var UXSliders = function() {
-
+var MetaSliders = function()
+{
     var self = this;
 
-    self.add = function( $slider ){
-
+    self.add = function( $slider )
+    {
         var context = {};
 
-        try {
-
-            context = $slider.data('context') ? JSON.parse('{' + $slider.data('context').replace(/'/g, '"') + '}') : {};
-            $slider.removeAttr('data-context');
-
-        } catch(e) {}
+        if( $(this).data('context') )
+        {
+            try { context = $slider.data('context') ? JSON.parse('{' + $slider.data('context').replace(/'/g, '"') + '}') : {}; } catch(e) {}
+        }
+        else
+        {
+            context = $slider.data();
+        }
 
         context.$element = $slider;
 
-        new UXSlider(context);
+        new MetaSlider(context);
     };
 
 
-    self.__construct = function() {
-
-        $('.ux-slider').initialize(function() {
-
+    self.__construct = function()
+    {
+        $('.swiper-container').initialize(function()
+        {
             self.add( $(this) );
         });
     };
 
 
-    if( typeof DOMCompiler !== "undefined" ) {
-
-        dom.compiler.register('element', 'slider', function(elem, attrs) {
-
-            return '<div class="ux-slider"'+(attrs.context?' data-context="'+attrs.context+'"':'')+' data-on_demand="false"><transclude/></div>';
+    if( typeof DOMCompiler !== "undefined" )
+    {
+        dom.compiler.register('element', 'slider', function(elem, attrs)
+        {
+            return '<div class="swiper-container" data-on_demand="false"><transclude/></div>';
 
         }, self.add);
 
-        dom.compiler.register('element', 'slides', function(elem) {
-
-            return '<div class="ux-slider__slides"><transclude/></div>';
+        dom.compiler.register('element', 'slides', function(elem)
+        {
+            return '<div class="swiper-wrapper"><transclude/></div>';
         });
 
-        dom.compiler.register('element', 'slide', function(elem) {
-
-            return '<div class="ux-slider__slide"><transclude/></div>';
+        dom.compiler.register('element', 'slide', function(elem)
+        {
+            return '<div class="swiper-slide"><transclude/></div>';
         });
 
-        dom.compiler.register('attribute', 'slide-item', function(elem, attrs) {
-
-            elem.addClass('ux-slider__slide__item');
+        dom.compiler.register('attribute', 'slide-item', function(elem, attrs)
+        {
+            elem.addClass('swiper-slide__item');
         });
 
-        dom.compiler.register('element', 'arrows', function(elem) {
-
-            return '<div class="ux-slider__arrows"><transclude/></div>';
+        dom.compiler.register('element', 'arrows', function(elem)
+        {
+            return '<a class="swiper-button-next"></a><a class="swiper-button-prev"></a>';
         });
 
-        dom.compiler.register('element', 'pagination', function(elem) {
-
-            return '<div class="ux-slider__pagination"><transclude/></div>';
+        dom.compiler.register('element', 'pagination', function(elem)
+        {
+            return '<div class="swiper-pagination"><transclude/></div>';
         });
 
-        dom.compiler.register('element', 'arrow-left', function(elem) {
-
-            return '<a class="ux-slider__arrow ux-slider__arrow--left"><transclude/></a>';
+        dom.compiler.register('element', 'arrow-prev', function(elem)
+        {
+            return '<a class="swiper-button-prev"><transclude/></a>';
         });
 
-        dom.compiler.register('element', 'arrow-right', function(elem) {
-
-            return '<a class="ux-slider__arrow ux-slider__arrow--right"><transclude/></a>';
+        dom.compiler.register('element', 'arrow-next', function(elem)
+        {
+            return '<a class="swiper-button-next"><transclude/></a>';
         });
     }
-
 
     self.__construct();
 };
 
-var ux = ux || {};
-ux.sliders = new UXSliders();
+var meta = meta || {};
+meta.sliders = new MetaSliders();
