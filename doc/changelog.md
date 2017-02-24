@@ -7,8 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 =======
 
 ## 3.3.0 - 2017-02-24 ##
-//todo
-
+### Added
+- new bind library ( see doc/features/bin.md )
+- responsive Grid
+- most framework sass variable are now noted as !default
+### Changed
+- renamed UX to Meta
+- renamed ux. to meta.
+- Slider classname is now compatible with iSwiper
+- global code simplification using data attribute
+### Updated
+- jQuery to 2.2.4
+- jQuery.touchSwipe to 1.6.18
+### Fixed
+- minor bugfix for most library
 
 ## 3.2.10 - 2017-02-01 ##
 ### Fixed
