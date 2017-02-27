@@ -260,11 +260,14 @@ var MetaMap = function($map, template, config, callback){
     /**
      *
      */
-    self.addMyLocation = function( data ){
+    self.addMyLocation = function( data, zoom ){
 
         self.context.gmap.marker({address:data}).then(function(marker){
 
             self.context.markers.push(marker);
+
+            if( typeof zoom != 'undefined')
+                self.setPosition({coords:{latitude:marker.position.lat(),longitude:marker.position.lng()}}, zoom);
         });
     };
 

@@ -39,29 +39,15 @@ var MetaBind = function() {
             return;
 
         if( type == 'click' )
-        {
-            $element.click(function(e)
-            {
-                e.preventDefault();
-
-                $element.toggleClass('active');
-                $target.toggleClass('active');
-            });
-
-            $(document).click(function(e)
-            {
-                var $click_target = $(e.target);
-
-                if( $element.hasClass('active') && !$click_target.closest(id+', [href="'+id+'"]').length )
-                {
-                    $element.removeClass('active');
-                    $target.removeClass('active');
-                }
-            });
-        }
+            self._handleClick(id, $element, $target);
         else if( type == 'hover' )
-        {
-            $element.hover(function () {
+            self._handleHover(id, $element, $target);
+    };
+
+
+    self._handleHover = function(id, $element, $target){
+
+        $element.add($target).hover(function () {
 
                 $element.addClass('active');
                 $target.addClass('active');
@@ -71,7 +57,29 @@ var MetaBind = function() {
                 $element.removeClass('active');
                 $target.removeClass('active');
             });
-        }
+    };
+
+
+    self._handleClick = function(id, $element, $target){
+
+        $element.click(function(e)
+        {
+            e.preventDefault();
+
+            $element.toggleClass('active');
+            $target.toggleClass('active');
+        });
+
+        $(document).click(function(e)
+        {
+            var $click_target = $(e.target);
+
+            if( $element.hasClass('active') && !$click_target.closest(id+', [href="'+id+'"]').length )
+            {
+                $element.removeClass('active');
+                $target.removeClass('active');
+            }
+        });
     };
 
 
