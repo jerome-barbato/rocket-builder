@@ -128,7 +128,7 @@ var config = module.exports = {
         {
             config.builder.script.app.forEach(function (element) {
 
-                config.paths.src.js.app.push(config.paths.asset + '/js/app/'+ element + '.js');
+                config.paths.src.js.app.push(config.paths.asset + '/js/'+ element + '.js');
             });
         }
         else {

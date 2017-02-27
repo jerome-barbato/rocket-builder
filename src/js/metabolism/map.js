@@ -70,30 +70,31 @@ var MetaMap = function($map, template, config, callback){
     /**
      *
      */
-    self.__construct =  function( $map, config, callback ) {
-
-
-        if( typeof $.gmap3 == 'undefined' ){
-
+    self.__construct =  function( $map, config, callback )
+    {
+        if( typeof $.gmap3 == 'undefined' )
+        {
             console.warn('gmap3 is required');
             return;
         }
 
         self.config = $.extend(true, self.config, config);
 
-        if( !MetaMapInit ){
+        var google_api_key = 'google_api' in app ? app.google_api : ('google_key' in app ? app.google_key : '');
 
+        if( !MetaMapInit )
+        {
             MetaMapInit = function(){ $(document).trigger('google.maps.initialized') };
 
-            if( document.readyState == 'complete' ){
-
-                $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=MetaMapInit"></script>');
+            if( document.readyState == 'complete' )
+            {
+                $('head').append('<script src="https://maps.google.com/maps/api/js?key='+google_api_key+'&callback=MetaMapInit"></script>');
             }
-            else{
-
-                $(window).load(function(){
-
-                    $('head').append('<script src="https://maps.google.com/maps/api/js?key='+('google_key' in app ? app.google_key : '')+'&callback=MetaMapInit"></script>');
+            else
+            {
+                $(window).load(function()
+                {
+                    $('head').append('<script src="https://maps.google.com/maps/api/js?key='+google_api_key+'&callback=MetaMapInit"></script>');
                 });
             }
 
@@ -260,11 +261,14 @@ var MetaMap = function($map, template, config, callback){
     /**
      *
      */
-    self.addMyLocation = function( data ){
+    self.addMyLocation = function( data, zoom ){
 
         self.context.gmap.marker({address:data}).then(function(marker){
 
             self.context.markers.push(marker);
+
+            if( typeof zoom != 'undefined')
+                self.setPosition({coords:{latitude:marker.position.lat(),longitude:marker.position.lng()}}, zoom);
         });
     };
 
