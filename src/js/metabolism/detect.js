@@ -98,7 +98,7 @@ var MetaDetect = function()
                 self.context.in_between     =  self.context.bottom_reached = false;
 
                 self.context.$body.attr('data-scroll', 'top');
-                self.context.$body.trigger('meta-scroll.top');
+                self.context.$body.trigger('scroll.top');
             }
         }
         else if( scroll_top > 5 && scroll_top+self.context.window_height < self.context.document_height )
@@ -109,7 +109,7 @@ var MetaDetect = function()
                 self.context.in_between = true;
 
                 self.context.$body.addClass('has-scrolled').attr('data-scroll', 'between');
-                self.context.$body.trigger('meta-scroll.between');
+                self.context.$body.trigger('scroll.between');
             }
         }
         else if( scroll_top+self.context.window_height >= self.context.document_height )
@@ -120,7 +120,7 @@ var MetaDetect = function()
                 self.context.bottom_reached = true;
 
                 self.context.$body.attr('data-scroll', 'bottom');
-                self.context.$body.trigger('meta-scroll.bottom');
+                self.context.$body.trigger('scroll.bottom');
             }
         }
     };
@@ -173,7 +173,7 @@ var MetaDetect = function()
                     {
                         element.detected = true;
                         element.$.addClass(classprefix+'-'+element.detect);
-                        element.$.trigger('meta-detect.'+element.detect,[true]);
+                        element.$.trigger('detect.'+element.detect,[true]);
                     }
                 }
                 else
@@ -182,7 +182,7 @@ var MetaDetect = function()
                     {
                         element.detected = false;
                         element.$.removeClass(classprefix+'-'+element.detect);
-                        element.$.trigger('meta-detect.'+element.detect,[false]);
+                        element.$.trigger('detect.'+element.detect,[false]);
                     }
                 }
             }
