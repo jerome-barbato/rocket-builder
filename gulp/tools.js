@@ -43,20 +43,21 @@ gulp.task('create', function () {
     }
 
     path.template += '/' + type;
+    var filename = name.toLowerCase();
 
     try {
-        fs.statSync(path.template + '/' + name + '.phtml.twig');
+        fs.statSync(path.template + '/' + filename + '.phtml.twig');
         gutil.log(chalk.red('This template allready exists'));
     } catch (e) {
-        fs_path.writeFile(path.template + '/' + name + '.phtml.twig', "<div block=\"" + name.replace(/\//g, '-') + "\">\n\t\n</div>");
+        fs_path.writeFile(path.template + '/' + filename + '.phtml.twig', "<div block=\"" + name.replace(/\//g, '-') + "\">\n\t\n</div>");
         gutil.log(chalk.green('Template created'));
     }
 
     try {
-        fs.statSync(path.sass + '/' + name + '.scss');
+        fs.statSync(path.sass + '/' + filename + '.scss');
         gutil.log(chalk.red('This stylesheet allready exists'));
     } catch (e) {
-        fs_path.writeFile(path.sass + '/' + name + '.scss', "." + name.replace(/\//g, '-') + "{\n\t\n}");
+        fs_path.writeFile(path.sass + '/' + filename + '.scss', "." + name.replace(/\//g, '-') + "{\n\t\n}");
         gutil.log(chalk.green('Stylesheet created'));
     }
 });

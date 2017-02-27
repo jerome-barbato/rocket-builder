@@ -4,11 +4,25 @@
     
 A controller is required and the map must have an height defined, Gmap3 is required.
 
+Add Google api key ( google_key ) to window.app in layout.html.twig
+~~~
+<script type="text/javascript">
+    window.app = {
+        debug : {{ debug|default('0') }}
+        ...
+        google_key : 'lkjdsmoipvutv4654vtrteqlijoiqr'
+    };
+</script>
+~~~
+
+Add HTML Markup
 ~~~
 <div controller="map">
     <div data-map style="height: 500px"></div>
 </div>
 ~~~
+
+Create a controller
 ~~~
 angulight.controller('map', function($dom){
 
