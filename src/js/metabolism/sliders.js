@@ -300,8 +300,8 @@ var MetaSlider = function(config)
 
     self._computeIndexes = function(target)
     {
-        var direction  = self.context.indices.current > target ? 'next' : 'prev';
-        var next       = direction == 'next' ? target - 1 : target + 1;
+        var direction  = self.context.indices.current > target ? 'prev' : 'next';
+        var next       = direction == 'prev' ? target - 1 : target + 1;
         var current    = self.context.indices.current;
 
         if( self.config.loop )
@@ -309,15 +309,16 @@ var MetaSlider = function(config)
             if ( target >= self.context.slide_count )
             {
                 target      = 0;
-                direction  = 'prev';
+                direction  = 'next';
 
-            } else if ( target < 0 )
+            }
+            else if ( target < 0 )
             {
                 target      = self.context.slide_count - 1;
-                direction  = 'next';
+                direction  = 'prev';
             }
 
-            next = direction == 'next' ? target - 1 : target + 1;
+            next = direction == 'prev' ? target - 1 : target + 1;
 
             if( next >= self.context.slide_count )
                 next = 0;
@@ -330,7 +331,7 @@ var MetaSlider = function(config)
                 return false;
         }
 
-        self.context.$slides_container.attr('data-direction', (direction=='prev'?'forward':'backward'));
+        self.context.$slides_container.attr('data-direction', (direction=='next'?'forward':'backward'));
         self.config.$element.attr('data-index', (parseInt(target)+1));
 
         self.context.direction        = direction;
@@ -480,7 +481,7 @@ var MetaSlider = function(config)
             {
                 e.preventDefault();
 
-                var inc = $(this).hasClass(self.classnames.arrow + '-next') ? -1 : 1;
+                var inc = $(this).hasClass(self.classnames.arrow + '-prev') ? -1 : 1;
 
                 self._show(self.context.indices.current + inc, true);
             }
@@ -636,16 +637,6 @@ var MetaSliders = function()
         dom.compiler.register('element', 'pagination', function(elem)
         {
             return '<div class="swiper-pagination"><transclude/></div>';
-        });
-
-        dom.compiler.register('element', 'arrow-prev', function(elem)
-        {
-            return '<a class="swiper-button-prev"><transclude/></a>';
-        });
-
-        dom.compiler.register('element', 'arrow-next', function(elem)
-        {
-            return '<a class="swiper-button-next"><transclude/></a>';
         });
     }
 

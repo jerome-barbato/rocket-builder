@@ -26,16 +26,13 @@
     }
 
     &-button {
-      &-prev{
+      &-prev, &-next{
         cursor: pointer; position: absolute;
         display: inline-block;
-        z-index: 5; top: 50%; right: 0
+        z-index: 5; top: 50%;
       }
-      &-next{
-        cursor: pointer; position: absolute;
-        display: inline-block;
-        z-index: 5; top: 50%; left: 0
-      }
+      &-prev{ left: 0 }
+      &-next{ right: 0 }
     }
 
 
