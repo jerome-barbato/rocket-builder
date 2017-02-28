@@ -4,6 +4,7 @@ $animation-offset       : 50% !default;
 $animation-offset-rem   : 6rem !default;
 $animation-delay        : $animation-duration/10 !default;
 $animation-delay-values : 35 !default;
+$animation-reveal-color : #eee !default;
 
 @mixin lib-animation{
 
@@ -12,6 +13,24 @@ $animation-delay-values : 35 !default;
       animation: $name $animation-duration $ease-out-cubic both;
       will-change: unquote($properties);
     }
+  }
+
+  [data-animation="reveal"]{
+    position: relative; display: inline-block;
+    &:after{
+      display: block; position: overlay(); z-index: 1;
+      background: $animation-reveal-color; content: ''; animation: appear-left $ease-in-out-cubic $animation-duration both
+    }
+    > *{ display: inline-block; animation: fade-in-half $animation-duration steps(1,end) both; line-height: 100% }
+    > img{ display: block }
+    > *, &:after{ animation-delay: inherit }
+    &[data-activation="wait"]{ > *, &:after{ animation-play-state: paused!important }}
+    &[data-activation="rewind"]{
+      > *{ animation-name: fade-out-half }
+      &:after{ animation-name: disappear-left }
+    }
+    &[data-direction="right"]:after{ animation-name: appear-right }
+    &[data-direction="right"][data-activation="rewind"]:after{ animation-name: disappear-right }
   }
 
   @for $i from 0 through $animation-delay-values{

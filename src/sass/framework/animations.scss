@@ -2,9 +2,11 @@
 @mixin animations-keyframes {
 
   @keyframes fade-in { 0%{ opacity: 0 } 100%{ opacity: 1 } }
+  @keyframes fade-in-half { 0%{ opacity: 0 } 50%, 100%{ opacity: 1 } }
   @keyframes un-fade-in { 100%{ opacity: 0 } 0%{ opacity: 1 } }
 
   @keyframes fade-out { 0%{ opacity: 1 } 100%{ opacity: 0 } }
+  @keyframes fade-out-half { 0%{ opacity: 1 } 50%, 100%{ opacity: 0 } }
 
   @keyframes slide-down { 0%{ opacity: 0; transform: translateY(-$animation-offset-rem) } 100%{ opacity: 1; transform: none }}
   @keyframes un-slide-down { 100%{ opacity: 0; transform: translateY(-$animation-offset-rem) } 0%{ opacity: 1; transform: none }}
@@ -52,14 +54,28 @@
   @keyframes rotate-y { 0%{ opacity: 0; transform: perspective(400px) rotateY(90deg) } 100%{ opacity: 1; transform: perspective(400px) }}
   @keyframes un-rotate-y { 100%{ opacity: 0; transform: perspective(400px) rotateY(90deg) } 0%{ opacity: 1; transform: perspective(400px) }}
 
-  @keyframes rotate-in { 0%{ opacity: 0; transform: scale(0.8) rotateZ(30deg) } 100%{ opacity: 1; transform: none }}
-  @keyframes un-rotate-in { 100%{ opacity: 0; transform: scale(0.8) rotateZ(30deg) } 0%{ opacity: 1; transform: none }}
-
   @keyframes pop { 0%{ opacity: 0; transform: scale(0,0) } 40%{ opacity: 1 } 60%{ transform: scale(0.9, 1.02) } 80%{ transform: scale(1.02, 0.98) } 100%{ transform: none }}
   @keyframes un-pop { 100%{ opacity: 0; transform: scale(0,0) } 80%{ opacity: 1 } 60%{ transform: scale(0.9, 1.02) } 40%{ transform: scale(1.02, 0.98) } 0%{ transform: none }}
 
   @keyframes enlarge { 0%{ width: 0 } 100%{ width: 100% } }
   @keyframes un-enlarge { 0%{ width: 100% } 100%{ width: 0 } }
+
+  @keyframes appear-left {
+    0%{ transform:scaleX(0); transform-origin: left } 50%{ transform: scaleX(1); transform-origin: left }
+    50.1%{ transform: scaleX(1); transform-origin: right } 100%{ transform: scaleX(0); transform-origin: right }
+  }
+  @keyframes disappear-left {
+    100%{ transform:scaleX(0); transform-origin: left } 50.1%{ transform: scaleX(1); transform-origin: left }
+    50%{ transform: scaleX(1); transform-origin: right } 0%{ transform: scaleX(0); transform-origin: right }
+  }
+  @keyframes appear-right {
+    0%{ transform:scaleX(0); transform-origin: right } 50%{ transform: scaleX(1); transform-origin: right }
+    50.1%{ transform: scaleX(1); transform-origin: left } 100%{ transform: scaleX(0); transform-origin: left }
+  }
+  @keyframes disappear-right {
+    100%{ transform:scaleX(0); transform-origin: right } 50.1%{ transform: scaleX(1); transform-origin: right }
+    50%{ transform: scaleX(1); transform-origin: left } 0%{ transform: scaleX(0); transform-origin: left }
+  }
 }
 
 $include-animations : false!default;
@@ -83,7 +99,6 @@ $animations :
         unzoom-out  'opacity, transform',
         rotate-x    'opacity, transform',
         rotate-y    'opacity, transform',
-        rotate-in   'opacity, transform',
         pop         'opacity, transform',
         enlarge     'width';
 

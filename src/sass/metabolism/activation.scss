@@ -2,12 +2,8 @@
 
 @mixin lib-activation {
 
-  [data-animation][data-activation="wait"]{
-    &, [data-animation]{ animation-play-state: paused }
-  }
-
-  [data-animation][data-activation="play"]{
-    &, [data-animation]{ animation-play-state: running }
+  [data-activation="wait"]{
+    &, [data-animation]{ animation-play-state: paused!important }
   }
 
   @each $name, $properties in $animations{

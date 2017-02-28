@@ -270,6 +270,14 @@ var MetaActivation = function(){
             if( attrs.whenVisible == 'stack' )
                 elem.find('[delay],[data-delay]').not('[animation],[data-animation]').attr('data-animation', 'slide-up');
 
+            if( attrs.whenVisible == 'reveal' && !elem.find('> *').length )
+            {
+                if( elem.is('img') )
+                    console.log('Reveal animation on image require to wrap the image inside a span');
+                else
+                    elem.wrapInner('<span/>');
+            }
+
         }, self.add);
 
 
