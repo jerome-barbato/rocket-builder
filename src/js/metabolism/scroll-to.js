@@ -85,8 +85,6 @@ var MetaScroll = function() {
             return self.offset;
         }
 
-        var $offset = $('[data-fixed="top"]');
-
         self.offset = $('[data-fixed="top"]').outerHeight();
 
         return self.offset;
