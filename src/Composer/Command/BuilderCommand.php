@@ -15,7 +15,7 @@ class BuilderCommand extends BaseCommand
     protected $pkg_path;
 
     public function __construct($name = null) { parent::__construct( $name );
-        $this->pkg_path = getcwd() . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'metabolism/builder' . DIRECTORY_SEPARATOR;
+        $this->pkg_path = getcwd() . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'metabolism'. DIRECTORY_SEPARATOR .'rocket-builder' . DIRECTORY_SEPARATOR;
     }
 
     /**
