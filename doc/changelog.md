@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 =======
 
+## 3.4.0 - IN-DEV ##
+### Added
+* Composer Plugin - [See documentation](composer.md)
+    * composer build
+    * composer create
+
 ## 3.3.0 - 2017-02-24 ##
 ### Added
 - new bind library ( see doc/features/bin.md )
