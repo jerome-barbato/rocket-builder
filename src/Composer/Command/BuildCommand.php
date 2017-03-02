@@ -9,7 +9,7 @@ use Composer\Command\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BuildCommand extends BaseCommand
+class BuildCommand extends BuilderCommand
 {
     protected function configure()
     {
@@ -18,6 +18,17 @@ class BuildCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln( 'Executing' );
+        $args = $input->getArguments();
+
+        if ( is_dir( $this->pkg_path ) ) {
+            chdir( $this->pkg_path );
+            $options = count( $args ) ? $args[0] : '';
+
+            if ( !is_dir( 'node_modules' ) ) {
+                $this->installNodeModules();
+            }
+
+            passthru( "gulp " . $options . " --color=always" );
+        }
     }
 }
