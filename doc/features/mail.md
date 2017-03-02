@@ -1,6 +1,6 @@
 # Mail
    
-###### file: js/libraries/mail.js
+###### file: js/metabolism/mail.js
     
 Mail spam protection
  
@@ -10,11 +10,17 @@ Mail spam protection
 * link : add mailto link
    
 ~~~~
-<a class="ui-mail" data-name="contact" data-domain="gmail.com" data-inline="1">
+<a mailto="test@domain.fr">@</a>
 ~~~~
 
 Once parsed when the dom is loaded, the result will be
   
 ~~~~
-<a class="ui-mail" href="mailto:contact@gmail.com">contact@gmail.com</a>
+<a href="mailto:test@domain.fr">test@domain.fr</a>
 ~~~~
+
+Using Twig 
+~~~~
+{{ 'test@domain.fr'|protect_email }}
+~~~~
+

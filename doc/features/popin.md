@@ -1,6 +1,6 @@
 # Popin
 
-###### file: js/libraries/popin.js, sass/libraries/_popin.scss
+###### file: js/metabolism/popin.js, sass/metabolism/popin.scss
 
 Display content using fullscreen popin.
 
@@ -48,22 +48,51 @@ The following markup will be added animated to the document you can style the po
 </div>
 ~~~~
      
-### You can open/close a popin via javascript directly
+### Javascript
 
 Open popin : custom html no template in the DOM
 
 ~~~~
-ui.popin.add('youtube', '<iframe width="560" height="315" src="//www.youtube.com/embed/W45FXXDF"></iframe>');
+var popin = new MetaPopin('youtube', '<iframe width="315" height="315" src="//www.youtube.com/embed/W45FXXDF"></iframe>');
 ~~~~
     
-Generate popin : template already in the DOM, id
+Generate popin : template already in the DOM, id in context
 
 ~~~~
-ui.popin.add('youtube', false, {youtube_id:'W45FXXDF'});
+var popin = new MetaPopin('youtube', false, {youtube_id:'W45FXXDF'});
+~~~~
+    
+Generate popin : template already in the DOM, id in context, do not remove on clode
+
+~~~~
+var popin = new MetaPopin('youtube', false, {youtube_id:'W45FXXDF', remove:false});
 ~~~~
      
-Close popin via id
+Public function
 
 ~~~~
-ui.popin.close('youtube');
+popin.close();
+popin.show();
+
+// Return jQuery element
+popin.get();
 ~~~~
+
+### Events
+
+Events are triggered for each action
+
+~~~
+$(document).on('popin.added', function($popin, id, context){ });
+~~~
+~~~
+$(document).on('popin.remove', function(id){ });
+~~~~
+
+You can trigger event on popin too
+
+~~~
+var $popin = $('.popin--youtube');
+$popin.trigger('popin.show');
+$popin.trigger('popin.close');
+~~~

@@ -18,85 +18,75 @@ if( typeof DOMCompiler !== "undefined" ) {
 
     dom.compiler.register('attribute', 'grid', function(elem, attrs) {
 
-        var properties = "grid";
-
-        if( attrs.grid )
-            properties += ' grid--'+attrs.grid;
-
-        elem.addClass(properties);
+        elem.attr('data-grid', attrs.grid?attrs.grid:'');
     });
 
 
     dom.compiler.register('attribute', 'row', function(elem, attrs) {
 
-        var properties = "g-row";
-
-        if( attrs.row )
-            properties += ' g-row--'+attrs.row;
-
-        if( attrs.alignItems )
-            properties += ' g-row--'+attrs.alignItems;
-
-       elem.addClass(properties);
+        elem.attr('data-row' ,attrs.row?attrs.row:'');
     });
 
 
     dom.compiler.register('attribute', 'col', function(elem, attrs) {
 
-        var properties = "g-col";
+        elem.attr('data-col', attrs.col?attrs.col:'');
 
-        attrs.col = attrs.col.split('/');
-        if( attrs.col.length == 2 && attrs.col[0] != attrs.col[1] )
-            properties += ' g-col--'+attrs.col[0]+'_'+attrs.col[1];
+        if( attrs.offsetBy ){
 
-        if( attrs.offsetBy )
-            properties += ' g-col---'+attrs.offsetBy.replace('/','_');
-
-        elem.addClass(properties);
+            $('<div data-col="'+attrs.offsetBy+'"></div>').insertBefore(elem);
+            elem.removeAttr('offset-by');
+        }
     });
 
 
     dom.compiler.register('element', 'grid', function(elem, attrs) {
 
-        var properties = "grid";
+        if( attrs.mod )
+            elem.removeAttr('mod');
 
-        if( attrs.mode )
-            properties += ' grid--'+attrs.mode;
-
-        return '<div class="'+properties+'"><transclude/></div>';
+        return '<div data-grid="'+(attrs.mod?attrs.mod:'')+'"><transclude/></div>';
     });
 
 
     dom.compiler.register('element', 'row', function(elem, attrs) {
 
-        var properties = "g-row";
+        if( attrs.mod )
+            elem.removeAttr('mod');
 
-        if( attrs.mode )
-            properties += ' g-row--'+attrs.mode;
-
-        if( attrs.alignItems )
-            properties += ' g-row--'+attrs.alignItems;
-
-        return '<div class="'+properties+'"><transclude/></div>';
+        return '<div data-row="'+(attrs.mod?attrs.mod:'')+'"><transclude/></div>';
     });
 
 
     dom.compiler.register('element', 'column', function(elem, attrs) {
 
-        var properties = "g-col";
+        var attributes = ['data-col="'+(attrs.size?attrs.size:'')+'"'];
 
-        if( attrs.size ){
-
-            properties += ' g-col--'+attrs.size.replace('/','_');
+        if( attrs.size )
             elem.removeAttr('size');
+
+        if( attrs.mod ){
+
+            attributes.push('data-align="'+attrs.mod+'"');
+            elem.removeAttr('mod');
         }
 
         if( attrs.offsetBy ){
 
-            properties += ' g-col---'+attrs.offsetBy.replace('/','_');
+            $('<div data-col="'+attrs.offsetBy+'"></div>').insertBefore(elem);
             elem.removeAttr('offset-by');
         }
 
-        return '<div class="'+properties+'"><transclude/></div>';
+        $.each(['tablet', 'mobile-portrait', 'mobile', 'wide', '13inch'], function(i, media){
+
+          media = media.charAt(0).toUpperCase() + media.slice(1);
+          if( attrs['size'+media] ){
+
+            attributes.push('data-col-'+media+'="'+attrs['size'+media]+'"');
+            elem.removeAttr('size-'+media);
+          }
+        });
+
+        return '<div '+attributes.join(' ')+'><transclude/></div>';
     });
 }

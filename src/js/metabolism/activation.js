@@ -13,7 +13,7 @@
  *
  **/
 
-var UXActivation = function(){
+var MetaActivation = function(){
 
     var self = this;
 
@@ -25,21 +25,19 @@ var UXActivation = function(){
         window_height : 0,
         elements      : [],
         lang          : $('html').attr('lang'),
-        animationEnd  : 'animationend.ux-activation oanimationend.ux-activation webkitAnimationEnd.ux-activation MSAnimationEnd.ux-activation'
+        animationEnd  : 'animationend.meta-activation oanimationend.meta-activation webkitAnimationEnd.meta-activation MSAnimationEnd.meta-activation'
     };
 
 
     self.config = {
         visibility  : 0.2,
         reverse     : true,
-        debug       : false,
-        tablet      : false,
-        phone       : false
+        mobile      : $('meta[name="animation-mobile"]').attr('content')=="yes"
     };
 
 
-    self.add = function( $element ){
-
+    self.add = function( $element )
+    {
         if( !$element || !$element.length )
             return;
 
@@ -58,26 +56,26 @@ var UXActivation = function(){
     };
 
 
+    self._onAnimationEnded = function($element, callback)
+    {
+        var $items = $element.find('[data-animation]');
 
-    self._onAnimationEnded = function($element, callback){
-
-        var $items = $element.find('[data-delay]');
-
-        if( $items.length && $element.data('animation') == 'stack' ){
-
+        if( $items.length )
+        {
             var i = 0;
 
-            $items.one(self.context.animationEnd, function(){
-
+            $items.one(self.context.animationEnd, function()
+            {
                 i++;
 
                 if( i == $items.length && callback )
                     callback();
             });
         }
-        else{
-
-            $element.one(self.context.animationEnd, function(){
+        else
+        {
+            $element.one(self.context.animationEnd, function()
+            {
                 if( callback )
                     callback();
             });
@@ -85,31 +83,29 @@ var UXActivation = function(){
     };
 
 
-
-    self._add = function($element){
-
-        if( self.context.disable ){
-
+    self._add = function($element)
+    {
+        if( self.context.disable )
+        {
             $element.removeAttr('data-animation').removeAttr('data-easing').removeAttr('data-delay');
-            $element.find('[data-delay]').removeAttr('data-animation').removeAttr('data-easing').removeAttr('data-delay');
-            $element.addClass('ux-activation--seen');
+            $element.find('[data-animation]').removeAttr('data-animation').removeAttr('data-easing').removeAttr('data-delay');
         }
-        else{
-
-            var element    = {
+        else
+        {
+            var element = {
                 $          : $element,
                 top        : $element.offset().top,
                 visibility : parseFloat($element.data('visibility')) || self.config.visibility,
                 active     : false,
-                animation  : $element.data('animation'),//todo: handle tablet and mobile animation
+                animation  : $element.data('animation'),
                 delay      : $element.data('delay'),
                 increment  : $element.data('animation') == 'increment'
             };
 
             var value = parseFloat( self.context.lang=='fr' ? $element.text().replace(/,/, '.') : $element.text().replace(/,/g, '') );
 
-            if( element.increment && !isNaN(value) ){
-
+            if( element.increment && !isNaN(value) )
+            {
                 var is_int = parseInt( value ) === value;
                 var init   =  is_int ? Math.round(value*0.5) : Math.round(value*5)/10;
 
@@ -132,159 +128,109 @@ var UXActivation = function(){
     };
 
 
-
-    self._setupEvents = function() {
-
+    self._setupEvents = function()
+    {
         $(window)
             .scroll( self._scroll )
-            .resize(function(){ self._recompute(); self._scroll() });
+            .resize( self._recompute );
     };
 
 
-
-    self._recompute = function(){
-
+    self._recompute = function()
+    {
         self.context.window_height = $(window).height();
 
-        $.each(self.context.elements, function(i, element){
-
+        $.each(self.context.elements, function(i, element)
+        {
             element.top = element.$.offset().top;
         });
+
+        self._scroll();
     };
 
 
-
-    self._decrement = function(element){
-
+    self._animateNumbers = function(from, to, element)
+    {
         var unit_decimal  = self.context.lang=='fr'?',':'.';
         var unit_thousand = self.context.lang=='fr'?' ':',';
 
-        $({increment: element.value}).stop(true).animate({increment: element.init}, {
+        $({increment: from}).stop(true).animate({increment: to}, {
             duration : 1500,
             easing   : "easeOutCubic",
-            step     : function() {
-
+            step     : function()
+            {
                 var value = element.is_int ?
                     Math.round(this.increment).format(0).replace(/ /g, unit_thousand) :
                     (Math.round(this.increment*10)/10).format(1).replace('.', unit_decimal);
 
                 element.$.text(value);
+            },
+            complete:function()
+            {
+                element.$.text(element.is_int ? to.format(0).replace(/ /g, unit_thousand) : to.format(1).replace('.', unit_decimal));
+                element.$.trigger('animationend');
             }
-        }, function() {
-
-            element.$.text( element.is_int ? element.init.format(0).replace(/ /g, unit_thousand) : element.init.format(1).replace('.', unit_decimal) );
         });
     };
 
 
-
-    self._increment = function(element){
-
-        var unit_decimal  = self.context.lang=='fr'?',':'.';
-        var unit_thousand = self.context.lang=='fr'?' ':',';
-
-        $({increment: element.init}).stop(true).animate({increment: element.value}, {
-            duration : 1500,
-            easing   : "easeOutCubic",
-            step     : function() {
-
-                var value = element.is_int ?
-                    Math.round(this.increment).format(0).replace(/ /g, unit_thousand) :
-                    (Math.round(this.increment*10)/10).format(1).replace('.', unit_decimal);
-
-                element.$.text(value);
-            }
-        }, function() {
-
-            element.$.text( element.is_int ? element.value.format(0).replace(/ /g, unit_thousand) : element.value.format(1).replace('.', unit_decimal) );
-        });
-    };
-
-
-    self._reset = function( element ){
-
-        self._onAnimationEnded(element.$, function(){
-
-            element.$.removeClass('ux-activation--reset');
+    self._reset = function( element )
+    {
+        self._onAnimationEnded(element.$, function()
+        {
+            element.$.attr('data-activation', 'wait');
         });
 
-        element.$.attr('data-animation', element.animation).removeClass('ux-activation--active ux-activation--seen').addClass('ux-activation--reset');
+        element.$.attr('data-animation', element.animation).attr('data-activation', 'rewind');
         element.active = false;
 
         if( element.increment )
-            self._decrement(element);
+            self._animateNumbers(element.value, element.init, element);
     };
 
 
-    self._activate = function( element, scrollTop ) {
-
+    self._activate = function( element, scrollTop )
+    {
         if( !element )
             return;
 
         if( typeof scrollTop == "undefined")
             scrollTop = $(window).scrollTop() + self.context.window_height;
 
-        if( element.active ) {
-
+        if( element.active )
+        {
             if( self.config.reverse && element.top + self.context.window_height*element.visibility > scrollTop )
                 self._reset( element );
         }
-        else{
-
-            if( scrollTop > element.top + self.context.window_height*element.visibility  ){
-
-                self._onAnimationEnded(element.$, function(){
-
-                    element.$.removeAttr('data-animation').removeClass('ux-activation--active');
+        else
+        {
+            if( scrollTop > element.top + self.context.window_height*element.visibility  )
+            {
+                self._onAnimationEnded(element.$, function()
+                {
+                    element.$.attr('data-activation', 'played');
                 });
 
-                element.$.removeClass('ux-activation--reset').addClass('ux-activation--active ux-activation--seen');
+                element.$.attr('data-activation', 'play');
 
                 element.active = true;
 
                 if( element.increment )
-                    self._increment(element);
+                    self._animateNumbers(element.init, element.value, element);
             }
         }
     };
 
-    self._scroll = function() {
-
+    self._scroll = function()
+    {
         if( self.context.hold ) return;
 
         var scrollTop = $(window).scrollTop() + self.context.window_height;
 
-        $.each(self.context.elements, function(index, element) {
-
+        $.each(self.context.elements, function(index, element)
+        {
             self._activate(element, scrollTop);
         });
-    };
-
-
-    self._addAttr = function(elem, value, id, name){
-
-        if( typeof name == "undefined" )
-            name = id;
-
-        if( value.indexOf(':') > -1 && value.indexOf('{') == -1 ) {
-
-            var values = {d:false, m:false, t:false};
-
-            try { values = JSON.parse('{"' + value.replace(/ /g, '","').replace(/:/g, '":"') + '"}')} catch (e) {}
-
-            if (values.d)
-                elem.attr('data-'+name, values.d);
-
-            if (values.m)
-                elem.attr('data-mobile-'+name , values.m);
-
-            if (values.t)
-                elem.attr('data-tablet-'+name ,values.t);
-        }
-        else{
-
-            elem.attr('data-'+name, value);
-        }
     };
 
 
@@ -295,53 +241,67 @@ var UXActivation = function(){
      */
     self.__construct =  function() {
 
-        self.context.disable = (browser.phone && !self.config.phone) || (browser.tablet && !self.config.tablet);
+        self.context.disable = browser && browser.mobile && !self.config.mobile;
 
-        $('.ux-activation').initialize(function() {
+        $('[data-activation]').initialize(function()
+        {
+            var $elem = $(this);
 
-            self.add( $(this) );
+            $elem.attr('data-animation', $elem.data('activation') );
+            $elem.attr('data-activation', 'wait');
+            self.add( $elem );
         });
 
-        $(document).on('loaded', function(){
-
+        $(document).on('loaded', function()
+        {
             self._setupEvents();
             self._recompute();
-            self._scroll();
         });
     };
 
 
 
-    if( typeof DOMCompiler !== "undefined" ){
-
-        dom.compiler.register('attribute', 'when-visible', function(elem, attrs) {
-
-            elem.addClass('ux-activation');
-            self._addAttr(elem, attrs.whenVisible, 'animation');
+    if( typeof DOMCompiler !== "undefined" )
+    {
+        dom.compiler.register('attribute', 'when-visible', function(elem, attrs)
+        {
+            elem.attr('data-activation', attrs.whenVisible);
 
             if( attrs.whenVisible == 'stack' )
                 elem.find('[delay],[data-delay]').not('[animation],[data-animation]').attr('data-animation', 'slide-up');
 
+            if( attrs.whenVisible == 'reveal' && !elem.find('> *').length )
+            {
+                if( elem.is('img') )
+                    console.log('Reveal animation on image require to wrap the image inside a span');
+                else
+                    elem.wrapInner('<span/>');
+            }
+
         }, self.add);
 
-        dom.compiler.register('attribute', 'activate', function(elem, attrs) {
 
-            elem.addClass('ux-activation');
+        dom.compiler.register('attribute', 'activate', function(elem, attrs)
+        {
+            elem.attr('data-activation', 'wait');
         });
 
-        dom.compiler.register('attribute', 'delay', function(elem, attrs) {
 
-            self._addAttr(elem, attrs.delay, 'delay');
+        dom.compiler.register('attribute', 'delay', function(elem, attrs)
+        {
+            elem.attr('data-delay', attrs.delay);
         });
 
-        dom.compiler.register('attribute', 'easing', function(elem, attrs) {
 
-            if( attrs.easing != "ease-in-out-cubic" )
-                self._addAttr(elem, attrs.easing, 'easing');
+        dom.compiler.register('attribute', 'easing', function(elem, attrs)
+        {
+            if( attrs.easing != "in-out-cubic" )
+                elem.attr('data-easing', attrs.easing);
         });
 
-        dom.compiler.register('attribute', 'visibility', function(elem, attrs) {
 
+        dom.compiler.register('attribute', 'visibility', function(elem, attrs)
+        {
             var visibility = attrs.visibility.replace('%', '');
 
             if( visibility == "top")
@@ -353,16 +313,13 @@ var UXActivation = function(){
             if( visibility == "bottom")
                 visibility = 0;
 
-            dom.compiler.attr(elem, 'visibility', attrs.visibility.indexOf('%')>=0 ? parseInt(visibility)/100 : visibility);
+            elem.attr('data-visibility', attrs.visibility.indexOf('%')>=0 ? parseInt(visibility)/100 : visibility);
         });
 
 
         dom.compiler.register('attribute', 'animation', function(elem, attrs) {
 
-            self._addAttr(elem, attrs.animation, 'animation');
-
-            if( attrs.animation == 'stack' )
-                elem.find('[delay],[data-delay]').not('[animation],[data-animation]').attr('data-animation', 'slide-up');
+            elem.attr('data-animation', attrs.animation);
         });
     }
 
@@ -370,5 +327,5 @@ var UXActivation = function(){
 };
 
 
-var ux = ux || {};
-ux.activation = new UXActivation();
+var meta = meta || {};
+meta.activation = new MetaActivation();

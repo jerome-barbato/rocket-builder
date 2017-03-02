@@ -1,10 +1,12 @@
 // Path
-$misc-path    :  $public-path+'media/misc/';
-$pages-path   :  $public-path+'media/page/';
-$blocks-path  :  $public-path+'media/block/';
-$tmp-path     :  $public-path+'media/tmp/';
-$icons-path   :  $public-path+'media/icon/';
-$fonts-path   :  $public-path+'font/';
+$public-path  : '../'!default;
+
+$misc-path    :  $public-path+'media/misc/' !default;
+$pages-path   :  $public-path+'media/page/' !default;
+$blocks-path  :  $public-path+'media/block/' !default;
+$tmp-path     :  $public-path+'media/tmp/' !default;
+$icons-path   :  $public-path+'media/icon/' !default;
+$fonts-path   :  $public-path+'font/' !default;
 
 @function page-url($path){
   @return url( $pages-path + $path )

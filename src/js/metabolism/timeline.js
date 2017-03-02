@@ -26,7 +26,7 @@
 /**
  *
  */
-var UXTimeline = function(){
+var MetaTimeline = function(){
 
     var self = this;
 
@@ -136,7 +136,7 @@ var UXTimeline = function(){
 
     self._addDebugger = function($element, timeline){
 
-        var $debugger = $('<div class="ux-timeline__debugger" title="Press spacebar to toggle play/pause"></div>');
+        var $debugger = $('<div class="meta-timeline__debugger" title="Press spacebar to toggle play/pause"></div>');
         $element.append($debugger);
 
         $debugger.slider({
@@ -184,7 +184,7 @@ var UXTimeline = function(){
 
     self.set = function( $element, animations, options ){
 
-        $element.addClass('ux-timeline');
+        $element.addClass('meta-timeline');
 
         options = $.extend({time_scale:false, start_at:0, end_at:false, debug:false, name:'unnamed'}, options);
 
@@ -233,8 +233,8 @@ var UXTimeline = function(){
 
                 if( $target.length ) {
 
-                if( !$target.hasClass('ux-timeline__element') )
-                    $target.addClass('ux-timeline__element');
+                if( !$target.hasClass('meta-timeline__element') )
+                    $target.addClass('meta-timeline__element');
 
                     if( 'set' in keypoint ){
 
@@ -305,5 +305,5 @@ var UXTimeline = function(){
     self.__construct();
 };
 
-var ux = ux || {};
-ux.timeline = new UXTimeline();
+var meta = meta || {};
+meta.timeline = new MetaTimeline();

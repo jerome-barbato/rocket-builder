@@ -1,18 +1,18 @@
 # Scroll to
 
-###### file: js/libraries/scroll-to.js
+###### file: js/metabolism/scroll-to.js
     
 Enable anchor smooth scroll 
 
 ~~~~    
-<a scroll-to="mydiv">my div</a>   
+<a scroll-to="page-1">Page 1</a>   
 ~~~~
 ~~~~
-<div id="mydiv"></div>
+<div id="page-1"></div>
 ~~~~
 
 You can add a scroll offset to a fixed header, it will be used for better calculation
 
 ~~~~
-<header fixed></header>
+<header fixed="top"></header>
 ~~~~

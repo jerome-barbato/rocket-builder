@@ -1,47 +1,48 @@
 /**
  * Popin
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Metabolism <jerome@metabolism.fr>
  *
  * License: GPL
- * Version: 2.0.1
+ * Version: 2.1.0
  *
  * Requires:
  *   - jQuery
  *
  * Changelog:
  *   # 1.3
- *   Added angular popin directive via ux-popin module
+ *   Added angular popin directive via popin module
  *
  *   #1.4
- *   Added popin-template directive when the popin is allready in the dom ( ex: nested ux-view )
- *   Empty ux-view on close if not removed
+ *   Added popin-template directive when the popin is allready in the dom ( ex: nested meta-view )
+ *   Empty meta-view on close if not removed
  *
  *   #2.0
  *   Each popin is now a new instance
  *
  **/
 
-var UXPopin = function(id, content, context){
-
+var MetaPopin = function(id, content, context)
+{
     var self   = this;
+    var $html  = $('html');
     var $body  = $('body');
     var $popin = false;
-    var transitionEnd = 'webkitTransitionEnd.ux-popin transitionend.ux-popin msTransitionEnd.ux-popin oTransitionEnd.ux-popin';
+    var transitionEnd = 'webkitTransitionEnd.popin transitionend.popin msTransitionEnd.popin oTransitionEnd.popin';
 
     /* Public */
 
     var config = {
         html   : {
 
-            popin : '<div class="ux-popin">'+
-            '<div class="valign"><div class="valign__middle ux-popin__overlay">'+
-            '<div class="ux-popin__content"></div>'+
-            '</div></div>'+
-            '</div>',
-            close : '<a class="ux-popin__close"></a>'
+            popin : '<div class="popin">'+
+                      '<div class="valign"><div class="valign__middle popin__overlay">'+
+                      '<div class="popin__content"></div>'+
+                      '</div></div>'+
+                    '</div>',
+            close : '<a class="popin__close"></a>'
         }
     };
 
@@ -51,30 +52,33 @@ var UXPopin = function(id, content, context){
     };
 
 
-    self.show = function(){
-
-        show();
-    };
-
-    self.close = function(){
-
-        close();
-    };
+    self.close = function(){ close() };
+    self.show  = function(){ show() };
+    self.get   = function(){ return $popin };
 
     /* Contructor. */
 
     /**
      *
      */
-    var construct =  function(){
+    var construct =  function()
+    {
+        $popin = $('.popin--'+id);
 
-        self.context = $.extend(self.context, context);
+        if( $popin.length )
+        {
+            $popin.trigger('popin.show');
+        }
+        else
+        {
+            self.context = $.extend(self.context, context);
 
-        if( typeof(content) == "undefined" || content === false )
-            content = $('script[type="text/template"]#'+id).html();
+            if( typeof(content) == "undefined" || content === false )
+                content = $('script[type="text/template"]#'+id).html();
 
-        add(content);
-        setupEvents();
+            add(content);
+            setupEvents();
+        }
     };
 
 
@@ -83,94 +87,96 @@ var UXPopin = function(id, content, context){
     /**
      *
      */
-    var setupEvents = function() {
-
-        $popin.on('click keypress', function(e) {
-
-            if (e.which === 13 || e.type === 'click') {
-
-                if( $(e.target).hasClass('ux-popin__overlay') || $(e.target).hasClass('ux-popin__close') || $(e.target).hasClass('ux-popin-close')){
-
-                    $popin.off('click keypress');
-                    close();
-                }
-            }
+    var setupEvents = function()
+    {
+        $popin.click(function(e)
+        {
+            if( $(e.target).hasClass('popin__overlay') || $(e.target).hasClass('popin__close') || $(e.target).hasClass('popin-close'))
+                close();
         });
 
-        $popin.on('ux-popin.close', function(e) {
-
-            close();
+        $(document).on('click keypress', function(e)
+        {
+            if ( e.which === 13 )
+                close();
         });
+
+        $popin.on('popin.close', function(e) { close() });
+        $popin.on('popin.show', function(e) { show() });
     };
 
 
 
-    var remove = function(){
-
+    var remove = function()
+    {
         if( $popin.length )
             $popin.remove();
+
+        $(document).trigger('popin.removed', [id]);
 
         $popin = self.context = self = null;
     };
 
 
-    var close = function(){
+    var close = function()
+    {
+        if( Modernizr && Modernizr.csstransitions )
+        {
+            $popin.attr('data-state', 'removing');
 
-        if( Modernizr && Modernizr.csstransitions ) {
-
-            $popin.removeClass('ux-popin--adding').addClass('ux-popin--removing');
-
-            $popin.one(transitionEnd, function() {
-
-                $popin.removeClass('ux-popin--removing');
-
-                $(document).trigger('ux-popin.removed', [id]);
-
+            $popin.one(transitionEnd, function()
+            {
                 if( self.context.remove )
                     remove();
                 else
-                    $popin.hide();
+                    $popin.attr('data-state', 'idle');
+
+                if( !$('.popin:visible').length )
+                    $html.removeClass('has-popin');
 
                 $body.repaint();
             });
         }
-        else{
-
+        else
+        {
             if( self.context.remove )
                 remove();
             else
-                $popin.hide();
-        }
+                $popin.attr('data-state', 'idle');
 
-        $popin.removeClass('ux-popin--added');
+            if( !$('.popin:visible').length )
+                $html.removeClass('has-popin');
+        }
     };
 
 
 
-    var add = function(content){
-
+    var add = function(content)
+    {
         if ( !window.angular )
             content = content.populate(self.context);
 
         $popin = $(config.html.popin);
-        var $content = $popin.find('.ux-popin__content');
+        var $content = $popin.find('.popin__content');
 
         $content.append(content);
 
-        if( !$content.find('.ux-popin__close, .ux-popin-close').length )
+        if( !$content.find('.popin__close, .popin-close').length )
             $content.append(config.html.close);
 
+        $html.addClass('has-popin');
+        $popin.addClass('popin--'+id);
+
         $body.append($popin);
-        $popin.addClass('ux-popin--'+id);
 
-        if( 'angular' in window && angular.$injector ){
-
-            angular.$injector.invoke(function($compile, $rootScope){
-
+        if( 'angular' in window && angular.$injector )
+        {
+            angular.$injector.invoke(function($compile, $rootScope)
+            {
                 var scope = $popin.scope() || $rootScope.$new();
                 scope = angular.extend(scope, self.context);
 
-                //todo: find why context is not interpoled
+                //todo: find why context is not interpolated
                 $compile($popin.contents())(scope);
             });
         }
@@ -180,26 +186,23 @@ var UXPopin = function(id, content, context){
 
 
 
-    var show = function() {
+    var show = function()
+    {
+        $popin.attr('data-state', '');
 
-        $popin.show().repaint();
+        $popin.repaint();
 
-        $popin.addClass('ux-popin--added');
+        $popin.attr('data-state', 'adding');
 
-        $(document).trigger('ux-popin.added', [$popin, id, self.context]);
+        $(document).trigger('popin.added', [$popin, id, self.context]);
 
-        if( Modernizr && Modernizr.csstransitions ){
-
-            $popin.addClass('ux-popin--adding');
-
-            $popin.one(transitionEnd, function() {
-
-                $popin.removeClass('ux-popin--adding');
-            });
+        if( Modernizr && Modernizr.csstransitions )
+        {
+            $popin.one(transitionEnd, function() { $popin.attr('data-state', 'added') });
         }
-        else{
-
-            $popin.removeClass('ux-popin--adding');
+        else
+        {
+            $popin.attr('data-state', 'added');
         }
     };
 
@@ -210,66 +213,34 @@ var UXPopin = function(id, content, context){
 
 
 
-var UXPopins = function(){
-
-    var self = this;
-
-    // Start backward compatibility
-
-    self.popins = {};
-
-    self.add = function(id, content, context ){
-
-        if(id in self.popins )
-            self.popins[id].close();
-
-        self.popins[id] = new UXPopin(id, content, context);
-    };
-
-
-    self.show = function( id ){
-
-        if(id in self.popins )
-            self.popins[id].show();
-    };
-
-
-    self.close = function( id ){
-
-        if(id in self.popins )
-            self.popins[id].close();
-    };
-
-    // End backward compatibility
-
-    $(document).on('click', '[data-popin]', function(e) {
-
+var MetaPopins = function()
+{
+    $(document).on('click', '[data-popin]', function(e)
+    {
         e.preventDefault();
         var context = {};
 
-        if( $(this).data('context') ){
-
-            try {
-                context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
-            } catch(e) {}
+        if( $(this).data('context') )
+        {
+            try { context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {}; } catch(e) {}
         }
-        else{
-
+        else
+        {
             context = $(this).data();
         }
 
-        new UXPopin($(this).data('popin'), false, context);
+        new MetaPopin($(this).data('popin'), false, context);
     });
 
 
-    if( typeof DOMCompiler !== "undefined" ) {
-
-        dom.compiler.register('attribute', 'popin', function(elem, attrs) {
-
+    if( typeof DOMCompiler !== "undefined" )
+    {
+        dom.compiler.register('attribute', 'popin', function(elem, attrs)
+        {
             elem.attr('data-popin', attrs.popin);
 
-            if( attrs.context ){
-
+            if( attrs.context )
+            {
                 elem.attr('data-context', attrs.context);
                 elem.removeAttr('context');
             }
@@ -277,5 +248,5 @@ var UXPopins = function(){
     }
 };
 
-var ux = ux || {};
-ux.popin = new UXPopins();
+var meta = meta || {};
+meta.popin = new MetaPopins();

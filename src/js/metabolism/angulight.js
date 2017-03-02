@@ -48,12 +48,12 @@ var angularLight = function(){
         var name   = self.camelCase( data[0] );
         var params = [$element];
 
-        if( data.length == 2  ){
-
+        if( data.length == 2  )
+        {
             var raw_params = data[1].replace(')','').replace(", '",",'").replace("' ,","',").split(',');
 
-            for(var i=0; i<raw_params.length; i++){
-
+            for(var i=0; i<raw_params.length; i++)
+            {
                 if( raw_params[i].substr(0,1) == '"' || raw_params[i].substr(0,1) == "'" )
                     raw_params[i] = raw_params[i].replace(/"/g,'').replace(/'/g,'');
                 else if( raw_params[i] == "false" )
@@ -67,51 +67,28 @@ var angularLight = function(){
             params = params.concat(raw_params);
         }
 
-        if( type == 'repeater' ) {
+        if( name in self.context[type+'s'] )
+        {
+            if( app.debug > 2 )
+                console.time('angulight:run');
 
-            var $controller = $element.parents('[data-controller]');
-            if( $controller.length ){
+            var fct = self.context[type+'s'][name];
+            var instance = self._guid();
 
-                var instance_id = $controller.data('angulight-instance');
-                if( instance_id in self.context.instances ){
+            $element.data('angulight-instance', instance);
+            self.context.instances[instance] = new (Function.prototype.bind.apply(fct, [null].concat(params)));
 
-                    var instance = self.context.instances[instance_id];
-
-                    if( name in instance ){
-
-                        var template_id = $element.data('name');
-                        params[0] = typeof template_id != 'undefined' ? self.context.templates[ template_id ] : $element.html();
-                        $element.replaceWith( instance[name].apply(null, params) );
-                    }
-                }
-            }
-        }
-        else{
-
-            if( name in self.context[type+'s'] ){
-
-                if( app.debug > 2 )
-                    console.time('angulight:run');
-
-                var fct = self.context[type+'s'][name];
-                var instance = self._guid();
-
-                $element.data('angulight-instance', instance);
-                self.context.instances[instance] = new (Function.prototype.bind.apply(fct, [null].concat(params)));
-
-
-                if( app.debug > 2 ){
-
-                    console.log(name, params);
-                    console.timeEnd('angulight:run')
-                }
+            if( app.debug > 2 )
+            {
+                console.log(name, params);
+                console.timeEnd('angulight:run')
             }
         }
     };
 
 
-    self._guid = guid || function() {
-
+    self._guid = guid || function()
+        {
             var s4 = function() {
                 return Math.floor((1 + Math.random()) * 0x10000)
                     .toString(16)
@@ -121,25 +98,22 @@ var angularLight = function(){
         };
 
 
-    self.__construct = function(){
-
-        $('script[type="text/template"]').each(function(){
+    self.__construct = function()
+    {
+        $('script[type="text/template"]').each(function()
+        {
             self.context.templates[ $(this).attr('id') ] = $(this).html();
         });
 
 
-        $('[data-controller]').initialize(function(){
+        $('[data-controller]').initialize(function()
+        {
             self._run('controller', $(this) );
         });
 
 
-        $('[data-repeater]').initialize(function(){
-            self._run('repeater', $(this) );
-        });
-
-
-        $('[data-if]').initialize(function(){
-
+        $('[data-if]').initialize(function()
+        {
             var condition = $(this).data('if');
             if( condition == "false" || condition == "0" || condition == "" || !condition )
                 $(this).remove();
@@ -148,8 +122,8 @@ var angularLight = function(){
         });
 
 
-        $('[data-remove_on]').initialize(function(){
-
+        $('[data-remove_on]').initialize(function()
+        {
             var removeOn = $(this).data('remove_on');
 
             if ((removeOn == "mobile" && browser.mobile) || (removeOn == "desktop" && browser.desktop) || (removeOn == "tablet" && browser.tablet) || (removeOn == "phone" && browser.phone))
@@ -168,41 +142,36 @@ var angularLight = function(){
     };
 
 
-    if( typeof DOMCompiler !== "undefined" ){
-
-        dom.compiler.register('attribute', 'controller', function(elem, attrs) {
-
+    if( typeof DOMCompiler !== "undefined" )
+    {
+        dom.compiler.register('attribute', 'controller', function(elem, attrs)
+        {
             elem.attr('data-controller', attrs.controller);
         });
 
-        dom.compiler.register('attribute', 'remove-on', function(elem, attrs){
-
+        dom.compiler.register('attribute', 'remove-on', function(elem, attrs)
+        {
             elem.attr('data-remove_on', attrs.removeOn);
         });
 
         // Compatibility
-        dom.compiler.register('attribute', 'directive', function(elem, attrs) {
-
+        dom.compiler.register('attribute', 'directive', function(elem, attrs)
+        {
             console.log('Angulight directive has been removed please une controller instead');
             elem.attr('data-controller', attrs.directive);
         });
 
-        dom.compiler.register('attribute', 'repeater', function(elem, attrs) {
 
-            elem.attr('data-repeater', attrs.repeater);
-
-            if( 'name' in attrs )
-                elem.attr('data-name', attrs.name);
+        dom.compiler.register('attribute', 'if', function(elem, attrs)
+        {
+            if( 'if' in attrs )
+                elem.attr('data-if', attrs['if']);
         });
 
-        dom.compiler.register('attribute', 'if', function(elem, attrs) {
-
-            elem.attr('data-if', attrs.if);
-        });
-
-        dom.compiler.register('attribute', 'if-not', function(elem, attrs) {
-
-            elem.attr('data-if-not', attrs.ifNot);
+        dom.compiler.register('attribute', 'if-not', function(elem, attrs)
+        {
+            if( 'ifNot' in attrs )
+                elem.attr('data-if-not', attrs.ifNot);
         });
     }
 

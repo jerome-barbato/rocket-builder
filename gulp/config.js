@@ -1,18 +1,19 @@
-
 /**
  * configuration
  */
 
-// Dependencies
-var gutil   = require('gulp-util'),
-    fs      = require('fs'),
-    gulp    = require('gulp'),
-    yaml    = require('js-yaml');
+var builder_config_version = 1;
 
-var getArg      = function(key) {
+// Dependencies
+var gutil = require('gulp-util'),
+    fs    = require('fs'),
+    gulp  = require('gulp'),
+    yaml  = require('js-yaml');
+
+var getArg = function (key) {
 
     var index = process.argv.indexOf(key);
-    var next = process.argv[index + 1];
+    var next  = process.argv[index + 1];
 
     return (index < 0) ? null : (!next || next[0] === "-") ? true : next;
 };
@@ -21,13 +22,13 @@ var config = module.exports = {
 
     /** Attributes */
     // Retrieving environment from environment variable
-    environment     : (process.env.WWW_ENV ? process.env.WWW_ENV : "development"),
+    environment  : (process.env.WWW_ENV ? process.env.WWW_ENV : "development"),
     // Enable watching for changes in src files
-    watching_mode   : true,
+    watching_mode: true,
     // Application root path
-    base_path        : "../../..",
+    base_path    : "../../..",
     // Global config file
-    paths           : {},
+    paths        : {},
 
     /** Load function will set configuration variables */
     load: function load() {
@@ -35,61 +36,105 @@ var config = module.exports = {
         try {
             config.builder = yaml.safeLoad(fs.readFileSync(config.base_path + '/app/config/builder.yml'));
         }
-        catch(e) {
+        catch (e) {
 
-            config.builder = yaml.safeLoad(fs.readFileSync(config.base_path+'/config/builder.yml'));
+            config.builder = yaml.safeLoad(fs.readFileSync(config.base_path + '/config/builder.yml'));
         }
 
         // Start backward compatibility
-        if( 'vendor' in config.builder ){
+        if ('vendor' in config.builder) {
 
-            config.builder.script = {vendor:config.builder.vendor.app};
-            config.builder.template = {vendor:config.builder.vendor.compiler};
+            config.builder.script   = {vendor: config.builder.vendor.app};
+            config.builder.template = {vendor: config.builder.vendor.compiler};
         }
 
-        if( 'compile' in config.builder )
+        if ('compile' in config.builder)
             config.builder.template.compile = config.builder.compile;
 
 
-        if( 'style' in config.builder == false )
-            config.builder.style = {browsers:["last 3 versions", "iOS 8"]};
+        if ('style' in config.builder == false)
+        {
+            config.builder.style = {
+                browsers: [
+                    "last 3 versions",
+                    "iOS 8"
+                ]
+            };
+        }
         // End backward
 
-        if( 'browsers' in config.builder.style == false )
-            config.builder.style.browsers = ["last 3 versions", "iOS 8"];
+        if ('browsers' in config.builder.style == false)
+        {
+            config.builder.style.browsers = [
+                "last 3 versions",
+                "iOS 8"
+            ];
+        }
 
-        config.paths.sm_asset  = "../.."+config.builder.paths.asset;
-        config.paths.asset     = config.base_path+config.builder.paths.asset;
-        config.paths.public    = config.base_path+config.builder.paths.public;
-        config.paths.views     = config.base_path+config.builder.paths.views;
+        config.paths.sm_asset = "../.." + config.builder.paths.asset;
+        config.paths.asset    = config.base_path + config.builder.paths.asset;
+        config.paths.public   = config.base_path + config.builder.paths.public;
+        config.paths.views    = config.base_path + config.builder.paths.views;
 
         config.paths.css_to_sass = '../../src/sass/';
 
         config.paths.src = {
-            js : {
-                vendor   : [],
-                browser  : [],
-                app      : [],
-                compiler : []
+            js      : {
+                vendor  : [],
+                browser : [],
+                app     : [],
+                compiler: []
             },
-            sass     : config.paths.asset+"/sass/*.scss",
-            template : config.paths.asset+"/template/**/*.twig",
-            html     : config.paths.public+"/views/**/*.html"
+            sass    : config.paths.asset + "/sass/*.scss",
+            template: [
+                config.paths.asset + "/template/**/*.twig",
+                config.paths.asset + "/template/**/*.tpl"
+            ],
+            html    : config.paths.public + "/views/**/*.html"
         };
 
         config.paths.dest = {
-            js       : config.paths.public+"/js",
-            css      : config.paths.public+"/css",
-            template : config.paths.views
+            js      : config.paths.public + "/js",
+            css     : config.paths.public + "/css",
+            template: config.paths.views
         };
 
         config.paths.watch = {
-            js         : config.paths.asset+"/js/**/*.js",
-            js_app     : [config.paths.asset+"/js/app/**/*.js", config.paths.asset+"/js/app.js"],
-            js_vendors : [config.paths.asset+"/js/vendor/**/*.js"],
-            sass       : config.paths.asset+"/sass/**/*.scss",
-            template   : config.paths.asset+"/template/**/*.twig"
+            js        : config.paths.asset + "/js/**/*.js",
+            js_app    : [
+                config.paths.asset + "/js/app/**/*.js",
+                config.paths.asset + "/js/app.js"
+            ],
+            js_vendors: [config.paths.asset + "/js/vendor/**/*.js"],
+            sass      : config.paths.asset + "/sass/**/*.scss",
+            template  : [
+                config.paths.asset + "/template/**/*.twig",
+                config.paths.asset + "/template/**/*.tpl"
+            ]
         };
+    },
+
+
+    addApp: function addApp(){
+
+        if ( typeof builder_config_version == 'undefined')
+        {
+            //backward compatibility
+            config.paths.src.js.app.push(config.paths.asset + '/js/app/**/*.js');
+            config.paths.src.js.app.push(config.paths.asset + '/js/app.js');
+        }
+
+        if (config.builder && config.builder.script && config.builder.script.app )
+        {
+            config.builder.script.app.forEach(function (element) {
+
+                config.paths.src.js.app.push(config.paths.asset + '/js/'+ element + '.js');
+            });
+        }
+        else {
+
+            config.paths.src.js.app = false;
+        }
     },
 
 
@@ -98,63 +143,60 @@ var config = module.exports = {
      * we add them by merging two objects
      * @TODO: Optimize
      */
-    addVendors : function addVendors() {
+    addVendors: function addVendors() {
 
-        if( config.builder.script.vendor ) {
-
-            config.builder.script.vendor.forEach(function (library) {
-
-                if (typeof library == 'string') {
-
+        if ( config.builder && config.builder.script && config.builder.script.vendor )
+        {
+            config.builder.script.vendor.forEach(function (library)
+            {
+                if (typeof library == 'string')
+                {
                     config.paths.src.js.vendor.push(config.paths.asset + '/js/vendor/' + library + '.js');
                 }
-                else {
-
-                    for (var path in library) {
-
-                        library[path].forEach(function (element) {
-
+                else
+                {
+                    for (var path in library)
+                    {
+                        library[path].forEach(function (element)
+                        {
                             config.paths.src.js.vendor.push(config.paths.asset + '/js/vendor/' + path + '/' + element + '.js');
                         });
                     }
                 }
             });
         }
-        else{
-
+        else
+        {
             config.paths.src.js.vendor = false;
         }
 
 
-        if( 'browser' in config.builder.script ) {
-
+        if ( config.builder &&  config.builder.script && 'browser' in config.builder.script )
+        {
             config.builder.script.browser.forEach(function (library) {
 
                 config.paths.src.js.browser.push(config.paths.asset + '/js/vendor/' + library + '.js');
             });
         }
-        else{
-
+        else
+        {
             config.paths.src.js.browser = false;
         }
 
-        config.paths.src.js.app.push(config.paths.asset+'/js/app/**/*.js');
-        config.paths.src.js.app.push(config.paths.asset+'/js/app.js');
 
-
-        config.builder.template.vendor.forEach(function(library){
-
-            if( typeof library == 'string' ){
-
-                config.paths.src.js.compiler.push(config.paths.asset+'/js/vendor/'+library+'.js');
+        config.builder.template.vendor.forEach(function (library)
+        {
+            if (typeof library == 'string')
+            {
+                config.paths.src.js.compiler.push(config.paths.asset + '/js/vendor/' + library + '.js');
             }
-            else{
-
-                for ( var path in library ){
-
-                    library[path].forEach(function(element){
-
-                        config.paths.src.js.compiler.push(config.paths.asset+'/js/vendor/'+path+'/'+element+'.js');
+            else
+            {
+                for (var path in library)
+                {
+                    library[path].forEach(function (element)
+                    {
+                        config.paths.src.js.compiler.push(config.paths.asset + '/js/vendor/' + path + '/' + element + '.js');
                     });
                 }
             }
@@ -164,20 +206,21 @@ var config = module.exports = {
     /**
      *  Common implementation for an error handler of a Gulp plugin
      */
-    errorHandler : function errorHandler(title) {
+    errorHandler: function errorHandler(title)
+    {
         'use strict';
 
-        return function(err) {
+        return function (err) {
             gutil.log(gutil.colors.red('[' + title + ']'), err.toString());
             this.emit('end');
         };
     },
 
-    fileExists : function fileExists(filename) {
-        try{
+    fileExists: function fileExists(filename) {
+        try {
             fs.accessSync(filename);
             return true;
-        }catch(e){
+        } catch (e) {
             return false;
         }
     },
@@ -186,7 +229,7 @@ var config = module.exports = {
     /**
      * Initilization
      */
-    init : function init() {
+    init: function init() {
 
         /** Parameters evaluation **/
         // Production mode
@@ -206,6 +249,7 @@ var config = module.exports = {
 
         config.load();
         config.addVendors();
+        config.addApp();
     }
 };
 

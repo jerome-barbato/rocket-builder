@@ -4,7 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-=======
+
+
+## 3.3.1 - 2017-03-02 ##
+### Changed
+- toogle bugfix
+
+## 3.3.0 - 2017-02-24 ##
+### Added
+- new bind library ( see doc/features/bin.md )
+- responsive Grid
+- most framework sass variable are now noted as !default
+### Changed
+- renamed UX to Meta
+- renamed ux. to meta.
+- Slider classname is now compatible with iSwiper
+- global code simplification using data attribute
+### Updated
+- jQuery to 2.2.4
+- jQuery.touchSwipe to 1.6.18
+### Fixed
+- minor bugfix for most library
 
 ## 3.2.13 - 2017-02-14 ##
 ### Fixed
@@ -25,6 +45,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Youtube embed url
 ### Added
 - grid mixin
+- multi template extension support
 
 ## 3.2.9 - 2017-01-26 ##
 ### Fixed

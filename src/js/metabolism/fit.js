@@ -1,7 +1,7 @@
 /**
  * Object fit polyfill
  *
- * Copyright (c) 2014 - Metabolism
+ * Copyright (c) 2017 - Metabolism
  * Author:
  *   - Metabolism <jerome@metabolism.fr>
  *
@@ -13,14 +13,12 @@
  *
  **/
 
-var UXFit = function() {
+var MetaFit = function() {
 
     var self = this;
 
     self.timeout   = false;
     self.warn      = false;
-
-    self.selector  = 'ux-fit';
 
 
     /* Public methods. */
@@ -191,7 +189,7 @@ var UXFit = function() {
 
         dom.compiler.register('attribute', 'object-fit', function(elem, attrs) {
 
-            elem.parent().addClass(self.selector);
+            elem.parent().addClass('has-object-fit');
             elem.attr('data-object_fit', attrs.objectFit.length ? attrs.objectFit : 'cover');
 
             if( 'objectPosition' in attrs ){
@@ -225,7 +223,7 @@ var UXFit = function() {
                 if( recompute_ratio )
                     $(this).data('ratio', false);
 
-                ux.fit.compute( $(this) )
+                meta.fit.compute( $(this) )
             });
         };
     }
@@ -234,5 +232,5 @@ var UXFit = function() {
 };
 
 
-var ux = ux || {};
-ux.fit = new UXFit();
+var meta = meta || {};
+meta.fit = new MetaFit();

@@ -4,64 +4,85 @@
  * todo: make as gulp module
  */
 
-var gulp    = require('gulp'),
-    fs      = require('fs'),
-    config  = require('./config'),
-    gutil   = require('gulp-util'),
-    gif     = require('gulp-if'),
-    chalk   = require('chalk'),
-    del     = require('del'),
-    $       = {
-        through : require('through2'),
-        jsdom   : require('jsdom')
+var gulp   = require('gulp'),
+    fs     = require('fs'),
+    config = require('./config'),
+    gutil  = require('gulp-util'),
+    gif    = require('gulp-if'),
+    chalk  = require('chalk'),
+    del    = require('del'),
+    $      = {
+        through: require('through2'),
+        jsdom  : require('jsdom')
     };
 
-function loadDep(){
+function loadDep() {
 
     var src = [];
 
-    src.push( fs.readFileSync(config.paths.asset+'/js/vendor/browser.js', 'utf-8') );
+    src.push(fs.readFileSync(config.paths.asset + '/js/vendor/browser.js', 'utf-8'));
 
-    config.paths.src.js.compiler.forEach(function(library){
+    config.paths.src.js.compiler.forEach(function (library) {
 
-        src.push( fs.readFileSync(library, 'utf-8') );
+        src.push(fs.readFileSync(library, 'utf-8'));
     });
 
     return src;
 }
 
 
+function compile(file, scripts, callback) {
 
-function compile(html, scripts, callback) {
+    var html    = file.contents.toString('utf8');
+    var extname = file.path.split('.')[file.path.split('.').length - 1];
+    var engine  = extname == 'tpl' ? 'smarty' : 'twig';
 
     var virtualConsole = $.jsdom.createVirtualConsole().sendTo(console);
 
-    if( html.indexOf('<!-- jsdom:disabled -->') != -1 ){
+    if (html.indexOf('<!-- jsdom:disabled -->') != -1) {
 
-        html = html.replace('<!-- jsdom:disabled -->','');
+        html = html.replace('<!-- jsdom:disabled -->', '');
         callback(new Buffer(html));
     }
     else {
 
-        html = html.replace(/<template /g, '<xtemplate ').replace(/<\/template>/g, '</xtemplate>');
+        var escape_tags = ['template','table','tr','td','ul'];
+
+        for(var i in escape_tags){
+
+          var escape_tag = escape_tags[i];
+          html = html.split('<'+escape_tag+'>').join('<x'+escape_tag+'>');
+          html = html.split('<'+escape_tag+' ').join('<x'+escape_tag+' ');
+          html = html.split('</'+escape_tag+'>').join('</x'+escape_tag+'>');
+        }
 
         $.jsdom.env({
-            html           : html,
-            src            : scripts,
-            virtualConsole : virtualConsole,
-            done : function (err, window) {
+            html          : html,
+            src           : scripts,
+            virtualConsole: virtualConsole,
+            done          : function (err, window) {
 
                 window.precompile = true;
+                window.engine     = engine;
 
-                var $        = window.$;
-                var compiler = window.dom.compiler;
-                var $body    = $('body');
+                var $body    = window.$('body');
 
-                compiler.run($body);
+                window.dom.compiler.run($body);
+
                 html = $body.html();
 
-                html = html.replace(/<xtemplate /g, '<template ').replace(/<\/xtemplate>/g, '</template>');
+              for(var i in escape_tags){
+
+                var escape_tag = escape_tags[i];
+                html = html.split('<x'+escape_tag+' ').join('<'+escape_tag+' ');
+                html = html.split('<x'+escape_tag+'>').join('<'+escape_tag+'>');
+                html = html.split('</x'+escape_tag+'>').join('</'+escape_tag+'>');
+              }
+
+                html = html.replace(/<template /g, '<script type="text/template" ').replace(/<\/template>/g, '</script>');
                 html = html.replace(/protect=\"([^"]*)\"/g, "$1");
+                html = html.replace(/&gt;/g, ">").replace(/&lt;"/g, "<").replace(/&quot;/g, "\"");
+
                 callback(new Buffer(html));
             }
         });
@@ -69,16 +90,13 @@ function compile(html, scripts, callback) {
 }
 
 
-
 function compileFiles() {
 
     var scripts = loadDep();
 
-    return $.through.obj(function(file, enc, cb) {
+    return $.through.obj(function (file, enc, cb) {
 
-        var raw_html = file.contents.toString('utf8');
-
-        compile(raw_html, scripts, function(compiled_html){
+        compile(file, scripts, function (compiled_html) {
 
             file.contents = compiled_html;
             cb(null, file);
@@ -87,32 +105,35 @@ function compileFiles() {
 }
 
 
-
 /**
  * Rocket directives post-processing with Rocket Dom Compiler
  */
-gulp.task('template::watch', function() {
+gulp.task('template::watch', function () {
 
-    gulp.watch(config.paths.src.template, function(event){
+    gulp.watch(config.paths.src.template, function (event) {
 
         var path_array = event.path.split('/');
-        var filename  = path_array[path_array.length-1];
+        var filename   = path_array[path_array.length - 1];
+
+        if( !filename || !filename.length )
+          return;
 
         path_array.pop();
-        var filepath  = path_array.join('/').replace(config.builder.paths.asset+'/template', config.builder.paths.views);
+        var filepath = path_array.join('/')
+                                 .replace(config.builder.paths.asset + '/template', config.builder.paths.views);
 
         if (event.type === 'deleted') {
 
-            gutil.log("Deleted '"+chalk.blue(filename)+"'");
-            return del.sync([filepath+'/'+filename], {force: true});
+            gutil.log("Deleted '" + chalk.blue(filename) + "'");
+            return del.sync([filepath + '/' + filename], {force: true});
         }
-        else{
+        else {
 
-            gutil.log("Compiled '"+chalk.blue(filename)+"'");
+            gutil.log("Compiled '" + chalk.blue(filename) + "'");
 
             return gulp.src(event.path)
-                .pipe(gif(config.builder.template.compile, compileFiles()))
-                .pipe(gulp.dest(filepath));
+                       .pipe(gif(config.builder.template.compile, compileFiles()))
+                       .pipe(gulp.dest(filepath));
         }
     });
 });
@@ -124,16 +145,17 @@ gulp.task('template::watch', function() {
 
 gulp.task('views::clean', function () {
 
-    return del.sync([config.paths.dest.template+'/*'], {force: true});
+    if (config.paths.dest.template.length)
+        return del.sync([config.paths.dest.template + '/*'], {force: true});
 });
 
 
 /**
  * Rocket directives post-processing with Rocket Dom Compiler
  */
-gulp.task('templates::compile', function() {
+gulp.task('templates::compile', function () {
 
     return gulp.src(config.paths.src.template)
-        .pipe(gif(config.builder.template.compile, compileFiles()))
-        .pipe(gulp.dest(config.paths.dest.template));
+               .pipe(gif(config.builder.template.compile, compileFiles()))
+               .pipe(gulp.dest(config.paths.dest.template));
 });

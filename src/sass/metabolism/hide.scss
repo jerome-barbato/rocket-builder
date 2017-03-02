@@ -1,23 +1,20 @@
 @mixin lib-hide{
 
-  .ux-hide{
-
     @media #{$media-desktop} {
-      &--desktop{ display: none }
+      [data-hide_on*="desktop"]{ display: none }
     }
 
     @media #{$media-tablet-only} {
-      &--tablet{ display: none }
+      [data-hide_on*="tablet"]{ display: none }
     }
 
     @media #{$media-tablet} {
-      &--mobile-tablet, &--tablet-mobile{ display: none }
+      [data-hide_on*="mobile"]{ display: none }
     }
 
     @media #{$media-mobile} {
-      &--mobile{ display: none }
+      [data-hide_on*="phone"]{ display: none }
     }
-  }
 }
 
 

@@ -1,17 +1,16 @@
 @mixin lib-router{
 
-  .ux-router{
+  [data-page]{
     display: none;
-    &--current{ display: block }
-    &--animate{ will-change: transform, opacity; animation-duration: $animation-duration; animation-timing-function: $ease-in-out-cubic }
-    &--enter{}
-    &--leave{}
+    will-change: transform, opacity; animation-duration: $animation-duration; animation-timing-function: $ease-in-out-cubic;
+    &[data-current]{ display: block }
+  }
+  .router{
+    &--enter{ position: absolute; top: 0; left: 0; width: 100% }
     &--fade-in{ animation-name: fade-in }
     &--fade-out{ animation-name: fade-out }
-    &--slide-from-left{ animation-name: slide-from-right }
-    &--slide-from-right{ animation-name: slide-from-right }
-    &--slide-to-right{ animation-name: slide-to-left }
-    &--slide-right{ animation-name: slide-to-left }
+    &--slide-in{ animation-name: slide-from-left }
+    &--slide-out{ animation-name: slide-to-right }
   }
 }
 

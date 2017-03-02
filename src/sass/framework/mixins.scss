@@ -48,24 +48,11 @@
 
 // Text
 @mixin text($type) {
-  @extend .text, .text--#{$type};
+  @extend %text, %text--#{$type};
 }
 
 
 // Button
 @mixin button($type) {
-  @extend .button, .button--#{$type};
-}
-
-
-// include font with fallback
-@mixin font($name:false) {
-
-  @each $family, $fallback in $font-families {
-
-    @if( to-lower-case($family) == to-lower-case($name) ){
-
-      font-family: $family, $fallback;
-    }
-  }
+  @extend %button, %button--#{$type};
 }

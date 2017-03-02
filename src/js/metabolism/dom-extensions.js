@@ -46,14 +46,22 @@ dom.compiler.register('attribute', 'sizer', function(elem, attrs){
 
     if( elem.is('img') ){
 
-        elem.attr('src', "{{ asset_url('/media/sizer/" + size + ".png') }}");
-        elem.addClass('ux-sizer');
+        if( window.engine == 'twig')
+        {
+            elem.attr('src', "{{ asset_url('/media/sizer/" + size + ".png') }}");
+        }
+        else if( window.engine == 'smarty')
+        {
+            elem.attr('src', "{asset_url file='/media/sizer/" + size + ".png'}");
+        }
+
+        elem.addClass('has-sizer');
 
         if( 'src' in attrs )
             elem.css('backgroundImage', "url('"+attrs.src+"')");
     }
     else
-        elem.prepend('<div class="ux-sizer" data-ratio="'+attrs.sizer+'">');
+        elem.attr('data-sizer', attrs.sizer);
 
 });
 
@@ -77,7 +85,7 @@ dom.compiler.register('attribute', 'background', function(elem, attrs){
 dom.compiler.register('attribute', 'icon', function(elem, attrs){
 
     if( 'icon' in attrs && attrs.icon.length )
-        elem.addClass('ux-icon ux-icon--'+attrs.icon);
+        elem.attr('data-icon', attrs.icon);
 });
 
 
@@ -85,7 +93,7 @@ dom.compiler.register('attribute', 'icon', function(elem, attrs){
 dom.compiler.register('attribute', 'icon-after', function(elem, attrs){
 
     if( 'iconAfter' in attrs && attrs.iconAfter.length )
-        elem.addClass('ux-icon-after ux-icon-after--'+attrs.iconAfter);
+        elem.attr('data-icon-after', attrs.iconAfter);
 });
 
 
@@ -93,7 +101,7 @@ dom.compiler.register('attribute', 'icon-after', function(elem, attrs){
 dom.compiler.register('attribute', 'icon-before', function(elem, attrs){
 
     if( 'iconBefore' in attrs && attrs.iconBefore.length )
-        elem.addClass('ux-icon ux-icon--'+attrs.iconBefore);
+        elem.attr('data-icon', attrs.iconBefore);
 });
 
 
@@ -128,9 +136,7 @@ dom.compiler.register('attribute', 'hide-on', function(elem, attrs){
 
     if( 'hideOn' in attrs && attrs.hideOn.length ) {
 
-        var hideOn = attrs.hideOn.indexOf('{{')==-1 ? attrs.hideOn.replace(' ', '-') : attrs.hideOn;
-
-        elem.addClass('ux-hide--' + hideOn);
+        elem.attr('data-hide_on', attrs.hideOn);
     }
 });
 
@@ -140,47 +146,49 @@ dom.compiler.register('attribute', 'show-on', function(elem, attrs){
 
     if( 'showOn' in attrs && attrs.showOn.length ) {
 
-        var showOn = attrs.showOn;
         var hideOn = false;
 
-        if (showOn == "mobile")
-            hideOn = "desktop tablet";
+        if (attrs.showOn == "mobile")
+            hideOn = "desktop";
+        else if (attrs.showOn == "desktop")
+            hideOn = "mobile";
+        else if (attrs.showOn == "tablet")
+            hideOn = "phone desktop";
 
-        if (showOn == "desktop")
-            hideOn = "mobile-tablet";
-
-        if (showOn == "tablet")
-            hideOn = "mobile desktop";
-
-        if( hideOn ){
-
-            if( hideOn.indexOf('{{')==-1 ){
-
-                var hideOn_map = hideOn.split(' ');
-                elem.addClass('ux-hide--' + hideOn_map.join(' ux-hide--'));
-            }
-            else{
-
-                elem.addClass('ux-hide--' + hideOn);
-            }
-        }
+        if( hideOn )
+            elem.attr('data-hide_on', hideOn);
     }
 });
 
 
-['block', 'icon', 'icon', 'page', 'component', 'tmp', 'misc'].map(function(type){
+['block', 'icon', 'page', 'component', 'tmp', 'misc'].map(function(type){
 
     dom.compiler.register('attribute', type+'-src', function(elem, attrs){
 
-        var src = attrs[type+'Src'].replace('{{','\' ~ ').replace('}}',' ~ \'');
-        elem.attr('src', "{{ asset_url('/media/"+type+"/" + src + "') }}");
-
+        if( window.engine == 'twig')
+        {
+            var src = attrs[type+'Src'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+            elem.attr('src', "{{ asset_url('/media/"+type+"/" + src + "') }}");
+        }
+        else if( window.engine == 'smarty')
+        {
+            var src = attrs[type+'Src'];
+            elem.attr('style', 'background-image:url({asset_url file="/media/'+type+'/' + src + '"})');
+        }
     });
 
     dom.compiler.register('attribute', type+'-background', function(elem, attrs){
 
-        var src = attrs[type+'Background'].replace('{{','\' ~ ').replace('}}',' ~ \'');
-        elem.attr('style', "background-image:url('{{ asset_url('/media/"+type+"/" + src + "') }}')");
+        if( window.engine == 'twig')
+        {
+            var src = attrs[type+'Background'].replace('{{','\' ~ ').replace('}}',' ~ \'');
+            elem.attr('style', "background-image:url({{ asset_url('/media/"+type+"/" + src + "') }})");
+        }
+        else if( window.engine == 'smarty')
+        {
+            var src = attrs[type+'Background'];
+            elem.attr('style', "background-image:url('{asset_url file='/media/"+type+"/" + src + "'}')");
+        }
     });
 });
 
@@ -236,7 +244,7 @@ dom.compiler.register('element', 'youtube-embed', function(elem, attrs){
     url = url.replace(/%7B/g, '{').replace(/%7D/g, '}');
 
     if( options.defer )
-        return '<iframe data-src="'+url+'" allowfullscreen class="youtube-embed ux-defer"></iframe>';
+        return '<iframe data-src="'+url+'" allowfullscreen class="youtube-embed meta-defer"></iframe>';
     else
         return '<iframe src="'+url+'" allowfullscreen class="youtube-embed"></iframe>';
 });

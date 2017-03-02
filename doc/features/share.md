@@ -1,6 +1,6 @@
 # Share
    
-######file: js/libraries/share.js
+######file: js/metabolism/share.js
 
 Simple social sharing on link
 
@@ -8,9 +8,10 @@ Simple social sharing on link
 
 ~~~~
 <a href="http://www.monsite.fr" share-on="facebook">Facebook</a>
+<a href="http://www.monsite.fr" share-on="facebook" data-scrape="1">Facebook</a>
 ~~~~
     
-When using the Facebook JS SDK, add data-scrape="1" to force Facebook cache reload
+When using the Facebook JS SDK, add data-scrape to force Facebook cache reload
    
 ### Twitter   
 
