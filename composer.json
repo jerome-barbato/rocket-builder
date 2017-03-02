@@ -2,6 +2,8 @@
   "name": "metabolism/rocket-builder",
   "version": "3.3.0",
   "description": "Rocket Builder by Metabolism",
+  "type": "composer-plugin",
+  "composer-plugin-api": "^1.0",
   "license": "AGPL-3.0",
   "authors": [
     {
@@ -12,5 +14,13 @@
       "name": "Paul COUDEVILLE",
       "email": "paul@metabolism.fr"
     }
-  ]
+  ],
+  "extra": {
+    "class": "Rocket\\Composer\\BuilderPlugin"
+  },
+  "autoload": {
+    "psr-4": {
+      "Rocket\\": "src/"
+    }
+  }
 }
