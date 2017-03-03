@@ -188,7 +188,7 @@ var MetaToggles = function() {
             context = $toggle.data();
         }
 
-        context.type = $toggle.data('toggles');
+        context.type = $toggle.data('toggle');
         context.$element = $toggle;
 
         new MetaToggle(context);
