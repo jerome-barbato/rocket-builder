@@ -8,7 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 3.3.1 - 2017-03-02 ##
 ### Changed
-- toogle bugfix
+- toogle now support list based component
+### Updated
+- no more has-fit-object on data-object_fit item
+### Fixed
+- li tag escape in the compiler
 
 ## 3.3.0 - 2017-02-24 ##
 ### Added

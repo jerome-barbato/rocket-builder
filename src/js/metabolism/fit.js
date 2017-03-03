@@ -99,7 +99,7 @@ var MetaFit = function() {
         if( Modernizr && Modernizr.objectfit )
             return;
 
-        $element.data('waiting', false);
+        $element.data('waiting', false).parent().addClass('has-object-fit');
 
         if( !$element.data('ratio') ) {
 
@@ -189,7 +189,6 @@ var MetaFit = function() {
 
         dom.compiler.register('attribute', 'object-fit', function(elem, attrs) {
 
-            elem.parent().addClass('has-object-fit');
             elem.attr('data-object_fit', attrs.objectFit.length ? attrs.objectFit : 'cover');
 
             if( 'objectPosition' in attrs ){

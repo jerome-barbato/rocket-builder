@@ -3,6 +3,7 @@ $grid-default-space : 0 !default;
 $grid-margin : 0 $grid-default-space !default;
 $grid-col-padding : 0 $grid-default-space !default;
 $grid-row-margin : $grid-default-space*2 !default;
+$grid-row-padding : false !default;
 
 //$grid-breakpoints : desktop, wide, 13inch, tablet, tablet-portrait, mobile;
 $grid-breakpoints : false !default;

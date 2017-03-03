@@ -182,11 +182,14 @@ var MetaScroll = function() {
     {
         $(window).on('hashchange', function(e)
         {
-            if( window.location.hash.indexOf('#!/') == -1 )
+            if( window.location.hash.indexOf('#!/') == -1 && window.location.hash.length )
             {
                 var id = window.location.hash.replace('#/','#');
 
                 e.preventDefault();
+
+                //go back to previous state
+                window.history.back();
                 setTimeout(function(){ self.scrollTo(id, true) });
             }
         })

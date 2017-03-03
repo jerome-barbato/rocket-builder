@@ -32,6 +32,7 @@ var MetaToggle = function(config) {
         auto_close : false,
         open_first : false,
         animate    : true,
+        type       : 'link',
         speed      : 300,
         easing     : 'easeInOutCubic'
     };
@@ -43,13 +44,13 @@ var MetaToggle = function(config) {
         {
             if (e.which === 13 || e.type === 'click')
             {
-                self.toggle( $(this).attr('href') );
+                self.toggle(  self.context.$toggles.index( $(this) ) );
 
                 if( self.config.auto_close )
                 {
                     self.context.$toggles.not( $(this) ).each(function()
                     {
-                        self.close( $(this).attr('href') );
+                        self.close( self.context.$toggles.index( $(this) ) );
                     });
                 }
             }
@@ -57,10 +58,10 @@ var MetaToggle = function(config) {
     };
 
 
-    self.close = function( id, animate ){
+    self.close = function( index, animate ){
 
-        var $tab = self.context.$tabs.filter(id);
-        var $toggle = self.context.$toggles.filter('[href="'+id+'"]');
+        var $tab = self.context.$tabs.eq(index);
+        var $toggle = self.context.$toggles.eq(index);
 
         if( !$tab.length )
             return;
@@ -83,24 +84,24 @@ var MetaToggle = function(config) {
     };
 
 
-    self.toggle = function( id, animate )
+    self.toggle = function( index, animate )
     {
-        var $tab = self.context.$tabs.filter(id);
+        var $tab = self.context.$tabs.eq(index);
 
         if( !$tab.length )
             return;
 
         if( $tab.is(':visible') )
-            self.close(id, animate);
+            self.close(index, animate);
         else
-            self.open(id, animate);
+            self.open(index, animate);
     };
 
 
-    self.open = function( id, animate )
+    self.open = function( index, animate )
     {
-        var $tab = self.context.$tabs.filter(id);
-        var $toggle = self.context.$toggles.filter('[href="'+id+'"]');
+        var $tab = self.context.$tabs.eq(index);
+        var $toggle = self.context.$toggles.eq(index);
 
         if( !$tab.length )
             return;
@@ -123,12 +124,25 @@ var MetaToggle = function(config) {
 
     self._getElements = function()
     {
-        self.context.$toggles = self.config.$element.find('[href^="#"]');
+        var $toggles = self.config.$element.find(self.config.type == 'link' ? '[href^="#"]' : 'li > a');
 
         self.context.$tabs = $();
-        self.context.$toggles.each(function()
+        self.context.$toggles = $();
+
+        $toggles.each(function()
         {
-            self.context.$tabs = self.context.$tabs.add( self.config.$element.find($(this).attr('href')) );
+            var $tab = false;
+
+            if( self.config.type == 'link' )
+                $tab = self.config.$element.find($(this).attr('href'));
+            else
+                $tab = $(this).next('ul');
+
+            if( $tab && $tab.length )
+            {
+                self.context.$toggles = self.context.$toggles.add( $(this) );
+                self.context.$tabs = self.context.$tabs.add( $tab );
+            }
         });
 
         self.context.$tabs.hide();
@@ -147,7 +161,7 @@ var MetaToggle = function(config) {
         self._getElements();
 
         if( self.config.open_first )
-            self.open( self.context.$toggles.first().attr('href'), false );
+            self.open( self.context.$tabs.first(), false );
 
         self._setupEvents();
     };
@@ -174,6 +188,7 @@ var MetaToggles = function() {
             context = $toggle.data();
         }
 
+        context.type = $toggle.data('toggles');
         context.$element = $toggle;
 
         new MetaToggle(context);
@@ -184,7 +199,7 @@ var MetaToggles = function() {
 
     self.__construct = function()
     {
-        $('[data-toggles="true"]').initialize(function()
+        $('[data-toggle]').initialize(function()
         {
             self.add( $(this) );
         });
@@ -193,9 +208,9 @@ var MetaToggles = function() {
 
     if( typeof DOMCompiler !== 'undefined' )
     {
-        dom.compiler.register('attribute', 'toggles', function(elem)
+        dom.compiler.register('attribute', 'toggles', function(elem, attrs)
         {
-            elem.attr('data-toggles','true');
+            elem.attr('data-toggle', attrs.toggles.length ? attrs.toggles: 'link');
 
         },self.add);
     }
