@@ -19,9 +19,8 @@
     "composer-plugin-api": "^1.0"
   },
   "suggest": {
-    "metabolism/rocket-kernel": "Allows file manipulation at builder installation using Rocket Framework",
-    "ext-xml": "Needed to support XML format in class Foo"
-  }
+    "metabolism/rocket-kernel": "Allows file manipulation at builder installation using Rocket Framework"
+  },
   "extra": {
     "class": "Rocket\\Composer\\BuilderPlugin"
   },
