@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Composer Plugin - [See documentation](composer.md)
     * composer build
     * composer create
+    * File management is now placed under subpackage `composer.json`
 
 ## 3.3.0 - 2017-02-24 ##
 ### Added
