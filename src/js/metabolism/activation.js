@@ -252,6 +252,14 @@ var MetaActivation = function(){
             self.add( $elem );
         });
 
+        $('[data-animation="reveal"]').initialize(function()
+        {
+            if( !$(this).find('*').length )
+                $(this).wrapInner('<span/>');
+            else
+                $(this).wrapInner('<div/>');
+        });
+
         $(document).on('loaded', function()
         {
             self._setupEvents();
@@ -270,13 +278,8 @@ var MetaActivation = function(){
             if( attrs.whenVisible == 'stack' )
                 elem.find('[delay],[data-delay]').not('[animation],[data-animation]').attr('data-animation', 'slide-up');
 
-            if( attrs.whenVisible == 'reveal' && !elem.find('> *').length )
-            {
-                if( elem.is('img') )
-                    console.log('Reveal animation on image require to wrap the image inside a span');
-                else
-                    elem.wrapInner('<span/>');
-            }
+            if( attrs.whenVisible == 'reveal' &&  elem.is('img') )
+                console.log('Reveal animation on image require to wrap the image inside a span');
 
         }, self.add);
 
@@ -320,6 +323,9 @@ var MetaActivation = function(){
         dom.compiler.register('attribute', 'animation', function(elem, attrs) {
 
             elem.attr('data-animation', attrs.animation);
+
+            if( attrs.animation == 'stack' )
+                elem.find('[delay],[data-delay]').not('[animation],[data-animation]').attr('data-animation', 'slide-up');
         });
     }
 

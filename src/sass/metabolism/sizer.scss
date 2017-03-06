@@ -15,7 +15,7 @@
 
 @mixin aspect-ratio($ratio) {
   position: relative;
-  &:after {
+  &:before {
     display: block; content: ""; width: 100%; padding-top: (1/$ratio) * 100%;
   }
 }

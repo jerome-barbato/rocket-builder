@@ -37,20 +37,26 @@ var MetaCustomInput = function()
                     if (!selected && placeholder) {
                         this.buttonItem.text(placeholder);
                     }
+                },
+                _resizeMenu: function() {
+                    this.menu.outerWidth( this.button.outerWidth() - 2 );
                 }
             });
 
             $('select[data-custom]').initialize(function()
             {
+                var $parent = $(this).parent();
+
                 var options = {
-                    icons: { button: "meta-icon meta-icon--selectmenu" },
+                    icons: { button: 'ui-icon ui-icon-arrow' },
                     change: function( event, ui ) {
 
                         if( $(this).val().length )
                             $element.addClass('ui-selectmenu-button-filled');
                         else
                             $element.removeClass('ui-selectmenu-button-filled');
-                    }
+                    },
+                    appendTo: $parent
                 };
 
                 if( $(this).hasDataAttr('placeholder') )
@@ -58,7 +64,7 @@ var MetaCustomInput = function()
 
                 $(this).selectmenu(options);
 
-                var $element = $(this).selectmenu( "widget" );
+                var $element = $(this).selectmenu( 'widget' );
             });
         }
     };
