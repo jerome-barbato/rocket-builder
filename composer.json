@@ -1,6 +1,6 @@
 {
   "name": "metabolism/rocket-builder",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Rocket Builder by Metabolism",
   "type": "composer-plugin",
   "license": "AGPL-3.0",
@@ -38,6 +38,9 @@
           "src/js/modernizr.js": "app/resources/js/vendor/modernizr.js"
         }
       }
+    },
+    "branch-alias": {
+      "dev-dev": "3.4.x-dev"
     }
   },
   "autoload": {
