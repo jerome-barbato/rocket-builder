@@ -15,6 +15,7 @@ Available detection: on-top, visible, appear, disappear
 ### Offset
 
 You can reference your fixed header/footer to ensure a right calculation
+
 ~~~~
 <header fixed="top"></header>
 <footer fixed="bottom"></fixed>
@@ -27,6 +28,7 @@ This script also add class and attribute on body according to the current scroll
 ## Events
 
 Trigger events according to the detection
+
 ~~~
 $('.element').on('detect.on-top', function(){ });
 ~~~

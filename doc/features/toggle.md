@@ -22,6 +22,7 @@ Simple toggle management system
     </ul>
   </div>
 ~~~~
+
 ~~~~
 <div toggles="link">
     <a href="#1">Item 1</a>
@@ -32,6 +33,7 @@ Simple toggle management system
 ~~~~
 
 ### Parameters
+
 ~~~~
 <div toggles data-auto_close="true">
     <a href="#1">Item 1</a>

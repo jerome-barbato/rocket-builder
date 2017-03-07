@@ -5,6 +5,7 @@
 A controller is required and the map must have an height defined, Gmap3 is required.
 
 Add Google api key ( google_key ) to window.app in layout.html.twig
+
 ~~~
 <script type="text/javascript">
     window.app = {
@@ -16,6 +17,7 @@ Add Google api key ( google_key ) to window.app in layout.html.twig
 ~~~
 
 Add HTML Markup
+
 ~~~
 <div controller="map">
     <div data-map style="height: 500px"></div>
@@ -23,11 +25,12 @@ Add HTML Markup
 ~~~
 
 Create a controller
+
 ~~~
 angulight.controller('map', function($dom){
 
     var $map = $dom.find('[data-map]');
-    new MetaMap( $map );
+    new rocket.map( $map );
 });
 ~~~
 
@@ -50,7 +53,7 @@ angulight.controller('map', function($dom){
         }
     };
 
-    new MetaMap( $dom.find('[data-map]'), config, function(map){
+    new rocket.map( $dom.find('[data-map]'), config, function(map){
 
         // address, zoom level
         map.addMyLocation('Nice', 5);

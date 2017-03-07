@@ -64,20 +64,21 @@ function compile(file, scripts, callback) {
 
                 window.precompile = true;
                 window.engine     = engine;
+                window.app        = false;
 
-                var $body    = window.$('body');
+                var $body = window.$('body');
 
                 window.dom.compiler.run($body);
 
                 html = $body.html();
 
-              for(var i in escape_tags){
+                for(var i in escape_tags){
 
-                var escape_tag = escape_tags[i];
-                html = html.split('<x'+escape_tag+' ').join('<'+escape_tag+' ');
-                html = html.split('<x'+escape_tag+'>').join('<'+escape_tag+'>');
-                html = html.split('</x'+escape_tag+'>').join('</'+escape_tag+'>');
-              }
+                    var escape_tag = escape_tags[i];
+                    html = html.split('<x'+escape_tag+' ').join('<'+escape_tag+' ');
+                    html = html.split('<x'+escape_tag+'>').join('<'+escape_tag+'>');
+                    html = html.split('</x'+escape_tag+'>').join('</'+escape_tag+'>');
+                }
 
                 html = html.replace(/<template /g, '<script type="text/template" ').replace(/<\/template>/g, '</script>');
                 html = html.replace(/protect=\"([^"]*)\"/g, "$1");

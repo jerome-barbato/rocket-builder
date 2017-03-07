@@ -13,8 +13,10 @@
  *
  **/
 
-if( typeof DOMCompiler !== "undefined" ) {
+(function($){
 
+    if( typeof dom == 'undefined' )
+        return;
 
     dom.compiler.register('attribute', 'grid', function(elem, attrs) {
 
@@ -89,4 +91,5 @@ if( typeof DOMCompiler !== "undefined" ) {
 
         return '<div '+attributes.join(' ')+'><transclude/></div>';
     });
-}
+
+})(jQuery);

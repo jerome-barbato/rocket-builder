@@ -20,6 +20,7 @@ Once parsed when the dom is loaded, the result will be
 ~~~~
 
 Using Twig 
+
 ~~~~
 {{ 'test@domain.fr'|protect_email }}
 ~~~~

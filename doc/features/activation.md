@@ -41,3 +41,4 @@ To enable on mobile, in the header add
 
 ~~~
 <meta name="animation-mobile" content="yes">
+~~~

@@ -5,13 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## 3.3.3 - 2017-03-07 ##
+### Changed
+- libs are now encapsulated in anonymous function with jQuery as parameter
+### Fixed
+- bugfix in scroll-to
 
 ## 3.3.2 - 2017-03-06 ##
 ### Added
 - reveal animation
 ### Fixed
 - custom select width
-
 ## 3.3.1 - 2017-03-02 ##
 ### Changed
 - toogle now support list based component

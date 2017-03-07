@@ -17,96 +17,99 @@
  *
  **/
 
-var MetaBind = function() {
+(function($){
 
-    var self = this;
+    var Bind = function() {
 
-    self.context = {
-        $elements : []
-    };
+        var self = this;
 
-    self.config = {
-    };
+        self.context = {
+            $elements : []
+        };
 
-
-    self.add = function($element)
-    {
-        var type = $element.data('bind');
-        var id   = $element.attr('href');
-        var $target = $(id);
-
-        if( !$target.length )
-            return;
-
-        if( type == 'click' )
-            self._handleClick(id, $element, $target);
-        else if( type == 'hover' )
-            self._handleHover(id, $element, $target);
-    };
+        self.config = {
+        };
 
 
-    self._handleHover = function(id, $element, $target){
-
-        $element.add($target).hover(function () {
-
-                $element.addClass('active');
-                $target.addClass('active');
-            },
-            function(){
-
-                $element.removeClass('active');
-                $target.removeClass('active');
-            });
-    };
-
-
-    self._handleClick = function(id, $element, $target){
-
-        $element.click(function(e)
+        self.add = function($element)
         {
-            e.preventDefault();
+            var type = $element.data('bind');
+            var id   = $element.attr('href');
+            var $target = $(id);
 
-            $element.toggleClass('active');
-            $target.toggleClass('active');
-        });
+            if( !$target.length )
+                return;
 
-        $(document).click(function(e)
-        {
-            var $click_target = $(e.target);
+            if( type == 'click' )
+                self._handleClick(id, $element, $target);
+            else if( type == 'hover' )
+                self._handleHover(id, $element, $target);
+        };
 
-            if( $element.hasClass('active') && !$click_target.closest(id+', [href="'+id+'"]').length )
+
+        self._handleHover = function(id, $element, $target){
+
+            $element.add($target).hover(function () {
+
+                    $element.addClass('active');
+                    $target.addClass('active');
+                },
+                function(){
+
+                    $element.removeClass('active');
+                    $target.removeClass('active');
+                });
+        };
+
+
+        self._handleClick = function(id, $element, $target){
+
+            $element.click(function(e)
             {
-                $element.removeClass('active');
-                $target.removeClass('active');
-            }
-        });
+                e.preventDefault();
+
+                $element.toggleClass('active');
+                $target.toggleClass('active');
+            });
+
+            $(document).click(function(e)
+            {
+                var $click_target = $(e.target);
+
+                if( $element.hasClass('active') && !$click_target.closest(id+', [href="'+id+'"]').length )
+                {
+                    $element.removeClass('active');
+                    $target.removeClass('active');
+                }
+            });
+        };
+
+
+        /* Constructor. */
+
+        self.__construct = function()
+        {
+            $('[data-bind]').initialize(function()
+            {
+                self.add( $(this) );
+            });
+        };
+
+
+        if( typeof dom !== 'undefined' )
+        {
+            dom.compiler.register('attribute', 'bind', function(elem, attrs)
+            {
+                elem.attr('data-bind', attrs.bind);
+
+            }, self.add);
+        }
+
+
+        self.__construct();
     };
 
+    rocket = typeof rocket == 'undefined' ? {} : rocket;
+    rocket.bind = new Bind();
 
-    /* Constructor. */
-
-    self.__construct = function()
-    {
-        $('[data-bind]').initialize(function()
-        {
-            self.add( $(this) );
-        });
-    };
-
-
-    if( typeof DOMCompiler !== 'undefined' )
-    {
-        dom.compiler.register('attribute', 'bind', function(elem, attrs)
-        {
-            elem.attr('data-bind', attrs.bind);
-
-        },self.add);
-    }
-
-
-    self.__construct();
-};
-
-
-var meta = meta || {};
-meta.bind = new MetaBind();
+})(jQuery);

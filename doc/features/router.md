@@ -25,6 +25,7 @@ Simple hash router
 ~~~~
 
 Define animation using meta
+
 ~~~~
 <meta name="animation-router" content="slide/fade">
 ~~~~
