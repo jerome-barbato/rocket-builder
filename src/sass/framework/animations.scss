@@ -60,21 +60,13 @@
   @keyframes enlarge { 0%{ width: 0 } 100%{ width: 100% } }
   @keyframes un-enlarge { 0%{ width: 100% } 100%{ width: 0 } }
 
-  @keyframes appear-left {
+  @keyframes appear {
     0%{ transform:scaleX(0); transform-origin: left } 50%{ transform: scaleX(1); transform-origin: left }
     50.1%{ transform: scaleX(1); transform-origin: right } 100%{ transform: scaleX(0); transform-origin: right }
   }
-  @keyframes disappear-left {
+  @keyframes disappear {
     100%{ transform:scaleX(0); transform-origin: left } 50.1%{ transform: scaleX(1); transform-origin: left }
     50%{ transform: scaleX(1); transform-origin: right } 0%{ transform: scaleX(0); transform-origin: right }
-  }
-  @keyframes appear-right {
-    0%{ transform:scaleX(0); transform-origin: right } 50%{ transform: scaleX(1); transform-origin: right }
-    50.1%{ transform: scaleX(1); transform-origin: left } 100%{ transform: scaleX(0); transform-origin: left }
-  }
-  @keyframes disappear-right {
-    100%{ transform:scaleX(0); transform-origin: right } 50.1%{ transform: scaleX(1); transform-origin: right }
-    50%{ transform: scaleX(1); transform-origin: left } 0%{ transform: scaleX(0); transform-origin: left }
   }
 }
 

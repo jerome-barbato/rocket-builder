@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## 3.3.4 - 2017-03-08 ##
+### Fixed
+- reveal animation
+
 ## 3.3.3 - 2017-03-07 ##
 ### Changed
 - libs are now encapsulated in anonymous function with jQuery as parameter

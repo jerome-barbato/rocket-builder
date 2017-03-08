@@ -16,21 +16,20 @@ $animation-reveal-color : #eee !default;
   }
 
   [data-animation="reveal"]{
-    position: relative; display: inline-block;
+    position: relative;
     &:after{
       display: block; position: overlay(); z-index: 1;
-      background: $animation-reveal-color; content: ''; animation: appear-left $ease-in-out-cubic $animation-duration both
+      background: $animation-reveal-color; content: ''; animation: appear $ease-in-out-cubic $animation-duration both
     }
-    > *{ display: inline-block; animation: fade-in-half $animation-duration steps(1,end) both; line-height: 100% }
+    > *{ animation: fade-in-half $animation-duration steps(1,end) both; height: 100% }
+    > span{ display: inline-block; line-height: 100% }
     > img{ display: block }
     > *, &:after{ animation-delay: inherit }
-    &[data-activation="wait"]{ > *, &:after{ animation-play-state: paused!important }}
-    &[data-activation="rewind"]{
+    &[data-activation="wait"], [data-activation="wait"] &{ > *, &:after{ animation-play-state: paused!important }}
+    &[data-activation="rewind"], [data-activation="rewind"] &{
       > *{ animation-name: fade-out-half }
-      &:after{ animation-name: disappear-left }
+      &:after{ animation-name: disappear }
     }
-    &[data-direction="right"]:after{ animation-name: appear-right }
-    &[data-direction="right"][data-activation="rewind"]:after{ animation-name: disappear-right }
   }
 
   @for $i from 0 through $animation-delay-values{
