@@ -16,19 +16,26 @@ $animation-reveal-color : #eee !default;
   }
 
   [data-animation="reveal"]{
-    position: relative;
-    &:after{
-      display: block; position: overlay(); z-index: 1;
+    position: relative; box-shadow:inset 0 0 0 1px $animation-reveal-color;
+    &:before{
+      display: block; position: overlay(); z-index: 1; will-change: opacity, transform;
       background: $animation-reveal-color; content: ''; animation: appear $ease-in-out-cubic $animation-duration both
     }
-    > *{ animation: fade-in-half $animation-duration steps(1,end) both; height: 100% }
+    > *{ animation: fade-in-half $animation-duration steps(1,end) both; height: 100%; will-change: opacity }
     > span{ display: inline-block; line-height: 100% }
     > img{ display: block }
-    > *, &:after{ animation-delay: inherit }
-    &[data-activation="wait"], [data-activation="wait"] &{ > *, &:after{ animation-play-state: paused!important }}
+    > *, &:before{ animation-delay: inherit }
+    &[data-activation], [data-activation] &{
+      > *, &:before{ animation-play-state: paused!important }
+    }
+    &[data-activation="play"], [data-activation="play"] &,
+    &[data-activation="rewind"], [data-activation="rewind"] &,
+    &[data-activation="played"], [data-activation="played"] &{
+      > *, &:before{ animation-play-state: running!important }
+    }
     &[data-activation="rewind"], [data-activation="rewind"] &{
       > *{ animation-name: fade-out-half }
-      &:after{ animation-name: disappear }
+      &:before{ animation-name: disappear }
     }
   }
 

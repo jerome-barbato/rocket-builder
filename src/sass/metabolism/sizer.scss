@@ -22,14 +22,14 @@
 
 @mixin remaining-aspect-ratio($ratio, $remain) {
   position: relative;
-  &:before {
+  &:after {
     display: block; content: ""; width: 100%;
     padding-top: ((((1/$ratio))*(1-$remain))/$remain) * 100%;
   }
 }
 
 @mixin remove-aspect-ratio() {
-  &:before { display: none }
+  &:after { display: none }
 }
 
 @if( index($libraries, 'sizer') ){

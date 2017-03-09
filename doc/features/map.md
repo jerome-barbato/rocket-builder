@@ -55,7 +55,7 @@ angulight.controller('map', function($dom){
 
     new rocket.map( $dom.find('[data-map]'), config, function(map){
 
-        // address, zoom level
-        map.addMyLocation('Nice', 5);
+        // {address, icon}, zoom
+        map.addMyLocation({address:'Nice', icon: 'http://maps.google.com/mapfiles/marker_green.png'}, 5);
     });
 });

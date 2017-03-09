@@ -138,9 +138,7 @@
                 labelOrigin : new google.maps.Point(self.config.marker.width/2, self.config.marker.height*0.65)
             };
 
-            self.context.gmap       = $map.gmap3(self.config.map);
-            self.context.map        = $map.gmap3('get');
-            self.context.googleMap  = self.context.map.get(0);
+            self.context.$map = $map;
 
             if( !browser.mobile )
             {
@@ -150,16 +148,21 @@
                 $loader.click(function () { $loader.hide() });
             }
 
-            google.maps.event.addListener(self.context.map, 'zoom_changed', function() {
+            self.context.gmap = $map.gmap3(self.config.map).then(function (result) {
 
-                var zoomLevel = self.context.googleMap.getZoom();
-                $(document).trigger('meta-map.zoom',[self.context.map, zoomLevel]);
+                self.context.map = this.get(0);
+
+                google.maps.event.addListener(self.context.map, 'zoom_changed', function() {
+
+                    var zoomLevel = self.context.map.getZoom();
+                    self.context.$map.trigger('map.zoom',[self.context.map, zoomLevel]);
+                });
+
+                self.context.init = true;
+
+                if( callback )
+                    callback(self);
             });
-
-            self.context.init = true;
-
-            if( callback )
-                callback(self);
         };
 
 
@@ -169,8 +172,8 @@
          */
         self.zoomIn = function() {
 
-            if(self.context.googleMap.getZoom() < 21 )
-                self.context.googleMap.setZoom( self.context.googleMap.getZoom()+1 );
+            if(self.context.map.getZoom() < 21 )
+                self.context.map.setZoom( self.context.map.getZoom()+1 );
         };
 
 
@@ -179,8 +182,8 @@
          */
         self.zoomOut = function() {
 
-            if(self.context.googleMap.getZoom() >  3)
-                self.context.googleMap.setZoom( self.context.googleMap.getZoom()-1 );
+            if(self.context.map.getZoom() >  3)
+                self.context.map.setZoom( self.context.map.getZoom()-1 );
         };
 
 
@@ -227,8 +230,8 @@
             if( typeof address == 'object' ){
 
                 var latLng = new google.maps.LatLng(address.coords.latitude, address.coords.longitude);
-                self.context.googleMap.panTo(latLng);
-                self.context.googleMap.setZoom(zoom);
+                self.context.map.panTo(latLng);
+                self.context.map.setZoom(zoom);
             }
             else{
 
@@ -236,8 +239,8 @@
                     .then(function (result) {
 
                         var latLng = new google.maps.LatLng(result.lat(), result.lng());
-                        self.context.googleMap.panTo(latLng);
-                        self.context.googleMap.setZoom(zoom);
+                        self.context.map.panTo(latLng);
+                        self.context.map.setZoom(zoom);
                     });
             }
         };
@@ -265,7 +268,7 @@
          */
         self.addMyLocation = function( data, zoom ){
 
-            self.context.gmap.marker({address:data}).then(function(marker){
+            self.context.gmap.marker(data).then(function(marker){
 
                 self.context.markers.push(marker);
 
@@ -331,7 +334,7 @@
                         return;
 
                     marker.setIcon(marker.icon_hover);
-                    $(document).trigger('meta-map.over', [self.context.map, marker.index]);
+                    self.context.$map.trigger('map.over', [self.context.map, marker.index]);
                 },
                 mouseout: function(marker){
 
@@ -341,8 +344,7 @@
                     if( !self.context.has_overlay ){
 
                         marker.setIcon(marker.icon_out);
-
-                        $(document).trigger('meta-map.out', [self.context.map, marker.index]);
+                        self.context.$map.trigger('map.out', [self.context.map, marker.index]);
                     }
                 },
                 click: function(marker){
@@ -357,7 +359,7 @@
 
                     marker.setIcon(marker.icon_hover);
 
-                    $(document).trigger('meta-map.click', [self.context.map, marker.index]);
+                    self.context.$map.trigger('map.click', [self.context.map, marker.index]);
 
                     if( !browser.phone || ('phone' in self.config.overlay && self.config.overlay.phone) ){
 
@@ -384,7 +386,7 @@
                                 self.context.marker = false;
 
                                 self.clearOverlay();
-                                $(document).trigger('meta-map.out', [self.context.map, marker.index]);
+                                self.context.$map.trigger('map.out', [self.context.map, marker.index]);
                             });
                         });
                     }
