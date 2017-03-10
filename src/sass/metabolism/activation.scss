@@ -17,6 +17,6 @@
   }
 }
 
-@if( index($libraries, 'activation') ){
+@if( variable-exists(libraries) and index($libraries, 'activation') ){
   @include lib-activation;
 }

@@ -65,7 +65,13 @@
         }
         else
             elem.attr('data-sizer', attrs.sizer);
+    });
 
+
+
+    dom.compiler.register('attribute', 'keep', function(elem, attrs){
+
+        elem.attr('data-keep', 'true');
     });
 
 

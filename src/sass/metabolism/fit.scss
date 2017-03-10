@@ -38,6 +38,6 @@
 }
 
 
-@if( index($libraries, 'fit') ){
+@if( variable-exists(libraries) and index($libraries, 'fit') ){
   @include lib-fit;
 }

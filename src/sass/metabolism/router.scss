@@ -15,6 +15,6 @@
 }
 
 
-@if( index($libraries, 'router') ){
+@if( variable-exists(libraries) and index($libraries, 'router') ){
   @include lib-router;
 }

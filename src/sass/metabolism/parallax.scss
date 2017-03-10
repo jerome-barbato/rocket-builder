@@ -6,6 +6,6 @@
 }
 
 
-@if( index($libraries, 'parallax') ){
+@if( variable-exists(libraries) and index($libraries, 'parallax') ){
   @include lib-parallax;
 }

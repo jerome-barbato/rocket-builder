@@ -18,6 +18,8 @@
     if( typeof dom == 'undefined' )
         return;
 
+    var grid_breakpoints = ['tablet', 'mobile-portrait', 'mobile', 'wide', '13inch'];
+
     dom.compiler.register('attribute', 'grid', function(elem, attrs) {
 
         elem.attr('data-grid', attrs.grid?attrs.grid:'');
@@ -39,6 +41,16 @@
             $('<div data-col="'+attrs.offsetBy+'"></div>').insertBefore(elem);
             elem.removeAttr('offset-by');
         }
+
+        $.each(grid_breakpoints, function(i, media){
+
+            media = media.charAt(0).toUpperCase() + media.slice(1);
+            if( attrs['col'+media] ){
+
+                attributes.push('data-col-'+media+'="'+attrs['size'+media]+'"');
+                elem.removeAttr('col-'+media);
+            }
+        });
     });
 
 
@@ -79,7 +91,7 @@
             elem.removeAttr('offset-by');
         }
 
-        $.each(['tablet', 'mobile-portrait', 'mobile', 'wide', '13inch'], function(i, media){
+        $.each(grid_breakpoints, function(i, media){
 
           media = media.charAt(0).toUpperCase() + media.slice(1);
           if( attrs['size'+media] ){

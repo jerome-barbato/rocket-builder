@@ -15,8 +15,10 @@ $animation-reveal-color : #eee !default;
     }
   }
 
+  span[data-animation]{ display: inline-block }
+
   [data-animation="reveal"]{
-    position: relative; box-shadow:inset 0 0 0 1px $animation-reveal-color;
+    position: relative;
     &:before{
       display: block; position: overlay(); z-index: 1; will-change: opacity, transform;
       background: $animation-reveal-color; content: ''; animation: appear $ease-in-out-cubic $animation-duration both
@@ -48,7 +50,8 @@ $animation-reveal-color : #eee !default;
   }
 }
 
+$animations : false !default;
 
-@if( index($libraries, 'animation') ){
+@if( variable-exists(libraries) and index($libraries, 'animation') and $animations ){
   @include lib-animation;
 }

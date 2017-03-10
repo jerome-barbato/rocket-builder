@@ -8,6 +8,6 @@
 }
 
 
-@if( index($libraries, 'transition') ){
+@if( variable-exists(libraries) and index($libraries, 'transition') ){
   @include lib-transition;
 }

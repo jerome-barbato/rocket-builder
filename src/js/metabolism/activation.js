@@ -245,28 +245,50 @@
 
             self.context.disable = browser && browser.mobile && !self.config.mobile;
 
-            $('[data-activation]').initialize(function()
+            if( self.context.disable )
             {
-                var $elem = $(this);
+                $('[data-activation]').initialize(function()
+                {
+                    $(this).removeAttr('data-activation');
+                });
 
-                $elem.attr('data-animation', $elem.data('activation') );
-                $elem.attr('data-activation', 'wait');
-                self.add( $elem );
-            });
+                $('[data-animation]').initialize(function()
+                {
+                    if( typeof( $(this).attr('data-keep') ) == 'undefined' && !$(this).closest('[data-keep]').length )
+                        $(this).removeAttr('data-animation').removeAttr('data-delay');
+                });
 
-            $('[data-animation="reveal"]').initialize(function()
+                $('html').addClass('no-activation');
+            }
+            else
             {
-                if( !$(this).find('*').length )
-                    $(this).wrapInner('<span/>');
-                else
-                    $(this).wrapInner('<div/>');
-            });
+                $('html').addClass('activation');
 
-            $(document).on('loaded', function()
-            {
-                self._setupEvents();
-                self._recompute();
-            });
+                $('[data-activation]').initialize(function()
+                {
+                    var $elem = $(this);
+
+                    $elem.attr('data-animation', $elem.data('activation') );
+                    $elem.attr('data-activation', 'wait');
+                    self.add( $elem );
+                });
+
+                $('[data-animation="reveal"]').initialize(function()
+                {
+                    var $children = $(this).find('*');
+
+                    if( !$children.length )
+                        $(this).wrapInner('<span/>');
+                    else if( $children.length > 2 )
+                        $(this).wrapInner('<div/>');
+                });
+
+                $(document).on('loaded', function()
+                {
+                    self._setupEvents();
+                    self._recompute();
+                });
+            }
         };
 
 
@@ -280,13 +302,8 @@
                 if( attrs.whenVisible == 'stack' )
                     elem.find('[delay],[data-delay]').not('[animation],[data-animation]').attr('data-animation', 'slide-up');
 
-                if( attrs.whenVisible == 'reveal' && !elem.find('> *').length )
-                {
-                    if( elem.is('img') )
+                if( attrs.whenVisible == 'reveal' && elem.is('img') )
                         console.log('Reveal animation on image require to wrap the image inside a span');
-                    else
-                        elem.wrapInner('<span/>');
-                }
 
             }, self.add);
 

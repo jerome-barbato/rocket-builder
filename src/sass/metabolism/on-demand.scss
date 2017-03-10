@@ -5,6 +5,6 @@
 }
 
 
-@if( index($libraries, 'on-demand') ){
+@if( variable-exists(libraries) and index($libraries, 'on-demand') ){
   @include lib-on-demand;
 }

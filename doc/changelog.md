@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## 3.3.6 - 2017-03-10 ##
+### Fixed
+- animation on span
+- check for $libraires variable existance globally
+- more default variables
+### Added
+- $space variable, $grid-default-space use $space as default
+
 ## 3.3.5 - 2017-03-09 ##
 ### Fixed
 - animations
