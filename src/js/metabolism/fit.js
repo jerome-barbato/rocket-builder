@@ -222,9 +222,9 @@
                 $(this).each(function() {
 
                     if( recompute_ratio )
-                        $(this).data('ratio', false);
+                        $(this).data('ratio', false).removeAttr('width').removeAttr('height');
 
-                    meta.fit.compute( $(this) )
+                    rocket.fit.compute( $(this) )
                 });
             };
         }
