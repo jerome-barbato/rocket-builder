@@ -47,7 +47,7 @@
             media = media.charAt(0).toUpperCase() + media.slice(1);
             if( attrs['col'+media] ){
 
-                attributes.push('data-col-'+media+'="'+attrs['size'+media]+'"');
+                elem.attr('data-col-'+media, attrs['size'+media]);
                 elem.removeAttr('col-'+media);
             }
         });
