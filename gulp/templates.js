@@ -66,7 +66,7 @@ function compile(file, scripts, callback) {
                 window.engine     = engine;
                 window.app        = false;
 
-                var $body = window.$('body');
+                var $body = window.jQuery('body');
 
                 window.dom.compiler.run($body);
 
