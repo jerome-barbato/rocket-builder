@@ -74,6 +74,7 @@
 
     dom.compiler.register('element', 'column', function(elem, attrs) {
 
+        var self       = this;
         var attributes = ['data-col="'+(attrs.size?attrs.size:'')+'"'];
 
         if( attrs.size )
@@ -96,7 +97,7 @@
           media = media.charAt(0).toUpperCase() + media.slice(1);
           if( attrs['size'+media] ){
 
-            attributes.push('data-col-'+media+'="'+attrs['size'+media]+'"');
+              self.attributes.push('data-col-' + media + '="' + attrs['size' + media] + '"');
             elem.removeAttr('size-'+media);
           }
         });
