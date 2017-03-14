@@ -41,7 +41,7 @@
                         }
                     },
                     _resizeMenu: function() {
-                        this.menu.outerWidth( this.button.outerWidth() - 2 );
+                        this.menu.css('min-width', this.button.outerWidth() - 2 );
                     }
                 });
 
