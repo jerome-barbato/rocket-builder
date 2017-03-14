@@ -41,14 +41,19 @@ class BuilderCommand extends BaseCommand
             $this->getIO()->write( '  Installing node modules...' );
             chdir( $this->pkg_path );
 
-            //todo: check if yarn is installed else use npm
             if ( is_dir( 'node_modules' ) )
             {
-                passthru( "yarn upgrade --production" );
+                passthru( "yarn upgrade --production", $err);
+
+                if( $err )
+                    passthru( "npm upgrade --production");
             }
             else
             {
-                passthru( "yarn install --production" );
+                passthru( "yarn install --production", $err);
+
+                if( $err )
+                    passthru( "npm install --production");
             }
         }
     }
