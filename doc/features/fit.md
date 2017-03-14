@@ -7,6 +7,7 @@ Object fit cover/contain with polyfill.
 For image and video width and height are mandatory ( especially for IE )
 
 ### Fit
+
 ~~~~
 <div>
     <img src="myimage.jpg" width="640" height="450" object-fit="contain"/>

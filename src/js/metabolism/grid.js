@@ -13,8 +13,12 @@
  *
  **/
 
-if( typeof DOMCompiler !== "undefined" ) {
+(function($){
 
+    if( typeof dom == 'undefined' )
+        return;
+
+    var grid_breakpoints = ['tablet', 'mobile-portrait', 'mobile', 'wide', '13inch'];
 
     dom.compiler.register('attribute', 'grid', function(elem, attrs) {
 
@@ -37,6 +41,16 @@ if( typeof DOMCompiler !== "undefined" ) {
             $('<div data-col="'+attrs.offsetBy+'"></div>').insertBefore(elem);
             elem.removeAttr('offset-by');
         }
+
+        $.each(grid_breakpoints, function(i, media){
+
+            media = media.charAt(0).toUpperCase() + media.slice(1);
+            if( attrs['col'+media] ){
+
+                elem.attr('data-col-'+media, attrs['size'+media]);
+                elem.removeAttr('col-'+media);
+            }
+        });
     });
 
 
@@ -77,16 +91,17 @@ if( typeof DOMCompiler !== "undefined" ) {
             elem.removeAttr('offset-by');
         }
 
-        $.each(['tablet', 'mobile-portrait', 'mobile', 'wide', '13inch'], function(i, media){
+        $.each(grid_breakpoints, function(i, media){
 
-          media = media.charAt(0).toUpperCase() + media.slice(1);
-          if( attrs['size'+media] ){
+            media = media.charAt(0).toUpperCase() + media.slice(1);
+            if (attrs['size' + media]) {
 
-            attributes.push('data-col-'+media+'="'+attrs['size'+media]+'"');
-            elem.removeAttr('size-'+media);
-          }
+                attributes.push('data-col-' + media + '="' + attrs['size' + media] + '"');
+                elem.removeAttr('size-' + media);
+            }
         });
 
         return '<div '+attributes.join(' ')+'><transclude/></div>';
     });
-}
+
+})(jQuery);

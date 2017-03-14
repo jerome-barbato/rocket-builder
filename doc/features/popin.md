@@ -53,19 +53,19 @@ The following markup will be added animated to the document you can style the po
 Open popin : custom html no template in the DOM
 
 ~~~~
-var popin = new MetaPopin('youtube', '<iframe width="315" height="315" src="//www.youtube.com/embed/W45FXXDF"></iframe>');
+var popin = new rocket.popin('youtube', '<iframe width="315" height="315" src="//www.youtube.com/embed/W45FXXDF"></iframe>');
 ~~~~
     
 Generate popin : template already in the DOM, id in context
 
 ~~~~
-var popin = new MetaPopin('youtube', false, {youtube_id:'W45FXXDF'});
+var popin = new rocket.popin('youtube', false, {youtube_id:'W45FXXDF'});
 ~~~~
     
 Generate popin : template already in the DOM, id in context, do not remove on clode
 
 ~~~~
-var popin = new MetaPopin('youtube', false, {youtube_id:'W45FXXDF', remove:false});
+var popin = new rocket.popin('youtube', false, {youtube_id:'W45FXXDF', remove:false});
 ~~~~
      
 Public function

@@ -20,6 +20,6 @@
 }
 
 
-@if( index($libraries, 'timeline') ){
+@if( variable-exists(libraries) and index($libraries, 'timeline') ){
   @include lib-timeline;
 }

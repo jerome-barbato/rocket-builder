@@ -9,6 +9,6 @@
 }
 
 
-@if( index($libraries, 'align') ){
+@if( variable-exists(libraries) and index($libraries, 'align') ){
   @include lib-align;
 }

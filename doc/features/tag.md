@@ -9,9 +9,11 @@ Simple google analytics tag management system
 ~~~~
 
 ### Javascript
+
 ~~~~
-meta.tag.event( 'category', 'action', 'label' );
+rocket.tag.event( 'category', 'action', 'label' );
 ~~~~
+
 ~~~~
-meta.tag.page( 'http://www.test.fr' );
+rocket.tag.page( 'http://www.test.fr' );
 ~~~~

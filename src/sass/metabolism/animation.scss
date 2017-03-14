@@ -15,22 +15,30 @@ $animation-reveal-color : #eee !default;
     }
   }
 
+  span[data-animation]{ display: inline-block }
+
   [data-animation="reveal"]{
-    position: relative; display: inline-block;
-    &:after{
-      display: block; position: overlay(); z-index: 1;
-      background: $animation-reveal-color; content: ''; animation: appear-left $ease-in-out-cubic $animation-duration both
+    position: relative;
+    &:before{
+      display: block; position: overlay(); z-index: 1; will-change: opacity, transform;
+      background: $animation-reveal-color; content: ''; animation: appear $ease-in-out-cubic $animation-duration both
     }
-    > *{ display: inline-block; animation: fade-in-half $animation-duration steps(1,end) both; line-height: 100% }
+    > *{ animation: fade-in-half $animation-duration steps(1,end) both; height: 100%; will-change: opacity }
+    > span{ display: inline-block; line-height: 100% }
     > img{ display: block }
-    > *, &:after{ animation-delay: inherit }
-    &[data-activation="wait"]{ > *, &:after{ animation-play-state: paused!important }}
-    &[data-activation="rewind"]{
-      > *{ animation-name: fade-out-half }
-      &:after{ animation-name: disappear-left }
+    > *, &:before{ animation-delay: inherit }
+    &[data-activation], [data-activation] &{
+      > *, &:before{ animation-play-state: paused!important }
     }
-    &[data-direction="right"]:after{ animation-name: appear-right }
-    &[data-direction="right"][data-activation="rewind"]:after{ animation-name: disappear-right }
+    &[data-activation="play"], [data-activation="play"] &,
+    &[data-activation="rewind"], [data-activation="rewind"] &,
+    &[data-activation="played"], [data-activation="played"] &{
+      > *, &:before{ animation-play-state: running!important }
+    }
+    &[data-activation="rewind"], [data-activation="rewind"] &{
+      > *{ animation-name: fade-out-half }
+      &:before{ animation-name: disappear }
+    }
   }
 
   @for $i from 0 through $animation-delay-values{
@@ -42,7 +50,8 @@ $animation-reveal-color : #eee !default;
   }
 }
 
+$animations : false !default;
 
-@if( index($libraries, 'animation') ){
+@if( variable-exists(libraries) and index($libraries, 'animation') and $animations ){
   @include lib-animation;
 }

@@ -17,13 +17,3 @@ Add a placeholder
    <option value="1">Element</option>
 </select>
 ~~~~
-
-Append the custom code to the parent element, else append it to the body
-
-~~~~
-<div class="ui-front">
-    <select placeholder="Select an element">
-       <option value="1">Element</option>
-    </select>
-</div>
-~~~~

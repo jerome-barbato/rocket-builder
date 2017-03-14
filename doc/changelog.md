@@ -4,7 +4,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-=======
+
+## 3.3.6 - 2017-03-10 ##
+### Fixed
+- animation on span
+- check for $libraires variable existance globally
+- more default variables
+### Added
+- $space variable, $grid-default-space use $space as default
+
+## 3.3.5 - 2017-03-09 ##
+### Fixed
+- animations
+- map object
+
+## 3.3.4 - 2017-03-08 ##
+### Fixed
+- reveal animation
+
+## 3.3.3 - 2017-03-07 ##
+### Changed
+- libs are now encapsulated in anonymous function with jQuery as parameter
+### Fixed
+- bugfix in scroll-to
+
+## 3.3.2 - 2017-03-06 ##
+### Added
+- reveal animation
+### Fixed
+- custom select width
+## 3.3.1 - 2017-03-02 ##
+### Changed
+- toogle now support list based component
+### Updated
+- no more has-fit-object on data-object_fit item
+### Fixed
+- li tag escape in the compiler
 
 ## 3.4.0 - IN-DEV ##
 ### Added
@@ -28,6 +63,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - jQuery.touchSwipe to 1.6.18
 ### Fixed
 - minor bugfix for most library
+
+## 3.2.13 - 2017-02-14 ##
+### Fixed
+- UX Defer now wait for window load ^^
+### Added
+- Map find nearest points + cluster optimisations
+
+## 3.2.12 - 2017-02-09 ##
+### Fixed
+- Fix slider animation
+
+## 3.2.11 - 2017-02-09 ##
+### Fixed
+- Fix slider issue
 
 ## 3.2.10 - 2017-02-01 ##
 ### Fixed

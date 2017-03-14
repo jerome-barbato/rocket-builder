@@ -31,6 +31,6 @@
 }
 
 
-@if( index($libraries, 'popin') ){
+@if( variable-exists(libraries) and index($libraries, 'popin') ){
   @include lib-popin;
 }

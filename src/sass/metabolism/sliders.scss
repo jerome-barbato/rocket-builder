@@ -148,6 +148,6 @@
 }
 
 
-@if( index($libraries, 'sliders') ){
+@if( variable-exists(libraries) and index($libraries, 'sliders') ){
   @include lib-sliders;
 }

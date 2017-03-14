@@ -1,8 +1,8 @@
 //add SrcSet support ( mostly for IE9-10-11 )
 
-(function(){
+(function($){
 
-    if(window.jQuery && window.Modernizr && !Modernizr.srcset ) {
+    if(window.Modernizr && !Modernizr.srcset ) {
 
         var chooseSrc = function($element, srcsets){
 
@@ -45,5 +45,5 @@
             });
         });
     }
-})();
+})(jQuery);
 

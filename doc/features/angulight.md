@@ -5,6 +5,7 @@
 ### Call function on init without parameter
 
 push-data.phtml.twig
+
 ~~~~
 <div class="push-data" controller="data">
     <a class="element"></a>
