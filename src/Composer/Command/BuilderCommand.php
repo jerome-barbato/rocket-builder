@@ -9,11 +9,21 @@ namespace Rocket\Composer\Command;
 use Composer\Command\BaseCommand;
 use Composer\Composer;
 
+/**
+ * Class BuilderCommand
+ *
+ * @package Rocket\Composer\Command
+ */
 class BuilderCommand extends BaseCommand
 {
 
     protected $pkg_path;
 
+    /**
+     * BuilderCommand constructor.
+     *
+     * @param null $name
+     */
     public function __construct($name = null) { parent::__construct( $name );
         $this->pkg_path = getcwd() . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'metabolism'. DIRECTORY_SEPARATOR .'rocket-builder' . DIRECTORY_SEPARATOR;
     }

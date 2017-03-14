@@ -1,10 +1,10 @@
-$space : 0 !default;
-$grid-default-space : $space !default;
+$space: 0 !default;
+$grid-default-space: $space !default;
 
 $grid-margin : 0 $grid-default-space !default;
 $grid-col-padding : 0 $grid-default-space !default;
 $grid-row-margin : $grid-default-space*2 !default;
-$grid-row-padding : false !default;
+$grid-row-padding: false !default;
 
 //$grid-breakpoints : desktop, wide, 13inch, tablet, tablet-portrait, mobile;
 $grid-breakpoints : false !default;
@@ -119,6 +119,6 @@ $grid-col-count : 12 !default;
 
 @mixin break-grid() { width: 100%; float: none }
 
-@if( variable-exists(libraries) and  index($libraries, 'grid') ) {
+@if (variable-exists(libraries) and  index($libraries, 'grid')) {
   @include lib-grid
 }

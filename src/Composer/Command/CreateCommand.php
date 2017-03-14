@@ -11,8 +11,16 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateCommand extends BuildCommand
+/**
+ * Class CreateCommand
+ *
+ * @package Rocket\Composer\Command
+ */
+class CreateCommand extends BuilderCommand
 {
+    /**
+     * Command declaration
+     */
     protected function configure()
     {
         $this->setName('create');
@@ -23,6 +31,12 @@ EOT
         );
     }
 
+    /**
+     * Command execution
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $args = $input->getArgument('module');

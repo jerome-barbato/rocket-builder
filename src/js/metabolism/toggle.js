@@ -16,42 +16,37 @@
  *   - jQuery
  *
  **/
-(function($){
+(function ($) {
 
-    var Toggle = function(config) {
+    var Toggle = function (config) {
 
         var self = this;
 
         self.context = {
-            $toggles : false,
-            $tabs    : false,
-            disable  : false
+            $toggles: false,
+            $tabs   : false,
+            disable : false
         };
 
         self.config = {
-            $element   : false,
-            auto_close : false,
-            open_first : false,
-            animate    : true,
-            type       : 'link',
-            speed      : 300,
-            easing     : 'easeInOutCubic'
+            $element  : false,
+            auto_close: false,
+            open_first: false,
+            animate   : true,
+            type      : 'link',
+            speed     : 300,
+            easing    : 'easeInOutCubic'
         };
 
 
-        self._setupEvents = function()
-        {
-            self.context.$toggles.on('click keypress', function(e)
-            {
-                if (e.which === 13 || e.type === 'click')
-                {
-                    self.toggle(  self.context.$toggles.index( $(this) ) );
+        self._setupEvents = function () {
+            self.context.$toggles.on('click keypress', function (e) {
+                if (e.which === 13 || e.type === 'click') {
+                    self.toggle(self.context.$toggles.index($(this)));
 
-                    if( self.config.auto_close )
-                    {
-                        self.context.$toggles.not( $(this) ).each(function()
-                        {
-                            self.close( self.context.$toggles.index( $(this) ) );
+                    if (self.config.auto_close) {
+                        self.context.$toggles.not($(this)).each(function () {
+                            self.close(self.context.$toggles.index($(this)));
                         });
                     }
                 }
@@ -59,90 +54,101 @@
         };
 
 
-        self.close = function( index, animate ){
+        self.close = function (index, animate) {
 
-            var $tab = self.context.$tabs.eq(index);
+            var $tab    = self.context.$tabs.eq(index);
             var $toggle = self.context.$toggles.eq(index);
 
-            if( !$tab.length )
+            if (!$tab.length) {
                 return;
+            }
 
             $tab.removeClass('active');
             $toggle.removeClass('active');
 
-            if( typeof animate !='undefined' ? animate : self.config.animate )
-            {
-                $tab.stop().slideUp(self.config.speed, self.config.easing, function()
-                {
-                    $(document).trigger('meta-toggle.updated', ['close', $tab])
+            if (typeof animate != 'undefined' ? animate : self.config.animate) {
+                $tab.stop().slideUp(self.config.speed, self.config.easing, function () {
+                    $(document)
+                        .trigger('meta-toggle.updated', [
+                            'close',
+                            $tab
+                        ])
                 });
             }
-            else
-            {
+            else {
                 $tab.hide();
-                $(document).trigger('meta-toggle.updated', ['close', $tab]);
+                $(document)
+                    .trigger('meta-toggle.updated', [
+                        'close',
+                        $tab
+                    ]);
             }
         };
 
 
-        self.toggle = function( index, animate )
-        {
+        self.toggle = function (index, animate) {
             var $tab = self.context.$tabs.eq(index);
 
-            if( !$tab.length )
+            if (!$tab.length) {
                 return;
+            }
 
-            if( $tab.is(':visible') )
+            if ($tab.is(':visible')) {
                 self.close(index, animate);
-            else
+            } else {
                 self.open(index, animate);
+            }
         };
 
 
-        self.open = function( index, animate )
-        {
-            var $tab = self.context.$tabs.eq(index);
+        self.open = function (index, animate) {
+            var $tab    = self.context.$tabs.eq(index);
             var $toggle = self.context.$toggles.eq(index);
 
-            if( !$tab.length )
+            if (!$tab.length) {
                 return;
+            }
 
             $tab.addClass('active');
             $toggle.addClass('active');
 
-            if( typeof animate !='undefined' ? animate : self.config.animate )
-            {
+            if (typeof animate != 'undefined' ? animate : self.config.animate) {
                 $tab.stop().slideDown(self.config.speed, self.config.easing);
-                $(document).trigger('meta-toggle.updated', ['open', $tab]);
+                $(document)
+                    .trigger('meta-toggle.updated', [
+                        'open',
+                        $tab
+                    ]);
             }
-            else
-            {
+            else {
                 $tab.show();
-                $(document).trigger('meta-toggle.updated', ['close', $tab]);
+                $(document)
+                    .trigger('meta-toggle.updated', [
+                        'close',
+                        $tab
+                    ]);
             }
         };
 
 
-        self._getElements = function()
-        {
+        self._getElements = function () {
             var $toggles = self.config.$element.find(self.config.type == 'link' ? '[href^="#"]' : 'li > a');
 
             self.context.$tabs = $();
             self.context.$toggles = $();
 
-            $toggles.each(function()
-            {
+            $toggles.each(function () {
                 var $tab = false;
 
-                if( self.config.type == 'link' )
+                if (self.config.type == 'link') {
                     $tab = self.config.$element.find($(this).attr('href'));
-                else
+                } else {
                     $tab = $(this).next('ul');
+                }
 
-                if( $tab && $tab.length )
-                {
-                    self.context.$toggles = self.context.$toggles.add( $(this) );
-                    self.context.$tabs = self.context.$tabs.add( $tab );
+                if ($tab && $tab.length) {
+                    self.context.$toggles = self.context.$toggles.add($(this));
+                    self.context.$tabs    = self.context.$tabs.add($tab);
                 }
             });
 
@@ -155,14 +161,14 @@
         /**
          *
          */
-        self.__construct = function(config)
-        {
+        self.__construct = function (config) {
             self.config = $.extend(self.config, config);
 
             self._getElements();
 
-            if( self.config.open_first )
-                self.open( self.context.$tabs.first(), false );
+            if (self.config.open_first) {
+                self.open(self.context.$tabs.first(), false);
+            }
 
             self._setupEvents();
         };
@@ -172,20 +178,17 @@
     };
 
 
-    var Toggles = function() {
+    var Toggles = function () {
 
         var self = this;
 
-        self.add = function( $toggle )
-        {
+        self.add = function ($toggle) {
             var context = {};
 
-            if( $toggle.data('context') )
-            {
-                try { context = JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') } catch(e) {}
+            if ($toggle.data('context')) {
+                try { context = JSON.parse('{' + $toggle.data('context').replace(/'/g, '"') + '}') } catch (e) {}
             }
-            else
-            {
+            else {
                 context = $toggle.data();
             }
 
@@ -198,22 +201,18 @@
 
         /* Constructor. */
 
-        self.__construct = function()
-        {
-            $('[data-toggle]').initialize(function()
-            {
-                self.add( $(this) );
+        self.__construct = function () {
+            $('[data-toggle]').initialize(function () {
+                self.add($(this));
             });
         };
 
 
-        if( typeof dom !== 'undefined' )
-        {
-            dom.compiler.register('attribute', 'toggles', function(elem, attrs)
-            {
-                elem.attr('data-toggle', attrs.toggles.length ? attrs.toggles: 'link');
+        if (typeof dom !== 'undefined') {
+            dom.compiler.register('attribute', 'toggles', function (elem, attrs) {
+                elem.attr('data-toggle', attrs.toggles.length ? attrs.toggles : 'link');
 
-            },self.add);
+            }, self.add);
         }
 
 
@@ -222,7 +221,7 @@
 
     new Toggles();
 
-    rocket = typeof rocket == 'undefined' ? {} : rocket;
+    rocket        = typeof rocket == 'undefined' ? {} : rocket;
     rocket.toggle = Toggle;
 
 })(jQuery);

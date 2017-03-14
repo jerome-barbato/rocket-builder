@@ -14,57 +14,53 @@
  *   - jQuery
  *
  **/
-(function($){
+(function ($) {
 
-    var Defer = function()
-    {
+    var Defer = function () {
         var self = this;
 
         self.resizeTimeout = false;
 
-        self.resize = function()
-        {
+        self.resize = function () {
             clearTimeout(self.resizeTimeout);
-            self.resizeTimeout = setTimeout(function(){ $(window).resize() }, 100);
+            self.resizeTimeout = setTimeout(function () { $(window).resize() }, 100);
         };
 
 
-        $(window).on('load', function()
-        {
-            $('[data-defer]').initialize(function()
-            {
+        $(window).on('load', function () {
+            $('[data-defer]').initialize(function () {
                 var $element = $(this);
 
                 $element
                     .on('load', self.resize)
-                    .attr('src', $element.data('defer') )
+                    .attr('src', $element.data('defer'))
                     .removeAttr('data-defer');
 
-                if( $.fn.fit )
+                if ($.fn.fit) {
                     $element.fit(true);
+                }
             });
         });
 
-        if( typeof dom !== 'undefined' )
-        {
-            dom.compiler.register('attribute', 'defer', function(elem, attrs)
-            {
-                if( elem.is('img') )
-                {
-                    if( window.precompile ){
+        if (typeof dom !== 'undefined') {
+            dom.compiler.register('attribute', 'defer', function (elem, attrs) {
+                if (elem.is('img')) {
+                    if (window.precompile) {
 
-                        if( typeof elem.attr('src') == 'undefined' )
+                        if (typeof elem.attr('src') == 'undefined') {
                             elem.attr('src', "{{ blank() }}");
+                        }
                     }
 
-                    if( attrs.defer )
+                    if (attrs.defer) {
                         dom.compiler.attr(elem, 'defer', attrs.defer);
+                    }
                 }
             });
         }
     };
 
-    rocket = typeof rocket == 'undefined' ? {} : rocket;
+    rocket       = typeof rocket == 'undefined' ? {} : rocket;
     rocket.defer = new Defer();
 
 })(jQuery);

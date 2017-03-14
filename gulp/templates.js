@@ -46,7 +46,14 @@ function compile(file, scripts, callback) {
     }
     else {
 
-        var escape_tags = ['template','table','tr','td','ul','li'];
+        var escape_tags = [
+            'template',
+            'table',
+            'tr',
+            'td',
+            'ul',
+            'li'
+        ];
 
         for(var i in escape_tags){
 
@@ -64,7 +71,7 @@ function compile(file, scripts, callback) {
 
                 window.precompile = true;
                 window.engine     = engine;
-                window.app        = false;
+                window.app = false;
 
                 var $body = window.$('body');
 
@@ -72,12 +79,12 @@ function compile(file, scripts, callback) {
 
                 html = $body.html();
 
-                for(var i in escape_tags){
+                for (var i in escape_tags) {
 
                     var escape_tag = escape_tags[i];
-                    html = html.split('<x'+escape_tag+' ').join('<'+escape_tag+' ');
-                    html = html.split('<x'+escape_tag+'>').join('<'+escape_tag+'>');
-                    html = html.split('</x'+escape_tag+'>').join('</'+escape_tag+'>');
+                    html = html.split('<x' + escape_tag + ' ').join('<' + escape_tag + ' ');
+                    html = html.split('<x' + escape_tag + '>').join('<' + escape_tag + '>');
+                    html = html.split('</x' + escape_tag + '>').join('</' + escape_tag + '>');
                 }
 
                 html = html.replace(/<template /g, '<script type="text/template" ').replace(/<\/template>/g, '</script>');

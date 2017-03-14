@@ -17,7 +17,6 @@
     }
 }
 
-
-@if( variable-exists(libraries) and index($libraries, 'hide') ){
+@if (variable-exists(libraries) and index($libraries, 'hide')) {
   @include lib-hide;
 }

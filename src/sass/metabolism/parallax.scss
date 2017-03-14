@@ -5,7 +5,6 @@
   span[data-parallax]{ display: inline-block }
 }
 
-
-@if( variable-exists(libraries) and index($libraries, 'parallax') ){
+@if (variable-exists(libraries) and index($libraries, 'parallax')) {
   @include lib-parallax;
 }

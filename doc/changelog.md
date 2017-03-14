@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.4.0 - 2013-03-14
+### Added
+- Branch aliases for composer, instead of using `dev-dev` tag in composer, you can now use `3.4.0@dev`
+### Changed
+- Composer Commands
+  - `composer create` and `composer build` are now added to this project and can be used anywhere if installing from composer.
+  - Symlinks creation is also moved into this project from boilerplate.
 
 ## 3.3.6 - 2017-03-10 ##
 ### Fixed

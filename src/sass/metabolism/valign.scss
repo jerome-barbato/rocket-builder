@@ -13,7 +13,6 @@
   }
 }
 
-
-@if( variable-exists(libraries) and index($libraries, 'valign') ){
+@if (variable-exists(libraries) and index($libraries, 'valign')) {
   @include lib-valign;
 }

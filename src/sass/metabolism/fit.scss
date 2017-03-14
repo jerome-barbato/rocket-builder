@@ -1,7 +1,10 @@
 @mixin lib-fit{
 
   .no-object-fit{
-    .has-object-fit{ overflow: hidden; position: relative }
+    .has-object-fit {
+      overflow: hidden;
+      position: relative
+    }
     [data-object_fit]{
       position: absolute; visibility: hidden;
       &[style]{ visibility: visible}
@@ -37,7 +40,6 @@
   [data-object_position="right bottom"]{ object-position: right bottom }
 }
 
-
-@if( variable-exists(libraries) and index($libraries, 'fit') ){
+@if (variable-exists(libraries) and index($libraries, 'fit')) {
   @include lib-fit;
 }

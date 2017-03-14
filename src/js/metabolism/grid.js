@@ -13,12 +13,19 @@
  *
  **/
 
-(function($){
+(function ($) {
 
-    if( typeof dom == 'undefined' )
+    if (typeof dom == 'undefined') {
         return;
+    }
 
-    var grid_breakpoints = ['tablet', 'mobile-portrait', 'mobile', 'wide', '13inch'];
+    var grid_breakpoints = [
+        'tablet',
+        'mobile-portrait',
+        'mobile',
+        'wide',
+        '13inch'
+    ];
 
     dom.compiler.register('attribute', 'grid', function(elem, attrs) {
 
@@ -42,13 +49,13 @@
             elem.removeAttr('offset-by');
         }
 
-        $.each(grid_breakpoints, function(i, media){
+        $.each(grid_breakpoints, function (i, media) {
 
             media = media.charAt(0).toUpperCase() + media.slice(1);
-            if( attrs['col'+media] ){
+            if (attrs['col' + media]) {
 
-                elem.attr('data-col-'+media, attrs['size'+media]);
-                elem.removeAttr('col-'+media);
+                elem.attr('data-col-' + media, attrs['size' + media]);
+                elem.removeAttr('col-' + media);
             }
         });
     });
@@ -91,7 +98,7 @@
             elem.removeAttr('offset-by');
         }
 
-        $.each(grid_breakpoints, function(i, media){
+        $.each(grid_breakpoints, function (i, media) {
 
             media = media.charAt(0).toUpperCase() + media.slice(1);
             if (attrs['size' + media]) {

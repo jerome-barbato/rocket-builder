@@ -17,44 +17,44 @@
  *
  **/
 
-(function($){
+(function ($) {
 
-    var Bind = function() {
+    var Bind = function () {
 
         var self = this;
 
         self.context = {
-            $elements : []
+            $elements: []
         };
 
-        self.config = {
-        };
+        self.config = {};
 
 
-        self.add = function($element)
-        {
-            var type = $element.data('bind');
-            var id   = $element.attr('href');
+        self.add = function ($element) {
+            var type    = $element.data('bind');
+            var id      = $element.attr('href');
             var $target = $(id);
 
-            if( !$target.length )
+            if (!$target.length) {
                 return;
+            }
 
-            if( type == 'click' )
+            if (type == 'click') {
                 self._handleClick(id, $element, $target);
-            else if( type == 'hover' )
+            } else if (type == 'hover') {
                 self._handleHover(id, $element, $target);
+            }
         };
 
 
-        self._handleHover = function(id, $element, $target){
+        self._handleHover = function (id, $element, $target) {
 
             $element.add($target).hover(function () {
 
                     $element.addClass('active');
                     $target.addClass('active');
                 },
-                function(){
+                function () {
 
                     $element.removeClass('active');
                     $target.removeClass('active');
@@ -62,22 +62,19 @@
         };
 
 
-        self._handleClick = function(id, $element, $target){
+        self._handleClick = function (id, $element, $target) {
 
-            $element.click(function(e)
-            {
+            $element.click(function (e) {
                 e.preventDefault();
 
                 $element.toggleClass('active');
                 $target.toggleClass('active');
             });
 
-            $(document).click(function(e)
-            {
+            $(document).click(function (e) {
                 var $click_target = $(e.target);
 
-                if( $element.hasClass('active') && !$click_target.closest(id+', [href="'+id+'"]').length )
-                {
+                if ($element.hasClass('active') && !$click_target.closest(id + ', [href="' + id + '"]').length) {
                     $element.removeClass('active');
                     $target.removeClass('active');
                 }
@@ -87,19 +84,15 @@
 
         /* Constructor. */
 
-        self.__construct = function()
-        {
-            $('[data-bind]').initialize(function()
-            {
-                self.add( $(this) );
+        self.__construct = function () {
+            $('[data-bind]').initialize(function () {
+                self.add($(this));
             });
         };
 
 
-        if( typeof dom !== 'undefined' )
-        {
-            dom.compiler.register('attribute', 'bind', function(elem, attrs)
-            {
+        if (typeof dom !== 'undefined') {
+            dom.compiler.register('attribute', 'bind', function (elem, attrs) {
                 elem.attr('data-bind', attrs.bind);
 
             }, self.add);
@@ -109,7 +102,7 @@
         self.__construct();
     };
 
-    rocket = typeof rocket == 'undefined' ? {} : rocket;
+    rocket      = typeof rocket == 'undefined' ? {} : rocket;
     rocket.bind = new Bind();
 
 })(jQuery);
