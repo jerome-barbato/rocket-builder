@@ -24,7 +24,10 @@ class BuilderCommand extends BaseCommand
      *
      * @param null $name
      */
-    public function __construct($name = null) { parent::__construct( $name );
+    public function __construct($name = null)
+    {
+        parent::__construct( $name );
+
         $this->pkg_path = getcwd() . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'metabolism'. DIRECTORY_SEPARATOR .'rocket-builder' . DIRECTORY_SEPARATOR;
     }
 
@@ -33,14 +36,18 @@ class BuilderCommand extends BaseCommand
      */
     protected function installNodeModules()
     {
-        if ( is_dir( $this->pkg_path ) ) {
+        if ( is_dir( $this->pkg_path ) )
+        {
             $this->getIO()->write( '  Installing node modules...' );
             chdir( $this->pkg_path );
 
-            if ( is_dir( 'node_modules' ) ) {
+            //todo: check if yarn is installed else use npm
+            if ( is_dir( 'node_modules' ) )
+            {
                 passthru( "yarn upgrade --production" );
             }
-            else {
+            else
+            {
                 passthru( "yarn install --production" );
             }
         }

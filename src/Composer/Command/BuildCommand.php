@@ -43,14 +43,14 @@ EOT
     {
         $output->writeln("<comment>Starting building...</comment>");
 
-        if ( is_dir( $this->pkg_path ) ) {
-
+        if ( is_dir( $this->pkg_path ) )
+        {
             chdir( $this->pkg_path );
 
             $options = $input->getOption('production') ? '-p' : '';
 
-            if ( !is_dir( 'node_modules' ) ) {
-
+            if ( !is_dir( 'node_modules' ) )
+            {
                 $output->writeln("<comment>Node modules installation...</comment>");
                 $this->installNodeModules();
             }

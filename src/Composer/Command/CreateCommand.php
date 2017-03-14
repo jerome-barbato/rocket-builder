@@ -41,22 +41,23 @@ EOT
     {
         $args = $input->getArgument('module');
 
-        if ( is_dir( $this->pkg_path ) ) {
+        if ( is_dir( $this->pkg_path ) )
+        {
             chdir( $this->pkg_path );
 
-            if ( !is_dir( 'node_modules' ) ) {
-
+            if ( !is_dir( 'node_modules' ) )
+            {
                 $output->writeln("<comment>Node modules installation...</comment>");
                 $this->installNodeModules();
             }
 
-            if ( count( $args ) > 1 ) {
-
+            if ( count( $args ) > 1 )
+            {
                 $type = $args[0];
                 array_shift( $args );
 
-                foreach ( $args as $arg ) {
-
+                foreach ( $args as $arg )
+                {
                     $output->writeln("<comment>Creating " . $type . " " . $arg . "...</comment>");
                     passthru( "gulp create --" . $type . " " . $arg . "  --color=always" );
                 }
