@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## 3.3.7 - 2017-03-15 ##
+### Fixed
+- Map marker hover error
+### Changed
+- map events
+
 ## 3.3.6 - 2017-03-10 ##
 ### Fixed
 - animation on span

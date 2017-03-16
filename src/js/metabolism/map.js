@@ -34,7 +34,8 @@
                 hover_url : app.asset+'/media/icon/marker--hover@2x.png',
                 width     : 45,
                 height    : 65,
-                label     : true
+                label_origin : 'center',
+                label: false
             },
             overlay : {
                 html       : '',
@@ -54,14 +55,21 @@
                 panControl        : false,
                 streetViewControl : true,
                 styles            : []
-            }
+            },
+            cluster : {
+                classname: 'map-cluster',
+                size: 200,
+                x: 0,
+                y: 0
+            },
+            click_to_use : false
         };
 
         self.context = {
             cluster  : false,
             markers  : [],
             marker   : false,
-            overlays : [],
+            selected_marker: false,
             map      : false,
             gmap     : false
         };
@@ -104,13 +112,13 @@
 
             if( typeof google != 'undefined' && 'maps' in google ){
 
-                self.init($map, callback);
+                self._init($map, callback);
             }
             else{
 
                 $(document).on('google.maps.initialized', function () {
 
-                    self.init($map, callback);
+                    self._init($map, callback);
                 });
             }
         };
@@ -120,36 +128,39 @@
         /**
          *
          */
-        self.init = function( $map, callback ) {
-
+        self._init = function( $map, callback )
+        {
             self.config.map.mapTypeId = google.maps.MapTypeId[self.config.map.mapTypeId];
 
-            self.config.marker_hover = {
-                url         : self.config.marker.hover_url,
-                scaledSize  : new google.maps.Size(self.config.marker.width, self.config.marker.height),
-                anchor      : new google.maps.Point(self.config.marker.width/2, self.config.marker.height),
-                labelOrigin : new google.maps.Point(self.config.marker.width/2, self.config.marker.height*0.65)
-            };
-
-            self.config.marker = {
+            self.context.marker = {
                 url         : self.config.marker.url,
                 scaledSize  : new google.maps.Size(self.config.marker.width, self.config.marker.height),
                 anchor      : new google.maps.Point(self.config.marker.width/2, self.config.marker.height),
                 labelOrigin : new google.maps.Point(self.config.marker.width/2, self.config.marker.height*0.65)
             };
 
-            self.context.$map = $map;
-
-            if( !browser.mobile )
+            if( self.config.marker.label_origin )
             {
-                var $loader = $('<div class="meta-map-loader"><div class="valign"><div class="valign__middle">Click to use the map</div></div></div>');
-
-                $map.append($loader, false);
-                $loader.click(function () { $loader.hide() });
+                if( self.config.marker.label_origin == 'top' )
+                    self.context.marker.labelOrigin = new google.maps.Point(self.config.marker.width/2, -20);
+                else if( self.config.marker.label_origin == 'bottom' )
+                    self.context.marker.labelOrigin = new google.maps.Point(self.config.marker.width/2, self.config.marker.height+10);
             }
 
-            self.context.gmap = $map.gmap3(self.config.map).then(function (result) {
+            self.context.$map = $map;
 
+            if( !browser.mobile && self.config.click_to_use )
+            {
+                var $prevent = $('<div class="map-prevent"><div class="valign"><div class="valign__middle">Click to use the map</div></div></div>');
+
+                $map.append($loader, false);
+                $prevent.click(function () { $prevent.fadeOut(300) });
+            }
+
+            self.context.gmap = $map.gmap3(self.config.map);
+
+            self.context.gmap.then(function ()
+            {
                 self.context.map = this.get(0);
 
                 google.maps.event.addListener(self.context.map, 'zoom_changed', function() {
@@ -158,6 +169,19 @@
                     self.context.$map.trigger('map.zoom',[self.context.map, zoomLevel]);
                 });
 
+                google.maps.event.addListener(self.context.map, 'bounds_changed', function() {
+
+                    self.context.$map.trigger('map.bounds_changed', [self.context.map]);
+                    setTimeout(self.updateLabel, 50);
+                });
+
+                google.maps.event.addListener(self.context.map, 'idle', function() {
+
+                    self.context.$map.trigger('map.idle', [self.context.map]);
+                    setTimeout(self.updateLabel, 50);
+                });
+
+
                 self.context.init = true;
 
                 if( callback )
@@ -165,6 +189,11 @@
             });
         };
 
+
+        self.updateLabel = function()
+        {
+            $map.find("[style*='custom-label']").addClass('map-label').removeAttr('style');
+        };
 
 
         /**
@@ -220,7 +249,6 @@
                 self.context.overlay.setMap(null);
 
             self.context.overlay = false;
-            self.context.has_overlay = false;
         };
 
 
@@ -229,7 +257,7 @@
 
             if( typeof address == 'object' ){
 
-                var latLng = new google.maps.LatLng(address.coords.latitude, address.coords.longitude);
+                var latLng = new google.maps.LatLng(address.lat, address.lng);
                 self.context.map.panTo(latLng);
                 self.context.map.setZoom(zoom);
             }
@@ -250,7 +278,7 @@
         self.hightlightMarker = function(id, status){
 
             if( self.context.init && self.context.markers.length > id )
-                self.context.markers[id].setIcon( status ? self.config.marker_hover : self.config.marker);
+                self.context.markers[id].setIcon( status ? self.context.markers[id].icons.hover : self.context.markers[id].icons.normal);
         };
 
 
@@ -273,7 +301,7 @@
                 self.context.markers.push(marker);
 
                 if( typeof zoom != 'undefined')
-                    self.setPosition({coords:{latitude:marker.position.lat(),longitude:marker.position.lng()}}, zoom);
+                    self.setPosition({lat:marker.position.lat(),lng:marker.position.lng()}, zoom);
             });
         };
 
@@ -283,28 +311,49 @@
 
             var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-            $.each(markers, function(i, marker){
+            $.each(markers, function(i, marker)
+            {
+                marker.has_overlay = false;
+                marker.icon  = $.extend({}, self.context.marker);
 
-                marker.icon = $.extend({}, self.config.marker, icon ? icon(marker) : {});
+                marker.icons = {
+                    normal : $.extend({}, marker.icon),
+                    hover  : $.extend({}, marker.icon)
+                };
 
-                marker.icon_out   = $.extend({}, marker.icon);
-                marker.icon_hover = $.extend({}, marker.icon);
+                if( icon )
+                {
+                    var icon_path = icon(marker);
 
-                marker.icon_hover.url =  marker.icon.hover_url;
+                    marker.icons.normal.url = icon_path.url;
+                    marker.icons.hover.url = icon_path.hover_url;
+                    marker.icon.url = marker.icons.normal.url;
+                }
+                else
+                {
+                    marker.icons.hover.url = self.config.marker.hover_url;
+                }
 
                 if( self.config.marker.label )
                     marker.label = {text: labels[i++ % labels.length], color: 'white', fontSize:'12px'};
+
+                if( 'position' in marker && 'address' in marker )
+                {
+                    marker._address = marker.address;
+                    delete marker.address;
+                }
             });
 
-            if( 'cluster' in self.config ) {
 
+            if( 'cluster' in self.config && self.config.cluster )
+            {
                 self.context.gmap.cluster({
                     size: self.config.cluster.size,
                     markers: markers,
                     cb: function (markers) {
                         if (markers.length > 1) {
                             return {
-                                content: '<div class="'+self.config.cluster.class+'"><span>' + markers.length + '</span></div>',
+                                content: '<div class="'+self.config.cluster.classname+'"><span>' + markers.length + '</span></div>',
                                 x: self.config.cluster.x,
                                 y: self.config.cluster.y
                             };
@@ -315,14 +364,22 @@
 
                     self.context.markers = [];
                     self.context.cluster = cluster;
+                    setTimeout(self.updateLabel, 50);
+
+                }).on({
+                    click: function(marker, clusterOverlay, cluster, event){
+
+                        if (clusterOverlay)
+                            clusterOverlay.overlay.getMap().fitBounds(clusterOverlay.overlay.getBounds());
+                    }
                 });
             }
-            else{
-
-                self.context.gmap.marker(markers).then(function(markers){
-
+            else
+            {
+                self.context.gmap.marker(markers).then(function(markers)
+                {
                     self.context.markers = self.context.markers.concat(markers);
-
+                    setTimeout(self.updateLabel, 50);
                 });
             }
 
@@ -333,18 +390,18 @@
                     if( typeof marker == 'undefined')
                         return;
 
-                    marker.setIcon(marker.icon_hover);
-                    self.context.$map.trigger('map.over', [self.context.map, marker.index]);
+                    marker.setIcon(marker.icons.hover);
+                    self.context.$map.trigger('marker.over', [self.context.map, marker.index]);
                 },
                 mouseout: function(marker){
 
                     if( typeof marker == 'undefined')
                         return;
 
-                    if( !self.context.has_overlay ){
-
-                        marker.setIcon(marker.icon_out);
-                        self.context.$map.trigger('map.out', [self.context.map, marker.index]);
+                    if( !marker.has_overlay )
+                    {
+                        marker.setIcon(marker.icons.normal);
+                        self.context.$map.trigger('marker.out', [self.context.map, marker.index]);
                     }
                 },
                 click: function(marker){
@@ -352,20 +409,24 @@
                     if( typeof marker == 'undefined')
                         return;
 
-                    if( self.context.marker )
-                        self.context.marker.setIcon(self.context.marker.icon_out);
+                    if( self.context.selected_marker )
+                        self.context.selected_marker.setIcon(self.context.selected_marker.icons.normal);
 
-                    self.context.marker = marker;
+                    self.context.selected_marker = marker;
 
-                    marker.setIcon(marker.icon_hover);
+                    marker.setIcon(marker.icons.hover);
 
-                    self.context.$map.trigger('map.click', [self.context.map, marker.index]);
+                    self.context.$map.trigger('marker.click', [self.context.map, marker]);
 
-                    if( !browser.phone || ('phone' in self.config.overlay && self.config.overlay.phone) ){
+                    var enable = !browser.phone || ('phone' in self.config.overlay && self.config.overlay.phone);
+                    enable = enable && (!browser.mobile || ('mobile' in self.config.overlay && self.config.overlay.mobile));
+                    enable = enable && (!browser.tablet || ('tablet' in self.config.overlay && self.config.overlay.tablet));
 
+                    if( enable )
+                    {
                         self.clearOverlay();
 
-                        self.context.has_overlay = true;
+                        marker.has_overlay = true;
 
                         var html = self.config.overlay.html;
 
@@ -380,13 +441,17 @@
                         }).then(function(overlay) {
 
                             self.context.overlay = overlay;
-                            overlay.$.find('[data-close]').click(function() {
 
-                                marker.setIcon(marker.icon_out);
-                                self.context.marker = false;
+                            self.context.$map.trigger('overlay.show', [self.context.map, marker]);
+
+                            overlay.$.find('[data-close]').click(function()
+                            {
+                                marker.setIcon(marker.icons.normal);
+                                self.context.selected_marker = false;
 
                                 self.clearOverlay();
-                                self.context.$map.trigger('map.out', [self.context.map, marker.index]);
+                                marker.has_overlay = false;
+                                self.context.$map.trigger('overlay.hide', [self.context.map, marker]);
                             });
                         });
                     }

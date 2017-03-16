@@ -18,7 +18,7 @@
     if( typeof dom == 'undefined' )
         return;
 
-    var grid_breakpoints = ['tablet', 'mobile-portrait', 'mobile', 'wide', '13inch'];
+    var grid_breakpoints = ['tablet', 'tablet-p', 'mobile-p', 'mobile', 'wide', '13inch'];
 
     dom.compiler.register('attribute', 'grid', function(elem, attrs) {
 

@@ -1,34 +1,51 @@
+#
+# Rocket Builder Configuration
+#
+# Perform specific compilation upon theme assets before it can be used by the framework.
+
+# Defines rocket-builder folders for resources.
 paths:
-  asset: /src/asset
-  public: /web/public
-  views: /web/views
+  # Resources folders with raw sources
+  asset: /app/resources
+  # Folder where all the assets will be generated
+  public: /web/static
+  # Folder where the views will be compiled
+  views: /app/views
 
-
+# Style compatibility
 style:
   browsers:
   - last 2 versions
   - iOS 9
 
-
+# Gulp scripts compilation
+# Defines which files will be included after compilation
 script:
+  # Vendors
   browser:
     - modernizr
     - browser
+
+  app:
+    - 'app/**/*'
+    - app
   vendor:
-    - shake
     - jquery:
       - jquery
       - jquery.easing
       - jquery.ui
+      - jquery.touchSwipe
+      - jquery.validate
     - polyfill:
       - jquery.utils
       - jquery.transform3d
       - jquery.initialize
       - misc
+    - gmap3
     - metabolism:
       - activation
       - angulight
-      - detect-scroll
+      - detect
       - fit
       - on-demand
       - parallax
@@ -36,8 +53,17 @@ script:
       - sliders
       - mail
       - popin
+      - toggle
+      - custom
+      - defer
+      - map
+      - router
+      - share
+      - tabs
+      - bind
+      - tag
 
-
+# Which file will be include for templating compilation
 template:
   compile: true
   vendor:
@@ -53,7 +79,7 @@ template:
       - activation
       - angulight
       - defer
-      - detect-scroll
+      - detect
       - fit
       - on-demand
       - parallax
@@ -62,4 +88,11 @@ template:
       - mail
       - grid
       - popin
+      - toggle
+      - tag
+      - custom
+      - router
+      - share
+      - tabs
+      - bind
       - tag
