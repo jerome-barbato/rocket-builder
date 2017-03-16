@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## 3.3.8 - 2017-03-15 ##
+### Fixed
+- has scrolled removed on top
+### Remove
+- hide on mobile, use hide on phone
+
 ## 3.3.7 - 2017-03-15 ##
 ### Fixed
 - Map marker hover error

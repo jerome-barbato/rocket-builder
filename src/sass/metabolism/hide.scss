@@ -8,10 +8,6 @@
       [data-hide_on*="tablet"]{ display: none }
     }
 
-    @media #{$media-tablet} {
-      [data-hide_on*="mobile"]{ display: none }
-    }
-
     @media #{$media-mobile} {
       [data-hide_on*="phone"]{ display: none }
     }
