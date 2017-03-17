@@ -246,7 +246,6 @@
 
             self.context.$window
                 .resize(self._computeOffset)
-                .scroll(self._preload)
                 .scroll(self._checkVisibility);
 
             $(document).on('loaded', self._computeOffset);
@@ -296,6 +295,9 @@
                 self._autoplay();
 
             self.context.is_visible = is_visible;
+
+            self._preload();
+            self._autoplay();
         };
 
 
@@ -402,13 +404,7 @@
             if( self.context.$next_slide )
                 self._addMod(self.context.$next_slide, 'slide', 'next');
 
-            if( window.jQuery.fn.fit )
-            {
-                self.context.$current_slide.find('[data-object_fit]').fit();
-
-                if( self.context.$next_slide )
-                    self.context.$next_slide.find('[data-object_fit]').fit();
-            }
+            self.context.$window.resize();
 
             self._animate(animate, function()
             {

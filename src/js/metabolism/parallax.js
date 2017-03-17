@@ -150,7 +150,7 @@
          */
         self.__construct = function() {
 
-            if( (browser && browser.mobile && !self.config.mobile) || typeof requestAnimationFrame == 'undefined' )
+            if( (browser && browser.mobile && !self.config.mobile) || typeof requestAnimationFrame == 'undefined' || $('html').hasClass('ie') )
                 return;
 
             self._setupEvents();

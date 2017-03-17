@@ -1,7 +1,7 @@
 @mixin lib-fit{
 
-  .no-object-fit{
-    .has-object-fit{ overflow: hidden; position: relative }
+  .has-object-fit{
+    overflow: hidden; position: relative;
     [data-object_fit]{
       position: absolute; visibility: hidden;
       &[style]{ visibility: visible}

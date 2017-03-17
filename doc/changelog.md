@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## 3.3.9 - 2017-03-17 ##
+### Fixed
+- IE Fit bug
+- no more autoplay while scrolling on slider
+### Remove
+- parallax on IE
+
 ## 3.3.8 - 2017-03-15 ##
 ### Fixed
 - has scrolled removed on top
