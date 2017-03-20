@@ -17,7 +17,7 @@ $grid-col-count : 12 !default;
 
   [data-grid], %grid {
     display: block; @include clearfix();
-    @if variable-exists(grid-margin) { & + & { margin: $grid-margin } }
+    @if ($grid-margin) { & + & { margin: $grid-margin } }
   }
 
   @if( $grid-flex ){
@@ -64,8 +64,8 @@ $grid-col-count : 12 !default;
 
   [data-row], %row{
     @include clearfix(); display: block; position: relative;
-    @if variable-exists(grid-row-padding) { padding: $grid-row-padding }
-    @if variable-exists(grid-row-margin) { & + & { margin-top: $grid-row-margin } }
+    @if ($grid-row-padding) { padding: $grid-row-padding }
+    @if ($grid-row-margin) { & + & { margin-top: $grid-row-margin } }
   }
 
   [data-col], %column {
@@ -75,7 +75,7 @@ $grid-col-count : 12 !default;
       width: 100%; float: none;
       &:empty{ display: none }
     }
-    @if variable-exists(grid-col-padding) { padding: $grid-col-padding }
+    @if ($grid-col-padding) { padding: $grid-col-padding }
   }
 
   @for $j from 1 through $grid-col-count {
