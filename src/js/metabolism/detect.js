@@ -93,7 +93,7 @@
                     self.context.top_reached = true;
                     self.context.in_between  = self.context.bottom_reached = false;
 
-                    self.context.$body.attr('data-scroll', 'top');
+                    self.context.$body.removeClass('has-scrolled').attr('data-scroll', 'top');
                     self.context.$body.trigger('scroll.top');
                 }
             }

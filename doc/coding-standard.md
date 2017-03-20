@@ -1,4 +1,6 @@
-# Metabolism Coding Standard
+# Coding Standard
+
+`todo: add details`
 
 ## Structure
 
@@ -9,13 +11,13 @@ All related files must have the same name/class/function name
 data.phtml.twig 
 
 ~~~~
-<div block="data"></div>
+<div block="Data"></div>
 ~~~~
     
 data.scss
 
 ~~~~
-.data{}
+.Data{}
 ~~~~
     
 data.js
@@ -33,13 +35,13 @@ If the block has a parent
 push/data.phtml.twig 
 
 ~~~~
-<div block="push-data"></div>
+<div block="Push-Data"></div>
 ~~~~
     
 push/data.scss
 
 ~~~~
-.push-data{}
+.Push-Data{}
 ~~~~
     
 push/data.js
@@ -56,11 +58,11 @@ angulight.controller('push-data', function($dom){});
 String variable must use single quote, to avoid double quote escaping on html content
 
 ~~~~
-var push = '<div class="push"></div>';
+var push = '<div class="Push"></div>';
 ~~~~
     
 jQuery object variable must use dollar sign in its name
     
 ~~~~
-var $push = $('.push');
+var $push = $('.Push');
 ~~~~

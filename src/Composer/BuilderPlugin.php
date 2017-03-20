@@ -6,10 +6,10 @@
 namespace Rocket\Composer;
 
 
-use Composer\Composer;
-use Composer\IO\IOInterface;
-use Composer\Plugin\Capable;
-use Composer\Plugin\PluginInterface;
+use Composer\Composer,
+    Composer\IO\IOInterface,
+    Composer\Plugin\Capable,
+    Composer\Plugin\PluginInterface;
 
 /**
  * Class BuilderPlugin

@@ -41,7 +41,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("<comment>Starting building...</comment>");
+        $output->writeln("<comment>Start building...</comment>");
 
         if ( is_dir( $this->pkg_path ) )
         {
@@ -55,7 +55,7 @@ EOT
                 $this->installNodeModules();
             }
 
-            $output->writeln("<comment>Gulp execution...</comment>");
+            $output->writeln("<comment>Running Gulp...</comment>");
             passthru( "gulp " . $options . " --color=always" );
         }
     }

@@ -1,4 +1,3 @@
-
 /**
  * Implement string repeat
  * @param num loop count
@@ -23,6 +22,7 @@ String.prototype.populate = function(data) {
             value = value.join('|');
 
         content = content.split('[['+key+']]').join(value);
+        content = content.split('[[ '+key+' ]]').join(value);
     }
 
     return content;

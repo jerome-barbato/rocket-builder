@@ -15,189 +15,155 @@
 
 (function ($) {
 
-    if (typeof dom == 'undefined' || !'compiler' in dom) {
+    if (typeof dom == 'undefined' || !'compiler' in dom)
         return;
-    }
 
-
-    dom.compiler.register('filter', 'width', function (elem, attrs) {
-
-        if ('width' in attrs && attrs.width.indexOf('/') > -1) {
-
+    dom.compiler.register('filter', 'width', function (elem, attrs)
+    {
+        if ('width' in attrs && attrs.width.indexOf('/') > -1)
+        {
             var width = attrs.width.split('/');
-            if (width.length == 2) {
+            if (width.length == 2)
                 elem.attr('width', Math.round(parseInt(width[0]) / parseInt(width[1])));
-            }
         }
     });
 
 
-    dom.compiler.register('filter', 'height', function (elem, attrs) {
-
-        if ('height' in attrs && attrs.height.indexOf('/') > -1) {
-
+    dom.compiler.register('filter', 'height', function (elem, attrs)
+    {
+        if ('height' in attrs && attrs.height.indexOf('/') > -1)
+        {
             var height = attrs.height.split('/');
-            if (height.length == 2) {
+            if (height.length == 2)
                 elem.attr('height', Math.round(parseInt(height[0]) / parseInt(height[1])));
-            }
         }
     });
 
 
-    dom.compiler.register('attribute', 'sizer', function (elem, attrs) {
-
+    dom.compiler.register('attribute', 'sizer', function (elem, attrs)
+    {
         var size = attrs.sizer.replace('/', 'x');
 
-        if (elem.is('img')) {
-
-            if (window.engine == 'twig') {
+        if (elem.is('img'))
+        {
+            if (window.engine == 'twig')
                 elem.attr('src', "{{ asset_url('/media/sizer/" + size + ".png') }}");
-            }
-            else if (window.engine == 'smarty') {
+            else if (window.engine == 'smarty')
                 elem.attr('src', "{asset_url file='/media/sizer/" + size + ".png'}");
-            }
 
             elem.addClass('has-sizer');
 
-            if ('src' in attrs) {
+            if ('src' in attrs)
                 elem.css('backgroundImage', "url('" + attrs.src + "')");
-            }
         }
-        else {
+        else
+        {
             elem.attr('data-sizer', attrs.sizer);
         }
     });
 
 
-    dom.compiler.register('attribute', 'keep', function (elem, attrs) {
-
+    dom.compiler.register('attribute', 'keep', function (elem, attrs)
+    {
         elem.attr('data-keep', 'true');
     });
 
 
-    dom.compiler.register('attribute', 'background-color', function (elem, attrs) {
-
-        if ('backgroundColor' in attrs && attrs.backgroundColor.length) {
+    dom.compiler.register('attribute', 'background-color', function (elem, attrs)
+    {
+        if ('backgroundColor' in attrs && attrs.backgroundColor.length)
             elem.css("backgroundColor", attrs.backgroundColor);
-        }
     });
 
 
-    dom.compiler.register('attribute', 'background', function (elem, attrs) {
-
-        if ('background' in attrs && attrs.background.length) {
+    dom.compiler.register('attribute', 'background', function (elem, attrs)
+    {
+        if ('background' in attrs && attrs.background.length)
             elem.css("backgroundImage", 'url("' + attrs.background + '")');
-        }
     });
 
 
-    dom.compiler.register('attribute', 'icon', function (elem, attrs) {
-
-        if ('icon' in attrs && attrs.icon.length) {
+    dom.compiler.register('attribute', 'icon', function (elem, attrs)
+    {
+        if ('icon' in attrs && attrs.icon.length)
             elem.attr('data-icon', attrs.icon);
-        }
     });
 
 
-    dom.compiler.register('attribute', 'icon-after', function (elem, attrs) {
-
-        if ('iconAfter' in attrs && attrs.iconAfter.length) {
+    dom.compiler.register('attribute', 'icon-after', function (elem, attrs)
+    {
+        if ('iconAfter' in attrs && attrs.iconAfter.length)
             elem.attr('data-icon-after', attrs.iconAfter);
-        }
     });
 
 
-    dom.compiler.register('attribute', 'icon-before', function (elem, attrs) {
-
-        if ('iconBefore' in attrs && attrs.iconBefore.length) {
+    dom.compiler.register('attribute', 'icon-before', function (elem, attrs)
+    {
+        if ('iconBefore' in attrs && attrs.iconBefore.length)
             elem.attr('data-icon', attrs.iconBefore);
-        }
     });
 
 
-    dom.compiler.register('attribute', 'text', function (elem, attrs) {
-
-        if ('text' in attrs && attrs.text.length) {
+    dom.compiler.register('attribute', 'text', function (elem, attrs)
+    {
+        if ('text' in attrs && attrs.text.length)
             elem.addClass('text text--' + attrs.text);
-        }
     });
 
 
-    dom.compiler.register('attribute', 'button', function (elem, attrs) {
-
-        if ('button' in attrs && attrs.button.length) {
+    dom.compiler.register('attribute', 'button', function (elem, attrs)
+    {
+        if ('button' in attrs && attrs.button.length)
             elem.addClass('button button--' + attrs.button);
-        }
     });
 
 
-    dom.compiler.register('attribute', 'align', function (elem, attrs) {
-
-        if ('align' in attrs && attrs.align.length) {
-
+    dom.compiler.register('attribute', 'align', function (elem, attrs)
+    {
+        if ('align' in attrs && attrs.align.length)
             elem.addClass('align-' + attrs.align);
-        }
     });
 
 
-    dom.compiler.register('attribute', 'hide-on', function (elem, attrs) {
-
-        if ('hideOn' in attrs && attrs.hideOn.length) {
-
+    dom.compiler.register('attribute', 'hide-on', function (elem, attrs)
+    {
+        if ('hideOn' in attrs && attrs.hideOn.length)
             elem.attr('data-hide_on', attrs.hideOn);
-        }
     });
 
 
-    dom.compiler.register('attribute', 'show-on', function (elem, attrs) {
-
-        if ('showOn' in attrs && attrs.showOn.length) {
-
-            var hideOn = false;
-
-            if (attrs.showOn == "mobile") {
-                hideOn = "desktop";
-            } else if (attrs.showOn == "desktop") {
-                hideOn = "mobile";
-            } else if (attrs.showOn == "tablet") {
-                hideOn = "phone desktop";
-            }
-
-            if (hideOn) {
-                elem.attr('data-hide_on', hideOn);
-            }
-        }
+    dom.compiler.register('attribute', 'show-on', function (elem, attrs)
+    {
+        if ('showOn' in attrs && attrs.showOn.length)
+                elem.attr('data-show_on', attrs.showOn);
     });
 
 
-    [
-        'block',
-        'icon',
-        'page',
-        'component',
-        'tmp',
-        'misc'
-    ].map(function (type) {
-
-        dom.compiler.register('attribute', type + '-src', function (elem, attrs) {
-
-            if (window.engine == 'twig') {
+    ['block', 'icon', 'page', 'component', 'tmp', 'misc'].map(function (type)
+    {
+        dom.compiler.register('attribute', type + '-src', function (elem, attrs)
+        {
+            if (window.engine == 'twig')
+            {
                 var src = attrs[type + 'Src'].replace('{{', '\' ~ ').replace('}}', ' ~ \'');
                 elem.attr('src', "{{ asset_url('/media/" + type + "/" + src + "') }}");
             }
-            else if (window.engine == 'smarty') {
+            else if (window.engine == 'smarty')
+            {
                 var src = attrs[type + 'Src'];
                 elem.attr('style', 'background-image:url({asset_url file="/media/' + type + '/' + src + '"})');
             }
         });
 
-        dom.compiler.register('attribute', type + '-background', function (elem, attrs) {
-
-            if (window.engine == 'twig') {
+        dom.compiler.register('attribute', type + '-background', function (elem, attrs)
+        {
+            if (window.engine == 'twig')
+            {
                 var src = attrs[type + 'Background'].replace('{{', '\' ~ ').replace('}}', ' ~ \'');
                 elem.attr('style', "background-image:url({{ asset_url('/media/" + type + "/" + src + "') }})");
             }
-            else if (window.engine == 'smarty') {
+            else if (window.engine == 'smarty')
+            {
                 var src = attrs[type + 'Background'];
                 elem.attr('style', "background-image:url('{asset_url file='/media/" + type + "/" + src + "'}')");
             }
