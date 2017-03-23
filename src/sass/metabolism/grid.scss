@@ -78,6 +78,8 @@ $grid-col-count : 12 !default;
     @if ($grid-col-padding) { padding: $grid-col-padding }
   }
 
+  [data-col="0"]{ padding: 0; float: none }
+
   @for $j from 1 through $grid-col-count {
     @for $i from 1 through $grid-col-count {
       @if $j <= $i{

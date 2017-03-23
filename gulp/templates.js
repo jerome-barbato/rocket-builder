@@ -46,14 +46,7 @@ function compile(file, scripts, callback) {
     }
     else {
 
-        var escape_tags = [
-            'template',
-            'table',
-            'tr',
-            'td',
-            'ul',
-            'li'
-        ];
+        var escape_tags = ['template', 'table', 'tr', 'thead', 'th', 'tbody', 'tfoot', 'td', 'ul', 'li'];
 
         for(var i in escape_tags){
 
