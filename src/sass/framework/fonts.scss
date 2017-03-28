@@ -14,10 +14,8 @@ $font-families : ();
 
   @font-face {
     font-family: "#{$family}";
-    src: url('#{$font_path}/#{$src}.eot');
-    src: url('#{$font_path}/#{$src}.eot?#iefix') format('embedded-opentype'),
-    url('#{$font_path}/#{$src}.woff') format('woff'),
-    url('#{$font_path}/#{$src}.svg##{$src}') format('svg');
+    src: url('#{$font_path}/#{$src}.woff2') format('woff2'),
+    url('#{$font_path}/#{$src}.woff') format('woff');
     font-weight: #{$weight};
     font-style: #{$style};
     font-stretch: #{$stretch};
