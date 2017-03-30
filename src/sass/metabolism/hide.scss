@@ -7,10 +7,11 @@
     }
 
     [data-show_on="#{$id}"]{
-      display: none;
       @media #{$media-query} { display: block }
     }
   }
+
+  [data-show_on] { display: none }
 
   .mobile [data-hide_on="mobile"]{ display: none }
   .desktop [data-hide_on="desktop"]{ display: none }
