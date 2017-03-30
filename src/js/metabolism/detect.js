@@ -180,6 +180,7 @@
          *
          */
         self.__construct = function () {
+
             $('[data-detect]').initialize(function () {
                 self.add($(this));
             });
