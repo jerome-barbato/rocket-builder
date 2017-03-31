@@ -1,23 +1,19 @@
 @mixin lib-hide{
 
-  @each $id, $media-query in $media-queries{
-
+  @each $id, $media-query in $media-queries
+  {
     @media #{$media-query} {
-      [data-hide_on="#{$id}"]{ display: none }
-    }
-
-    [data-show_on="#{$id}"]{
-      @media #{$media-query} { display: block }
+      [data-hide_on="#{$id}"]{ display: none!important }
+      [data-show_on="#{$id}"]{ display: initial!important }
     }
   }
 
-  [data-show_on] { display: none }
+  [data-show_on],
+  .mobile [data-hide_on="mobile"],
+  .desktop [data-hide_on="desktop"]{ display: none!important }
 
-  .mobile [data-hide_on="mobile"]{ display: none }
-  .desktop [data-hide_on="desktop"]{ display: none }
-
-  .desktop [data-show_on="desktop"]{ display: block }
-  .mobile [data-show_on="mobile"]{ display: block }
+  .desktop [data-show_on="desktop"],
+  .mobile [data-show_on="mobile"]{ display: initial!important }
 }
 
 @if (variable-exists(libraries) and index($libraries, 'hide')) {

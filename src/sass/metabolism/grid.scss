@@ -77,6 +77,7 @@ $grid-col-count : 12 !default;
   }
 
   [data-col="0"]{ padding: 0; float: none }
+  [data-col="auto"]{ width: auto }
 
   @for $j from 1 through $grid-col-count {
     @for $i from 1 through $grid-col-count {
