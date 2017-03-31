@@ -25,12 +25,16 @@
  **/
 (function ($) {
 
-    var Popin = function (id, content, context) {
-        var self   = this;
-        var $html  = $('html');
-        var $body  = $('body');
-        var $popin = false;
+    var Popin = function (id, content, context) 
+    {
+        var self          = this;
+        var $html         = $('html');
+        var $container    = $('.popin-container');
+        var $popin        = false;
         var transitionEnd = 'webkitTransitionEnd.popin transitionend.popin msTransitionEnd.popin oTransitionEnd.popin';
+
+        if( !$container.length )
+            $container = $('body');
 
         /* Public */
 
@@ -61,18 +65,20 @@
         /**
          *
          */
-        var construct = function () {
+        var construct = function ()
+        {
             $popin = $('.popin--' + id);
 
-            if ($popin.length) {
+            if ($popin.length)
+            {
                 $popin.trigger('popin.show');
             }
-            else {
+            else
+            {
                 self.context = $.extend(self.context, context);
 
-                if (typeof(content) == "undefined" || content === false) {
+                if (typeof(content) == "undefined" || content === false)
                     content = $('script[type="text/template"]#' + id).html();
-                }
 
                 add(content);
                 setupEvents();
@@ -85,18 +91,18 @@
         /**
          *
          */
-        var setupEvents = function () {
-            $popin.click(function (e) {
-                if ($(e.target).hasClass('popin__overlay') || $(e.target).hasClass('popin__close') || $(e.target)
-                        .hasClass('popin-close')) {
+        var setupEvents = function ()
+        {
+            $popin.click(function (e)
+            {
+                if ($(e.target).hasClass('popin__overlay') || $(e.target).hasClass('popin__close') || $(e.target).hasDataAttr('close'))
                     close();
-                }
             });
 
-            $(document).on('click keypress', function (e) {
-                if (e.which === 13) {
+            $(document).on('click keypress', function (e)
+            {
+                if (e.which === 13)
                     close();
-                }
             });
 
             $popin.on('popin.close', function (e) { close() });
@@ -104,10 +110,10 @@
         };
 
 
-        var remove = function () {
-            if ($popin.length) {
+        var remove = function ()
+        {
+            if ($popin.length)
                 $popin.remove();
-            }
 
             $(document).trigger('popin.removed', [id]);
 
@@ -115,59 +121,57 @@
         };
 
 
-        var close = function () {
-            if (Modernizr && Modernizr.csstransitions) {
+        var close = function ()
+        {
+            if (Modernizr && Modernizr.csstransitions)
+            {
                 $popin.attr('data-state', 'removing');
 
-                $popin.one(transitionEnd, function () {
-                    if (self.context.remove) {
+                $popin.one(transitionEnd, function ()
+                {
+                    if (self.context.remove)
                         remove();
-                    } else {
+                    else
                         $popin.attr('data-state', 'idle');
-                    }
 
-                    if (!$('.popin:visible').length) {
+                    if (!$('.popin:visible').length)
                         $html.removeClass('has-popin');
-                    }
 
-                    $body.repaint();
+                    $container.repaint();
                 });
             }
-            else {
-                if (self.context.remove) {
+            else
+            {
+                if (self.context.remove)
                     remove();
-                } else {
+                else
                     $popin.attr('data-state', 'idle');
-                }
 
-                if (!$('.popin:visible').length) {
+                if (!$('.popin:visible').length)
                     $html.removeClass('has-popin');
-                }
             }
         };
 
 
-        var add = function (content) {
-            if (!window.angular) {
+        var add = function (content)
+        {
+            if (!window.angular)
                 content = content.populate(self.context);
-            }
 
             $popin       = $(config.html.popin);
             var $content = $popin.find('.popin__content');
 
             $content.append(content);
 
-            if (!$content.find('.popin__close, .popin-close').length) {
+            if (!$content.find('.popin__close, [data-close]').length)
                 $content.append(config.html.close);
-            }
 
-            $html.addClass('has-popin');
-            $popin.addClass('popin--' + id);
+            $container.append($popin);
 
-            $body.append($popin);
-
-            if ('angular' in window && angular.$injector) {
-                angular.$injector.invoke(function ($compile, $rootScope) {
+            if ('angular' in window && angular.$injector)
+            {
+                angular.$injector.invoke(function ($compile, $rootScope)
+                {
                     var scope = $popin.scope() || $rootScope.$new();
                     scope = angular.extend(scope, self.context);
 
@@ -180,24 +184,28 @@
         };
 
 
-        var show          = function () {
-            $popin.attr('data-state', '');
+        var show = function ()
+        {
+            $popin.attr('data-state', '').addClass('popin--' + id);
 
             $popin.repaint();
 
             $popin.attr('data-state', 'adding');
 
-            $(document)
-                .trigger('popin.added', [
-                    $popin,
-                    id,
-                    self.context
-                ]);
+            $(document).trigger('popin.added', [$popin, id, self.context]);
 
-            if (Modernizr && Modernizr.csstransitions) {
-                $popin.one(transitionEnd, function () { $popin.attr('data-state', 'added') });
+            if (Modernizr && Modernizr.csstransitions)
+            {
+                $html.addClass('will-have-popin');
+                $popin.one(transitionEnd, function ()
+                {
+                    $popin.attr('data-state', 'added');
+                    $html.removeClass('will-have-popin').addClass('has-popin');
+                });
             }
-            else {
+            else
+            {
+                $html.addClass('has-popin');
                 $popin.attr('data-state', 'added');
             }
         };
@@ -208,19 +216,22 @@
     };
 
 
-    var Popins = function () {
-        $(document).on('click', '[data-popin]', function (e) {
+    var Popins = function ()
+    {
+        $(document).on('click', '[data-popin]', function (e)
+        {
             e.preventDefault();
             var context = {};
 
-            if ($(this).data('context')) {
-                try {
-                    context = $(this).data('context') ? JSON.parse('{' + $(this)
-                                .data('context')
-                                .replace(/'/g, '"') + '}') : {};
+            if ($(this).data('context'))
+            {
+                try
+                {
+                    context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
                 } catch (e) {}
             }
-            else {
+            else
+            {
                 context = $(this).data();
             }
 
@@ -228,11 +239,14 @@
         });
 
 
-        if (typeof dom !== "undefined") {
-            dom.compiler.register('attribute', 'popin', function (elem, attrs) {
+        if (typeof dom !== "undefined")
+        {
+            dom.compiler.register('attribute', 'popin', function (elem, attrs)
+            {
                 elem.attr('data-popin', attrs.popin);
 
-                if (attrs.context) {
+                if (attrs.context)
+                {
                     elem.attr('data-context', attrs.context);
                     elem.removeAttr('context');
                 }
