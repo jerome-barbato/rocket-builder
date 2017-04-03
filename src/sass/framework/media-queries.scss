@@ -48,7 +48,8 @@ $retina           : "(-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi
 
 
 // Media query list to be used in other libraries
-$media-queries          : ( 4k: $to-4k, large: $to-large, medium: $to-medium, small: $to-small, tablet: $to-tablet, phone: $to-phone, phone-m: $to-phone-m, phone-s: $to-phone-s);
+$media-queries-to   : ( 4k: $to-4k, large: $to-large, medium: $to-medium, small: $to-small, tablet: $to-tablet, phone: $to-phone, phone-m: $to-phone-m, phone-s: $to-phone-s);
+$media-queries-from : ( 4k: $from-4k, large: $from-large, medium: $from-medium, small: $from-small, tablet: $from-tablet, phone: $from-phone, phone-m: $from-phone-m, phone-s: $from-phone-s);
 
 
 // Dummy queries for mqpaker, define media query order in generated css

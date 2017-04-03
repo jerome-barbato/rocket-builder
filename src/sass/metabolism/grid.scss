@@ -31,7 +31,7 @@ $grid-col-count : 12 !default;
             [data-col="#{$j}/#{$i}"] { flex-basis: ((100%*$j)/$i) }
             @if($grid-breakpoints){
               @each $grid-breakpoint in $grid-breakpoints{
-                $media-query : map_get($media-queries, $grid-breakpoint);
+                $media-query : map_get($media-queries-to, $grid-breakpoint);
                 @media #{$media-query} { [data-col-#{$grid-breakpoint}="#{$j}/#{$i}"] { flex-basis: ((100%*$j)/$i) } }
               }
             }
@@ -85,7 +85,7 @@ $grid-col-count : 12 !default;
         [data-col="#{$j}/#{$i}"] { width: ((100%*$j)/$i) }
         @if($grid-breakpoints){
           @each $grid-breakpoint in $grid-breakpoints{
-            $media-query : map_get($media-queries, $grid-breakpoint);
+            $media-query : map_get($media-queries-to, $grid-breakpoint);
             @media #{$media-query} { [data-col-#{$grid-breakpoint}="#{$j}/#{$i}"] { width: ((100%*$j)/$i) } }
           }
         }
