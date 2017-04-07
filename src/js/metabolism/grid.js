@@ -43,7 +43,7 @@
 
     dom.compiler.register('attribute', 'col', function(elem, attrs) {
 
-        elem.attr('data-col', attrs.col?attrs.col:'');
+        elem.attr('data-col', attrs.col?attrs.col:'1/1');
 
         if( attrs.offsetBy ){
 
@@ -83,7 +83,7 @@
 
     dom.compiler.register('element', 'column', function(elem, attrs) {
 
-        var attributes = ['data-col="'+(attrs.size?attrs.size:'')+'"'];
+        var attributes = ['data-col="'+(attrs.size?attrs.size:'1/1')+'"'];
 
         if( attrs.size )
             elem.removeAttr('size');

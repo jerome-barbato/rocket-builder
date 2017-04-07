@@ -96,7 +96,10 @@
             $popin.click(function (e)
             {
                 if ($(e.target).hasClass('popin__overlay') || $(e.target).hasClass('popin__close') || $(e.target).hasDataAttr('close'))
-                    close();
+                {
+                    e.preventDefault();
+	                close();
+                }
             });
 
             $(document).on('click keypress', function (e)
@@ -105,8 +108,8 @@
                     close();
             });
 
-            $popin.on('popin.close', function (e) { close() });
-            $popin.on('popin.show', function (e) { show() });
+            $popin.on('popin.close', function () { close() });
+            $popin.on('popin.show', function () { show() });
         };
 
 
