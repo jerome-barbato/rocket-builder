@@ -171,18 +171,6 @@
 
             $container.append($popin);
 
-            if ('angular' in window && angular.$injector)
-            {
-                angular.$injector.invoke(function ($compile, $rootScope)
-                {
-                    var scope = $popin.scope() || $rootScope.$new();
-                    scope = angular.extend(scope, self.context);
-
-                    //todo: find why context is not interpolated
-                    $compile($popin.contents())(scope);
-                });
-            }
-
             show();
         };
 
@@ -231,6 +219,7 @@
                 try
                 {
                     context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
+
                 } catch (e) {}
             }
             else

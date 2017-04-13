@@ -2,11 +2,7 @@
 
   @each $id, $media-query in $media-queries-from
   {
-    @if( variable-exists(prev-media-query) ){
-      @media #{$prev-media-query} { [data-show_on="#{$id}"]{ display: none!important }}
-    }
-
-    $prev-media-query : $media-query;
+    @media #{$media-query} { [data-show_on="#{$id}"]{ display: none!important }}
   }
 
   @each $id, $media-query in $media-queries-to

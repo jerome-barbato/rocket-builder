@@ -38,6 +38,9 @@
 
                             if (!selected && placeholder)
                                 this.buttonItem.text(placeholder);
+
+                            if(selected)
+	                            this.button.addClass('ui-selectmenu-button-filled');
                         },
                         _resizeMenu: function () {
 
@@ -64,6 +67,8 @@
                                     $element.addClass('ui-selectmenu-button-filled');
                                 else
                                     $element.removeClass('ui-selectmenu-button-filled');
+
+	                            $(this).change();
                             },
                             appendTo: $parent
                         };

@@ -19,7 +19,7 @@ $grid-col-count : 12 !default;
   }
 
   @if( $grid-flex ){
-    [data-grid="flex"] {
+    [data-grid="flex"], %grid-flex {
       [data-row] { display: flex; flex: 0 1 auto; flex-direction: row; flex-wrap: wrap }
       [data-row="top"]{ align-items: flex-start }
       [data-row="center"]{ align-items: center }
@@ -42,7 +42,7 @@ $grid-col-count : 12 !default;
   }
 
   @if( $grid-table ){
-    [data-grid="table"] {
+    [data-grid="table"], %grid-table {
       display: table; width: 100%; height: 100%; table-layout: fixed;
       &:after{ display: none }
       @media #{$grid-phone-breakpoint} { display: block }
@@ -82,7 +82,7 @@ $grid-col-count : 12 !default;
   @for $j from 1 through $grid-col-count {
     @for $i from 1 through $grid-col-count {
       @if $j <= $i{
-        [data-col="#{$j}/#{$i}"] { width: ((100%*$j)/$i) }
+        [data-col="#{$j}/#{$i}"]{ width: ((100%*$j)/$i) }
         @if($grid-breakpoints){
           @each $grid-breakpoint in $grid-breakpoints{
             $media-query : map_get($media-queries-to, $grid-breakpoint);
@@ -96,26 +96,19 @@ $grid-col-count : 12 !default;
 
 @mixin grid($mod: false) {
   @if( $mod ){
-    [data-grid="#{$mod}"]{ @content; }
+    @extend %grid-#{$mod}
   } @else {
-    [data-grid]{ @content; }
+    @extend %grid;
   }
 }
 
-@mixin column($mod: false) {
-  @if( $mod ){
-    [data-col="#{$mod}"]{ @content; }
-  } @else {
-    [data-col]{ @content; }
-  }
+@mixin column($size, $extend:true) {
+  @if( $extend ){ @extend %column }
+  width: $size*100%;
 }
 
 @mixin row($mod: false) {
-  @if( $mod ){
-    [data-row="#{$mod}"]{ @content; }
-  } @else {
-    [data-row]{ @content; }
-  }
+  @extend %row;
 }
 
 @mixin break-grid() { width: 100%; float: none }

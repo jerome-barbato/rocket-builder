@@ -178,11 +178,10 @@
 
         var $parent = elem.parent();
 
-        if ($parent.is('div') || $parent.is('header') || $parent.is('article') || $parent.is('footer') || $parent.is('main')) {
+        if ( !$parent.length || $parent.is('div') || $parent.is('header') || $parent.is('article') || $parent.is('footer') || $parent.is('main'))
             return '<div class="valign"><div class="valign__middle"><transclude/></div></div>';
-        } else {
+        else
             return '<span class="valign"><span class="valign__middle"><transclude/></span></span>';
-        }
     });
 
 
