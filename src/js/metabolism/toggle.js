@@ -45,6 +45,8 @@
             {
                 if (e.which === 13 || e.type === 'click')
                 {
+                    e.preventDefault();
+
                     self.toggle(self.context.$toggles.index($(this)));
 
                     if (self.config.auto_close)

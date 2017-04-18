@@ -6,9 +6,10 @@
 namespace Rocket\Composer\Command;
 
 use Composer\Command\BaseCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
+
+use Symfony\Component\Console\Input\InputInterface,
+	Symfony\Component\Console\Input\InputOption,
+	Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class BuildCommand

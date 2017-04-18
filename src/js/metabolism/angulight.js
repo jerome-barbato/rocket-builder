@@ -148,7 +148,6 @@
             $('script[type="text/template"]').initialize(function ()
             {
                 self.context.templates[$(this).attr('id')] = $(this).html();
-	            $(this).remove();
             });
 
 
