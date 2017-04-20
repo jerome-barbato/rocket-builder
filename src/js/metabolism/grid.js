@@ -53,10 +53,11 @@
 
         $.each(grid_breakpoints, function(i, media){
 
-            var c_media = camelCase(media);
-            if( attrs['col'+c_media] ){
+            var c_media = camelCase('col-'+media);
 
-                elem.attr('data-col-'+media, attrs['col'+c_media]);
+            if( attrs[c_media] ){
+
+                elem.attr('data-col-'+media, attrs[c_media]);
                 elem.removeAttr('col-'+media);
             }
         });
