@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## 3.3.10 - 2017-04-20 ##
+### Fixed
+- Grid col attribute
+
 ## 3.3.9 - 2017-03-17 ##
 ### Fixed
 - IE Fit bug
