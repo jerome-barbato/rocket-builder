@@ -13,65 +13,63 @@
  *   - jQuery
  *
  **/
-(function($){
+(function ($) {
 
-    var OnDemand = function()
-    {
+    var OnDemand = function () {
         var self = this;
 
         self.context = {
-            init          : false,
-            elements      : [],
-            window_height : 0
+            init         : false,
+            elements     : [],
+            window_height: 0
         };
 
         self.config = {
-            load : 1.9
+            load: 1.9
         };
 
         self.resizeTimeout = false;
 
-        self.add = function( $element )
-        {
-            if( $element.closest('[data-on_demand="false"]').length )
+        self.add = function ($element) {
+            if ($element.closest('[data-on_demand="false"]').length) {
                 return;
+            }
 
             $element.attr('data-on_demand', 'waiting');
 
             var use_parent = false;
             var $parent    = false;
 
-            if( typeof $element.attr('data-object_fit') != 'undefined' )
-            {
+            if (typeof $element.attr('data-object_fit') != 'undefined') {
                 $parent    = $element.parent();
                 use_parent = $parent.length;
             }
 
-            var top        = use_parent ? $parent.realOffset().top : $element.realOffset().top;
-            var height     = use_parent ? $parent.height() : $element.height();
+            var top    = use_parent ? $parent.realOffset().top : $element.realOffset().top;
+            var height = use_parent ? $parent.height() : $element.height();
 
             var element = {
-                $          : $element,
-                top        : top,
-                bottom     : top+height,
-                preloaded  : false,
-                loaded     : false,
-                $parent    : $parent,
-                use_parent : use_parent,
-                type       : 'default',
-                src        : $element.data('src'),
-                visible    : $element.is(':visible')
+                $         : $element,
+                top       : top,
+                bottom    : top + height,
+                preloaded : false,
+                loaded    : false,
+                $parent   : $parent,
+                use_parent: use_parent,
+                type      : 'default',
+                src       : $element.data('src'),
+                visible   : $element.is(':visible')
             };
 
 
-            if( $element.is('img') )
+            if ($element.is('img')) {
                 element.type = 'img';
+            }
 
-            if( $element.is('video') )
-            {
+            if ($element.is('video')) {
                 element.type = 'video';
                 $element.attr('preload', 'none');
-                $element.html('<source src="'+element.src+'" type="video/mp4"><source src="'+element.src.replace('.mp4', '.webm')+'" type="video/webm">');
+                $element.html('<source src="' + element.src + '" type="video/mp4"><source src="' + element.src.replace('.mp4', '.webm') + '" type="video/webm">');
                 $element.removeAttr('data-src');
             }
 
@@ -81,64 +79,58 @@
         };
 
 
-
-        self._resize = function(){
+        self._resize = function () {
 
             self.context.window_height = $(window).height();
 
-            for (var i=0; i< self.context.elements.length; i++)
-            {
-                var element  = self.context.elements[i];
-                var top      = element.use_parent ? element.$parent.realOffset().top : element.$.realOffset().top;
-                var height   = element.use_parent ? element.$parent.height() : element.$.height();
+            for (var i = 0; i < self.context.elements.length; i++) {
+                var element    = self.context.elements[i];
+                var top        = element.use_parent ? element.$parent.realOffset().top : element.$.realOffset().top;
+                var height     = element.use_parent ? element.$parent.height() : element.$.height();
 
                 element.top     = top;
                 element.visible = element.$.is(':visible');
-                element.bottom  = top+height;
+                element.bottom = top + height;
             }
 
-            if( app && app.debug > 2 )
+            if (app && app.debug > 2) {
                 console.log('on-demand', self.context.elements);
+            }
         };
 
 
-
-        self._loaded = function(element)
-        {
+        self._loaded = function (element) {
             element.$.attr('data-on_demand', 'loaded');
 
-            if( $.fn.fit )
+            if ($.fn.fit) {
                 element.$.fit(true);
+            }
 
             element.loaded = true;
 
             clearTimeout(self.resizeTimeout);
-            self.resizeTimeout = setTimeout(function(){ $(window).resize() }, 100);
+            self.resizeTimeout = setTimeout(function () { $(window).resize() }, 100);
 
             self.applyPlayState(element, $(window).scrollTop());
         };
 
 
+        self._load = function (element, scrollTop) {
+            var targetScroll = scrollTop + self.context.window_height * self.config.load;
 
-        self._load = function(element, scrollTop)
-        {
-            var targetScroll = scrollTop + self.context.window_height*self.config.load;
-
-            if( !element.preloaded && element.visible && element.top <= targetScroll ){
+            if (!element.preloaded && element.visible && element.top <= targetScroll) {
 
                 element.preloaded = true;
 
                 element.$.attr('data-on_demand', 'loading');
 
-                switch( element.type )
-                {
+                switch (element.type) {
                     case 'img':
 
-                        (function(elem)
-                        {
+                        (function (elem) {
                             elem.$
-                                .on('load', function() { self._loaded(elem) })
-                                .on('error', function(){ elem.$.attr('data-on_demand', 'error') });
+                                .on('load', function () { self._loaded(elem) })
+                                .on('error', function () { elem.$.attr('data-on_demand', 'error') });
 
                         })(element);
 
@@ -149,12 +141,11 @@
 
                     case "video" :
 
-                        (function(elem)
-                        {
+                        (function (elem) {
                             elem.$
-                                .on('loadeddata', function(){ self._loaded(elem) })
-                                .on('ended', function(){ elem.ended = true })
-                                .on('error', function(){ elem.$.attr('data-on_demand', 'error') });
+                                .on('loadeddata', function () { self._loaded(elem) })
+                                .on('ended', function () { elem.ended = true })
+                                .on('error', function () { elem.$.attr('data-on_demand', 'error') });
 
                         })(element);
 
@@ -166,18 +157,17 @@
 
                     default :
 
-                        (function(elem)
-                        {
+                        (function (elem) {
                             var $img = $('<img/>');
 
-                            $img.on('load', function() { self._loaded(elem) })
-                                .on('error', function(){ elem.$.attr('data-on_demand', 'error') });
+                            $img.on('load', function () { self._loaded(elem) })
+                                .on('error', function () { elem.$.attr('data-on_demand', 'error') });
 
                             $img.attr('src', elem.src);
 
                         })(element);
 
-                        element.$.css('background-image', "url('"+element.src+"')");
+                        element.$.css('background-image', "url('" + element.src + "')");
 
                         break;
                 }
@@ -189,22 +179,17 @@
         };
 
 
-        self.applyPlayState = function(element, scrollTop)
-        {
-            if( element.type == "video" && element.loaded )
-            {
-                if( element.top < scrollTop+self.context.window_height && element.bottom > scrollTop)
-                {
-                    if( !element.play && (element.loop || !element.ended) )
-                    {
-                        element.$.attr('data-state','playing');
+        self.applyPlayState = function (element, scrollTop) {
+            if (element.type == "video" && element.loaded) {
+                if (element.top < scrollTop + self.context.window_height && element.bottom > scrollTop) {
+                    if (!element.play && (element.loop || !element.ended)) {
+                        element.$.attr('data-state', 'playing');
                         element.$.get(0).play();
                         element.play = true;
                     }
                 }
-                else if( element.play )
-                {
-                    element.$.attr('data-state','paused');
+                else if (element.play) {
+                    element.$.attr('data-state', 'paused');
                     element.$.get(0).pause();
                     element.play = false;
                 }
@@ -213,17 +198,14 @@
         };
 
 
-        self._loadAll = function()
-        {
+        self._loadAll = function () {
             var scrollTop = $(window).scrollTop();
 
-            for (var i in self.context.elements)
-            {
+            for (var i in self.context.elements) {
                 var element = self.context.elements[i];
                 self._load(element, scrollTop);
             }
         };
-
 
 
         /* Contructor. */
@@ -231,22 +213,19 @@
         /**
          *
          */
-        self.__construct =  function()
-        {
-            $('[data-src]').initialize(function()
-            {
+        self.__construct = function () {
+            $('[data-src]').initialize(function () {
                 self.add($(this))
             });
 
-            var resize = function()
-            {
+            var resize = function () {
                 self._resize();
                 self._loadAll();
             };
 
             $(window).on('scroll', self._loadAll).on('resize', resize);
 
-            $(document).on('loaded', function(){
+            $(document).on('loaded', function () {
 
                 self._resize();
                 setTimeout(self._loadAll, 300);
@@ -254,16 +233,15 @@
         };
 
 
-        if( typeof dom !== "undefined" )
-        {
-            dom.compiler.register('attribute', 'on-demand', function(elem, attrs)
-            {
+        if (typeof dom !== "undefined") {
+            dom.compiler.register('attribute', 'on-demand', function (elem, attrs) {
                 var src = elem.attr('src');
 
-                if( elem.is('img') && typeof elem.attr('src') == 'undefined' )
+                if (elem.is('img') && typeof elem.attr('src') == 'undefined') {
                     elem.attr('src', "{{ blank() }}");
+                }
 
-                elem.attr('data-src', attrs.onDemand.length ? attrs.onDemand : src );
+                elem.attr('data-src', attrs.onDemand.length ? attrs.onDemand : src);
 
             }, self.add);
         }
@@ -273,7 +251,7 @@
         self.__construct();
     };
 
-    rocket = typeof rocket == 'undefined' ? {} : rocket;
+    rocket          = typeof rocket == 'undefined' ? {} : rocket;
     rocket.onDemand = new OnDemand();
 
 })(jQuery);

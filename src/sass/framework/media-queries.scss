@@ -1,50 +1,83 @@
-$screen-mobile        : 767px !default;
-$screen-mobile-small  : 320px !default;
-$screen-tablet        : 1024px !default;
-$screen-13inch-height : 750px !default;
-$screen-13inch-width  : 1280px !default;
-$screen-wide-width    : 1680px !default;
+// Default Screen sizes, following Chrome devtools specification
+
+$screen-phone           : 425px !default;
+$screen-phone-m         : 375px !default;
+$screen-phone-s         : 320px !default;
+$screen-tablet          : 768px !default;
+$screen-small           : 1024px !default;
+$screen-medium          : 1280px !default;
+$screen-large           : 1680px !default;
+$screen-4k              : 2560px !default;
+
+// Standard Media query shorthand
+
+// From [value] to infinity
+$from-4k               : "screen and (min-width: "+($screen-4k + 1px)+")";
+$from-large            : "screen and (min-width: "+($screen-large + 1px)+")";
+$from-medium           : "screen and (min-width: "+($screen-medium + 1px)+")";
+$from-small            : "screen and (min-width: "+($screen-small + 1px)+")";
+$from-tablet           : "screen and (min-width: "+($screen-tablet + 1px)+")";
+$from-phone            : "screen and (min-width: "+($screen-phone + 1px)+")";
+$from-phone-m          : "screen and (min-width: "+($screen-phone-m + 1px)+")";
+$from-phone-s          : "screen and (min-width: "+($screen-phone-s + 1px)+")";
+
+// From 0 to [value]
+$to-4k                 : "screen and (max-width: "+$screen-4k+")";
+$to-large              : "screen and (max-width: "+$screen-large+")";
+$to-medium             : "screen and (max-width: "+$screen-medium+")";
+$to-small              : "screen and (max-width: "+$screen-small+")";
+$to-tablet             : "screen and (max-width: "+$screen-tablet+")";
+$to-phone              : "screen and (max-width: "+$screen-phone+")";
+$to-phone-m            : "screen and (max-width: "+$screen-phone-m+")";
+$to-phone-s            : "screen and (max-width: "+$screen-phone-s+")";
+
+// [value] only
+$only-4k               : $from-4k;
+$only-large            : "screen and (min-width: "+$screen-large+") and (max-width: "+($screen-4k - 1px)+")";
+$only-medium           : "screen and (min-width: "+$screen-medium+") and (max-width: "+($screen-large - 1px)+")";
+$only-small            : "screen and (min-width: "+$screen-small+") and (max-width: "+($screen-medium - 1px)+")";
+$only-tablet           : "screen and (min-width: "+$screen-tablet+") and (max-width: "+($screen-small - 1px)+")";
+$only-phone            : "screen and (min-width: "+$screen-phone+") and (max-width: "+($screen-tablet - 1px)+")";
+$only-phone-m          : "screen and (min-width: "+$screen-phone-m+") and (max-width: "+($screen-phone - 1px)+")";
+$only-phone-s          : $to-phone-s;
+
+// Specific
+$phone-portrait   : "screen and (max-width: "+$screen-phone+") and (orientation: portrait)";
+$phone-landscape  : "screen and (max-width: "+$screen-phone+") and (orientation: landscape)";
+$retina           : "(-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi)";
 
 
-$media-desktop          : "screen and (min-width: "+($screen-tablet + 1px)+")";
-
-$media-wide             : "screen and (min-width: "+$screen-wide-width+")";
-
-$media-13inch           : "screen and (max-width: "+$screen-13inch-width+"),(max-height: "+$screen-13inch-height+")";
-$media-13inch-only      : "screen and (min-width: "+($screen-tablet + 1px)+") and (max-width: "+$screen-13inch-width+"),(max-height: "+$screen-13inch-height+")";
-
-$media-tablet-desktop   : "screen and (min-width: "+($screen-mobile + 1px)+")";
-
-$media-tablet           : "screen and (max-width: "+$screen-tablet+")";
-$media-tablet-portrait  : "screen and (max-width: "+($screen-tablet - 1px)+")";
-$media-tablet-landscape : "screen and (min-width: "+($screen-mobile + 1px)+") and (max-width: "+$screen-tablet+") and (orientation: landscape)";
-$media-tablet-only      : "screen and (min-width: "+($screen-mobile + 1px)+") and (max-width: "+$screen-tablet+")";
-
-$media-not-mobile       : "screen and (min-width: "+($screen-mobile + 1px)+")";
-$media-mobile           : "screen and (max-width: "+$screen-mobile+")";
-$media-mobile-small     : "screen and (max-width: "+$screen-mobile-small+")";
-$media-mobile-portrait  : "screen and (max-width: "+$screen-mobile+") and (orientation: portrait)";
-$media-mobile-landscape : "screen and (max-width: "+$screen-mobile+") and (orientation: landscape)";
-
-$media-retina           : "(-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi)";
-
-$media-queries          : ( desktop: $media-desktop, wide: $media-wide, 13inch: $media-13inch, tablet: $media-tablet, tablet-portrait: $media-tablet-portrait, mobile: $media-mobile);
+// Media query list to be used in other libraries
+$media-queries-to   : ( 4k: $to-4k, large: $to-large, medium: $to-medium, small: $to-small, tablet: $to-tablet, phone: $to-phone, phone-m: $to-phone-m, phone-s: $to-phone-s);
+$media-queries-from : ( 4k: $from-4k, large: $from-large, medium: $from-medium, small: $from-small, tablet: $from-tablet, phone: $from-phone, phone-m: $from-phone-m, phone-s: $from-phone-s);
 
 
-// Dummy queries for mqpaker
+// Dummy queries for mqpaker, define media query order in generated css
 
-@media #{$media-not-mobile} {       html{ display: block } }
-@media #{$media-desktop} {          html{ display: block } }
-@media #{$media-wide}   {           html{ display: block } }
-@media #{$media-13inch} {           html{ display: block } }
-@media #{$media-13inch-only} {      html{ display: block } }
-@media #{$media-tablet-desktop} {   html{ display: block } }
-@media #{$media-tablet-only} {      html{ display: block } }
-@media #{$media-tablet} {           html{ display: block } }
-@media #{$media-tablet-landscape} { html{ display: block } }
-@media #{$media-tablet-portrait} {  html{ display: block } }
-@media #{$media-mobile} {           html{ display: block } }
-@media #{$media-mobile-landscape} { html{ display: block } }
-@media #{$media-mobile-portrait} {  html{ display: block } }
-
-@media #{$media-retina} {           html{ display: block } }
+@media #{$from-4k} {         html{ display: block } }
+@media #{$to-4k} {           html{ display: block } }
+@media #{$only-4k} {         html{ display: block } }
+@media #{$from-large} {      html{ display: block } }
+@media #{$to-large} {        html{ display: block } }
+@media #{$only-large} {      html{ display: block } }
+@media #{$from-medium} {     html{ display: block } }
+@media #{$to-medium} {       html{ display: block } }
+@media #{$only-medium} {     html{ display: block } }
+@media #{$from-small} {      html{ display: block } }
+@media #{$to-small} {        html{ display: block } }
+@media #{$only-small} {      html{ display: block } }
+@media #{$from-tablet} {     html{ display: block } }
+@media #{$to-tablet} {       html{ display: block } }
+@media #{$only-tablet} {     html{ display: block } }
+@media #{$from-phone} {      html{ display: block } }
+@media #{$to-phone} {        html{ display: block } }
+@media #{$only-phone} {      html{ display: block } }
+@media #{$from-phone-m} {    html{ display: block } }
+@media #{$to-phone-m} {      html{ display: block } }
+@media #{$only-phone-m} {    html{ display: block } }
+@media #{$from-phone-s} {    html{ display: block } }
+@media #{$to-phone-s} {      html{ display: block } }
+@media #{$only-phone-s} {    html{ display: block } }
+@media #{$phone-landscape} { html{ display: block } }
+@media #{$phone-portrait} {  html{ display: block } }
+@media #{$retina} {          html{ display: block } }

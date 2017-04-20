@@ -13,6 +13,6 @@
   }
 }
 
-@if( variable-exists(libraries) and index($libraries, 'map') ){
+@if (variable-exists(libraries) and index($libraries, 'map')) {
   @include lib-map;
 }

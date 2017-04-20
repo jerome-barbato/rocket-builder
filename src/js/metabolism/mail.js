@@ -12,38 +12,39 @@
  *   - jQuery
  *
  **/
-(function($){
+(function ($) {
 
-    var Mail = function(){
+    var Mail = function () {
 
         var self = this;
 
         /* Contructor. */
 
-        self._resolve = function(){
+        self._resolve = function () {
 
-            var email = $(this).data('name')+'@'+$(this).data('domain');
+            var email = $(this).data('name') + '@' + $(this).data('domain');
 
-            $(this).attr('href', 'mailto:'+email);
+            $(this).attr('href', 'mailto:' + email);
 
             $(this).removeAttr('data-name').removeAttr('data-domain');
 
-            if( $(this).text() == '@' )
+            if ($(this).text() == '@') {
                 $(this).text(email);
+            }
         };
 
         /**
          *
          */
-        self.__construct =  function(){
+        self.__construct = function () {
 
             $('[data-name][data-domain]').initialize(self._resolve);
         };
 
 
-        if( typeof dom !== "undefined" ) {
+        if (typeof dom !== "undefined") {
 
-            dom.compiler.register('attribute', 'mailto', function(elem, attrs) {
+            dom.compiler.register('attribute', 'mailto', function (elem, attrs) {
 
                 var mail = attrs.mailto.indexOf('@') >= 0 ? attrs.mailto.split('@') : attrs.mailto.split('|');
 
@@ -56,7 +57,7 @@
         $(document).on('boot', self.__construct);
     };
 
-    rocket = typeof rocket == 'undefined' ? {} : rocket;
+    rocket      = typeof rocket == 'undefined' ? {} : rocket;
     rocket.mail = new Mail();
 
 })(jQuery);

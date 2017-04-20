@@ -26,48 +26,83 @@
 
         self.__construct = function()
         {
-            if( 'ui' in $ && $.ui.selectmenu ){
+            if( 'ui' in $ ){
 
-                $.widget( 'app.selectmenu', $.ui.selectmenu, {
-                    _drawButton: function() {
-                        this._super();
-                        var selected = this.element
-                                .find( '[selected]' )
-                                .length,
-                            placeholder = this.options.placeholder;
-
-                        if (!selected && placeholder) {
-                            this.buttonItem.text(placeholder);
-                        }
-                    },
-                    _resizeMenu: function() {
-                        this.menu.css('min-width', this.button.outerWidth() - 2 );
-                    }
-                });
-
-                $('select[data-custom]').initialize(function()
+                if( 'selectmenu' in $.ui )
                 {
-                    var $parent = $(this).parent();
+                    $.widget('app.selectmenu', $.ui.selectmenu, {
+                        _drawButton: function () {
+                            this._super();
+                            var selected = this.element.find('[selected]').length,
+                                placeholder = this.options.placeholder;
 
-                    var options = {
-                        icons: { button: 'ui-icon ui-icon-arrow' },
-                        change: function( event, ui ) {
+                            if (!selected && placeholder)
+                                this.buttonItem.text(placeholder);
 
-                            if( $(this).val().length )
-                                $element.addClass('ui-selectmenu-button-filled');
-                            else
-                                $element.removeClass('ui-selectmenu-button-filled');
+                            if(selected)
+	                            this.button.addClass('ui-selectmenu-button-filled');
                         },
-                        appendTo: $parent
-                    };
+                        _resizeMenu: function () {
 
-                    if( $(this).hasDataAttr('placeholder') )
-                        options.placeholder = $(this).data('placeholder');
+                            var offset = this.element.data('menu_offset');
+                            if (typeof offset == "undefined")
+                                offset = 0;
+                            else
+                                offset = parseInt(offset);
 
-                    $(this).selectmenu(options);
+                            this.menu.css('min-width', this.button.outerWidth() - offset - 2);
+                        }
+                    });
 
-                    var $element = $(this).selectmenu( 'widget' );
-                });
+
+                    $('select[data-custom]').initialize(function ()
+                    {
+                        var $parent = $(this).parent();
+
+                        var options = {
+                            icons: {button: 'ui-icon ui-icon-arrow'},
+                            change: function (event, ui) {
+
+                                if ($(this).val().length)
+                                    $element.addClass('ui-selectmenu-button-filled');
+                                else
+                                    $element.removeClass('ui-selectmenu-button-filled');
+
+	                            $(this).change();
+                            },
+                            appendTo: $parent
+                        };
+
+                        if ($(this).hasDataAttr('placeholder'))
+                            options.placeholder = $(this).data('placeholder');
+
+                        $(this).selectmenu(options);
+
+                        var $element = $(this).selectmenu('widget');
+                    });
+                }
+
+
+                if( 'datepicker' in $.ui )
+                {
+                    $('input[data-custom="date"]').initialize(function () {
+
+                        var $parent = $(this).parent();
+
+                        var options = {
+                            beforeShow:function(textbox, instance){
+
+                                var $datepicker = instance.dpDiv;
+                                $parent.append($datepicker);
+                                setTimeout(function(){
+                                    $datepicker.css({position:'absolute', left:0, top:'100%', visibility:'visible'})
+                                });
+                            }
+                        };
+
+                        $(this).datepicker(options);
+                    });
+                }
             }
         };
 
@@ -76,7 +111,7 @@
         {
             dom.compiler.register('attribute', 'custom', function(elem, attrs)
             {
-                elem.attr('data-custom', 'true');
+                elem.attr('data-custom', attrs.custom.length ? attrs.custom : 'true');
 
                 if( attrs.placeholder )
                 {

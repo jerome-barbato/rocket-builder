@@ -10,7 +10,13 @@
   [data-sizer="16/10"]{ @include aspect-ratio(16/10) }
   [data-sizer="1/1"]{ @include aspect-ratio(1) }
 
-  img.has-sizer{ background-size: cover; background-position: center; width: 100%; height: auto; display: block }
+  img.has-sizer {
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: auto;
+    display: block
+  }
 }
 
 @mixin aspect-ratio($ratio) {
@@ -29,9 +35,11 @@
 }
 
 @mixin remove-aspect-ratio() {
-  &:after { display: none }
+  &:after {
+    display: none
+  }
 }
 
-@if( variable-exists(libraries) and index($libraries, 'sizer') ){
+@if (variable-exists(libraries) and index($libraries, 'sizer')) {
   @include lib-sizer;
 }

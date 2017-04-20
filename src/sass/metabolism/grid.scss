@@ -1,14 +1,12 @@
-$space : 0 !default;
-$grid-default-space : $space !default;
-
-$grid-margin : 0 $grid-default-space !default;
-$grid-col-padding : 0 $grid-default-space !default;
-$grid-row-margin : $grid-default-space*2 !default;
-$grid-row-padding : false !default;
+$grid-space: 0 !default;
+$grid-margin : 0 $grid-space !default;
+$grid-col-padding : 0 $grid-space !default;
+$grid-row-margin : $grid-space*2 !default;
+$grid-row-padding: false !default;
 
 //$grid-breakpoints : desktop, wide, 13inch, tablet, tablet-portrait, mobile;
 $grid-breakpoints : false !default;
-$grid-mobile-breakpoint : $media-mobile !default;
+$grid-phone-breakpoint : $to-phone !default;
 $grid-flex : false !default;
 $grid-table : true !default;
 $grid-col-count : 12 !default;
@@ -17,11 +15,11 @@ $grid-col-count : 12 !default;
 
   [data-grid], %grid {
     display: block; @include clearfix();
-    @if variable-exists(grid-margin) { & + & { margin: $grid-margin } }
+    @if ($grid-margin) { & + & { margin: $grid-margin } }
   }
 
   @if( $grid-flex ){
-    [data-grid="flex"] {
+    [data-grid="flex"], %grid-flex {
       [data-row] { display: flex; flex: 0 1 auto; flex-direction: row; flex-wrap: wrap }
       [data-row="top"]{ align-items: flex-start }
       [data-row="center"]{ align-items: center }
@@ -33,8 +31,8 @@ $grid-col-count : 12 !default;
             [data-col="#{$j}/#{$i}"] { flex-basis: ((100%*$j)/$i) }
             @if($grid-breakpoints){
               @each $grid-breakpoint in $grid-breakpoints{
-                $mediaquery : map_get($media-queries, $grid-breakpoint);
-                @media #{$mediaquery} { [data-col-#{$grid-breakpoint}="#{$j}/#{$i}"] { flex-basis: ((100%*$j)/$i) } }
+                $media-query : map_get($media-queries-to, $grid-breakpoint);
+                @media #{$media-query} { [data-col-#{$grid-breakpoint}="#{$j}/#{$i}"] { flex-basis: ((100%*$j)/$i) } }
               }
             }
           }
@@ -44,17 +42,17 @@ $grid-col-count : 12 !default;
   }
 
   @if( $grid-table ){
-    [data-grid="table"] {
+    [data-grid="table"], %grid-table {
       display: table; width: 100%; height: 100%; table-layout: fixed;
       &:after{ display: none }
-      @media #{$grid-mobile-breakpoint} { display: block }
+      @media #{$grid-phone-breakpoint} { display: block }
       [data-row] {
         display: table-row;
-        @media #{$grid-mobile-breakpoint} { display: block }
+        @media #{$grid-phone-breakpoint} { display: block }
       }
       [data-col]{
         display: table-cell; height: 100%; float: none; vertical-align: top;
-        @media #{$grid-mobile-breakpoint} { display: block }
+        @media #{$grid-phone-breakpoint} { display: block }
       }
       [data-align="top"] { vertical-align: top }
       [data-align="middle"] { vertical-align: middle }
@@ -64,28 +62,31 @@ $grid-col-count : 12 !default;
 
   [data-row], %row{
     @include clearfix(); display: block; position: relative;
-    @if variable-exists(grid-row-padding) { padding: $grid-row-padding }
-    @if variable-exists(grid-row-margin) { & + & { margin-top: $grid-row-margin } }
+    @if ($grid-row-padding) { padding: $grid-row-padding }
+    @if ($grid-row-margin) { & + & { margin-top: $grid-row-margin } }
   }
 
   [data-col], %column {
     &:empty:after{ content:'\00a0' }
     float: left; width: 100%; border-collapse: collapse; display: block; position: relative;
-    @media #{$grid-mobile-breakpoint} {
+    @media #{$grid-phone-breakpoint} {
       width: 100%; float: none;
       &:empty{ display: none }
     }
-    @if variable-exists(grid-col-padding) { padding: $grid-col-padding }
+    @if ($grid-col-padding) { padding: $grid-col-padding }
   }
+
+  [data-col="0"]{ padding: 0; float: none }
+  [data-col="auto"]{ width: auto }
 
   @for $j from 1 through $grid-col-count {
     @for $i from 1 through $grid-col-count {
       @if $j <= $i{
-        [data-col="#{$j}/#{$i}"] { width: ((100%*$j)/$i) }
+        [data-col="#{$j}/#{$i}"]{ width: ((100%*$j)/$i) }
         @if($grid-breakpoints){
           @each $grid-breakpoint in $grid-breakpoints{
-            $mediaquery : map_get($media-queries, $grid-breakpoint);
-            @media #{$mediaquery} { [data-col-#{$grid-breakpoint}="#{$j}/#{$i}"] { width: ((100%*$j)/$i) } }
+            $media-query : map_get($media-queries-to, $grid-breakpoint);
+            @media #{$media-query} { [data-col-#{$grid-breakpoint}="#{$j}/#{$i}"] { width: ((100%*$j)/$i) } }
           }
         }
       }
@@ -95,30 +96,23 @@ $grid-col-count : 12 !default;
 
 @mixin grid($mod: false) {
   @if( $mod ){
-    [data-grid="#{$mod}"]{ @content; }
+    @extend %grid-#{$mod}
   } @else {
-    [data-grid]{ @content; }
+    @extend %grid;
   }
 }
 
-@mixin column($mod: false) {
-  @if( $mod ){
-    [data-col="#{$mod}"]{ @content; }
-  } @else {
-    [data-col]{ @content; }
-  }
+@mixin column($size, $extend:true) {
+  @if( $extend ){ @extend %column }
+  width: $size*100%;
 }
 
 @mixin row($mod: false) {
-  @if( $mod ){
-    [data-row="#{$mod}"]{ @content; }
-  } @else {
-    [data-row]{ @content; }
-  }
+  @extend %row;
 }
 
 @mixin break-grid() { width: 100%; float: none }
 
-@if( variable-exists(libraries) and  index($libraries, 'grid') ) {
+@if (variable-exists(libraries) and  index($libraries, 'grid')) {
   @include lib-grid
 }

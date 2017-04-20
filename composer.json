@@ -1,7 +1,8 @@
 {
   "name": "metabolism/rocket-builder",
-  "version": "3.3.10",
+  "version": "3.4.0",
   "description": "Rocket Builder by Metabolism",
+  "type": "composer-plugin",
   "license": "AGPL-3.0",
   "authors": [
     {
@@ -12,5 +13,39 @@
       "name": "Paul COUDEVILLE",
       "email": "paul@metabolism.fr"
     }
-  ]
+  ],
+  "require": {
+    "composer-plugin-api": "^1.0"
+  },
+  "suggest": {
+    "metabolism/rocket-kernel": "Allows file manipulation at builder installation using Rocket Framework"
+  },
+  "extra": {
+    "class": "Rocket\\Composer\\BuilderPlugin",
+    "file-management": {
+      "symlink": {
+        "metabolism/rocket-builder": {
+          "src/js/metabolism": "app/resources/js/vendor/metabolism",
+          "src/js/polyfill": "app/resources/js/vendor/polyfill",
+          "doc": "doc/builder",
+          "src/sass/framework": "app/resources/sass/vendor/framework",
+          "src/sass/metabolism": "app/resources/sass/vendor/metabolism"
+        }
+      },
+      "copy": {
+        "metabolism/rocket-builder": {
+          "src/js/browser.js": "app/resources/js/vendor/browser.js",
+          "src/js/modernizr.js": "app/resources/js/vendor/modernizr.js"
+        }
+      }
+    },
+    "branch-alias": {
+      "dev-dev": "3.4.x-dev"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Rocket\\": "src/"
+    }
+  }
 }

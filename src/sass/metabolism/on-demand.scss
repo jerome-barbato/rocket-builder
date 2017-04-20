@@ -4,7 +4,6 @@
   [data-on_demand="loaded"]{ transition: $speed-slow opacity $ease-in-out-cubic; will-change: opacity }
 }
 
-
-@if( variable-exists(libraries) and index($libraries, 'on-demand') ){
+@if (variable-exists(libraries) and index($libraries, 'on-demand')) {
   @include lib-on-demand;
 }

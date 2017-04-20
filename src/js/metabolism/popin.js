@@ -23,50 +23,53 @@
  *   Each popin is now a new instance
  *
  **/
-(function($){
+(function ($) {
 
-    var Popin = function(id, content, context)
+    var Popin = function (id, content, context) 
     {
-        var self   = this;
-        var $html  = $('html');
-        var $body  = $('body');
-        var $popin = false;
+        var self          = this;
+        var $html         = $('html');
+        var $container    = $('.popin-container');
+        var $popin        = false;
         var transitionEnd = 'webkitTransitionEnd.popin transitionend.popin msTransitionEnd.popin oTransitionEnd.popin';
+
+        if( !$container.length )
+            $container = $('body');
 
         /* Public */
 
         var config = {
-            html   : {
+            html: {
 
-                popin : '<div class="popin">'+
-                          '<div class="valign"><div class="valign__middle popin__overlay">'+
-                          '<div class="popin__content"></div>'+
-                          '</div></div>'+
-                        '</div>',
-                close : '<a class="popin__close"></a>'
+                popin: '<div class="popin">' +
+                '<div class="valign"><div class="valign__middle popin__overlay">' +
+                '<div class="popin__content"></div>' +
+                '</div></div>' +
+                '</div>',
+                close: '<a class="popin__close"></a>'
             }
         };
 
 
         self.context = {
-            remove : true
+            remove: true
         };
 
 
-        self.close = function(){ close() };
-        self.show  = function(){ show() };
-        self.get   = function(){ return $popin };
+        self.close = function () { close() };
+        self.show  = function () { show() };
+        self.get   = function () { return $popin };
 
         /* Contructor. */
 
         /**
          *
          */
-        var construct =  function()
+        var construct = function ()
         {
-            $popin = $('.popin--'+id);
+            $popin = $('.popin--' + id);
 
-            if( $popin.length )
+            if ($popin.length)
             {
                 $popin.trigger('popin.show');
             }
@@ -74,8 +77,8 @@
             {
                 self.context = $.extend(self.context, context);
 
-                if( typeof(content) == "undefined" || content === false )
-                    content = $('script[type="text/template"]#'+id).html();
+                if (typeof(content) == "undefined" || content === false)
+                    content = $('script[type="text/template"]#' + id).html();
 
                 add(content);
                 setupEvents();
@@ -88,29 +91,31 @@
         /**
          *
          */
-        var setupEvents = function()
+        var setupEvents = function ()
         {
-            $popin.click(function(e)
+            $popin.click(function (e)
             {
-                if( $(e.target).hasClass('popin__overlay') || $(e.target).hasClass('popin__close') || $(e.target).hasClass('popin-close'))
+                if ($(e.target).hasClass('popin__overlay') || $(e.target).hasClass('popin__close') || $(e.target).hasDataAttr('close'))
+                {
+                    e.preventDefault();
+	                close();
+                }
+            });
+
+            $(document).on('click keypress', function (e)
+            {
+                if (e.which === 13)
                     close();
             });
 
-            $(document).on('click keypress', function(e)
-            {
-                if ( e.which === 13 )
-                    close();
-            });
-
-            $popin.on('popin.close', function(e) { close() });
-            $popin.on('popin.show', function(e) { show() });
+            $popin.on('popin.close', function () { close() });
+            $popin.on('popin.show', function () { show() });
         };
 
 
-
-        var remove = function()
+        var remove = function ()
         {
-            if( $popin.length )
+            if ($popin.length)
                 $popin.remove();
 
             $(document).trigger('popin.removed', [id]);
@@ -119,77 +124,60 @@
         };
 
 
-        var close = function()
+        var close = function ()
         {
-            if( Modernizr && Modernizr.csstransitions )
+            if (Modernizr && Modernizr.csstransitions)
             {
                 $popin.attr('data-state', 'removing');
 
-                $popin.one(transitionEnd, function()
+                $popin.one(transitionEnd, function ()
                 {
-                    if( self.context.remove )
+                    if (self.context.remove)
                         remove();
                     else
                         $popin.attr('data-state', 'idle');
 
-                    if( !$('.popin:visible').length )
+                    if (!$('.popin:visible').length)
                         $html.removeClass('has-popin');
 
-                    $body.repaint();
+                    $container.repaint();
                 });
             }
             else
             {
-                if( self.context.remove )
+                if (self.context.remove)
                     remove();
                 else
                     $popin.attr('data-state', 'idle');
 
-                if( !$('.popin:visible').length )
+                if (!$('.popin:visible').length)
                     $html.removeClass('has-popin');
             }
         };
 
 
-
-        var add = function(content)
+        var add = function (content)
         {
-            if ( !window.angular )
+            if (!window.angular)
                 content = content.populate(self.context);
 
-            $popin = $(config.html.popin);
+            $popin       = $(config.html.popin);
             var $content = $popin.find('.popin__content');
 
             $content.append(content);
 
-            if( !$content.find('.popin__close, .popin-close').length )
+            if (!$content.find('.popin__close, [data-close]').length)
                 $content.append(config.html.close);
 
-            $html.addClass('has-popin');
-            $popin.addClass('popin--'+id);
-
-            $body.append($popin);
-
-            if( 'angular' in window && angular.$injector )
-            {
-                angular.$injector.invoke(function($compile, $rootScope)
-                {
-                    var scope = $popin.scope() || $rootScope.$new();
-                    scope = angular.extend(scope, self.context);
-
-                    //todo: find why context is not interpolated
-                    $compile($popin.contents())(scope);
-                });
-            }
+            $container.append($popin);
 
             show();
         };
 
 
-
-        var show = function()
+        var show = function ()
         {
-            $popin.attr('data-state', '');
+            $popin.attr('data-state', '').addClass('popin--' + id);
 
             $popin.repaint();
 
@@ -197,12 +185,18 @@
 
             $(document).trigger('popin.added', [$popin, id, self.context]);
 
-            if( Modernizr && Modernizr.csstransitions )
+            if (Modernizr && Modernizr.csstransitions)
             {
-                $popin.one(transitionEnd, function() { $popin.attr('data-state', 'added') });
+                $html.addClass('will-have-popin');
+                $popin.one(transitionEnd, function ()
+                {
+                    $popin.attr('data-state', 'added');
+                    $html.removeClass('will-have-popin').addClass('has-popin');
+                });
             }
             else
             {
+                $html.addClass('has-popin');
                 $popin.attr('data-state', 'added');
             }
         };
@@ -213,17 +207,20 @@
     };
 
 
-
-    var Popins = function()
+    var Popins = function ()
     {
-        $(document).on('click', '[data-popin]', function(e)
+        $(document).on('click', '[data-popin]', function (e)
         {
             e.preventDefault();
             var context = {};
 
-            if( $(this).data('context') )
+            if ($(this).data('context'))
             {
-                try { context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {}; } catch(e) {}
+                try
+                {
+                    context = $(this).data('context') ? JSON.parse('{' + $(this).data('context').replace(/'/g, '"') + '}') : {};
+
+                } catch (e) {}
             }
             else
             {
@@ -234,13 +231,13 @@
         });
 
 
-        if( typeof dom !== "undefined" )
+        if (typeof dom !== "undefined")
         {
-            dom.compiler.register('attribute', 'popin', function(elem, attrs)
+            dom.compiler.register('attribute', 'popin', function (elem, attrs)
             {
                 elem.attr('data-popin', attrs.popin);
 
-                if( attrs.context )
+                if (attrs.context)
                 {
                     elem.attr('data-context', attrs.context);
                     elem.removeAttr('context');
@@ -251,7 +248,7 @@
 
     new Popins();
 
-    rocket = typeof rocket == 'undefined' ? {} : rocket;
+    rocket       = typeof rocket == 'undefined' ? {} : rocket;
     rocket.popin = Popin;
 
 })(jQuery);

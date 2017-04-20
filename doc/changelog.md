@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.4.0 - 2013-04-20
+### Added
+- Branch aliases for composer, instead of using `dev-dev` tag in composer, you can now use `3.4.x-dev`
+### Changed
+- Composer Commands
+  - `composer create` and `composer build` are now added to this project and can be used anywhere if installing from composer.
+  - Symlinks creation is also moved into this project from boilerplate.
+- Hide-On behaviour
+- Media queries ( mobile = phone, tablet = small, ... )
 
 ## 3.3.10 - 2017-04-20 ##
 ### Fixed
@@ -13,13 +22,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - IE Fit bug
 - no more autoplay while scrolling on slider
-### Remove
+### Removed
 - parallax on IE
 
 ## 3.3.8 - 2017-03-15 ##
 ### Fixed
 - has scrolled removed on top
-### Remove
+### Removed
 - hide on mobile, use hide on phone
 
 ## 3.3.7 - 2017-03-15 ##
@@ -63,6 +72,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - no more has-fit-object on data-object_fit item
 ### Fixed
 - li tag escape in the compiler
+
+## 3.4.0 - IN-DEV ##
+### Added
+* Composer Plugin - [See documentation](composer.md)
+    * composer build
+    * composer create
+    * File management is now placed under subpackage `composer.json`
 
 ## 3.3.0 - 2017-02-24 ##
 ### Added

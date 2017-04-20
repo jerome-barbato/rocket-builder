@@ -30,8 +30,8 @@
 
         self.config = {
             marker : {
-                url       : app.asset+'/media/icon/marker@2x.png',
-                hover_url : app.asset+'/media/icon/marker--hover@2x.png',
+                url       : app.asset_url+'/media/icon/marker@2x.png',
+                hover_url : app.asset_url+'/media/icon/marker--hover@2x.png',
                 width     : 45,
                 height    : 65,
                 label_origin : 'center',

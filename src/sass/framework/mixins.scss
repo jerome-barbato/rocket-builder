@@ -48,11 +48,11 @@
 
 // Text
 @mixin text($type) {
-  @extend %text, %text--#{$type};
+  @extend %text--#{$type}, %text !optional;
 }
 
 
 // Button
 @mixin button($type) {
-  @extend %button, %button--#{$type};
+  @extend %button--#{$type}, %button !optional;
 }

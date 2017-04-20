@@ -14,111 +14,109 @@
  *   - jQuery
  *
  **/
-(function($){
+(function ($) {
 
-    var Parallax = function()
-    {
+    var Parallax = function () {
         var self = this;
 
         self.config = {
-            mobile : $('meta[name="parallax-mobile"]').attr('content')=="yes",
-            type   : 'down'
+            mobile: $('meta[name="parallax-mobile"]').attr('content') == "yes",
+            type  : 'down'
         };
 
 
         self.context = {
-            window_height   : 0,
-            document_height : 0,
-            scroll_top      : 0,
-            font_size       : 10,
-            items           : []
+            window_height  : 0,
+            document_height: 0,
+            scroll_top     : 0,
+            font_size      : 10,
+            items          : []
         };
 
 
-        self._setupEvents = function()
-        {
+        self._setupEvents = function () {
             $(document)
                 .on('boot', self._recompute)
                 .on('loaded', self._recompute);
 
             $(window)
-                .scroll(function(){ requestAnimationFrame(self._update) })
+                .scroll(function () { requestAnimationFrame(self._update) })
                 .resize(self._recompute);
         };
 
 
-
-        self._recompute = function(){
+        self._recompute = function () {
 
             self.context.window_height   = $(window).height();
             self.context.document_height = $(document).height();
             self.context.font_size       = parseInt($('html').css('fontSize'));
 
-            $.each(self.context.items, function(i, item){
+            $.each(self.context.items, function (i, item) {
 
                 item.height = item.$container.height();
 
-                item.gap  = item.unit == 'rem' ?
-                    item.strength*self.context.font_size :
-                    ( item.unit == '%' ? item.strength*item.height :
-                        ( item.unit == 'px' ? item.strength*item.height :
-                            ( item.unit == 'vh' ? item.strength*self.context.window_height : item.strength )
-                        )
+                item.gap    = item.unit == 'rem' ?
+                    item.strength * self.context.font_size :
+                    ( item.unit == '%' ? item.strength * item.height :
+                            ( item.unit == 'px' ? item.strength * item.height :
+                                    ( item.unit == 'vh' ? item.strength * self.context.window_height : item.strength )
+                            )
                     );
 
                 item.gap    = (item.invert ? -1 : 1) * item.gap;
                 item.top    = item.$container.offset().top;
-                item.bottom = item.top+item.height+(item.use_gap?item.gap:0);
+                item.bottom = item.top + item.height + (item.use_gap ? item.gap : 0);
             });
 
-            if( app && app.debug > 2 )
+            if (app && app.debug > 2) {
                 console.log('parallax', self.context.items);
+            }
 
             self._update();
         };
 
 
-
-        self._update = function(){
+        self._update = function () {
 
             self.context.scroll_top = $(window).scrollTop();
 
-            $.each(self.context.items, function(i, item){
+            $.each(self.context.items, function (i, item) {
 
                 var offset = 0;
 
-                if( self.context.scroll_top + self.context.window_height > item.top && item.bottom > self.context.scroll_top) {
+                if (self.context.scroll_top + self.context.window_height > item.top && item.bottom > self.context.scroll_top) {
 
-                    if( item.top < self.context.window_height )
+                    if (item.top < self.context.window_height) {
                         offset = self.context.scroll_top / item.bottom;
-                    else
+                    } else {
                         offset = (self.context.scroll_top + self.context.window_height - item.top) / (item.bottom + self.context.window_height - item.top);
+                    }
 
-                    offset = Math.round(offset*1000)/1000;
+                    offset = Math.round(offset * 1000) / 1000;
                 }
-                else{
+                else {
 
                     offset = self.context.scroll_top + self.context.window_height > item.top ? 1 : 0;
                 }
 
-                offset = item.invert ? 1-offset : offset;
-                offset = item.center ? offset-0.5 : offset;
+                offset = item.invert ? 1 - offset : offset;
+                offset = item.center ? offset - 0.5 : offset;
 
-                if( item.offset != offset ){
+                if (item.offset != offset) {
 
                     item.offset = offset;
 
-                    if( !item.center && item.offset < 0.01 )
+                    if (!item.center && item.offset < 0.01) {
                         item.$element.css('transform', 'none');
-                    else
-                        item.$element.css('transform', 'translate3d(0,'+(item.offset*item.strength)+item.unit+',0)');
+                    } else {
+                        item.$element.css('transform', 'translate3d(0,' + (item.offset * item.strength) + item.unit + ',0)');
+                    }
                 }
             });
         };
 
 
-
-        self._add = function( $element ){
+        self._add = function ($element) {
 
             var parallax = $element.data('parallax');
 
@@ -126,21 +124,20 @@
             unit = parallax.indexOf('rem') > 0 ? 'rem' : unit;
             unit = parallax.indexOf('vh') > 0 ? 'vh' : unit;
 
-            var invert = parallax.substr(0,1) == '!';
+            var invert = parallax.substr(0, 1) == '!';
 
-            parallax = parallax.replace('!','');
+            parallax = parallax.replace('!', '');
 
             self.context.items.push({
-                $element   : $element,
-                $container : $element.parent().hasClass('parallax-container') ? $element.parent() : $element,
-                strength   : parseInt( parallax.replace(unit,'') ),
-                unit       : unit,
-                invert     : invert,
-                center     : $element.hasDataAttr('parallax-center') ? parseInt($element.data('parallax-center')) : false,
-                use_gap    : $element.hasDataAttr('parallax-gap') ? parseInt($element.data('parallax-gap')) : true
+                $element  : $element,
+                $container: $element.parent().hasClass('parallax-container') ? $element.parent() : $element,
+                strength  : parseInt(parallax.replace(unit, '')),
+                unit      : unit,
+                invert    : invert,
+                center    : $element.hasDataAttr('parallax-center') ? parseInt($element.data('parallax-center')) : false,
+                use_gap   : $element.hasDataAttr('parallax-gap') ? parseInt($element.data('parallax-gap')) : true
             });
         };
-
 
 
         /* Contructor. */
@@ -148,45 +145,45 @@
         /**
          *
          */
-        self.__construct = function() {
+        self.__construct = function () {
+
 
             if( (browser && browser.mobile && !self.config.mobile) || typeof requestAnimationFrame == 'undefined' || $('html').hasClass('ie') )
                 return;
 
             self._setupEvents();
 
-            $('[data-parallax]').initialize(function(){
+            $('[data-parallax]').initialize(function () {
 
-                self._add( $(this) );
+                self._add($(this));
             });
         };
 
 
+        if (typeof dom !== "undefined") {
 
-        if( typeof dom !== "undefined" ){
-
-            dom.compiler.register('attribute', 'parallax-container', function(elem, attrs) {
+            dom.compiler.register('attribute', 'parallax-container', function (elem, attrs) {
 
                 elem.addClass('parallax-container');
             });
 
-            dom.compiler.register('attribute', 'parallax', function(elem, attrs) {
+            dom.compiler.register('attribute', 'parallax', function (elem, attrs) {
 
-                if( elem.hasDataAttr('animation') ){
+                if (elem.hasDataAttr('animation')) {
 
-                    console.warn('Parallax and animation are not compatible, please add an extra node ( parallax : "'+attrs.parallax+'", animation : "'+elem.data('animation')+'")');
+                    console.warn('Parallax and animation are not compatible, please add an extra node ( parallax : "' + attrs.parallax + '", animation : "' + elem.data('animation') + '")');
                     return;
                 }
 
                 dom.compiler.attr(elem, 'parallax', attrs.parallax);
 
-                if( attrs.parallaxCenter ){
+                if (attrs.parallaxCenter) {
 
                     dom.compiler.attr(elem, 'parallax-center', attrs.parallaxCenter == "1" || attrs.parallaxCenter == "true" ? "1" : "0");
                     elem.removeAttr('parallax-center');
                 }
 
-                if( attrs.parallaxGap ){
+                if (attrs.parallaxGap) {
 
                     dom.compiler.attr(elem, 'parallax-gap', attrs.parallaxGap == "1" || attrs.parallaxGap == "true" ? "1" : "0");
                     elem.removeAttr('parallax-gap');
@@ -199,7 +196,7 @@
         self.__construct();
     };
 
-    rocket = typeof rocket == 'undefined' ? {} : rocket;
+    rocket          = typeof rocket == 'undefined' ? {} : rocket;
     rocket.parallax = new Parallax();
 
 })(jQuery);

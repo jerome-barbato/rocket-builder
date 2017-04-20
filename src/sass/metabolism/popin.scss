@@ -4,7 +4,7 @@
   .popin {
     position: fixed; left: 0; top: 0; width: 100%; overflow: auto;
     height: 100%; z-index: 9999;background: rgba(0,0,0,0.9);
-    transition: allow(opacity); text-align: center; opacity: 0;
+    transition: allow(opacity transform); text-align: center; opacity: 0;
 
     &__trigger, &__close { cursor: pointer }
 
@@ -22,7 +22,7 @@
 
     &[data-state="idle"]{ display: none }
     &[data-state="adding"], &[data-state="added"]{
-      opacity: 1;
+      opacity: 1; transform: none;
       .popin {
         &__content, &__close { transform: none }
       }
@@ -30,7 +30,6 @@
   }
 }
 
-
-@if( variable-exists(libraries) and index($libraries, 'popin') ){
+@if (variable-exists(libraries) and index($libraries, 'popin')) {
   @include lib-popin;
 }

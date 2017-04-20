@@ -57,7 +57,7 @@ a {
 }
 
 input, textarea {
-  outline: none;
+  outline: none; border: none; padding: 0;
 }
 
 input, button {
