@@ -4,7 +4,7 @@
 <div background="http://image.url"></div>
 ~~~~
 
-Convert to
+Compile to
 
 ~~~~
 <div style="background-image:url('http://image.url')"></div>
@@ -16,7 +16,7 @@ Also available for project media folder
 <div page-background="monimage.jpg"></div>
 ~~~~
 
-Convert to
+Compile to
 
 ~~~~
 <div style="background-image:url('{{ asset_url('/media/page/monimage.jpg') }}')"></div>

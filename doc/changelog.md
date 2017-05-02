@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.4.1 - 2013-04-25
+### Added
+- Slider auto height
+
 ## 3.4.0 - 2013-04-20
 ### Added
 - Branch aliases for composer, instead of using `dev-dev` tag in composer, you can now use `3.4.x-dev`

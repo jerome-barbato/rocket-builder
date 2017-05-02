@@ -67,6 +67,7 @@
             preload       : true,
             loop          : true,
             sync          : false,
+            height        : false,
             load          : 1.9,
             use_transition: Modernizr && Modernizr.csstransitions,
             display       : false
@@ -101,12 +102,7 @@
 
         /* Public */
 
-        self.goto = function (id, animate, callback)
-        {
-            self._show(id, animate, callback);
-        };
-
-
+        self.goto   = function (id, animate, callback){ self._show(id, animate, callback) };
         self.pause  = function () { self.context.paused = true };
         self.resume = function () { self.context.paused = false };
 
@@ -124,7 +120,7 @@
          */
         self._setupContext = function ()
         {
-            if (typeof self.config.$element.attr('id') == 'undefined')
+            if (typeof self.config.$element.attr('id') === 'undefined')
                 self.config.$element.attr('id', guid('slider'));
 
             self.context.$slides_container     = self.config.$element.findClosest('.' + self.classnames.slides, '.' + self.classnames.slider);
@@ -153,8 +149,10 @@
             if (self.config.preload)
                 self.config.$element.append('<div class="' + self.classnames.preload + '"/>', false);
 
-            if (self.config.sync)
                 self._sync();
+
+            if (self.config.height && !isNaN(self.config.height))
+	            self.config.$element.height(self.config.height);
 
             self._initArrows();
             self._initPagination();
@@ -205,11 +203,14 @@
 
         self._sync = function ()
         {
+	        if (self.config.sync)
+	        {
             $('#' + self.config.sync).on('slider.updated', function (e, index)
             {
-                if (index != self.context.indices.current)
+			        if (index !== self.context.indices.current)
                     self._show(index, true);
             });
+	        }
         };
 
 
@@ -256,10 +257,10 @@
 
             self.config.$element.on('slider.update', function (e, index, animate)
             {
-                if (typeof animate == 'undefined')
+                if (typeof animate === 'undefined')
                     animate = true;
 
-                if (index != self.context.indices.current)
+                if (index !== self.context.indices.current)
                     self._show(index, animate);
             });
 
@@ -305,7 +306,7 @@
         self._computeIndexes = function (target)
         {
             var direction = self.context.indices.current > target ? 'prev' : 'next';
-            var next      = direction == 'prev' ? target - 1 : target + 1;
+            var next      = direction === 'prev' ? target - 1 : target + 1;
             var current   = self.context.indices.current;
 
             if (self.config.loop)
@@ -322,7 +323,7 @@
                     direction = 'prev';
                 }
 
-                next = direction == 'prev' ? target - 1 : target + 1;
+                next = direction === 'prev' ? target - 1 : target + 1;
 
                 if (next >= self.context.slide_count)
                     next = 0;
@@ -335,7 +336,7 @@
                     return false;
             }
 
-            self.context.$slides_container.attr('data-direction', (direction == 'next' ? 'forward' : 'backward'));
+            self.context.$slides_container.attr('data-direction', (direction === 'next' ? 'forward' : 'backward'));
             self.config.$element.attr('data-index', (parseInt(target) + 1));
 
             self.context.direction        = direction;
@@ -351,7 +352,7 @@
         {
             clearTimeout(self.context.timer);
 
-            if (self.context.is_animating || self.context.indices.current == index) return;
+            if (self.context.is_animating || self.context.indices.current === index) return;
 
             if (!self._computeIndexes(index))
                 return false;
@@ -377,7 +378,7 @@
             if (self.context.indices.current >= self.context.slide_count - 1 && !self.config.loop)
                 self._addMod(self.context.$arrows.filter('.' + self.classnames.arrow + '-next'), 'button', 'disabled');
 
-            if (self.context.indices.current == 0 && !self.config.loop)
+            if (self.context.indices.current === 0 && !self.config.loop)
                 self._addMod(self.context.$arrows.filter('.' + self.classnames.arrow + '-prev'), 'button', 'disabled');
 
             self._updateSlides(animate, callback);
@@ -414,15 +415,17 @@
                 self._preload();
                 self._autoplay();
 
-                if (callback) {
+                if( callback )
                     callback();
-                }
             });
         };
 
 
         self._animate = function (animate, callback)
         {
+	        if ( self.config.height === "auto" )
+	            self.config.$element.height( self.context.$current_slide.outerHeight() );
+
             if (animate)
             {
                 if (!self.context.loop)
@@ -431,7 +434,7 @@
                 var $animatedSlides = self.context.$slides.filter(':visible').not(function ()
                 {
                     var animation = $(this).css('animation-name');
-                    return !animation || animation == "none";
+                    return !animation || animation === "none";
                 });
 
                 var i = 0;
@@ -444,7 +447,7 @@
                         $(this).off(self.context.animationEnd);
                     }
 
-                    if (i == $animatedSlides.length)
+                    if (i === $animatedSlides.length)
                         callback();
                 });
 
@@ -608,7 +611,7 @@
         {
             dom.compiler.register('element', 'slider', function (elem, attrs)
             {
-                return '<div class="swiper-container" data-on_demand="false"><transclude/></div>';
+                return '<div class="swiper-container"><transclude/></div>';
 
             }, self.add);
 
@@ -619,7 +622,7 @@
 
             dom.compiler.register('element', 'slide', function (elem)
             {
-                return '<div class="swiper-slide"><transclude/></div>';
+                return '<div class="swiper-slide" data-on_demand="false"><transclude/></div>';
             });
 
             dom.compiler.register('attribute', 'slide-item', function (elem, attrs)
@@ -643,7 +646,7 @@
 
     new Sliders();
 
-    rocket        = typeof rocket == 'undefined' ? {} : rocket;
+    rocket        = typeof rocket === 'undefined' ? {} : rocket;
     rocket.slider = Slider;
 
 })(jQuery);

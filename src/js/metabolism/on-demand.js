@@ -31,9 +31,9 @@
         self.resizeTimeout = false;
 
         self.add = function ($element) {
-            if ($element.closest('[data-on_demand="false"]').length) {
+
+            if ($element.closest('[data-on_demand="false"]').length)
                 return;
-            }
 
             $element.attr('data-on_demand', 'waiting');
 

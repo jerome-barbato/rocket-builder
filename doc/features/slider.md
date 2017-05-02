@@ -71,10 +71,28 @@ Pause autoplay when mouse is over the slider
 <slider data-loop="0">
 ~~~~
 
+### Sync
+
+~~~~
+<slider id="slider1"></slider>
+
+<slider data-sync="slider1"></slider>
+~~~~
+
 ### Pack Slide
 
 ~~~~
 <slider data-display="desktop:3,phone:1">
 ~~~~
 
-Available: desktop, mobile, tablet, phone
+Display: desktop, mobile, tablet, phone
+
+### Height
+
+~~~~
+<slider data-height="300">
+~~~~
+~~~~
+<slider data-height="auto">
+~~~~
+

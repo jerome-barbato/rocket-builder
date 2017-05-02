@@ -43,30 +43,35 @@
 </div>
 ~~~~
 
+### Special values
+
+no padding, no float
+~~~~
+<grid>
+  <column size="0"></column>
+</grid>
+~~~~
+
+width auto
+~~~~
+<grid>
+  <column size="auto"></column>
+</grid>
+~~~~
+
 ### SASS
  
  ~~~~
- <div class="item">
-     <div grid>
-         <div row>
-             <div col="1/3"></div>
-         </div>
+ <div class="container">
+    <div class="items">
+        <div class="item"></div>
+        <div class="item"></div>
      </div>
  </div>
  ~~~~
  
 ~~~
-.item{
-
-   @include col{
-      background:#eee
-   }
-   @include row{
-      background:#fff
-   }
-   @include grid{
-      border:1px solid #000
-   }
-}
-
+.container{ @include grid() }
+.items{ @include row() }
+.item{ @include column(1/5) }
 ~~~
