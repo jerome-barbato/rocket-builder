@@ -37,6 +37,7 @@ angulight.controller('data', function($dom, color1, color2){
 ~~~~
 
 ### Use HTML template and inject data
+
 ~~~~
 <template id="popin">
   <h1>[[title]]</h1>

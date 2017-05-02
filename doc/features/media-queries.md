@@ -13,36 +13,40 @@ large    : 1680px
 4k       : 2560px
 ~~~
 
-## From
+### From
 
 ~~~
 @media #{$from-phone}{ }
 ~~~
 
 compile to
+
 ~~~
 @media screen and (min-width: 426px){ }
 ~~~
+
 425 + 1px
 
-## To
+### To
 
 ~~~
 @media #{$to-phone}{ }
 ~~~
 
 compile to
+
 ~~~
 @media screen and (max-width: 425px){ }
 ~~~
 
-## Only
+### Only
 
 ~~~
 @media #{$only-phone}{ }
 ~~~
 
 compile to
+
 ~~~
 @media screen and (min-width: 425px) and (max-width: 767px){ }
 ~~~

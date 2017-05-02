@@ -10,6 +10,7 @@ Works will standard media queries, defined in media-queries.scss
 Also works with js defined `<html>` class, mobile/desktop based on user agent
 
 ### Exemples
+
 ~~~
 <div hide-on="phone">
     I'm on a tablet or desktop

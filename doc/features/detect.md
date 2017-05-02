@@ -25,7 +25,7 @@ You can reference your fixed header/footer to ensure a right calculation
 
 This script also add class and attribute on body according to the current scroll state
 
-## Events
+### Events
 
 Trigger events according to the detection
 

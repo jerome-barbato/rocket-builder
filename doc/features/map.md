@@ -35,9 +35,9 @@ angulight.controller('map', function($dom){
 ~~~
 
 
-## API
+### API
 
-### Events
+#### Events
 
 trigger events on jQuery map object
 
@@ -53,7 +53,7 @@ trigger events on jQuery map object
 Google map options documentation : https://developers.google.com/maps/documentation/javascript/controls#ControlOptions
 
 
-### Functions
+#### Functions
 
 - zoomIn
 - zoomOut
@@ -65,7 +65,7 @@ Google map options documentation : https://developers.google.com/maps/documentat
 - updateLabel
 
 
-### Example with custom map style and one marker without GPS
+#### Example with custom map style and one marker without GPS
 
 ~~~
 angulight.controller('map', function($dom)
@@ -90,7 +90,7 @@ angulight.controller('map', function($dom)
 });
 ~~~
 
-### Example with multiple marker
+#### Example with multiple marker
 
 ~~~
 angulight.controller('map', function($dom)
@@ -126,3 +126,4 @@ angulight.controller('map', function($dom)
         map.addMarkers(stores, true);
     });
 });
+~~~

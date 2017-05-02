@@ -5,7 +5,7 @@
 ~~~~
 
 ~~~~ 
-<vbottom></vbottom>   
+<vbottom></vbottom>
 ~~~~
 
 ~~~~

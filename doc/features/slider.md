@@ -49,6 +49,7 @@ Available animations are :
 ### Hold
 
 Pause autoplay when mouse is over the slider
+
 ~~~~
 <slider data-hold="1">
 ~~~~
