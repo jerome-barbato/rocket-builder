@@ -17,3 +17,10 @@ Add a placeholder
    <option value="1">Element</option>
 </select>
 ~~~~
+
+### Events
+
+Refresh custom select
+~~~
+  $('select').trigger('refresh')
+~~~

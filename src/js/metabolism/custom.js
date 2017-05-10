@@ -57,28 +57,39 @@
 
                     $('select[data-custom]').initialize(function ()
                     {
-                        var $parent = $(this).parent();
+                        var $select = $(this);
+                        var $parent = $select.parent();
 
                         var options = {
                             icons: {button: 'ui-icon ui-icon-arrow'},
                             change: function (event, ui) {
 
-                                if ($(this).val().length)
+                                if ($select.val().length)
                                     $element.addClass('ui-selectmenu-button-filled');
                                 else
                                     $element.removeClass('ui-selectmenu-button-filled');
 
-	                            $(this).change();
+	                            $select.change();
                             },
                             appendTo: $parent
                         };
 
-                        if ($(this).hasDataAttr('placeholder'))
-                            options.placeholder = $(this).data('placeholder');
+                        if ($select.hasDataAttr('placeholder'))
+                            options.placeholder = $select.data('placeholder');
 
-                        $(this).selectmenu(options);
+                        $select.selectmenu(options);
 
-                        var $element = $(this).selectmenu('widget');
+	                    $select.on('refresh', function(){
+
+		                    $select.selectmenu( "refresh" );
+
+		                    if ($select.val().length)
+			                    $element.addClass('ui-selectmenu-button-filled');
+		                    else
+			                    $element.removeClass('ui-selectmenu-button-filled');
+	                    });
+
+                        var $element = $select.selectmenu('widget');
                     });
                 }
 

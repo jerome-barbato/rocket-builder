@@ -121,7 +121,9 @@
                 var instance = self._guid();
 
                 $element.data('angulight-instance', instance);
-                self.context.instances[instance] = new (Function.prototype.bind.apply(fct, [null].concat(params)));
+
+                //delay init to next tick
+                setTimeout(function() { self.context.instances[instance] = new (Function.prototype.bind.apply(fct, [null].concat(params))) });
 
                 if (app && app.debug > 2)
                 {
