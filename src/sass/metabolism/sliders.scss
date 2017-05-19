@@ -64,24 +64,23 @@
       //horizontal
       $horizontal : '[data-transition="horizontal"]';
       &--current{
-        #{$horizontal}[data-direction="forward"] > &{
-          animation-name: slide-from-right;
-          .swiper-slider__item{ animation-name: slide-from-right-only }
-        }
-        #{$horizontal}[data-direction="backward"] > &{
-          animation-name: slide-from-left;
-          .swiper-slider__item{ animation-name: slide-from-left-only }
-        }
+        #{$horizontal}[data-direction="forward"] > &{ animation-name: slide-from-right }
+        #{$horizontal}[data-direction="backward"] > &{ animation-name: slide-from-left }
       }
       &--previous{
-        #{$horizontal}[data-direction="forward"] > &{
-          animation-name: slide-to-left;
-          .swiper-slider__item{ animation-name: slide-to-left-only }
+        #{$horizontal}[data-direction="forward"] > &{ animation-name: slide-to-left }
+        #{$horizontal}[data-direction="backward"] > &{ animation-name: slide-to-right }
         }
-        #{$horizontal}[data-direction="backward"] > &{
-          animation-name: slide-to-right;
-          .swiper-slider__item{ animation-name: slide-to-right-only }
+
+      //horizontal classic
+      $classic : '[data-transition="classic"]';
+      &--current{
+        #{$classic}[data-direction="forward"] > &{ animation-name: slide-from-right-only }
+        #{$classic}[data-direction="backward"] > &{ animation-name: slide-from-left-only }
         }
+      &--previous{
+        #{$classic}[data-direction="forward"] > &{ animation-name: slide-to-left-only }
+        #{$classic}[data-direction="backward"] > &{ animation-name: slide-to-right-only }
       }
 
 

@@ -38,6 +38,7 @@ Available animations are :
 * horizontal
 * zoom 
 * stack 
+* classic
 
 
 ### Autoplay

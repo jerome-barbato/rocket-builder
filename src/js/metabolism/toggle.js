@@ -34,6 +34,7 @@
             open_first: false,
             animate   : true,
             type      : 'link',
+            activate  : true,
             speed     : 300,
             easing    : 'easeInOutCubic'
         };
@@ -69,10 +70,10 @@
             if (!$tab.length)
                 return;
 
-            $tab.removeClass('active');
-            $toggle.removeClass('active');
+            $tab.removeClass('is-active');
+            $toggle.removeClass('is-active');
 
-            if (typeof animate != 'undefined' ? animate : self.config.animate)
+            if (typeof animate !== 'undefined' ? animate : self.config.animate)
             {
                 $tab.stop().slideUp(self.config.speed, self.config.easing, function ()
                 {
@@ -109,10 +110,10 @@
             if (!$tab.length)
                 return;
 
-            $tab.addClass('active');
-            $toggle.addClass('active');
+            $tab.addClass('is-active');
+            $toggle.addClass('is-active');
 
-            if (typeof animate != 'undefined' ? animate : self.config.animate)
+            if (typeof animate !== 'undefined' ? animate : self.config.animate)
             {
                 $tab.stop().slideDown(self.config.speed, self.config.easing);
                 $tab.trigger('toggle.updated', ['open']);
@@ -127,7 +128,7 @@
 
         self._getElements = function ()
         {
-            var $toggles = self.config.$element.find(self.config.type == 'link' ? '[href^="#"]' : 'li > a');
+            var $toggles = self.config.$element.find(self.config.type === 'link' ? '[href^="#"]' : 'li > a');
 
             self.context.$tabs = $();
             self.context.$toggles = $();
@@ -136,13 +137,15 @@
             {
                 var $tab = false;
 
-                if (self.config.type == 'link')
+                if (self.config.type === 'link')
                     $tab = self.config.$element.find($(this).attr('href'));
                 else
                     $tab = $(this).next('ul');
 
                 if ($tab && $tab.length)
                 {
+                    $(this).addClass('toggle-handler');
+
                     self.context.$toggles = self.context.$toggles.add($(this));
                     self.context.$tabs    = self.context.$tabs.add($tab);
                 }
@@ -160,6 +163,12 @@
         self.__construct = function (config)
         {
             self.config = $.extend(self.config, config);
+
+            if( self.config.activate !== true )
+	            self.config.activate = self.config.activate in browser ? browser[self.config.activate] : false;
+
+            if( !self.config.activate )
+                return;
 
             self._getElements();
 
@@ -209,7 +218,14 @@
         {
             dom.compiler.register('attribute', 'toggles', function (elem, attrs)
             {
+                console.log('toggles is deprecated, replace with toggle');
                 elem.attr('data-toggle', attrs.toggles.length ? attrs.toggles : 'link');
+
+            }, self.add);
+
+            dom.compiler.register('attribute', 'toggle', function (elem, attrs)
+            {
+                elem.attr('data-toggle', attrs.toggle.length ? attrs.toggle : 'link');
 
             }, self.add);
         }

@@ -50,3 +50,4 @@ Available parameters :
 - animate
 - speed
 - easing
+- activate ( phone, desktop, mobile, tablet)

@@ -1,6 +1,6 @@
 {
   "name": "metabolism/rocket-builder",
-  "version": "3.4.2",
+  "version": "3.4.3",
   "description": "Rocket Builder by Metabolism",
   "type": "composer-plugin",
   "license": "AGPL-3.0",
