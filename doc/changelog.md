@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.4.5 - 2013-06-06
+### Fixed
+- Grid js was wrong, now use phone, tablet, small, medium...
+### Added
+- Grid data-col-tablet="none" to hide on tablet
+
 ## 3.4.4 - 2013-06-06
 ### Changed
 - require rocket-installer

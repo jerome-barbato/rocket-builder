@@ -18,7 +18,7 @@
     if( typeof dom == 'undefined' )
         return;
 
-    var grid_breakpoints = ['tablet', 'mobile', 'tablet-portrait', 'mobile-portrait', 'wide', '13inch'];
+    var grid_breakpoints = ['phone', 'tablet', 'small', 'medium', 'large', '4k'];
 
     var camelCase = function(str) {
 

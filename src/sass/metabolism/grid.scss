@@ -79,6 +79,13 @@ $grid-col-count : 12 !default;
   [data-col="0"]{ padding: 0; float: none }
   [data-col="auto"]{ width: auto }
 
+  @if($grid-breakpoints){
+    @each $grid-breakpoint in $grid-breakpoints{
+      $media-query : map_get($media-queries-to, $grid-breakpoint);
+      @media #{$media-query} { [data-col-#{$grid-breakpoint}="none"] { display: none } }
+    }
+  }
+
   @for $j from 1 through $grid-col-count {
     @for $i from 1 through $grid-col-count {
       @if $j <= $i{

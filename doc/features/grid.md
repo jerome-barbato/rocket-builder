@@ -57,6 +57,14 @@ no padding, no float
 </grid>
 ~~~~
 
+hide on tablet
+
+~~~~
+<grid>
+  <column size="1/3" size-tablet="none"></column>
+</grid>
+~~~~
+
 width auto
 
 ~~~~
