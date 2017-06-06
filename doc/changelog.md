@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.4.4 - 2013-06-06
+### Changed
+- require rocket-installer
+
 ## 3.4.3 - 2013-05-19
 ### Added
 - Toogle : activate option ( data-activate_on="phone" )
