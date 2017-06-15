@@ -181,11 +181,15 @@
         {
             if (self.config.display)
             {
-                $.each(['desktop','mobile','tablet','phone'], function (i, device)
+                var pack = false;
+
+                $.each(['tablet','phone'], function (i, device)
                 {
-                    if (self.config.display[device] && self.config.display[device] > 1 && browser[device])
+                    if (device in self.config.display && device in browser && browser[device] && !pack)
                     {
-                        for (var j = 0; j < self.context.$slides.length; j += self.config.display[device])
+                        pack = true;
+
+                        for (var j = 0; j < self.context.$slides.length; j += parseInt(self.config.display[device]))
                         {
                             self.context.$slides.slice(j, j + parseInt(self.config.display[device]))
                                 .wrapAll("<div class='" + self.classnames.slide + "'></div>")
@@ -194,6 +198,17 @@
                         }
                     }
                 });
+
+                if( !pack && 'default' in self.config.display)
+                {
+                    for (var j = 0; j < self.context.$slides.length; j += parseInt(self.config.display['default']))
+                    {
+                        self.context.$slides.slice(j, j + parseInt(self.config.display['default']))
+                            .wrapAll("<div class='" + self.classnames.slide + "'></div>")
+                            .children()
+                            .unwrap();
+                    }
+                }
 
                 self.context.$slides     = self.context.$slides_container.findClosest('.' + self.classnames.slide, '.' + self.classnames.slider);
                 self.context.slide_count = self.context.$slides.length;

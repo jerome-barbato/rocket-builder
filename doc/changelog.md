@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.4.6 - 2013-06-15
+### Fixed
+- Browser JS phone and tablet detection
+### Changed
+- Removed desktop from Slider.js added default instead
+
 ## 3.4.5 - 2013-06-06
 ### Fixed
 - Grid js was wrong, now use phone, tablet, small, medium...

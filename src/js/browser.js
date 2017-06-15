@@ -189,12 +189,12 @@ function css_browser_selector(u) {
     var cssbs      = (b.join(' ')) + " js ";
     html.className = ( cssbs + html.className.replace(/\b(no[-|_]?)?js\b/g, "")  ).replace(/^ /, "")
                                                                                   .replace(/ +/g, " ");
-
     browser.desktop  = !browser.mobile;
-    browser.tablet   = browser.mobile && window.innerWidth >= 768;
-    browser.phone    = browser.mobile && !browser.tablet;
     browser.language = language;
 
+    browser.tablet   = window.innerWidth > 425  && window.innerWidth < 1024;
+    browser.phone    = window.innerWidth < 425;
+    
     html.className += browser.tablet ? " tablet" : (browser.phone ? ' phone' : '');
 
     return browser;
