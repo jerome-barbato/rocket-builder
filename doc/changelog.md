@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.5.0 - in dev
+### Added
+- File path on compiled twig
+### Changed
+- Use new folder structure
+- simpilfy path when possible ( home/home.twig become home.twig)
+- framework and lib are now really separated
+
 ## 3.4.6 - 2013-06-15
 ### Fixed
 - Browser JS phone and tablet detection

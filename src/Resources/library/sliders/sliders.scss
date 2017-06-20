@@ -1,0 +1,155 @@
+//v2
+@mixin lib-sliders{
+
+  $slider-speed : 0.4s !default;
+
+  .swiper{
+
+    &-container{ height: 100%; position: relative }
+    &-wrapper { height: 100%; position: relative }
+
+    &-preload {
+      position: absolute; user-select: none;
+      top: 0; left: 0; opacity: 0.01; z-index: -1;
+      img{ width: 1px; height: 1px; float: left }
+    }
+
+    &-scroller{
+      width: 100%; overflow: hidden;
+      position: relative; height: 100%;
+      z-index: 1;
+    }
+
+    &-pagination  a {
+      display: inline-block;
+      cursor: pointer; user-select: none;
+    }
+
+    &-button {
+      &-prev, &-next{
+        cursor: pointer; position: absolute;
+        display: inline-block;
+        z-index: 5; top: 50%;
+      }
+      &-prev{ left: 0 }
+      &-next{ right: 0 }
+    }
+
+    &-container[data-height="auto"]{
+      transition: allow(height); transition-duration: $slider-speed; height: auto;
+      .swiper-slide{ height: auto }
+    }
+
+    &-slide{
+
+      height: 100%; position: absolute;
+      left: 0; top: 0; width: 100%;
+      z-index: 1; display: none;
+      animation-fill-mode: both;
+      animation-timing-function: $ease-in-out-cubic;
+      will-change: opacity, transform;
+
+      &--current{ display: block; z-index: 2 }
+
+      .swiper-wrapper--animating > &{ animation-duration: $slider-speed }
+      .swiper-wrapper--animating > &--previous{ display: block }
+
+      &__item{
+        animation-fill-mode: both;
+        animation-duration: $slider-speed;
+        animation-timing-function: $ease-in-out-cubic;
+        will-change: opacity, transform;
+      }
+
+      //horizontal
+      $horizontal : '[data-transition="horizontal"]';
+      &--current{
+        #{$horizontal}[data-direction="forward"] > &{ animation-name: slide-from-right }
+        #{$horizontal}[data-direction="backward"] > &{ animation-name: slide-from-left }
+      }
+      &--previous{
+        #{$horizontal}[data-direction="forward"] > &{ animation-name: slide-to-left }
+        #{$horizontal}[data-direction="backward"] > &{ animation-name: slide-to-right }
+        }
+
+      //horizontal classic
+      $classic : '[data-transition="classic"]';
+      &--current{
+        #{$classic}[data-direction="forward"] > &{ animation-name: slide-from-right-only }
+        #{$classic}[data-direction="backward"] > &{ animation-name: slide-from-left-only }
+        }
+      &--previous{
+        #{$classic}[data-direction="forward"] > &{ animation-name: slide-to-left-only }
+        #{$classic}[data-direction="backward"] > &{ animation-name: slide-to-right-only }
+      }
+
+
+      //zoom
+      $zoom : '[data-transition="zoom"]';
+      &--current{
+        #{$zoom}[data-direction="forward"] > &{ animation-name: zoom-in }
+        #{$zoom}[data-direction="backward"] > &{ animation-name: unzoom-in }
+      }
+      &--previous{
+        #{$zoom}[data-direction="forward"] > & { animation-name: unzoom-out }
+        #{$zoom}[data-direction="backward"] > & { animation-name: zoom-out }
+      }
+
+
+      //vertical
+      $vertical : '[data-transition="vertical"]';
+      &--current{
+        #{$vertical}[data-direction="forward"] > & { animation-name: slide-from-bottom }
+        #{$vertical}[data-direction="backward"] > & { animation-name: slide-from-top }
+      }
+      &--previous{
+        #{$vertical}[data-direction="forward"] > & { animation-name: slide-to-bottom }
+        #{$vertical}[data-direction="backward"] > & { animation-name: slide-to-top }
+      }
+
+
+      //stack
+      $stack : '[data-transition="stack"]';
+      &--current{
+        #{$stack}[data-direction="forward"] > & { animation-name: offset-by-0 }
+      }
+      &--previous{
+        #{$stack}[data-direction="forward"] > & { animation-name: offset-by--4; z-index: 3 }
+      }
+      &--next{
+        #{$stack}[data-direction="forward"] > & { animation-name: offset-by-4 }
+        .swiper-wrapper#{$stack} > & { transform: translate3d(4rem, 4rem, 0); opacity: 0.5; display: block }
+      }
+
+      @keyframes offset-by-4 {
+        0%{ transform: translate3d(8rem, 8rem, 0); opacity: 0 }
+        100%{ transform: translate3d(4rem, 4rem, 0); opacity: 0.5 }
+      }
+
+      @keyframes offset-by--4 {
+        0%{ transform: none; opacity: 1 }
+        100%{ transform: translate3d(-4rem, -4rem, 0); opacity: 0 }
+      }
+
+      @keyframes offset-by-0 {
+        0%{ transform: translate3d(4rem, 4rem, 0); opacity: 0.5 }
+        100%{ transform: none; opacity: 1 }
+      }
+
+      //none
+      &--previous{
+        [data-transition="none"] > & { display: block }
+      }
+
+
+      //crossfade
+      &--current{
+        [data-transition="crossfade"] > & { animation-name: fade-in; animation-duration: $slider-speed*2 }
+      }
+    }
+  }
+}
+
+@if (variable-exists(libraries) and index($libraries, 'sliders')) {
+  @include lib-sliders;
+}

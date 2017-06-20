@@ -1,0 +1,18 @@
+@mixin lib-valign{
+
+  vcenter{ visibility: hidden }
+
+  .valign {
+    display: table; height: 100%; margin: auto; width: 100%;
+    &__middle, &__bottom , &__top {
+      display: table-cell; height: 100%; width: 100%;
+    }
+    &__middle { vertical-align: middle }
+    &__bottom { vertical-align: bottom }
+    &__top{ vertical-align: top }
+  }
+}
+
+@if (variable-exists(libraries) and index($libraries, 'valign')) {
+  @include lib-valign;
+}

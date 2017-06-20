@@ -1,0 +1,32 @@
+$icons: false !default;
+
+@if($icons){
+
+  %icon{
+    font-family: icons, sans-serif; text-transform: none; line-height: 1;
+    font-style: normal; font-weight: normal; font-variant: normal;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+
+  [data-icon]:before, [data-icon-after]:after{ @extend %icon }
+
+  @each $icon in $icons {
+
+    $id      : nth($icon, 1);
+    $content : nth($icon, 2);
+
+    %icon-#{$id}{ content: $content }
+    [data-icon="#{$id}"]:before, [data-icon-after="#{$id}"]:after{ @extend %icon-#{$id} }
+  }
+}
+
+//include icon
+@mixin icon($name, $position:'before') {
+
+  @if($position == 'before'){
+    &:before{ @extend %icon, %icon-#{$name} }
+  }
+  @else{
+    &:after{ @extend %icon, %icon-#{$name} }
+  }
+}

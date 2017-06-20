@@ -18,7 +18,7 @@ var gulp   = require('gulp'),
  */
 gulp.task('style::compile', function () {
 
-    if (config.environment == 'development') {
+    if (config.environment === 'development') {
 
         return gulp.src(config.paths.src.sass)
                    .pipe($.sourcemaps.init())

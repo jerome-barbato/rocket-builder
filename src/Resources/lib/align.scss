@@ -1,0 +1,13 @@
+@mixin lib-align {
+
+  .align{
+    &-center, &-c {  text-align: center }
+    &-left, &-l {    text-align: left }
+    &-right, &-r {   text-align: right }
+    &-justify, &-j { text-align: justify }
+  }
+}
+
+@if (variable-exists(libraries) and index($libraries, 'align')) {
+  @include lib-align;
+}

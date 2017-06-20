@@ -76,7 +76,7 @@ var config = module.exports = {
         config.paths.public   = config.base_path + config.builder.paths.public;
         config.paths.views    = config.base_path + config.builder.paths.views;
 
-        config.paths.css_to_sass = '../../src/sass/';
+        config.paths.css_to_sass = '../private/';
 
         config.paths.src = {
             js      : {
@@ -85,10 +85,10 @@ var config = module.exports = {
                 app     : [],
                 compiler: []
             },
-            sass    : config.paths.asset + "/sass/*.scss",
+            sass    : config.paths.asset + "/*.scss",
             template: [
-                config.paths.asset + "/template/**/*.twig",
-                config.paths.asset + "/template/**/*.tpl"
+                config.paths.asset + "/**/*.twig",
+                config.paths.asset + "/**/*.tpl"
             ],
             html    : config.paths.public + "/views/**/*.html"
         };
@@ -100,16 +100,16 @@ var config = module.exports = {
         };
 
         config.paths.watch = {
-            js        : config.paths.asset + "/js/**/*.js",
+            js        : config.paths.asset + "/**/*.js",
             js_app    : [
-                config.paths.asset + "/js/app/**/*.js",
+                config.paths.asset + "/**/*.js",
                 config.paths.asset + "/js/app.js"
             ],
-            js_vendors: [config.paths.asset + "/js/vendor/**/*.js"],
-            sass      : config.paths.asset + "/sass/**/*.scss",
+            js_vendors: [config.paths.asset + "/vendor/**/*.js"],
+            sass      : config.paths.asset + "/**/*.scss",
             template  : [
-                config.paths.asset + "/template/**/*.twig",
-                config.paths.asset + "/template/**/*.tpl"
+                config.paths.asset + "/**/*.twig",
+                config.paths.asset + "/**/*.tpl"
             ]
         };
     },
@@ -117,24 +117,37 @@ var config = module.exports = {
 
     addApp: function addApp(){
 
-        if ( typeof builder_config_version == 'undefined')
-        {
-            //backward compatibility
-            config.paths.src.js.app.push(config.paths.asset + '/js/app/**/*.js');
-            config.paths.src.js.app.push(config.paths.asset + '/js/app.js');
-        }
-
         if (config.builder && config.builder.script && config.builder.script.app )
         {
             config.builder.script.app.forEach(function (element) {
 
-                config.paths.src.js.app.push(config.paths.asset + '/js/'+ element + '.js');
+                config.paths.src.js.app.push(config.paths.asset + '/'+ element + '.js');
             });
         }
         else {
 
             config.paths.src.js.app = false;
         }
+    },
+
+
+
+    addLibs: function addVendor(libraries, additional_path, vendors) {
+
+        libraries.forEach(function (library)
+        {
+            if (typeof library === 'string')
+            {
+                vendors.push(config.paths.asset + '/vendor/' + additional_path + library + '.js');
+            }
+            else
+            {
+                for (var path in library)
+                {
+                    config.addLibs(library[path], additional_path + path + '/', vendors);
+                }
+            }
+        });
     },
 
 
@@ -145,25 +158,9 @@ var config = module.exports = {
      */
     addVendors: function addVendors() {
 
-        if ( config.builder && config.builder.script && config.builder.script.vendor )
+        if ( config.builder && config.builder.script && 'vendor' in config.builder.script )
         {
-            config.builder.script.vendor.forEach(function (library)
-            {
-                if (typeof library == 'string')
-                {
-                    config.paths.src.js.vendor.push(config.paths.asset + '/js/vendor/' + library + '.js');
-                }
-                else
-                {
-                    for (var path in library)
-                    {
-                        library[path].forEach(function (element)
-                        {
-                            config.paths.src.js.vendor.push(config.paths.asset + '/js/vendor/' + path + '/' + element + '.js');
-                        });
-                    }
-                }
-            });
+            config.addLibs(config.builder.script.vendor, '', config.paths.src.js.vendor);
         }
         else
         {
@@ -173,34 +170,14 @@ var config = module.exports = {
 
         if ( config.builder &&  config.builder.script && 'browser' in config.builder.script )
         {
-            config.builder.script.browser.forEach(function (library) {
-
-                config.paths.src.js.browser.push(config.paths.asset + '/js/vendor/' + library + '.js');
-            });
+            config.addLibs(config.builder.script.browser, '', config.paths.src.js.browser);
         }
         else
         {
             config.paths.src.js.browser = false;
         }
 
-
-        config.builder.template.vendor.forEach(function (library)
-        {
-            if (typeof library == 'string')
-            {
-                config.paths.src.js.compiler.push(config.paths.asset + '/js/vendor/' + library + '.js');
-            }
-            else
-            {
-                for (var path in library)
-                {
-                    library[path].forEach(function (element)
-                    {
-                        config.paths.src.js.compiler.push(config.paths.asset + '/js/vendor/' + path + '/' + element + '.js');
-                    });
-                }
-            }
-        });
+        config.addLibs(config.builder.template.vendor, '', config.paths.src.js.compiler);
     },
 
     /**
@@ -214,15 +191,6 @@ var config = module.exports = {
             gutil.log(gutil.colors.red('[' + title + ']'), err.toString());
             this.emit('end');
         };
-    },
-
-    fileExists: function fileExists(filename) {
-        try {
-            fs.accessSync(filename);
-            return true;
-        } catch (e) {
-            return false;
-        }
     },
 
 

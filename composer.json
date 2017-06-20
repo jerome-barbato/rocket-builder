@@ -1,6 +1,6 @@
 {
   "name": "metabolism/rocket-builder",
-  "version": "3.4.6",
+  "version": "3.5.0",
   "description": "Rocket Builder by Metabolism",
   "type": "composer-plugin",
   "license": "AGPL-3.0",
@@ -23,21 +23,15 @@
     "file-management": {
       "symlink": {
         "metabolism/rocket-builder": {
-          "src/js/metabolism": "app/resources/js/vendor/metabolism",
-          "src/js/polyfill": "app/resources/js/vendor/polyfill",
-          "doc": "doc/builder",
-          "src/sass/framework": "app/resources/sass/vendor/framework",
-          "src/sass/metabolism": "app/resources/sass/vendor/metabolism"
-        }
-      },
-      "copy": {
-        "metabolism/rocket-builder": {
-          "src/js/browser.js": "app/resources/js/vendor/browser.js",
-          "src/js/modernizr.js": "app/resources/js/vendor/modernizr.js"
+          "src/Resources/library": "src/AppBundle/Resources/private/vendor/metabolism",
+          "src/Resources/polyfill": "src/AppBundle/Resources/private/vendor/polyfill",
+          "src/Resources/sass-framework": "src/AppBundle/Resources/private/framework",
+          "doc": "doc/builder"
         }
       }
     },
     "branch-alias": {
+      "dev-3.5.x": "3.5.x-dev",
       "dev-3.4.x": "3.4.x-dev",
       "dev-3.3.x": "3.3.x-dev",
       "dev-3.2.x": "3.2.x-dev"

@@ -1,0 +1,10 @@
+@mixin lib-parallax{
+
+  .parallax-container{ overflow: hidden; position: relative }
+  [data-parallax]{ will-change: transform }
+  span[data-parallax]{ display: inline-block }
+}
+
+@if (variable-exists(libraries) and index($libraries, 'parallax')) {
+  @include lib-parallax;
+}

@@ -109,10 +109,7 @@ gulp.task('script::browser', function () {
     }
     else {
 
-        return gulp.src([
-            config.paths.asset + '/js/vendor/modernizr.js',
-            config.paths.asset + '/js/vendor/browser.js'
-        ])
+        return gulp.src(config.paths.src.js.browser, {base: config.paths.asset})
             .pipe($.concat('browser.js'))
             .pipe($.uglify().on('error', config.errorHandler('Scripts')))
             .pipe(gulp.dest(config.paths.dest.js))
