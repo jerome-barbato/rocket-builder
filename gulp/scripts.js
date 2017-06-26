@@ -41,7 +41,7 @@ gulp.task('script::app', function () {
 
     if (config.environment == 'development') {
 
-        return gulp.src(config.paths.src.js.app, {base: config.paths.asset})
+        return gulp.src(config.paths.src.js.app, {base: config.paths.private.js})
                    .pipe($.sourcemaps.init())
                    .pipe($.concat('app.js'))
                    .pipe($.sourcemaps.write('./', {
@@ -68,7 +68,7 @@ gulp.task('script::vendor', function () {
 
     if (config.environment == 'development') {
 
-        return gulp.src(config.paths.src.js.vendor, {base: config.paths.asset})
+        return gulp.src(config.paths.src.js.vendor, {base: config.paths.private.js})
                    .pipe($.sourcemaps.init())
                    .pipe($.concat('vendor.js'))
                    .pipe($.sourcemaps.write('./', {
@@ -98,7 +98,7 @@ gulp.task('script::browser', function () {
 
     if (config.environment == 'development') {
 
-        return gulp.src(config.paths.src.js.browser, {base: config.paths.asset})
+        return gulp.src(config.paths.src.js.browser, {base: config.paths.private.js})
                    .pipe($.sourcemaps.init())
                    .pipe($.concat('browser.js'))
                    .pipe($.sourcemaps.write('./', {
@@ -109,7 +109,7 @@ gulp.task('script::browser', function () {
     }
     else {
 
-        return gulp.src(config.paths.src.js.browser, {base: config.paths.asset})
+        return gulp.src(config.paths.src.js.browser, {base: config.paths.private.js})
             .pipe($.concat('browser.js'))
             .pipe($.uglify().on('error', config.errorHandler('Scripts')))
             .pipe(gulp.dest(config.paths.dest.js))

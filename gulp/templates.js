@@ -165,8 +165,7 @@ gulp.task('template::watch', function ()
         if( lastdir === basename )
             path_array.pop();
 
-        var filepath = path_array.join('/')
-                                 .replace(config.builder.paths.asset, config.builder.paths.views);
+        var filepath = path_array.join('/').replace(config.builder.paths.private, config.builder.paths.views);
 
         if (event.type === 'deleted')
         {
@@ -191,8 +190,8 @@ gulp.task('template::watch', function ()
  */
 gulp.task('views::clean', function ()
 {
-    if (config.paths.dest.template.length)
-        return del.sync([config.paths.dest.template + '/*'], {force: true});
+    if (config.paths.dest.views.length)
+        return del.sync([config.paths.dest.views + '/*'], {force: true});
 });
 
 
@@ -204,5 +203,5 @@ gulp.task('templates::compile', function ()
     return gulp.src(config.paths.src.template)
                .pipe(gif(config.builder.template.compile, compileFiles()))
                .pipe(rename(getCompiledPath))
-               .pipe(gulp.dest(config.paths.dest.template));
+               .pipe(gulp.dest(config.paths.dest.views));
 });

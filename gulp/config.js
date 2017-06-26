@@ -71,10 +71,16 @@ var config = module.exports = {
             ];
         }
 
-        config.paths.sm_asset = "../.." + config.builder.paths.asset;
-        config.paths.asset    = config.base_path + config.builder.paths.asset;
+        config.paths.sm_private = "../.." + config.builder.paths.private;
         config.paths.public   = config.base_path + config.builder.paths.public;
         config.paths.views    = config.base_path + config.builder.paths.views;
+        config.paths.split    = 'split_by_type' in config.builder.paths && config.builder.paths.split_by_type;
+
+	    config.paths.private = {
+	    	js : config.base_path + config.builder.paths.private + (config.paths.split ? '/js' : ''),
+		    scss : config.base_path + config.builder.paths.private + (config.paths.split ? '/scss' : ''),
+		    template : config.base_path + config.builder.paths.private + (config.paths.split ? '/template' : '')
+	    };
 
         config.paths.css_to_sass = '../private/';
 
@@ -85,10 +91,10 @@ var config = module.exports = {
                 app     : [],
                 compiler: []
             },
-            sass    : config.paths.asset + "/*.scss",
+	        scss    : config.paths.private.scss + "/*.scss",
             template: [
-                config.paths.asset + "/**/*.twig",
-                config.paths.asset + "/**/*.tpl"
+	            config.paths.private.template + "/**/*.twig",
+	            config.paths.private.template + "/**/*.tpl"
             ],
             html    : config.paths.public + "/views/**/*.html"
         };
@@ -96,20 +102,20 @@ var config = module.exports = {
         config.paths.dest = {
             js      : config.paths.public + "/js",
             css     : config.paths.public + "/css",
-            template: config.paths.views
+	        views : config.paths.views
         };
 
         config.paths.watch = {
-            js        : config.paths.asset + "/**/*.js",
+            js        : config.paths.private.js + "/**/*.js",
             js_app    : [
-                config.paths.asset + "/**/*.js",
-                config.paths.asset + "/js/app.js"
+	            config.paths.private.js + "/**/*.js",
+	            config.paths.private.js + "/app.js"
             ],
-            js_vendors: [config.paths.asset + "/vendor/**/*.js"],
-            sass      : config.paths.asset + "/**/*.scss",
+            js_vendors: [config.paths.private.js + "/vendor/**/*.js"],
+	        scss      : config.paths.private.scss + "/**/*.scss",
             template  : [
-                config.paths.asset + "/**/*.twig",
-                config.paths.asset + "/**/*.tpl"
+                config.paths.private.template + "/**/*.twig",
+                config.paths.private.template + "/**/*.tpl"
             ]
         };
     },
@@ -121,7 +127,7 @@ var config = module.exports = {
         {
             config.builder.script.app.forEach(function (element) {
 
-                config.paths.src.js.app.push(config.paths.asset + '/'+ element + '.js');
+                config.paths.src.js.app.push(config.paths.private.js + '/'+ element + '.js');
             });
         }
         else {
@@ -138,7 +144,7 @@ var config = module.exports = {
         {
             if (typeof library === 'string')
             {
-                vendors.push(config.paths.asset + '/vendor/' + additional_path + library + '.js');
+                vendors.push(config.paths.private.js + '/vendor/' + additional_path + library + '.js');
             }
             else
             {

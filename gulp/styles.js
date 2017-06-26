@@ -20,7 +20,7 @@ gulp.task('style::compile', function () {
 
     if (config.environment === 'development') {
 
-        return gulp.src(config.paths.src.sass)
+        return gulp.src(config.paths.src.scss)
                    .pipe($.sourcemaps.init())
                    .pipe($.cssGlobbing({extensions: ['.scss']}))
                    .pipe($.sass().on('error', config.errorHandler('Sass')))
@@ -39,7 +39,7 @@ gulp.task('style::compile', function () {
 
         $.del.sync([config.paths.dest.css + '/*.map'], {force: true});
 
-        return gulp.src(config.paths.src.sass)
+        return gulp.src(config.paths.src.scss)
                    .pipe($.cssGlobbing({extensions: ['.scss']}))
                    .pipe($.sass().on('error', config.errorHandler('Sass')))
                    .pipe($.pleeease({
