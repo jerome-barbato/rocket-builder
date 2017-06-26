@@ -23,9 +23,6 @@
     "file-management": {
       "symlink": {
         "metabolism/rocket-builder": {
-          "src/Resources/library": "src/FrontBundle/Resources/private/vendor/metabolism",
-          "src/Resources/polyfill": "src/FrontBundle/Resources/private/vendor/polyfill",
-          "src/Resources/sass-framework": "src/FrontBundle/Resources/private/framework",
           "doc": "doc/builder"
         }
       }

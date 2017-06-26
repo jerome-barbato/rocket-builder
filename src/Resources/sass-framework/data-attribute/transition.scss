@@ -1,12 +1,12 @@
 //v1.0
 
-@mixin lib-transition{
+@mixin data-transition{
 
   @for $i from 0 through 35{
     [data-transition-delay="#{$i}"]{ transition-delay: $transition-delay*$i!important }
   }
 }
 
-@if (variable-exists(libraries) and index($libraries, 'transition')) {
-  @include lib-transition;
+@if (variable-exists(data-attributes) and index($data-attributes, 'transition')) {
+  @include data-transition;
 }

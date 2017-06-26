@@ -8,6 +8,18 @@ $icons: false !default;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   }
 
+  @each $icon in $icons {
+
+    $id      : nth($icon, 1);
+    $content : nth($icon, 2);
+
+    %icon-#{$id}{ content: $content }
+  }
+}
+
+
+@mixin data-icon {
+
   [data-icon]:before, [data-icon-after]:after{ @extend %icon }
 
   @each $icon in $icons {
@@ -15,18 +27,11 @@ $icons: false !default;
     $id      : nth($icon, 1);
     $content : nth($icon, 2);
 
-    %icon-#{$id}{ content: $content }
     [data-icon="#{$id}"]:before, [data-icon-after="#{$id}"]:after{ @extend %icon-#{$id} }
   }
 }
 
-//include icon
-@mixin icon($name, $position:'before') {
-
-  @if($position == 'before'){
-    &:before{ @extend %icon, %icon-#{$name} }
-  }
-  @else{
-    &:after{ @extend %icon, %icon-#{$name} }
-  }
+@if (variable-exists(data-attributes) and index($data-attributes, 'icon')) {
+  @include data-icon;
 }
+
