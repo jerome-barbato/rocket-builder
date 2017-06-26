@@ -165,7 +165,7 @@ gulp.task('template::watch', function ()
         if( lastdir === basename )
             path_array.pop();
 
-        var filepath = path_array.join('/').replace(config.builder.paths.private, config.builder.paths.views);
+        var filepath = path_array.join('/').replace(config.paths.private.template.replace(config.base_path, ''), config.builder.paths.views);
 
         if (event.type === 'deleted')
         {
