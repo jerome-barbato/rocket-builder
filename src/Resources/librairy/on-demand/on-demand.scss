@@ -1,9 +1,0 @@
-@mixin lib-on-demand{
-  [data-on_demand="waiting"]{ opacity: 0 }
-  [data-on_demand="loading"]{ opacity: 0; transition: $speed-slow opacity $ease-in-out-cubic; will-change: opacity }
-  [data-on_demand="loaded"]{ transition: $speed-slow opacity $ease-in-out-cubic; will-change: opacity }
-}
-
-@if (variable-exists(libraries) and index($libraries, 'on-demand')) {
-  @include lib-on-demand;
-}
