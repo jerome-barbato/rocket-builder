@@ -38,6 +38,6 @@ gulp.task('default', ["views::clean", "script::browser", "script::vendor", "scri
 
         gulp.watch(config.paths.watch.js_app, ["script::app"]);
         gulp.watch(config.paths.watch.js_vendors, ["script::vendor", "templates::compile"]);
-        gulp.watch(config.paths.watch.sass, ["style::compile"]);
+        gulp.watch(config.paths.watch.scss, ["style::compile"]);
     }
 });

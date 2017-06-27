@@ -86,10 +86,7 @@
     dom.compiler.register('attribute', 'text', function (elem, attrs)
     {
         if ('text' in attrs && attrs.text.length)
-        {
             elem.addClass('text text--' + attrs.text);
-            console.log('attribute text is not recommended, please use @include text('+attrs.text+') instead');
-        }
     });
 
 
