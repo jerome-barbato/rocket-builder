@@ -26,7 +26,7 @@ gulp.task('create', function (cb) {
 	}
 
 	var filename = name.toLowerCase();
-	var path = config.paths.private + '/shared/' + filename;
+	var path = config.paths.private.root + '/shared/' + filename;
 
 	try
 	{
