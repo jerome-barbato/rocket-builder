@@ -32,29 +32,24 @@ Javascript
 
 Rocket builder offers a possibility to automatically create TWIG and SCSS assets.
 Theses modules are created according to BEM organizational naming.
-> More informations are availables in `doc/tools` folder.
     
-This command will generate `.phml.twig` and `.scss` files that will be placed in `app/resources/template` and `app/resources/sass` folders.
+This command will generate `.twig` and `.scss` files that will be placed in `src/FrontBundle/Resources/private/shared` folder.
 
-Two modules can be created in Rocket : 
-* Blocks : Parts of a page which represents simple and specifics modules ( ex : menu, title, formulary )
-* Components  : Tiny modules which can be used in several blocks. ( burger, lines, ... )
-    
 **Commands**    
     
 Simple modules :
 
-    composer create <module> <module_name>
+    composer create <module_name>
     
 Page specific modules ( with subfolder creation )
     
-    composer create <module> <subfolder>/<module_name>
+    composer create <subfolder>/<module_name>
     
 Multiple modules creation
     
-    composer create <module> <module_name_2> <module_name_2>
+    composer create <module_name_2> <module_name_2>
 
 **Examples**
 
-    composer create block homepage/slider
-    composer create component burger menu
+    composer create slider
+    composer create burger menu

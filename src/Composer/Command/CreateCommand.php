@@ -53,13 +53,11 @@ EOT
 
             if ( count( $args ) > 1 )
             {
-                $type = $args[0];
-                array_shift( $args );
 
                 foreach ( $args as $arg )
                 {
-                    $output->writeln("<comment>Creating " . $type . " " . $arg . "...</comment>");
-                    passthru( "gulp create --" . $type . " " . $arg . "  --color=always" );
+                    $output->writeln("<comment>Creating  " . $arg . "...</comment>");
+                    passthru( "gulp create -- " . $arg . "  --color=always" );
                 }
             }
         }

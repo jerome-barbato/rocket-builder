@@ -31,7 +31,7 @@ gulp.task('create', function () {
     try
     {
         fs.statSync(path + '/' + filename + '.twig');
-        gutil.log(chalk.red('This component allready exists'));
+        gutil.log(chalk.red('This component already exists'));
 
     } catch (e)
     {
@@ -42,7 +42,7 @@ gulp.task('create', function () {
     try
     {
         fs.statSync(path + '/' + filename + '.scss');
-        gutil.log(chalk.red('This stylesheet allready exists'));
+        gutil.log(chalk.red('This stylesheet already exists'));
 
     } catch (e)
     {
