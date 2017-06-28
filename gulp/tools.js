@@ -17,47 +17,36 @@ var gulp    = require('gulp'),
  */
 gulp.task('create', function () {
 
-    var type = process.argv[3].replace('--', '');
-    var name = process.argv[4];
+    var name = process.argv[3];
 
-    if (type != "block" && type != "component") {
-        gutil.log(chalk.red('The type is not valid, use --block or --component'));
-        return;
-    }
-
-    if (!name.length) {
+    if (!name.length)
+    {
         gutil.log(chalk.red('The name is empty'));
         return;
     }
 
-
-    var path = {
-        template: config.paths.asset + '/template',
-        sass    : config.paths.asset + '/sass/app/' + type
-    };
-
-    try {
-        fs.statSync(path.template);
-    } catch (e) {
-        path.template = config.paths.web + '/views';
-    }
-
-    path.template += '/' + type;
     var filename = name.toLowerCase();
+    var path = config.paths.private + '/shared/' + filename;
 
-    try {
-        fs.statSync(path.template + '/' + filename + '.phtml.twig');
-        gutil.log(chalk.red('This template allready exists'));
-    } catch (e) {
-        fs_path.writeFile(path.template + '/' + filename + '.phtml.twig', "<div block=\"" + name.replace(/\//g, '-') + "\">\n\t\n</div>");
+    try
+    {
+        fs.statSync(path + '/' + filename + '.twig');
+        gutil.log(chalk.red('This component allready exists'));
+
+    } catch (e)
+    {
+        fs_path.writeFile(path + '/' + filename + '.twig', "<div block=\"" + name.replace(/\//g, '-') + "\">\n\t\n</div>");
         gutil.log(chalk.green('Template created'));
     }
 
-    try {
-        fs.statSync(path.sass + '/' + filename + '.scss');
+    try
+    {
+        fs.statSync(path + '/' + filename + '.scss');
         gutil.log(chalk.red('This stylesheet allready exists'));
-    } catch (e) {
-        fs_path.writeFile(path.sass + '/' + filename + '.scss', "." + name.replace(/\//g, '-') + "{\n\t\n}");
+
+    } catch (e)
+    {
+        fs_path.writeFile(path + '/' + filename + '.scss', "." + name.replace(/\//g, '-') + "{\n\t\n}");
         gutil.log(chalk.green('Stylesheet created'));
     }
 });
