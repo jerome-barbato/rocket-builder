@@ -51,7 +51,7 @@ EOT
                 $this->installNodeModules();
             }
 
-            if ( count( $args ) > 1 )
+            if ( count( $args ) > 0 )
             {
 
                 foreach ( $args as $arg )
