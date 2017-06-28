@@ -8,9 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - File path on compiled twig
 ### Changed
-- Use new folder structure
-- simpilfy path when possible ( home/home.twig become home.twig)
+- Use new folder structure according to [Symfony](http://symfony.com/doc/current/quick_tour/the_architecture.html)
+- simplify path when possible ( home/home.twig become home.twig)
 - framework and lib are now really separated
+- `Composer create `function now use only one arg. blocks and components specifications are deprecated.
 
 ## 3.4.6 - 2013-06-15
 ### Fixed
