@@ -76,11 +76,7 @@ var config = module.exports = {
         config.paths.views    = config.base_path + config.builder.paths.views;
         config.paths.split    = 'split_by_type' in config.builder.paths && config.builder.paths.split_by_type;
 
-	    config.paths.private = {
-	    	js : config.base_path + config.builder.paths.private + (config.paths.split ? '/js' : ''),
-		    scss : config.base_path + config.builder.paths.private + (config.paths.split ? '/scss' : ''),
-		    template : config.base_path + config.builder.paths.private + (config.paths.split ? '/template' : '')
-	    };
+	    config.paths.private = config.base_path + config.builder.paths.private;
 
         config.paths.css_to_sass = '../private/';
 

@@ -56,8 +56,8 @@ EOT
 
                 foreach ( $args as $arg )
                 {
-                    $output->writeln("<comment>Creating  " . $arg . "...</comment>");
-                    passthru( "gulp create -- " . $arg . "  --color=always" );
+                    $output->writeln("<comment>Creating " . $arg . "...</comment>");
+                    passthru( "gulp create --shared " . $arg . "  --color=always" );
                 }
             }
         }
