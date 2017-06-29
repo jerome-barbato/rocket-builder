@@ -4,6 +4,7 @@ $public-path  : '../'!default;
 $misc-path   :  $public-path+'media/misc/' !default;
 $page-path   :  $public-path+'media/page/' !default;
 $block-path  :  $public-path+'media/block/' !default;
+$shared-path :  $public-path+'media/shared/' !default;
 $tmp-path    :  $public-path+'media/tmp/' !default;
 $icon-path   :  $public-path+'media/icon/' !default;
 $vendor-path :  $public-path+'media/vendor/' !default;
@@ -15,6 +16,10 @@ $font-path   :  $public-path+'font/' !default;
 
 @function block-url($path){
   @return url( $block-path + $path )
+}
+
+@function shared-url($path){
+  @return url( $shared-path + $path )
 }
 
 @function media-url($path){

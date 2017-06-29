@@ -118,7 +118,7 @@
     });
 
 
-    ['block', 'icon', 'page', 'component', 'tmp', 'misc'].map(function (type)
+    ['block', 'icon', 'page', 'component', 'tmp', 'misc', 'shared'].map(function (type)
     {
         dom.compiler.register('attribute', type + '-src', function (elem, attrs)
         {
