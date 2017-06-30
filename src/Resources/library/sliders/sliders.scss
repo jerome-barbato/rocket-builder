@@ -35,9 +35,15 @@
       &-next{ right: 0 }
     }
 
+    &-container[data-height]{
+	  height: auto;
+	}
+
     &-container[data-height="auto"]{
-      transition: allow(height); transition-duration: $slider-speed; height: auto;
-      .swiper-slide{ height: auto }
+	  .swiper{
+		&-scroller{ transition: allow(height); transition-duration: $slider-speed }
+		&-slide{ height: auto }
+	  }
     }
 
     &-slide{

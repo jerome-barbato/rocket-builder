@@ -107,13 +107,14 @@ var config = module.exports = {
         };
 
         config.paths.watch = {
-            js        : config.paths.private.js + "/**/*.js",
-            js_app    : [
-	            config.paths.private.js + "/**/*.js",
-	            config.paths.private.js + "/app.js"
-            ],
-            js_vendors: [config.paths.private.js + "/vendor/**/*.js"],
-	        scss      : config.paths.private.scss + "/**/*.scss",
+            js        : {
+                app    : [
+                    config.paths.private.js + "/**/*.js",
+                    "!"+config.paths.private.js + "/vendor/**/*.js"
+                ],
+                vendors: [config.paths.private.js + "/vendor/**/*.js"]
+            },
+            scss      : config.paths.private.scss + "/**/*.scss",
             template  : [
                 config.paths.private.template + "/**/*.twig",
                 config.paths.private.template + "/**/*.tpl"

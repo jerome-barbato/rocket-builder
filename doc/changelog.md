@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - simplify path when possible ( home/home.twig become home.twig)
 - framework and lib are now really separated
 - `Composer create `function now use only one arg. blocks and components specifications are deprecated.
+- Metabolism slider height now defined on the scroller
+### Fixed
+- Wrong template compilation watch path
 
 ## 3.4.6 - 2013-06-15
 ### Fixed

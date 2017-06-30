@@ -142,6 +142,8 @@
                 .attr('data-transition', self.config.animation)
                 .wrap('<div class="' + self.classnames.scroller + '"/>');
 
+            self.context.$scroller = self.config.$element.findClosest('.' + self.classnames.scroller );
+
             if (self.context.slide_count < 2)
                 self.context.$arrows.hide();
 
@@ -152,7 +154,7 @@
                 self._sync();
 
             if (self.config.height && !isNaN(self.config.height))
-	            self.config.$element.height(self.config.height);
+                self.context.$scroller.height(self.config.height);
 
             self._initArrows();
             self._initPagination();
@@ -439,7 +441,7 @@
         self._animate = function (animate, callback)
         {
 	        if ( self.config.height === "auto" )
-	            self.config.$element.height( self.context.$current_slide.outerHeight() );
+                self.context.$scroller.height( self.context.$current_slide.outerHeight() );
 
             if (animate)
             {

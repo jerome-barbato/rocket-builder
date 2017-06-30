@@ -150,7 +150,7 @@ function baseName(str)
  */
 gulp.task('template::watch', function ()
 {
-    gulp.watch(config.paths.src.template, function (event)
+    gulp.watch(config.paths.watch.template, function (event)
     {
         var path_array = event.path.split('/');
         var filename   = path_array[path_array.length - 1];
