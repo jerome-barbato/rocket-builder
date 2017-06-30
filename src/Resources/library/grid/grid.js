@@ -66,7 +66,7 @@
 
     dom.compiler.register('element', 'grid', function(elem, attrs) {
 
-        if( attrs.mod )
+        if( 'mod' in attrs && !'element' in attrs && !'block' in attrs )
             elem.removeAttr('mod');
 
         return '<div data-grid="'+(attrs.mod?attrs.mod:'')+'"><transclude/></div>';
@@ -75,7 +75,7 @@
 
     dom.compiler.register('element', 'row', function(elem, attrs) {
 
-        if( attrs.mod )
+        if( 'mod' in attrs && !'element' in attrs && !'block' in attrs )
             elem.removeAttr('mod');
 
         return '<div data-row="'+(attrs.mod?attrs.mod:'')+'"><transclude/></div>';
@@ -89,13 +89,13 @@
         if( attrs.size )
             elem.removeAttr('size');
 
-        if( attrs.mod ){
+        if( 'mod' in attrs && !'element' in attrs && !'block' in attrs ){
 
             attributes.push('data-align="'+attrs.mod+'"');
             elem.removeAttr('mod');
         }
 
-        if( attrs.offsetBy ){
+        if( 'offsetBy' in attrs ){
 
             $('<div data-col="'+attrs.offsetBy+'"></div>').insertBefore(elem);
             elem.removeAttr('offset-by');
