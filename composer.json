@@ -16,7 +16,7 @@
   ],
   "require": {
     "composer-plugin-api": "^1.0",
-    "metabolism/rocket-installer": "1.0.x"
+    "metabolism/rocket-installer": "1.0.*"
   },
   "extra": {
     "class": "Rocket\\Composer\\BuilderPlugin",
