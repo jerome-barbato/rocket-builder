@@ -24,11 +24,7 @@ gulp.task('style::compile', function () {
                    .pipe($.sourcemaps.init())
                    .pipe($.cssGlobbing({extensions: ['.scss']}))
                    .pipe($.sass().on('error', config.errorHandler('Sass')))
-                   .pipe($.pleeease({
-                       minifier: false,
-                       mqpacker: true,
-                       browsers: config.builder.style.browsers
-                   }).on('error', config.errorHandler('Pleeease')))
+                   .pipe($.pleeease({minifier: false, mqpacker: true, browsers: config.builder.style.browsers }).on('error', config.errorHandler('Pleeease')))
                    .pipe($.sourcemaps.write('./', {
                        includeContent: false,
                        sourceRoot    : config.paths.css_to_sass
@@ -42,10 +38,7 @@ gulp.task('style::compile', function () {
         return gulp.src(config.paths.src.scss)
                    .pipe($.cssGlobbing({extensions: ['.scss']}))
                    .pipe($.sass().on('error', config.errorHandler('Sass')))
-                   .pipe($.pleeease({
-                       mqpacker: true,
-                       browsers: config.builder.style.browsers
-                   }).on('error', config.errorHandler('Pleeease')))
+                   .pipe($.pleeease({ mqpacker: true, browsers: config.builder.style.browsers}).on('error', config.errorHandler('Pleeease')))
                    .pipe(gulp.dest(config.paths.dest.css))
                    .pipe($.size({showFiles: true}));
     }

@@ -1,0 +1,1 @@
+../../src/Resources/library/detect/detect.md

@@ -103,7 +103,7 @@ var config = module.exports = {
         config.paths.dest = {
             js      : config.paths.public + "/js",
             css     : config.paths.public + "/css",
-	        views : config.paths.views
+	        views   : config.paths.views
         };
 
         config.paths.watch = {

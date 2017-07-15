@@ -8,7 +8,8 @@
 
 var gulp        = require('gulp'),
     fs          = require('fs'),
-    config      = require('./gulp/config');
+    config      = require('./src/Gulp/config'),
+    livereload  = require('gulp-livereload');
 
 
 /**
@@ -16,12 +17,12 @@ var gulp        = require('gulp'),
  *  in order to load all gulp tasks
  */
 
-var files = fs.readdirSync('./gulp');
+var files = fs.readdirSync('./src/Gulp');
 
 for (var i in files)
 {
     if (files[i].split('.').pop() == 'js')
-        require('./gulp/' + files[i]);
+        require('./src/Gulp/' + files[i]);
 }
 
 
@@ -34,10 +35,20 @@ gulp.task('default', ["views::clean", "script::browser", "script::vendor", "scri
 {
     if (config.watching_mode)
     {
+        if (config.environment === 'development')
+            livereload.listen();
+
         gulp.start("template::watch");
 
-        gulp.watch(config.paths.watch.js_app, ["script::app"]);
-        gulp.watch(config.paths.watch.js_vendors, ["script::vendor", "templates::compile"]);
+        gulp.watch(config.paths.watch.js.app, ["script::app"]);
+        gulp.watch(config.paths.watch.js.vendors, ["script::vendor", "templates::compile"]);
         gulp.watch(config.paths.watch.scss, ["style::compile"]);
+
+        if (config.environment === 'development') {
+
+            gulp.watch([config.paths.dest.css + '/**/*.css', config.paths.dest.js + '/**/*.js', config.paths.dest.views + '/**/*.*' ], function (files) {
+                livereload.changed(files)
+            });
+        }
     }
 });

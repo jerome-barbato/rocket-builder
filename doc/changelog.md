@@ -7,12 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 3.5.0 - in dev
 ### Added
 - File path on compiled twig
+- Livereload
 ### Changed
 - Use new folder structure according to [Symfony](http://symfony.com/doc/current/quick_tour/the_architecture.html)
 - simplify path when possible ( home/home.twig become home.twig)
 - framework and lib are now really separated
 - `Composer create `function now use only one arg. blocks and components specifications are deprecated.
 - Metabolism slider height now defined on the scroller
+- moved gulp folder to src/Gulp
 ### Fixed
 - Wrong template compilation watch path
 
