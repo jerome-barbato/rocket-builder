@@ -1,21 +1,12 @@
-// custom scrollbar colors
+// Custom scrollbar colors
 @mixin scrollbar($size, $primary, $secondary: lighten($primary, 25%), $radius-thumb: 0, $radius-track: 0) {
-  &::-webkit-scrollbar {
-    width:  $size;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: $primary;
-    border-radius: $radius-thumb;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: $secondary;
-    border-radius: $radius-track;
-  }
+  &::-webkit-scrollbar { width:  $size; height: $size }
+  &::-webkit-scrollbar-thumb { background: $primary; border-radius: $radius-thumb }
+  &::-webkit-scrollbar-track { background: $secondary; border-radius: $radius-track }
 }
 
-// clear float
+
+// Clear float
 @mixin clearfix() {
   &:after{
     content: '\0020'; display: block; overflow: hidden;
@@ -25,7 +16,8 @@
 
 .clearfix{ @include clearfix() }
 
-// custom placeholder style
+
+// Custom placeholder style
 @mixin placeholder {
   &::-webkit-input-placeholder {@content}
   &:-moz-placeholder           {@content}
@@ -33,7 +25,7 @@
   &:-ms-input-placeholder      {@content}
 }
 
-// borders
+// Borders
 @mixin borders($size:1px, $color:false){
   position: relative;
   &:after { left: 0; top:0; border-top: $size solid; border-left: $size solid }
