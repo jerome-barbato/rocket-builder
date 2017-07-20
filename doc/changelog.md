@@ -4,50 +4,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 3.5.0 - in dev
+## 3.5.1 - 2017-07-20
+### Changed
+- Grid col padding fix
+
+## 3.5.0
 ### Added
 - File path on compiled twig
+- Livereload
 ### Changed
 - Use new folder structure according to [Symfony](http://symfony.com/doc/current/quick_tour/the_architecture.html)
 - simplify path when possible ( home/home.twig become home.twig)
 - framework and lib are now really separated
 - `Composer create `function now use only one arg. blocks and components specifications are deprecated.
 - Metabolism slider height now defined on the scroller
+- moved gulp folder to src/Gulp
 ### Fixed
 - Wrong template compilation watch path
 
-## 3.4.6 - 2013-06-15
+## 3.4.6 - 2017-06-15
 ### Fixed
 - Browser JS phone and tablet detection
 ### Changed
 - Removed desktop from Slider.js added default instead
 
-## 3.4.5 - 2013-06-06
+## 3.4.5 - 2017-06-06
 ### Fixed
 - Grid js was wrong, now use phone, tablet, small, medium...
 ### Added
 - Grid data-col-tablet="none" to hide on tablet
 
-## 3.4.4 - 2013-06-06
+## 3.4.4 - 2017-06-06
 ### Changed
 - require rocket-installer
 
-## 3.4.3 - 2013-05-19
+## 3.4.3 - 2017-05-19
 ### Added
 - Toogle : activate option ( data-activate_on="phone" )
 - Slider : added classic animation
 
 
-## 3.4.2 - 2013-05-10
+## 3.4.2 - 2017-05-10
 ### Changed
 - Angulight: delay controller init at one tick
 - Custom: add refresh trigger
 
-## 3.4.1 - 2013-04-25
+## 3.4.1 - 2017-04-25
 ### Added
 - Slider auto height
 
-## 3.4.0 - 2013-04-20
+## 3.4.0 - 2017-04-20
 ### Added
 - Branch aliases for composer, instead of using `dev-dev` tag in composer, you can now use `3.4.x-dev`
 ### Changed
