@@ -56,6 +56,7 @@
 
 
         self._resize = function () {
+
             for (var i = 0; i < self.context.elements.length; i++) {
                 var element = self.context.elements[i];
 
@@ -78,6 +79,8 @@
 
 
         self._computeOffset = function () {
+
+            self.context.offset.body   = !isNaN(self.context.$body.data('scroll_offset'))?self.context.$body.data('scroll_offset'):5;
             self.context.offset.top    = $('[data-fixed="top"]').height();
             self.context.offset.bottom = $('[data-fixed="bottom"]').height();
         };
@@ -88,7 +91,7 @@
                 return;
             }
 
-            if (scroll_top <= 5) {
+            if (scroll_top <= self.context.offset.body) {
                 if (!self.context.top_reached) {
                     self.context.top_reached = true;
                     self.context.in_between  = self.context.bottom_reached = false;
@@ -97,7 +100,7 @@
                     self.context.$body.trigger('scroll.top');
                 }
             }
-            else if (scroll_top > 5 && scroll_top + self.context.window_height < self.context.document_height) {
+            else if (scroll_top >  self.context.offset.body && scroll_top + self.context.window_height < self.context.document_height) {
                 if (!self.context.in_between) {
                     self.context.bottom_reached = self.context.top_reached = false;
                     self.context.in_between = true;

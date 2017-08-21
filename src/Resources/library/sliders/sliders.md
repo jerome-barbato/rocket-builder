@@ -84,10 +84,17 @@ Pause autoplay when mouse is over the slider
 ### Pack Slide
 
 ~~~~
-<slider data-display="desktop:3,phone:1">
+<slider data-desktop="3" data-phone="1">
 ~~~~
 
 Display: desktop, mobile, tablet, phone
+
+
+### Disable slider on mobile
+
+~~~~
+<slider data-phone="false">
+~~~~
 
 ### Height
 

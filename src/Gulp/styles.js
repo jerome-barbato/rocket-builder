@@ -25,10 +25,7 @@ gulp.task('style::compile', function () {
                    .pipe($.cssGlobbing({extensions: ['.scss']}))
                    .pipe($.sass().on('error', config.errorHandler('Sass')))
                    .pipe($.pleeease({minifier: false, mqpacker: true, browsers: config.builder.style.browsers }).on('error', config.errorHandler('Pleeease')))
-                   .pipe($.sourcemaps.write('./', {
-                       includeContent: false,
-                       sourceRoot    : config.paths.css_to_sass
-                   }))
+                   .pipe($.sourcemaps.write('./'))
                    .pipe(gulp.dest(config.paths.dest.css))
     }
     else {

@@ -136,7 +136,8 @@
             if (!self.context.slide_count)
                 return false;
 
-            self._packSlides();
+            if( !self._packSlides() )
+                return;
 
             self.context.$slides_container
                 .attr('data-transition', self.config.animation)
@@ -181,40 +182,52 @@
 
         self._packSlides = function ()
         {
-            if (self.config.display)
+            var pack = false;
+            var devices = ['desktop','mobile','tablet','phone'];
+
+            for( var i in devices)
             {
-                var pack = false;
+                var device = devices[i];
 
-                $.each(['tablet','phone'], function (i, device)
+                if (device in self.config && device in browser && browser[device] && !pack)
                 {
-                    if (device in self.config.display && device in browser && browser[device] && !pack)
-                    {
-                        pack = true;
+                    pack = true;
 
-                        for (var j = 0; j < self.context.$slides.length; j += parseInt(self.config.display[device]))
-                        {
-                            self.context.$slides.slice(j, j + parseInt(self.config.display[device]))
-                                .wrapAll("<div class='" + self.classnames.slide + "'></div>")
-                                .children()
-                                .unwrap();
-                        }
+                    if( self.config[device] === false )
+                    {
+                        self.destroy();
+                        return false;
                     }
-                });
-
-                if( !pack && 'default' in self.config.display)
-                {
-                    for (var j = 0; j < self.context.$slides.length; j += parseInt(self.config.display['default']))
+                    else
                     {
-                        self.context.$slides.slice(j, j + parseInt(self.config.display['default']))
-                            .wrapAll("<div class='" + self.classnames.slide + "'></div>")
-                            .children()
-                            .unwrap();
+	                    var slide_count = parseInt(self.config[device]);
+
+	                    for (var j = 0; j < self.context.$slides.length; j += slide_count)
+	                    {
+		                    self.context.$slides.slice(j, j + slide_count)
+			                    .wrapAll("<div class='" + self.classnames.slide + "'></div>")
+			                    .children()
+			                    .unwrap();
+	                    }
                     }
                 }
-
-                self.context.$slides     = self.context.$slides_container.findClosest('.' + self.classnames.slide, '.' + self.classnames.slider);
-                self.context.slide_count = self.context.$slides.length;
             }
+
+            self.context.$slides     = self.context.$slides_container.findClosest('.' + self.classnames.slide, '.' + self.classnames.slider);
+            self.context.slide_count = self.context.$slides.length;
+
+            return true;
+        };
+
+
+        self.destroy = function (){
+
+	        self.context.$slides.contents().unwrap();
+	        self.context.$pagination_container.remove();
+	        self.context.$arrows.remove();
+	        self.context.$slides_container.contents().unwrap();
+	        self.context.$slides_container.unwrap();
+	        self.config.$element.contents().unwrap();
         };
 
 
@@ -222,11 +235,11 @@
         {
 	        if (self.config.sync)
 	        {
-            $('#' + self.config.sync).on('slider.updated', function (e, index)
-            {
+                $('#' + self.config.sync).on('slider.updated', function (e, index)
+                {
 			        if (index !== self.context.indices.current)
-                    self._show(index, true);
-            });
+                        self._show(index, true);
+                });
 	        }
         };
 

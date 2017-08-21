@@ -23,12 +23,14 @@ Simple toggle management system
   </div>
 ~~~~
 
+When using anchor, id must start with 'toggle'
+
 ~~~~
 <div toggles="link">
-    <a href="#1">Item 1</a>
-    <div id="1">Lorem ipsum</div>
-    <a href="#2">Item 2</a>
-    <div id="2">Lorem ipsum</div>
+    <a href="#toggle1">Item 1</a>
+    <div id="toggle1">Lorem ipsum</div>
+    <a href="#toggle2">Item 2</a>
+    <div id="toggle2">Lorem ipsum</div>
 </div>
 ~~~~
 
@@ -36,10 +38,10 @@ Simple toggle management system
 
 ~~~~
 <div toggles data-auto_close="true">
-    <a href="#1">Item 1</a>
-    <div id="1">Lorem ipsum</div>
-    <a href="#2">Item 2</a>
-    <div id="2">Lorem ipsum</div>
+    <a href="#toggle1">Item 1</a>
+    <div id="toggle1">Lorem ipsum</div>
+    <a href="#toggle2">Item 2</a>
+    <div id="toggle2">Lorem ipsum</div>
 </div>
 ~~~~
 

@@ -44,10 +44,7 @@ gulp.task('script::app', function () {
         return gulp.src(config.paths.src.js.app, {base: config.paths.private.js})
                    .pipe($.sourcemaps.init())
                    .pipe($.concat('app.js'))
-                   .pipe($.sourcemaps.write('./', {
-                       includeContent: false,
-                       sourceRoot    : config.paths.sm_asset
-                   }))
+                   .pipe($.sourcemaps.write('./'))
                    .pipe(gulp.dest(config.paths.dest.js))
     }
     else {
@@ -71,10 +68,7 @@ gulp.task('script::vendor', function () {
         return gulp.src(config.paths.src.js.vendor, {base: config.paths.private.js})
                    .pipe($.sourcemaps.init())
                    .pipe($.concat('vendor.js'))
-                   .pipe($.sourcemaps.write('./', {
-                       includeContent: false,
-                       sourceRoot    : config.paths.sm_asset
-                   }))
+                   .pipe($.sourcemaps.write('./'))
                    .pipe(gulp.dest(config.paths.dest.js))
     }
     else {
@@ -101,10 +95,7 @@ gulp.task('script::browser', function () {
         return gulp.src(config.paths.src.js.browser, {base: config.paths.private.js})
                    .pipe($.sourcemaps.init())
                    .pipe($.concat('browser.js'))
-                   .pipe($.sourcemaps.write('./', {
-                       includeContent: false,
-                       sourceRoot    : config.paths.sm_asset
-                   }))
+                   .pipe($.sourcemaps.write('./'))
                    .pipe(gulp.dest(config.paths.dest.js));
     }
     else {

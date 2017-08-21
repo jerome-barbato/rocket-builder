@@ -7,13 +7,13 @@ Simple tab management system
 ~~~~
 <div tabs>
     <nav>
-        <a href="#1">Item 1</a>
-        <a href="#2">Item 2</a>
+        <a href="#tab1">Item 1</a>
+        <a href="#tab2">Item 2</a>
     </nav>
-    <div id="1">
+    <div id="tab1">
         Tab Item 1
     </div>
-    <div id="2">
+    <div id="tab2">
         Tab Item 2
     </div>
 </div>
@@ -26,16 +26,17 @@ You can transform tab to inline insert
 ~~~~
 <div tabs data-inline="mobile">
     <nav>
-        <a href="#1">Item 1</a>
-        <a href="#2">Item 2</a>
+        <a href="#tab1">Item 1</a>
+        <a href="#tab2">Item 2</a>
     </nav>
-    <div id="1">
+    <div id="tab1">
         Tab Item 1
     </div>
-    <div id="2">
+    <div id="tab2">
         Tab Item 2
     </div>
 </div>
 ~~~~
 
 Available parameters are mobile, tablet, phone
+Id must start with 'tab'
