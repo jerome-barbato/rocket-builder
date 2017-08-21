@@ -7,14 +7,14 @@
 
   @if( $axis == false ){
 
-    @return unquote('position: absolute; left: 50%; top: 50%; margin-top: -0.5em; margin-left: -0.5em; line-height: 100%');
+    @return unquote('absolute; left: 50%; top: 50%; margin-top: -0.5em; margin-left: -0.5em; line-height: 100%');
   }
   @else if( $axis == 'x' ){
 
-    @return unquote('position: absolute; left: 50%; margin-left: -0.5em; line-height: 100%');
+    @return unquote('absolute; left: 50%; margin-left: -0.5em; line-height: 100%');
   }
   @else if( $axis == 'y' ){
 
-    @return unquote('position: absolute; top: 50%; margin-top: -0.5em; line-height: 100%');
+    @return unquote('absolute; top: 50%; margin-top: -0.5em; line-height: 100%');
   }
 }
