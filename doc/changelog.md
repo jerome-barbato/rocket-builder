@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.5.4 - 2017-08-23
+### Added
+- Map : optimisations 
+
 ## 3.5.3 - 2017-08-21
 ### Changed
 - Slider : slides pack management, now use data-desktop, data-phone, data-tablet, data-mobile 

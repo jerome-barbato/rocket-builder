@@ -31,7 +31,7 @@
         self.config = {
             marker : {
                 url       : app.asset_url+'/media/icon/marker@2x.png',
-                hover_url : app.asset_url+'/media/icon/marker--hover@2x.png',
+                hover_url : false,
                 width     : 45,
                 height    : 65,
                 label_origin : 'center',
@@ -124,6 +124,7 @@
         };
 
 
+        self.gmap3 = function(){ return self.context.gmap };
 
         /**
          *
@@ -135,9 +136,13 @@
             self.context.marker = {
                 url         : self.config.marker.url,
                 scaledSize  : new google.maps.Size(self.config.marker.width, self.config.marker.height),
-                anchor      : new google.maps.Point(self.config.marker.width/2, self.config.marker.height),
                 labelOrigin : new google.maps.Point(self.config.marker.width/2, self.config.marker.height*0.65)
             };
+
+            if( self.config.marker.anchor )
+	            self.context.marker.anchor = new google.maps.Point(self.config.marker.anchor.x, self.config.marker.anchor.y);
+            else
+	            self.context.marker.anchor = new google.maps.Point(self.config.marker.width/2, self.config.marker.height);
 
             if( self.config.marker.label_origin )
             {
@@ -313,6 +318,7 @@
 
             $.each(markers, function(i, marker)
             {
+                marker.index = i;
                 marker.has_overlay = false;
                 marker.icon  = $.extend({}, self.context.marker);
 
@@ -342,12 +348,14 @@
                     marker._address = marker.address;
                     delete marker.address;
                 }
-            });
 
+                if( 'position' in marker && 'lat' in marker.position )
+                    marker.position = [marker.position.lat, marker.position.lng];
+            });
 
             if( 'cluster' in self.config && self.config.cluster )
             {
-                self.context.gmap.cluster({
+	            self.context.gmap.cluster({
                     size: self.config.cluster.size,
                     markers: markers,
                     cb: function (markers) {
@@ -376,7 +384,7 @@
             }
             else
             {
-                self.context.gmap.marker(markers).then(function(markers)
+	            self.context.gmap.marker(markers).then(function(markers)
                 {
                     self.context.markers = self.context.markers.concat(markers);
                     setTimeout(self.updateLabel, 50);
@@ -390,7 +398,9 @@
                     if( typeof marker == 'undefined')
                         return;
 
-                    marker.setIcon(marker.icons.hover);
+                    if( marker.icons.hover.url )
+                        marker.setIcon(marker.icons.hover);
+
                     self.context.$map.trigger('marker.over', [self.context.map, marker.index]);
                 },
                 mouseout: function(marker){
@@ -400,7 +410,9 @@
 
                     if( !marker.has_overlay )
                     {
-                        marker.setIcon(marker.icons.normal);
+                        if( marker.icons.hover.url )
+                            marker.setIcon(marker.icons.normal);
+
                         self.context.$map.trigger('marker.out', [self.context.map, marker.index]);
                     }
                 },
@@ -409,12 +421,13 @@
                     if( typeof marker == 'undefined')
                         return;
 
-                    if( self.context.selected_marker )
+                    if( self.context.selected_marker && marker.icons.hover.url )
                         self.context.selected_marker.setIcon(self.context.selected_marker.icons.normal);
 
                     self.context.selected_marker = marker;
 
-                    marker.setIcon(marker.icons.hover);
+                    if( marker.icons.hover.url )
+                        marker.setIcon(marker.icons.hover);
 
                     self.context.$map.trigger('marker.click', [self.context.map, marker]);
 
@@ -442,11 +455,13 @@
 
                             self.context.overlay = overlay;
 
-                            self.context.$map.trigger('overlay.show', [self.context.map, marker]);
+                            self.context.$map.trigger('overlay.show', [self.context.map, marker, overlay]);
 
                             overlay.$.find('[data-close]').click(function()
                             {
-                                marker.setIcon(marker.icons.normal);
+	                            if( marker.icons.hover.url )
+                                    marker.setIcon(marker.icons.normal);
+
                                 self.context.selected_marker = false;
 
                                 self.clearOverlay();
