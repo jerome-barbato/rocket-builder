@@ -4,11 +4,10 @@
   "description": "Gulp tasks to compile scss, js, and templates. Metabolism framework included.",
   "type": "composer-plugin",
   "license": "AGPL-3.0",
-  "authors": [
-    {
-      "name": "Jérôme BARBATO",
-      "email": "jerome@metabolism.fr"
-    },
+  "authors": [{
+    "name": "Jérôme BARBATO",
+    "email": "jerome@metabolism.fr"
+  },
     {
       "name": "Paul COUDEVILLE",
       "email": "paul@metabolism.fr"
@@ -26,7 +25,7 @@
           "doc": "doc/builder",
           "src/Resources/library": "src/FrontBundle/Resources/private/vendor/metabolism",
           "src/Resources/polyfill": "src/FrontBundle/Resources/private/vendor/polyfill",
-          "src/Resources/sass-framework": "src/FrontBundle/Resources/private/framework"
+          "src/Resources/sass-framework": "src/FrontBundle/Resources/private/framework",
           "src/Resources/browser.js": "src/FrontBundle/Resources/private/vendor/browser.js",
           "src/Resources/modernizr.js": "src/FrontBundle/Resources/private/vendor/modernizr.js"
         }
