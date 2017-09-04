@@ -1,6 +1,6 @@
 {
   "name": "metabolism/rocket-builder",
-  "version": "3.5.4",
+  "version": "3.5.5",
   "description": "Gulp tasks to compile scss, js, and templates. Metabolism framework included.",
   "type": "composer-plugin",
   "license": "AGPL-3.0",
@@ -15,7 +15,7 @@
   ],
   "require": {
     "composer-plugin-api": "^1.0",
-    "metabolism/rocket-installer": "1.1.x-dev"
+    "metabolism/rocket-installer": "1.1.*"
   },
   "extra": {
     "class": "Rocket\\Composer\\BuilderPlugin",
