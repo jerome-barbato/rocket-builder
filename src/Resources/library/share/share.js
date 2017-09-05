@@ -23,33 +23,11 @@
 
         /* Public */
 
-        self.facebook = function (link, scrape) {
-            if (scrape && typeof FB !== 'undefined') {
-                FB.api('https://graph.facebook.com/', 'post', {
-                    id    : link,
-                    scrape: true
-                }, function (response) {
-                    if (response) {
-                        FB.ui({
-                            method: 'feed',
-                            link  : link
-                        });
-                    }
-                });
-            }
-            else {
+        self.facebook = function (link) {
 
-                if (typeof FB !== 'undefined') {
-                    FB.ui({
-                        method: 'feed',
-                        link  : link
-                    });
-                }
-                else {
-                    var url = 'http://www.facebook.com/sharer.php?u=' + encodeURIComponent(link);
-                    self._openWindow(url, 'facebookwindow', 533, 355);
-                }
-            }
+	        var url = 'http://www.facebook.com/sharer.php?u=' + encodeURIComponent(link);
+
+            self._openWindow(url, 'facebookwindow', 533, 355);
         };
 
 
@@ -183,26 +161,23 @@
             switch (target) {
                 case 'facebook':
 
-                    var scrape = $elem.hasDataAttr('scrape') ? $elem.data('scrape') : false;
-                    self.facebook(link, scrape);
+                    self.facebook(link);
                     break;
 
                 case 'twitter':
 
-                    var text = $elem.hasDataAttr('tweet') ? $elem.data('tweet') : '';
-                    var share_link = $elem.hasDataAttr('link') ? $elem.data('link') : true;
+                    var description = $elem.hasDataAttr('description') ? $elem.data('description') : '';
+                    var share_link = $elem.hasDataAttr('share_link') ? $elem.data('share_link') : false;
 
-                    share_link = share_link != "false" && share_link;
-
-                    self.twitter(link, text, share_link);
+                    self.twitter(link, description, share_link);
                     break;
 
                 case 'linkedin':
 
                     var title   = $elem.hasDataAttr('title') ? $elem.data('title') : '';
-                    var summary = $elem.hasDataAttr('summary') ? $elem.data('summary') : '';
+                    var description = $elem.hasDataAttr('description') ? $elem.data('description') : '';
 
-                    self.linkedin(link, title, summary);
+                    self.linkedin(link, title, description);
                     break;
 
                 case 'pinterest':

@@ -49,7 +49,7 @@
         self.open = function (id)
         {
             self.context.$tab_handlers.removeClass('active').filter('[href="' + id + '"]').addClass('active');
-            self.context.$tabs.hide().filter(id).show();
+            self.context.$tabs.hide().filter(id).show().trigger('tab.open');
 
             self.current = id;
 

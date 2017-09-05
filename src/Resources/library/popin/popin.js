@@ -158,6 +158,9 @@
 
         var add = function (content)
         {
+            if( !content )
+                return;
+
             if (!window.angular)
                 content = content.populate(self.context);
 

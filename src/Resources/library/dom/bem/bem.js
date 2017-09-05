@@ -48,7 +48,7 @@
             elem.data(':bem', single_binding ? block_class_name : block_class_name + element_class_name);
             elem.data('bem', block_class_name + element_class_name);
 
-            if (elem.data('bem').split('__').length > 3) {
+            if (elem.data('bem').split('__').length > 2) {
                 console.warn(elem.data('bem') + ' : BEM depth is important, please use single/double binding');
             }
 

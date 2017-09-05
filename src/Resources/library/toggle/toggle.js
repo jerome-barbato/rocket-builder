@@ -137,6 +137,9 @@
             {
                 var $tab = false;
 
+                if( $(this).attr('href').length < 2)
+                    return;
+
                 if (self.config.type === 'link')
                     $tab = self.config.$element.find($(this).attr('href'));
                 else

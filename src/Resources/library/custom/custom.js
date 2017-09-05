@@ -42,6 +42,17 @@
                             if(selected)
 	                            this.button.addClass('ui-selectmenu-button-filled');
                         },
+                        refresh: function () {
+		                    this._super();
+		                    var selected = this.element.find('[selected]').length,
+			                    placeholder = this.options.placeholder;
+
+		                    if (!selected && placeholder)
+			                    this.buttonItem.text(placeholder);
+
+		                    if(selected)
+			                    this.button.addClass('ui-selectmenu-button-filled');
+	                    },
                         _resizeMenu: function () {
 
                             var offset = this.element.data('menu_offset');

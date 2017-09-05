@@ -16,7 +16,7 @@ When using the Facebook JS SDK, add data-scrape to force Facebook cache reload
 ### Twitter   
 
 ~~~~
-<a href="http://www.monsite.fr" share-on="twitter" data-tweet="Lorem ipsum">Twitter</a>
+<a href="http://www.monsite.fr" share-on="twitter" data-description="Lorem ipsum">Twitter</a>
 ~~~~
    
 ### Google+
@@ -36,7 +36,7 @@ data-media="http://www.mysite.com/myimage.jpg">Pinterest</a>
 
 ~~~~
 <a href="http://www.monsite.fr" share-on="linkedin" data-title="Lorem ipsum"
-data-summary="ipsum">LinkedIn</a>
+data-description="ipsum">LinkedIn</a>
 ~~~~
    
 ### Mail   
