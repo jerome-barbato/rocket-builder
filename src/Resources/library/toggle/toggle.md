@@ -1,11 +1,9 @@
 # Toggle
-   
-######file: js/metabolism/toggle.js
 
 Simple toggle management system
 
 ~~~~
- <div toggles="list">
+ <div toggle="list">
     <ul>
       <li>
         <a>Item 1</a>
@@ -26,7 +24,7 @@ Simple toggle management system
 When using anchor, id must start with 'toggle'
 
 ~~~~
-<div toggles="link">
+<div toggle="link">
     <a href="#toggle1">Item 1</a>
     <div id="toggle1">Lorem ipsum</div>
     <a href="#toggle2">Item 2</a>
@@ -37,7 +35,7 @@ When using anchor, id must start with 'toggle'
 ### Parameters
 
 ~~~~
-<div toggles data-auto_close="true">
+<div toggle data-auto_close="true">
     <a href="#toggle1">Item 1</a>
     <div id="toggle1">Lorem ipsum</div>
     <a href="#toggle2">Item 2</a>
