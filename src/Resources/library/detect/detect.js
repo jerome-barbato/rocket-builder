@@ -22,7 +22,7 @@
             init           : false,
             elements       : [],
             $window        : $(window),
-            $body          : $('body'),
+            $body          : false,
             window_height  : 0,
             document_height: 0,
             offset         : {
@@ -188,7 +188,10 @@
                 self.add($(this));
             });
 
-            $(document).on('boot', self._resize);
+            $(document).on('boot', function(){
+	            self.context.$body = $('body');
+	            self._resize();
+            });
 
             self.context.$window
                 .on('scroll', self._detect)
