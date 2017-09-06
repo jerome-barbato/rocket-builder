@@ -78,7 +78,7 @@
 
         self._getElements = function ()
         {
-            self.context.$tab_handlers = self.config.$element.find('[href^="#"]');
+            self.context.$tab_handlers = self.config.$element.findClosest('[href^="#tab"]', '[data-tabs]');
 
             self.context.$tabs = $();
             self.context.$tab_handlers.each(function ()

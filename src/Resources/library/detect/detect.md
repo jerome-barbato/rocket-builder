@@ -24,6 +24,11 @@ You can reference your fixed header/footer to ensure a right calculation
 ### Body
 
 This script also add class and attribute on body according to the current scroll state
+Delay detection using parameter, scroll_offset default value is 5
+
+~~~
+<body data-scroll_offset="100"></header>
+~~~
 
 ### Events
 
