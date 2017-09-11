@@ -294,6 +294,7 @@
                     self._show(index, animate);
             });
 
+            self.config.$element.on('slider.resize', self._resize);
 
             self.config.$element.on('slider.autoplay', function (e, state) {
 
@@ -313,7 +314,15 @@
             self.context.offset        = self.config.$element.offset().top;
             self.context.window_height = self.context.$window.height();
 
+            self._resize();
             self._checkVisibility();
+        };
+
+
+        self._resize = function(){
+
+	           if ( self.config.height === "auto" && self.context.$current_slide && self.context.$current_slide.length )
+		        self.context.$scroller.height( self.context.$current_slide.outerHeight() );
         };
 
 
@@ -433,8 +442,6 @@
             if (self.context.$next_slide)
                 self._addMod(self.context.$next_slide, 'slide', 'next');
 
-            self.context.$window.resize();
-
             self._animate(animate, function ()
             {
                 if (animate)
@@ -453,8 +460,7 @@
 
         self._animate = function (animate, callback)
         {
-	        if ( self.config.height === "auto" )
-                self.context.$scroller.height( self.context.$current_slide.outerHeight() );
+	        self._resize();
 
             if (animate)
             {

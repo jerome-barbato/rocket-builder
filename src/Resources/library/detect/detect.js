@@ -57,6 +57,9 @@
 
         self._resize = function () {
 
+            if( !self.context.$body )
+                return;
+
             for (var i = 0; i < self.context.elements.length; i++) {
                 var element = self.context.elements[i];
 

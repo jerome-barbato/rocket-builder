@@ -53,8 +53,9 @@ a {
   color: inherit;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
+  &[href]{ cursor: pointer }
 }
+
 
 input, textarea {
   outline: none; border: none; padding: 0;

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.5.8 - 2017-09-11
+### Fixed
+- Detect init bug
+- map overlay on click or hover option
+- parallax disabled class on html + delayed visibility
+- slider resize events and auto resize
+- reset a tag cursor
+
 ## 3.5.7 - 2017-09-06
 ### Fixed
 - minor bugfix

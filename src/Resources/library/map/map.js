@@ -38,6 +38,7 @@
                 label: false
             },
             overlay : {
+                method     : 'click',
                 html       : '',
                 x          : 0,
                 y          : 0
@@ -395,11 +396,18 @@
 
                 mouseover: function(marker){
 
-                    if( typeof marker == 'undefined')
-                        return;
+	                if( self.config.overlay.method = 'hover' )
+                    {
+	                    self._showOverlay(marker);
+                    }
+                    else
+                    {
+	                    if( typeof marker == 'undefined')
+		                    return;
 
-                    if( marker.icons.hover.url )
-                        marker.setIcon(marker.icons.hover);
+	                    if( marker.icons.hover.url )
+		                    marker.setIcon(marker.icons.hover);
+                    }
 
                     self.context.$map.trigger('marker.over', [self.context.map, marker.index]);
                 },
@@ -418,58 +426,8 @@
                 },
                 click: function(marker){
 
-                    if( typeof marker == 'undefined')
-                        return;
-
-                    if( self.context.selected_marker && marker.icons.hover.url )
-                        self.context.selected_marker.setIcon(self.context.selected_marker.icons.normal);
-
-                    self.context.selected_marker = marker;
-
-                    if( marker.icons.hover.url )
-                        marker.setIcon(marker.icons.hover);
-
-                    self.context.$map.trigger('marker.click', [self.context.map, marker]);
-
-                    var enable = !browser.phone || ('phone' in self.config.overlay && self.config.overlay.phone);
-                    enable = enable && (!browser.mobile || ('mobile' in self.config.overlay && self.config.overlay.mobile));
-                    enable = enable && (!browser.tablet || ('tablet' in self.config.overlay && self.config.overlay.tablet));
-
-                    if( enable )
-                    {
-                        self.clearOverlay();
-
-                        marker.has_overlay = true;
-
-                        var html = self.config.overlay.html;
-
-                        html = html.populate(marker);
-
-                        self.context.gmap.overlay({
-                            position: marker.getPosition(),
-                            content: html,
-                            y: self.config.overlay.y,
-                            x: self.config.overlay.x
-
-                        }).then(function(overlay) {
-
-                            self.context.overlay = overlay;
-
-                            self.context.$map.trigger('overlay.show', [self.context.map, marker, overlay]);
-
-                            overlay.$.find('[data-close]').click(function()
-                            {
-	                            if( marker.icons.hover.url )
-                                    marker.setIcon(marker.icons.normal);
-
-                                self.context.selected_marker = false;
-
-                                self.clearOverlay();
-                                marker.has_overlay = false;
-                                self.context.$map.trigger('overlay.hide', [self.context.map, marker]);
-                            });
-                        });
-                    }
+                    if( self.config.overlay.method = 'click' )
+                        self._showOverlay();
                 }
             });
 
@@ -477,6 +435,69 @@
 
             if( fit )
                 self.context.gmap.fit();
+        };
+
+
+        self._hideOverlay = function(marker){
+
+	        if( marker.icons.hover.url )
+		        marker.setIcon(marker.icons.normal);
+
+	        self.context.selected_marker = false;
+
+	        self.clearOverlay();
+	        marker.has_overlay = false;
+	        self.context.$map.trigger('overlay.hide', [self.context.map, marker]);
+        };
+
+
+        self._showOverlay = function(marker){
+
+	        if( typeof marker == 'undefined')
+		        return;
+
+	        if( self.context.selected_marker && marker.icons.hover.url )
+		        self.context.selected_marker.setIcon(self.context.selected_marker.icons.normal);
+
+	        self.context.selected_marker = marker;
+
+	        if( marker.icons.hover.url )
+		        marker.setIcon(marker.icons.hover);
+
+	        self.context.$map.trigger('marker.click', [self.context.map, marker]);
+
+	        var enable = !browser.phone || ('phone' in self.config.overlay && self.config.overlay.phone);
+	        enable = enable && (!browser.mobile || ('mobile' in self.config.overlay && self.config.overlay.mobile));
+	        enable = enable && (!browser.tablet || ('tablet' in self.config.overlay && self.config.overlay.tablet));
+
+	        if( enable )
+	        {
+		        self.clearOverlay();
+
+		        marker.has_overlay = true;
+
+		        var html = self.config.overlay.html;
+
+		        html = html.populate(marker);
+
+		        self.context.gmap.overlay({
+			        position: marker.getPosition(),
+			        content: html,
+			        y: self.config.overlay.y,
+			        x: self.config.overlay.x
+
+		        }).then(function(overlay) {
+
+			        self.context.overlay = overlay;
+
+			        self.context.$map.trigger('overlay.show', [self.context.map, marker, overlay]);
+
+			        overlay.$.find('[data-close]').click(function(){ self._hideOverlay(marker)});
+
+			        if( self.config.overlay.method = 'hover' )
+				        overlay.$.mouseleave(function(){ self._hideOverlay(marker) });
+		        });
+	        }
         };
 
         self.__construct( $map, template, config, callback );

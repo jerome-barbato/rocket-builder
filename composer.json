@@ -1,6 +1,6 @@
 {
   "name": "metabolism/rocket-builder",
-  "version": "3.5.7",
+  "version": "3.5.8",
   "description": "Gulp tasks to compile scss, js, and templates. Metabolism framework included.",
   "type": "composer-plugin",
   "license": "AGPL-3.0",
@@ -29,7 +29,18 @@
           "src/Resources/browser.js": "src/FrontBundle/Resources/private/vendor/browser.js",
           "src/Resources/modernizr.js": "src/FrontBundle/Resources/private/vendor/modernizr.js"
         }
-      }
+      },
+      "post-package-update": {
+        "copy": {
+          "metabolism/rocket-builder": {
+            "doc": "doc/builder",
+            "src/Resources/library": "src/FrontBundle/Resources/private/vendor/metabolism",
+            "src/Resources/polyfill": "src/FrontBundle/Resources/private/vendor/polyfill",
+            "src/Resources/sass-framework": "src/FrontBundle/Resources/private/framework",
+            "src/Resources/browser.js": "src/FrontBundle/Resources/private/vendor/browser.js",
+            "src/Resources/modernizr.js": "src/FrontBundle/Resources/private/vendor/modernizr.js"
+          }
+        }
     },
     "branch-alias": {
       "dev-3.5.x": "3.5.x-dev",

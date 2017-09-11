@@ -35,8 +35,8 @@
 
 
         self._setupEvents = function () {
-            $(document)
-                .on('boot', self._recompute)
+
+            $(document).ready(self._recompute)
                 .on('loaded', self._recompute);
 
             $(window)
@@ -149,7 +149,10 @@
 
 
             if( (browser && browser.mobile && !self.config.mobile) || typeof requestAnimationFrame == 'undefined' || $('html').hasClass('ie') )
-                return;
+            {
+                $('html').addClass('no-parallax');
+	            return;
+            }
 
             self._setupEvents();
 
