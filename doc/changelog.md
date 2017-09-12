@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.5.9 - 2017-09-12
+### Fixed
+- WINDOWS support : Use of plateform-specific path segment separator.
+
 ## 3.5.8 - 2017-09-11
 ### Fixed
 - Detect init bug
