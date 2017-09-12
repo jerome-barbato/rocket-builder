@@ -7,7 +7,7 @@
   "authors": [{
     "name": "Jérôme BARBATO",
     "email": "jerome@metabolism.fr"
-  },
+    },
     {
       "name": "Paul COUDEVILLE",
       "email": "paul@metabolism.fr"
@@ -29,7 +29,8 @@
           "src/Resources/browser.js": "src/FrontBundle/Resources/private/vendor/browser.js",
           "src/Resources/modernizr.js": "src/FrontBundle/Resources/private/vendor/modernizr.js"
         }
-      },
+      }
+    },
       "post-package-update": {
         "copy": {
           "metabolism/rocket-builder": {
