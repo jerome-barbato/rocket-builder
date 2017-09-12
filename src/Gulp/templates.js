@@ -12,6 +12,7 @@ var gulp   = require('gulp'),
     rename = require('gulp-rename'),
     chalk  = require('chalk'),
     del    = require('del'),
+    gpath   = require('path'),
     $      =
     {
         through: require('through2'),
@@ -80,7 +81,7 @@ function compile(file, scripts, callback)
 
                 if (config.environment === 'development' && html.indexOf('{% extends') === -1)
                 {
-                    var path = file.path.substring(file.path.indexOf('/private/')).replace('/private/', '');
+                    var path = file.path.substring(file.path.indexOf(gpath.sep+'private'+gpath.sep)).replace(gpath.sep+'private'+gpath.sep, '');
                     html = "<!-- "+path+" -->\n" + html;
                 }
 
@@ -122,13 +123,13 @@ function compileFiles()
 
 function getCompiledPath(path)
 {
-    var dirname = path.dirname.split('/');
+    var dirname = path.dirname.split(gpath.sep);
     var lastdir = dirname[dirname.length-1];
 
     if( lastdir === path.basename )
     {
         dirname.pop();
-        path.dirname = dirname.join('/');
+        path.dirname = dirname.join(gpath.sep);
     }
 
     return path;
@@ -137,7 +138,7 @@ function getCompiledPath(path)
 
 function baseName(str)
 {
-    var base = String(str).substring(str.lastIndexOf('/') + 1);
+    var base = String(str).substring(str.lastIndexOf(gpath.sep) + 1);
 
     if(base.lastIndexOf(".") !== -1)
         base = base.substring(0, base.lastIndexOf("."));
@@ -152,7 +153,7 @@ gulp.task('template::watch', function ()
 {
     gulp.watch(config.paths.watch.template, function (event)
     {
-        var path_array = event.path.split('/');
+        var path_array = event.path.split(gpath.sep);
         var filename   = path_array[path_array.length - 1];
         var lastdir    = path_array[path_array.length - 2];
         var basename   = baseName(filename);
@@ -165,13 +166,13 @@ gulp.task('template::watch', function ()
         if( lastdir === basename )
             path_array.pop();
 
-        var filepath = path_array.join('/').replace(config.paths.private.template.replace(config.base_path, ''), config.builder.paths.views);
+        var filepath = path_array.join(gpath.sep).replace(config.paths.private.template.replace(config.base_path, ''), config.builder.paths.views);
 
         if (event.type === 'deleted')
         {
             gutil.log("Deleted '" + chalk.blue(filename) + "'");
 
-            return del.sync([filepath + '/' + filename], {force: true});
+            return del.sync([filepath + gpath.sep + filename], {force: true});
         }
         else
         {
@@ -191,7 +192,7 @@ gulp.task('template::watch', function ()
 gulp.task('views::clean', function ()
 {
     if (config.paths.dest.views.length)
-        return del.sync([config.paths.dest.views + '/*'], {force: true});
+        return del.sync([config.paths.dest.views + gpath.sep + '*'], {force: true});
 });
 
 
