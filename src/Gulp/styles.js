@@ -2,6 +2,7 @@
 
 var gulp   = require('gulp'),
     config = require('./config'),
+    gpath  = require('path'),
     $      = {
         sourcemaps : require('gulp-sourcemaps'),
         cssGlobbing: require('gulp-css-globbing'),
@@ -25,12 +26,12 @@ gulp.task('style::compile', function () {
                    .pipe($.cssGlobbing({extensions: ['.scss']}))
                    .pipe($.sass().on('error', config.errorHandler('Sass')))
                    .pipe($.pleeease({minifier: false, mqpacker: true, browsers: config.builder.style.browsers }).on('error', config.errorHandler('Pleeease')))
-                   .pipe($.sourcemaps.write('./'))
+                   .pipe($.sourcemaps.write('.'+gpath.sep))
                    .pipe(gulp.dest(config.paths.dest.css))
     }
     else {
 
-        $.del.sync([config.paths.dest.css + '/*.map'], {force: true});
+        $.del.sync([config.paths.dest.css + gpath.sep + '*.map'], {force: true});
 
         return gulp.src(config.paths.src.scss)
                    .pipe($.cssGlobbing({extensions: ['.scss']}))

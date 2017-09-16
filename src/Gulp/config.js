@@ -7,6 +7,7 @@ var builder_config_version = 1;
 // Dependencies
 var gutil = require('gulp-util'),
     fs    = require('fs'),
+    gpath = require('path'),
     gulp  = require('gulp'),
     yaml  = require('js-yaml');
 
@@ -26,7 +27,7 @@ var config = module.exports = {
     // Enable watching for changes in src files
     watching_mode: true,
     // Application root path
-    base_path    : "../../..",
+    base_path    : ".." + gpath.sep + ".." + gpath.sep + "..",
     // Global config file
     paths        : {},
 
@@ -34,11 +35,11 @@ var config = module.exports = {
     load: function load() {
 
         try {
-            config.builder = yaml.safeLoad(fs.readFileSync(config.base_path + '/app/config/builder.yml'));
+            config.builder = yaml.safeLoad(fs.readFileSync(config.base_path + gpath.sep + 'app' + gpath.sep + 'config' + gpath.sep + 'builder.yml'));
         }
         catch (e) {
 
-            config.builder = yaml.safeLoad(fs.readFileSync(config.base_path + '/config/builder.yml'));
+            config.builder = yaml.safeLoad(fs.readFileSync(config.base_path + gpath.sep + 'config' + gpath.sep + 'builder.yml'));
         }
 
         // Start backward compatibility
@@ -71,19 +72,19 @@ var config = module.exports = {
             ];
         }
 
-        config.paths.sm_private = "../.." + config.builder.paths.private;
+        config.paths.sm_private = ".." + gpath.sep + ".." + config.builder.paths.private;
         config.paths.public   = config.base_path + config.builder.paths.public;
         config.paths.views    = config.base_path + config.builder.paths.views;
         config.paths.split    = 'split_by_type' in config.builder.paths && config.builder.paths.split_by_type;
 
 	    config.paths.private = {
 	        root : config.base_path + config.builder.paths.private,
-	    	js : config.base_path + config.builder.paths.private + (config.paths.split ? '/js' : ''),
-		    scss : config.base_path + config.builder.paths.private + (config.paths.split ? '/scss' : ''),
-		    template : config.base_path + config.builder.paths.private + (config.paths.split ? '/template' : '')
+	    	js : config.base_path + config.builder.paths.private + (config.paths.split ? gpath.sep + 'js' : ''),
+		    scss : config.base_path + config.builder.paths.private + (config.paths.split ? gpath.sep + 'scss' : ''),
+		    template : config.base_path + config.builder.paths.private + (config.paths.split ? gpath.sep + 'template' : '')
 	    };
 
-        config.paths.css_to_sass = '../private/';
+        config.paths.css_to_sass = '..' + gpath.sep + 'private' + gpath.sep;
 
         config.paths.src = {
             js      : {
@@ -92,32 +93,32 @@ var config = module.exports = {
                 app     : [],
                 compiler: []
             },
-	        scss    : config.paths.private.scss + "/*.scss",
+	        scss    : config.paths.private.scss + gpath.sep + "*.scss",
             template: [
-	            config.paths.private.template + "/**/*.twig",
-	            config.paths.private.template + "/**/*.tpl"
+	            config.paths.private.template + gpath.sep + "**" + gpath.sep + "*.twig",
+	            config.paths.private.template + gpath.sep + "**" + gpath.sep + "*.tpl"
             ],
-            html    : config.paths.public + "/views/**/*.html"
+            html    : config.paths.public + gpath.sep + "views" + gpath.sep + "**" + gpath.sep + "*.html"
         };
 
         config.paths.dest = {
-            js      : config.paths.public + "/js",
-            css     : config.paths.public + "/css",
+            js      : config.paths.public + gpath.sep + "js",
+            css     : config.paths.public + gpath.sep + "css",
 	        views   : config.paths.views
         };
 
         config.paths.watch = {
             js        : {
                 app    : [
-                    config.paths.private.js + "/**/*.js",
-                    "!"+config.paths.private.js + "/vendor/**/*.js"
+                    config.paths.private.js + gpath.sep + "**" + gpath.sep + "*.js",
+                    "!"+config.paths.private.js + gpath.sep + "vendor" + gpath.sep + "**" + gpath.sep + "*.js"
                 ],
-                vendors: [config.paths.private.js + "/vendor/**/*.js"]
+                vendors: [config.paths.private.js + gpath.sep + "vendor" + gpath.sep + "**" + gpath.sep + "*.js"]
             },
-            scss      : config.paths.private.scss + "/**/*.scss",
+            scss      : config.paths.private.scss + gpath.sep + "**" + gpath.sep + "*.scss",
             template  : [
-                config.paths.private.template + "/**/*.twig",
-                config.paths.private.template + "/**/*.tpl"
+                config.paths.private.template + gpath.sep + "**" + gpath.sep + "*.twig",
+                config.paths.private.template + gpath.sep + "**" + gpath.sep + "*.tpl"
             ]
         };
     },
@@ -129,7 +130,7 @@ var config = module.exports = {
         {
             config.builder.script.app.forEach(function (element) {
 
-                config.paths.src.js.app.push(config.paths.private.js + '/'+ element + '.js');
+                config.paths.src.js.app.push(config.paths.private.js + gpath.sep + element + '.js');
             });
         }
         else {
@@ -146,13 +147,13 @@ var config = module.exports = {
         {
             if (typeof library === 'string')
             {
-                vendors.push(config.paths.private.js + '/vendor/' + additional_path + library + '.js');
+                vendors.push(config.paths.private.js + gpath.sep + 'vendor' + gpath.sep + additional_path + library + '.js');
             }
             else
             {
                 for (var path in library)
                 {
-                    config.addLibs(library[path], additional_path + path + '/', vendors);
+                    config.addLibs(library[path], additional_path + path + gpath.sep, vendors);
                 }
             }
         });
