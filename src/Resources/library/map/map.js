@@ -41,7 +41,8 @@
                 method     : 'click',
                 html       : '',
                 x          : 0,
-                y          : 0
+                y          : 0,
+                mobile     : true
             },
             map : {
                 center            :[25,0],
@@ -122,6 +123,9 @@
                     self._init($map, callback);
                 });
             }
+
+            $map.on('map.fit', self.fit);
+            $map.on('map.resize', self.resize);
         };
 
 
@@ -396,7 +400,7 @@
 
                 mouseover: function(marker){
 
-	                if( self.config.overlay.method = 'hover' )
+	                if( self.config.overlay.method == 'hover' )
                     {
 	                    self._showOverlay(marker);
                     }
@@ -426,8 +430,8 @@
                 },
                 click: function(marker){
 
-                    if( self.config.overlay.method = 'click' )
-                        self._showOverlay();
+                    if( self.config.overlay.method == 'click' )
+                        self._showOverlay(marker);
                 }
             });
 
@@ -435,6 +439,19 @@
 
             if( fit )
                 self.context.gmap.fit();
+        };
+
+
+        self.fit = function(){
+
+            if( 'gmap' in self.context && typeof self.context.gmap.fit != 'undefined' )
+                self.context.gmap.fit();
+        };
+
+        self.resize = function(){
+
+            if( 'map' in self.context && typeof google != 'undefined' )
+                google.maps.event.trigger(self.context.map, 'resize');
         };
 
 
@@ -494,7 +511,7 @@
 
 			        overlay.$.find('[data-close]').click(function(){ self._hideOverlay(marker)});
 
-			        if( self.config.overlay.method = 'hover' )
+			        if( self.config.overlay.method == 'hover' )
 				        overlay.$.mouseleave(function(){ self._hideOverlay(marker) });
 		        });
 	        }

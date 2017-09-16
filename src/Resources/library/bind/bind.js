@@ -51,13 +51,13 @@
 
             $element.add($target).hover(function () {
 
-                    $element.addClass('active');
-                    $target.addClass('active');
+                    $element.addClass('is-active');
+                    $target.addClass('is-active');
                 },
                 function () {
 
-                    $element.removeClass('active');
-                    $target.removeClass('active');
+                    $element.removeClass('is-active');
+                    $target.removeClass('is-active');
                 });
         };
 
@@ -67,16 +67,16 @@
             $element.click(function (e) {
                 e.preventDefault();
 
-                $element.toggleClass('active');
-                $target.toggleClass('active');
+                $element.toggleClass('is-active');
+                $target.toggleClass('is-active');
             });
 
             $(document).click(function (e) {
                 var $click_target = $(e.target);
 
-                if ($element.hasClass('active') && !$click_target.closest(id + ', [href="' + id + '"]').length) {
-                    $element.removeClass('active');
-                    $target.removeClass('active');
+                if ($element.hasClass('is-active') && !$click_target.closest(id + ', [href="' + id + '"]').length) {
+                    $element.removeClass('is-active');
+                    $target.removeClass('is-active');
                 }
             });
         };

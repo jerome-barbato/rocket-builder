@@ -192,7 +192,7 @@ function css_browser_selector(u) {
     browser.desktop  = !browser.mobile;
     browser.language = language;
 
-    browser.tablet   = window.innerWidth > 425  && window.innerWidth < 1024;
+    browser.tablet   = window.innerWidth > 425  && window.innerWidth <= 768;
     browser.phone    = window.innerWidth < 425;
     
     html.className += browser.tablet ? " tablet" : (browser.phone ? ' phone' : '');

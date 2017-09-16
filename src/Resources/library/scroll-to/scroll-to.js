@@ -117,14 +117,14 @@
 
                 if (target.top <= self.scroll_top && target.bottom > self.scroll_top) {
                     if (!target.active) {
-                        target.$link.addClass('active');
-                        target.$.addClass('active');
+                        target.$link.addClass('is-active');
+                        target.$.addClass('is-active');
                         target.active = true;
                     }
                 }
                 else if (target.active) {
-                    target.$link.removeClass('active');
-                    target.$.removeClass('active');
+                    target.$link.removeClass('is-active');
+                    target.$.removeClass('is-active');
                     target.active = false;
                 }
             }
