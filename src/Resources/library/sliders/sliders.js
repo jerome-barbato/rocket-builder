@@ -455,12 +455,26 @@
 			if (self.context.$next_slide)
 				self._addMod(self.context.$next_slide, 'slide', 'next');
 
+			var $video = self.context.$current_slide.find('video');
+			if( $video.length )
+				$video.get(0).play();
+
 			self._animate(animate, function ()
 			{
+				if ($.fn.fit)
+					self.context.$current_slide.find('[data-object_fit]').fit(true);
+
 				if (animate)
 					self._removeMod(self.context.$slides_container, 'slides', 'animating');
 
 				self.context.is_animating = false;
+
+				if(self.context.$previous_slide )
+				{
+					var $video = self.context.$previous_slide.find('video');
+					if( $video.length )
+						$video.get(0).pause();
+				}
 
 				self._preload();
 				self._autoplay();
@@ -541,28 +555,28 @@
 
 			if (self.config.preload && self.context.offset <= targetScroll * self.config.load)
 			{
-				self._loadImage(self.context.$current_slide);
+				self._loadOnDemand(self.context.$current_slide);
 
 				if (self.context.$next_slide && self.context.offset <= targetScroll * self.config.load)
 				{
-					self._loadImage(self.context.$next_slide);
+					self._loadOnDemand(self.context.$next_slide);
 
 					if (self.config.preload > 1)
 					{
 						var $next = self.context.$next_slide.next();
 
 						if ($next.length)
-							self._loadImage($next);
+							self._loadOnDemand($next);
 					}
 				}
 
 				if (self.config.loop && self.context.$previous_slide && self.context.offset <= targetScroll * self.config.load)
-					self._loadImage(self.context.$previous_slide);
+					self._loadOnDemand(self.context.$previous_slide);
 			}
 		};
 
 
-		self._loadImage = function ($slide)
+		self._loadOnDemand = function ($slide)
 		{
 			if (!$slide || !$slide.length)
 				return false;
@@ -572,7 +586,7 @@
 				var $element = $(this);
 
 				//force load to memory
-				if (Modernizr && Modernizr.csstransforms3d)
+				if (Modernizr && Modernizr.csstransforms3d && !$element.is('video'))
 				{
 					self.config.$element.find('.' + self.classnames.preload)
 						.append('<img src="' + $element.data('src') + '"/>', false);
@@ -580,6 +594,11 @@
 
 				if ($element.is('img'))
 					$element.attr('src', $element.data('src'));
+				else if( $element.is('video') )
+				{
+					$element.html('<source src="' + $element.data('src') + '" type="video/mp4"><source src="' + $element.data('src').replace('.mp4', '.webm') + '" type="video/webm">');
+					$element.attr('autoplay');
+				}
 				else
 					$element.css('backgroundImage', "url('" + $element.data('src') + "')");
 

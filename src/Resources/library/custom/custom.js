@@ -71,6 +71,11 @@
                         var $select = $(this);
                         var $parent = $select.parent();
 
+	                    if( browser.mobile )
+	                    {
+		                    $select.change(function(){ $select.trigger('refresh') });
+	                    }
+
                         var options = {
                             icons: {button: 'ui-icon ui-icon-arrow'},
                             change: function (event, ui) {
@@ -109,20 +114,32 @@
                 {
                     $('input[data-custom="date"]').initialize(function () {
 
-                        var $parent = $(this).parent();
+	                    if( browser.mobile )
+                        {
+                            $(this).attr('type', 'date');
 
-                        var options = {
-                            beforeShow:function(textbox, instance){
+                            if( $(this).hasDataAttr('min') )
+                                $(this).attr('min', $(this).data('min'));
 
-                                var $datepicker = instance.dpDiv;
-                                $parent.append($datepicker);
-                                setTimeout(function(){
-                                    $datepicker.css({position:'absolute', left:0, top:'100%', visibility:'visible'})
-                                });
-                            }
-                        };
+                            return;
+                        }
+	                    else
+                        {
+	                        var $parent = $(this).parent();
 
-                        $(this).datepicker(options);
+	                        var options = {
+		                        beforeShow:function(textbox, instance){
+
+			                        var $datepicker = instance.dpDiv;
+			                        $parent.append($datepicker);
+			                        setTimeout(function(){
+				                        $datepicker.css({position:'absolute', left:0, top:'100%', visibility:'visible'})
+			                        });
+		                        }
+	                        };
+
+	                        $(this).datepicker(options);
+                        }
                     });
                 }
             }

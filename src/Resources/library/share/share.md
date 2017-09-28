@@ -36,7 +36,7 @@ data-media="http://www.mysite.com/myimage.jpg">Pinterest</a>
 
 ~~~~
 <a href="http://www.monsite.fr" share-on="linkedin" data-title="Lorem ipsum"
-data-description="ipsum">LinkedIn</a>
+data-description="ipsum" data-media="http://www.mysite.com/myimage.jpg">LinkedIn</a>
 ~~~~
    
 ### Mail   

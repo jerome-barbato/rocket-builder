@@ -483,9 +483,16 @@
 
 	        self.context.$map.trigger('marker.click', [self.context.map, marker]);
 
-	        var enable = !browser.phone || ('phone' in self.config.overlay && self.config.overlay.phone);
-	        enable = enable && (!browser.mobile || ('mobile' in self.config.overlay && self.config.overlay.mobile));
-	        enable = enable && (!browser.tablet || ('tablet' in self.config.overlay && self.config.overlay.tablet));
+	        var enable = true;
+
+	        if( 'phone' in self.config.overlay && !self.config.overlay.phone && browser.phone )
+		        enable = false;
+
+	        if( 'tablet' in self.config.overlay && !self.config.overlay.tablet && browser.tablet )
+		        enable = false;
+
+	        if( 'mobile' in self.config.overlay && !self.config.overlay.mobile && browser.mobile )
+		        enable = false;
 
 	        if( enable )
 	        {
