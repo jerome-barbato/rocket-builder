@@ -29,9 +29,9 @@ function loadDep()
         src.push(fs.readFileSync(library, 'utf-8'));
     });
 
-    config.paths.src.js.compiler.forEach(function (library)
+    ['jquery','global','compiler','bem','attributes','elements','filters'].forEach(function (library)
     {
-        src.push(fs.readFileSync(library, 'utf-8'));
+        src.push(fs.readFileSync('src'+gpath.sep+'Gulp'+gpath.sep+'dom'+gpath.sep+library+'.js', 'utf-8'));
     });
 
     return src;
@@ -69,6 +69,7 @@ function compile(file, scripts, callback)
             virtualConsole: virtualConsole,
             done          : function (err, window)
             {
+                window.bem_level  = 'bem_level' in config.builder.template ? config.builder.template.bem_level : 2;
                 window.precompile = true;
                 window.engine     = engine;
                 window.app = false;

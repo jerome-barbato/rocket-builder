@@ -674,41 +674,6 @@
 			});
 		};
 
-
-		if (typeof dom !== "undefined")
-		{
-			dom.compiler.register('element', 'slider', function (elem, attrs)
-			{
-				return '<div class="swiper-container"><transclude/></div>';
-
-			}, self.add);
-
-			dom.compiler.register('element', 'slides', function (elem)
-			{
-				return '<div class="swiper-wrapper"><transclude/></div>';
-			});
-
-			dom.compiler.register('element', 'slide', function (elem)
-			{
-				return '<div class="swiper-slide" data-on_demand="false"><transclude/></div>';
-			});
-
-			dom.compiler.register('attribute', 'slide-item', function (elem, attrs)
-			{
-				elem.addClass('swiper-slide__item');
-			});
-
-			dom.compiler.register('element', 'arrows', function (elem)
-			{
-				return '<a class="swiper-button-next"></a><a class="swiper-button-prev"></a>';
-			});
-
-			dom.compiler.register('element', 'pagination', function (elem)
-			{
-				return '<div class="swiper-pagination"><transclude/></div>';
-			});
-		}
-
 		self.__construct();
 	};
 

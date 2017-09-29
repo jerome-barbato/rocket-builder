@@ -190,40 +190,6 @@
             });
         };
 
-
-        if (typeof dom !== "undefined")
-        {
-            dom.compiler.register('attribute', 'controller', function (elem, attrs)
-            {
-                elem.attr('data-controller', attrs.controller);
-            });
-
-            dom.compiler.register('attribute', 'remove-on', function (elem, attrs)
-            {
-                elem.attr('data-remove_on', attrs.removeOn);
-            });
-
-            // Compatibility
-            dom.compiler.register('attribute', 'directive', function (elem, attrs)
-            {
-                console.log('Angulight directive has been removed please une controller instead');
-                elem.attr('data-controller', attrs.directive);
-            });
-
-
-            dom.compiler.register('attribute', 'if', function (elem, attrs)
-            {
-                if ('if' in attrs)
-                    elem.attr('data-if', attrs['if']);
-            });
-
-            dom.compiler.register('attribute', 'if-not', function (elem, attrs)
-            {
-                if ('ifNot' in attrs)
-                    elem.attr('data-if-not', attrs.ifNot);
-            });
-        }
-
         self.__construct();
     };
 

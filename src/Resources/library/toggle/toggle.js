@@ -216,23 +216,6 @@
             });
         };
 
-
-        if (typeof dom !== 'undefined')
-        {
-            dom.compiler.register('attribute', 'toggles', function (elem, attrs)
-            {
-                console.log('toggles is deprecated, replace with toggle');
-                elem.attr('data-toggle', attrs.toggles.length ? attrs.toggles : 'link');
-
-            }, self.add);
-
-            dom.compiler.register('attribute', 'toggle', function (elem, attrs)
-            {
-                elem.attr('data-toggle', attrs.toggle.length ? attrs.toggle : 'link');
-
-            }, self.add);
-        }
-
         self.__construct();
     };
 

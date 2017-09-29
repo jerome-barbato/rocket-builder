@@ -185,23 +185,6 @@
         };
 
 
-
-        if( typeof dom !== "undefined" ) {
-
-            dom.compiler.register('attribute', 'object-fit', function(elem, attrs) {
-
-                elem.attr('data-object_fit', attrs.objectFit.length ? attrs.objectFit : 'cover');
-
-                if( 'objectPosition' in attrs ){
-
-                    elem.attr('data-object_position', attrs.objectPosition);
-                    elem.removeAttr('object-position', attrs.objectPosition);
-                }
-
-            }, self._add);
-        }
-
-
         /*
          * jQuery extension
          *

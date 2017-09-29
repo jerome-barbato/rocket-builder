@@ -145,22 +145,6 @@
             }
         };
 
-
-        if( typeof dom !== 'undefined' )
-        {
-            dom.compiler.register('attribute', 'custom', function(elem, attrs)
-            {
-                elem.attr('data-custom', attrs.custom.length ? attrs.custom : 'true');
-
-                if( attrs.placeholder )
-                {
-                    elem.attr('data-placeholder', attrs.placeholder);
-                    elem.removeAttr('placeholder');
-                }
-            });
-        }
-
-
         self.__construct();
     };
 

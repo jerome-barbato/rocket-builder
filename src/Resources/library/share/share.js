@@ -230,13 +230,6 @@
             });
         };
 
-
-        if (typeof dom !== "undefined") {
-            dom.compiler.register('attribute', 'share-on', function (elem, attrs) {
-                elem.attr('data-share_on', attrs.shareOn);
-            });
-        }
-
         self.__construct();
     };
 

@@ -304,31 +304,6 @@
         };
 
 
-        if (typeof dom !== "undefined") {
-
-            dom.compiler.register('attribute', 'timeline', function (elem, attrs) {
-
-                elem.attr('data-timeline', attrs.timeline);
-
-                if (attrs.startAt) {
-                    elem.attr('data-start_at', attrs.startAt ? attrs.startAt : 0);
-                }
-
-                if (attrs.endAt) {
-                    elem.attr('data-end_at', attrs.endAt);
-                }
-
-                if (attrs.timeScale) {
-                    elem.attr('data-time_scale', attrs.timeScale);
-                }
-
-                if (attrs.debug) {
-                    elem.attr('data-debug', 'true');
-                }
-            });
-        }
-
-
         self.__construct();
     };
 

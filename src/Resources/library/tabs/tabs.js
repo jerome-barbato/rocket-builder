@@ -157,15 +157,6 @@
         };
 
 
-        if (typeof dom !== 'undefined')
-        {
-            dom.compiler.register('attribute', 'tabs', function (elem)
-            {
-                elem.attr('data-tabs', 'true');
-
-            }, self.add);
-        }
-
         self.__construct();
     };
 

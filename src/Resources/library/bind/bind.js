@@ -91,14 +91,6 @@
         };
 
 
-        if (typeof dom !== 'undefined') {
-            dom.compiler.register('attribute', 'bind', function (elem, attrs) {
-                elem.attr('data-bind', attrs.bind);
-
-            }, self.add);
-        }
-
-
         self.__construct();
     };
 

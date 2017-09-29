@@ -21,6 +21,12 @@ style:
   - iOS 8
 
 
+# HTML compilation options
+template:
+  compile: true
+  bem_level: 2
+
+
 # Gulp scripts compilation
 # Defines which files will be included after compilation
 script:
@@ -42,7 +48,6 @@ script:
       - ui/ui
       - touchSwipe/touchSwipe
       - validate/validate
-      - sticky-kit
     - gmap3/gmap3
     - polyfill:
       - jquery.utils
@@ -55,9 +60,9 @@ script:
       - angulight/angulight
       - detect/detect
       - fit/fit
-      - on/on-demand
+      - on-demand/on-demand
       - parallax/parallax
-      - scroll/scroll-to
+      - scroll-to/scroll-to
       - sliders/sliders
       - mail/mail
       - popin/popin
@@ -65,43 +70,6 @@ script:
       - custom/custom
       - defer/defer
       - map/map
-      - router/router
-      - share/share
-      - tabs/tabs
-      - bind/bind
-      - tag/tag
-
-# Which file will be include for templating compilation
-template:
-  compile: true
-  vendor:
-    - jquery:
-      - jquery
-    - polyfill:
-      - jquery.utils
-      - misc
-    - metabolism:
-      - dom:
-        - compiler/compiler
-        - extensions/attributes
-        - extensions/elements
-        - extensions/filters
-        - bem/bem
-      - activation/activation
-      - angulight/angulight
-      - defer/defer
-      - detect/detect
-      - fit/fit
-      - on-demand/on-demand
-      - parallax/parallax
-      - scroll-to/scroll-to
-      - sliders/sliders
-      - mail/mail
-      - grid/grid
-      - popin/popin
-      - toggle/toggle
-      - tag/tag
-      - custom/custom
       - router/router
       - share/share
       - tabs/tabs

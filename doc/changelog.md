@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.6.0 - 2017-09-29
+### Removed
+- dom compilation from library files
+### Added
+- bem_level template parameter in builder.yml
+
 ## 3.5.11 - 2017-09-18
 ### Fixed
 - Map: tooltip activation on mobile

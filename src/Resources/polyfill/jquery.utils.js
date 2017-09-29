@@ -192,4 +192,8 @@
         });
     };
 
+
+	if (typeof $.fn.initialize == "undefined")
+		$.fn.initialize = $.fn.each;
+
 })(jQuery);

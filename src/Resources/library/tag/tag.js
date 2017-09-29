@@ -83,12 +83,6 @@
             });
         };
 
-        if (typeof dom !== 'undefined') {
-            dom.compiler.register('attribute', 'tag', function (elem, attrs) {
-                elem.attr('data-tag', attrs.tag);
-            });
-        }
-
 
         self.__construct();
     };

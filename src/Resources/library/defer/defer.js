@@ -41,23 +41,6 @@
                 }
             });
         });
-
-        if (typeof dom !== 'undefined') {
-            dom.compiler.register('attribute', 'defer', function (elem, attrs) {
-                if (elem.is('img')) {
-                    if (window.precompile) {
-
-                        if (typeof elem.attr('src') == 'undefined') {
-                            elem.attr('src', "{{ blank() }}");
-                        }
-                    }
-
-                    if (attrs.defer) {
-                        dom.compiler.attr(elem, 'defer', attrs.defer);
-                    }
-                }
-            });
-        }
     };
 
     rocket       = typeof rocket == 'undefined' ? {} : rocket;

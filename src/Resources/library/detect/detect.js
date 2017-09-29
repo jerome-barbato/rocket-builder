@@ -203,18 +203,6 @@
         };
 
 
-        if (typeof dom !== "undefined") {
-            dom.compiler.register('attribute', 'detect', function (elem, attrs) {
-                elem.attr('data-detect', attrs.detect);
-
-            }, self.add);
-
-            dom.compiler.register('attribute', 'fixed', function (elem, attrs) {
-                elem.attr('data-fixed', attrs.fixed ? attrs.fixed : 'top');
-            });
-        }
-
-
         /* Public */
         self.__construct();
     };

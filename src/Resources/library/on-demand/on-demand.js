@@ -254,21 +254,6 @@
 		};
 
 
-		if (typeof dom !== "undefined")
-		{
-			dom.compiler.register('attribute', 'on-demand', function (elem, attrs)
-			{
-				var src = elem.attr('src');
-
-				if (elem.is('img') && typeof elem.attr('src') === 'undefined')
-					elem.attr('src', "{{ blank() }}");
-
-				elem.attr('data-src', attrs.onDemand.length ? attrs.onDemand : src);
-
-			}, self.add);
-		}
-
-
 		/* Public */
 		self.__construct();
 	};

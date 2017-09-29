@@ -42,18 +42,6 @@
         };
 
 
-        if (typeof dom !== "undefined") {
-
-            dom.compiler.register('attribute', 'mailto', function (elem, attrs) {
-
-                var mail = attrs.mailto.indexOf('@') >= 0 ? attrs.mailto.split('@') : attrs.mailto.split('|');
-
-                elem.attr('data-name', mail[0]);
-                elem.attr('data-domain', mail[1]);
-            });
-        }
-
-
         $(document).on('boot', self.__construct);
     };
 

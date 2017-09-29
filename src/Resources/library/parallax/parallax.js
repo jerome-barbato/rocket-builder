@@ -162,40 +162,6 @@
             });
         };
 
-
-        if (typeof dom !== "undefined") {
-
-            dom.compiler.register('attribute', 'parallax-container', function (elem, attrs) {
-
-                elem.addClass('parallax-container');
-            });
-
-            dom.compiler.register('attribute', 'parallax', function (elem, attrs) {
-
-                if (elem.hasDataAttr('animation')) {
-
-                    console.warn('Parallax and animation are not compatible, please add an extra node ( parallax : "' + attrs.parallax + '", animation : "' + elem.data('animation') + '")');
-                    return;
-                }
-
-                dom.compiler.attr(elem, 'parallax', attrs.parallax);
-
-                if (attrs.parallaxCenter) {
-
-                    dom.compiler.attr(elem, 'parallax-center', attrs.parallaxCenter == "1" || attrs.parallaxCenter == "true" ? "1" : "0");
-                    elem.removeAttr('parallax-center');
-                }
-
-                if (attrs.parallaxGap) {
-
-                    dom.compiler.attr(elem, 'parallax-gap', attrs.parallaxGap == "1" || attrs.parallaxGap == "true" ? "1" : "0");
-                    elem.removeAttr('parallax-gap');
-                }
-
-            }, self._add);
-        }
-
-
         self.__construct();
     };
 

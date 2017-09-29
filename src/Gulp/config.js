@@ -42,28 +42,6 @@ var config = module.exports = {
             config.builder = yaml.safeLoad(fs.readFileSync(config.base_path + gpath.sep + 'config' + gpath.sep + 'builder.yml'));
         }
 
-        // Start backward compatibility
-        if ('vendor' in config.builder) {
-
-            config.builder.script   = {vendor: config.builder.vendor.app};
-            config.builder.template = {vendor: config.builder.vendor.compiler};
-        }
-
-        if ('compile' in config.builder)
-            config.builder.template.compile = config.builder.compile;
-
-
-        if ('style' in config.builder == false)
-        {
-            config.builder.style = {
-                browsers: [
-                    "last 3 versions",
-                    "iOS 8"
-                ]
-            };
-        }
-        // End backward
-
         if ('browsers' in config.builder.style == false)
         {
             config.builder.style.browsers = [
@@ -185,8 +163,6 @@ var config = module.exports = {
         {
             config.paths.src.js.browser = false;
         }
-
-        config.addLibs(config.builder.template.vendor, '', config.paths.src.js.compiler);
     },
 
     /**

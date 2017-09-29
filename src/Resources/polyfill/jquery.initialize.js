@@ -3,10 +3,12 @@
 
 (function ($) {
 
-    if (window.angular || window.precompile) {
+    if ('angular' in window && window.angular) {
+
         $.fn.initialize = function () {};
     }
     else {
+
         var replaceWith = $.fn.replaceWith;
         var html        = $.fn.html;
         var append      = $.fn.append;
@@ -16,6 +18,7 @@
         var init = $.fn.init;
 
         var hasContainer = function (content) {
+
             if( typeof content != "string" )
                 return false;
 

@@ -39,24 +39,10 @@ Fresh install
     apt-get install rubygems
     gem install sass
     npm install -g gulp
-
-INSTALLATION
-------------
-
-### Download
-* Option n°1 : NPM
-
-In dependecies field from your package.json, please send us your ssh key.
-
-        "dependencies": {
-            "rocket-builder": "git+ssh://git@bitbucket.org:Metabolism/rocket-builder.git#master"
-          }
-
-* Option n°2 : Git 
-
-        git clone git@bitbucket.org:Metabolism/rocket-builder.git builder
+        
 ### Dependencies
-Depending on what usage you will do of the builder, two options are availables :
+
+Depending on what usage you will do of the builder, two options are available :
 
 * Minimum dependencies
   * Preprocessors CSS
@@ -75,8 +61,9 @@ Depending on what usage you will do of the builder, two options are availables :
         cd builder
         npm install
         
+        
 USAGE
-------------
+------
 
     cd builder
     gulp
@@ -89,10 +76,7 @@ For your comfort, some arguments are available :
         Enable compression
     --no-watch
         Disable wathching on source assets
-    --framework "rocket" | "silex" | "wordpress"
-        Add specific behavior for a framework
-    --theme "meta"
-        Add specific behavior for theme
+        
         
 MAINTAINERS
 -----------

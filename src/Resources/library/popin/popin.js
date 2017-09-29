@@ -232,21 +232,6 @@
 
             new Popin($(this).data('popin'), false, context);
         });
-
-
-        if (typeof dom !== "undefined")
-        {
-            dom.compiler.register('attribute', 'popin', function (elem, attrs)
-            {
-                elem.attr('data-popin', attrs.popin);
-
-                if (attrs.context)
-                {
-                    elem.attr('data-context', attrs.context);
-                    elem.removeAttr('context');
-                }
-            });
-        }
     };
 
     new Popins();

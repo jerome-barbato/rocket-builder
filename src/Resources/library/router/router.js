@@ -234,18 +234,6 @@
         };
 
 
-        if (typeof dom !== "undefined") {
-            dom.compiler.register('attribute', 'page', function (elem, attrs) {
-                var $parent = elem.parents('[data-page]');
-                elem.attr('data-page', $parent.length ? $parent.data('page') + '/' + attrs.page : attrs.page);
-
-                if (typeof attrs.default !== "undefined") {
-                    elem.attr('data-default', 'true');
-                    elem.removeAttr('default');
-                }
-            });
-        }
-
         $(document).ready(self.__construct);
     };
 
