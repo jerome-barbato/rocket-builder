@@ -4,13 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 3.5.12 - 2017-09-30
+## 3.5.11 - 2017-09-30
 - last version used on Antalis
-
-## 3.5.11 - 2017-09-18
-### Fixed
-- Map: tooltip activation on mobile
-- Share: better linked in sharing options
 
 ## 3.5.10 - 2017-09-16
 ### Fixed
