@@ -41,8 +41,7 @@
                 method     : 'click',
                 html       : '',
                 x          : 0,
-                y          : 0,
-                mobile     : true
+                y          : 0
             },
             map : {
                 center            :[25,0],
@@ -123,9 +122,6 @@
                     self._init($map, callback);
                 });
             }
-
-            $map.on('map.fit', self.fit);
-            $map.on('map.resize', self.resize);
         };
 
 
@@ -400,7 +396,7 @@
 
                 mouseover: function(marker){
 
-	                if( self.config.overlay.method == 'hover' )
+	                if( self.config.overlay.method = 'hover' )
                     {
 	                    self._showOverlay(marker);
                     }
@@ -430,8 +426,8 @@
                 },
                 click: function(marker){
 
-                    if( self.config.overlay.method == 'click' )
-                        self._showOverlay(marker);
+                    if( self.config.overlay.method = 'click' )
+                        self._showOverlay();
                 }
             });
 
@@ -439,19 +435,6 @@
 
             if( fit )
                 self.context.gmap.fit();
-        };
-
-
-        self.fit = function(){
-
-            if( 'gmap' in self.context && typeof self.context.gmap.fit != 'undefined' )
-                self.context.gmap.fit();
-        };
-
-        self.resize = function(){
-
-            if( 'map' in self.context && typeof google != 'undefined' )
-                google.maps.event.trigger(self.context.map, 'resize');
         };
 
 
@@ -483,16 +466,9 @@
 
 	        self.context.$map.trigger('marker.click', [self.context.map, marker]);
 
-	        var enable = true;
-
-	        if( 'phone' in self.config.overlay && !self.config.overlay.phone && browser.phone )
-		        enable = false;
-
-	        if( 'tablet' in self.config.overlay && !self.config.overlay.tablet && browser.tablet )
-		        enable = false;
-
-	        if( 'mobile' in self.config.overlay && !self.config.overlay.mobile && browser.mobile )
-		        enable = false;
+	        var enable = !browser.phone || ('phone' in self.config.overlay && self.config.overlay.phone);
+	        enable = enable && (!browser.mobile || ('mobile' in self.config.overlay && self.config.overlay.mobile));
+	        enable = enable && (!browser.tablet || ('tablet' in self.config.overlay && self.config.overlay.tablet));
 
 	        if( enable )
 	        {
@@ -518,7 +494,7 @@
 
 			        overlay.$.find('[data-close]').click(function(){ self._hideOverlay(marker)});
 
-			        if( self.config.overlay.method == 'hover' )
+			        if( self.config.overlay.method = 'hover' )
 				        overlay.$.mouseleave(function(){ self._hideOverlay(marker) });
 		        });
 	        }

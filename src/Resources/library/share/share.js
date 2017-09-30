@@ -42,15 +42,8 @@
         };
 
 
-        self.linkedin = function (link, title, summary, media) {
-            var url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(link) + '&title=' + encodeURIComponent(title);
-
-	        if (media)
-		        url += '&submitted-image-url=' + encodeURIComponent(media);
-
-	        if (summary)
-		        url += '&summary=' + encodeURIComponent(summary);
-
+        self.linkedin = function (link, title, summary) {
+            var url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(link) + '&title=' + encodeURIComponent(title) + '&summary=' + encodeURIComponent(summary);
             self._openWindow(url, 'linkedinwindow', 560, 510);
         };
 
@@ -183,9 +176,8 @@
 
                     var title   = $elem.hasDataAttr('title') ? $elem.data('title') : '';
                     var description = $elem.hasDataAttr('description') ? $elem.data('description') : '';
-	                var media       = $elem.hasDataAttr('media') ? $elem.data('media') : false;
 
-                    self.linkedin(link, title, description, media);
+                    self.linkedin(link, title, description);
                     break;
 
                 case 'pinterest':

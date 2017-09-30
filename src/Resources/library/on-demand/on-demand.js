@@ -131,12 +131,9 @@
 
 						(function (elem)
 						{
-							if( elem.get(0).complete )
-								self._loaded(elem);
-							else
-								elem.$.on('load', function () { self._loaded(elem) });
-
-							elem.$.on('error', function () { elem.$.attr('data-on_demand', 'error') });
+							elem.$
+								.on('load', function () { self._loaded(elem) })
+								.on('error', function () { elem.$.attr('data-on_demand', 'error') });
 
 						})(element);
 
@@ -149,12 +146,9 @@
 
 						(function (elem)
 						{
-							if( elem.$.get(0).readyState === 4 )
-								self._loaded(elem);
-							else
-								elem.$.on('loadeddata', function () { self._loaded(elem) });
-
-							elem.$.on('ended', function () { elem.ended = true })
+							elem.$
+								.on('loadeddata', function () { self._loaded(elem) })
+								.on('ended', function () { elem.ended = true })
 								.on('error', function () { elem.$.attr('data-on_demand', 'error') });
 
 						})(element);

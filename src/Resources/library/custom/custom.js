@@ -33,23 +33,14 @@
                     $.widget('app.selectmenu', $.ui.selectmenu, {
                         _drawButton: function () {
                             this._super();
-                            var selected = this.element.find('[selected]').length,
-                                placeholder = this.options.placeholder;
-
-                            if (!selected && placeholder)
-                                this.buttonItem.text(placeholder);
+                            var selected = this.element.find('[selected]').length;
 
                             if(selected)
 	                            this.button.addClass('ui-selectmenu-button-filled');
                         },
                         refresh: function () {
 		                    this._super();
-		                    var selected = this.element.find('[selected]').length,
-			                    placeholder = this.options.placeholder;
-
-		                    if (!selected && placeholder)
-			                    this.buttonItem.text(placeholder);
-
+		                    var selected = this.element.find('[selected]').length;
 		                    if(selected)
 			                    this.button.addClass('ui-selectmenu-button-filled');
 	                    },
@@ -71,16 +62,11 @@
                         var $select = $(this);
                         var $parent = $select.parent();
 
-	                    if( browser.mobile )
-	                    {
-		                    $select.change(function(){ $select.trigger('refresh') });
-	                    }
-
                         var options = {
                             icons: {button: 'ui-icon ui-icon-arrow'},
                             change: function (event, ui) {
 
-                                if ($select.val().length)
+                                if ($select.val() && $select.val().length)
                                     $element.addClass('ui-selectmenu-button-filled');
                                 else
                                     $element.removeClass('ui-selectmenu-button-filled');
@@ -99,7 +85,7 @@
 
 		                    $select.selectmenu( "refresh" );
 
-		                    if ($select.val().length)
+		                    if ($select.val() && $select.val().length)
 			                    $element.addClass('ui-selectmenu-button-filled');
 		                    else
 			                    $element.removeClass('ui-selectmenu-button-filled');
@@ -114,32 +100,20 @@
                 {
                     $('input[data-custom="date"]').initialize(function () {
 
-	                    if( browser.mobile )
-                        {
-                            $(this).attr('type', 'date');
+                        var $parent = $(this).parent();
 
-                            if( $(this).hasDataAttr('min') )
-                                $(this).attr('min', $(this).data('min'));
+                        var options = {
+                            beforeShow:function(textbox, instance){
 
-                            return;
-                        }
-	                    else
-                        {
-	                        var $parent = $(this).parent();
+                                var $datepicker = instance.dpDiv;
+                                $parent.append($datepicker);
+                                setTimeout(function(){
+                                    $datepicker.css({position:'absolute', left:0, top:'100%', visibility:'visible'})
+                                });
+                            }
+                        };
 
-	                        var options = {
-		                        beforeShow:function(textbox, instance){
-
-			                        var $datepicker = instance.dpDiv;
-			                        $parent.append($datepicker);
-			                        setTimeout(function(){
-				                        $datepicker.css({position:'absolute', left:0, top:'100%', visibility:'visible'})
-			                        });
-		                        }
-	                        };
-
-	                        $(this).datepicker(options);
-                        }
+                        $(this).datepicker(options);
                     });
                 }
             }

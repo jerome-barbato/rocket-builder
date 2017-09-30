@@ -148,6 +148,7 @@
 
                     if( !isNaN(ratio) ){
 
+                        $element.attr('width', width).attr('height', height);
                         $element.data('ratio', ratio);
 
                         if( callback )
@@ -221,7 +222,7 @@
                 $(this).each(function() {
 
                     if( recompute_ratio )
-                        $(this).data('ratio', false);
+                        $(this).data('ratio', false).removeAttr('width').removeAttr('height');
 
                     rocket.fit.compute( $(this) )
                 });
