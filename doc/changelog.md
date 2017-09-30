@@ -8,12 +8,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - replaced $(document).on('loaded') with nativ $(window).on('load')
 - replaced $(document).on('boot') with nativ $(document).ready
+- data-transition for slider instead of animation
+### Fixed
+- Slider arrows deactivation
 
 ## 3.6.0 - 2017-09-29
 ### Removed
 - dom compilation from library files
 ### Added
 - bem_level template parameter in builder.yml
+### Fixed
+- Map: tooltip activation on mobile
+- Share: better linked in sharing options
+### Changed
+- all active class are now is-active
 
 ## 3.5.11 - 2017-09-18
 ### Fixed

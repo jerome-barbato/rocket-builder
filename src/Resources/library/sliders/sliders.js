@@ -59,7 +59,7 @@
 			$element      : false,
 			autoplay      : false,
 			hold          : true,
-			animation     : 'horizontal',
+			transition    : 'horizontal',
 			start_slide   : 0,
 			swipe_tablet  : true,
 			swipe_mobile  : true,
@@ -140,7 +140,7 @@
 				return;
 
 			self.context.$slides_container
-				.attr('data-transition', self.config.animation)
+				.attr('data-transition', self.config.transition)
 				.wrap('<div class="' + self.classnames.scroller + '"/>');
 
 			self.context.$scroller = self.config.$element.findClosest('.' + self.classnames.scroller );
@@ -425,13 +425,13 @@
 			else
 				self.context.$previous_slide = false;
 
-			self._removeMod(self.context.$arrows, 'button', 'disabled');
+			self._removeMod(self.context.$arrows, 'arrow', 'disabled');
 
 			if (self.context.indices.current >= self.context.slide_count - 1 && !self.config.loop)
-				self._addMod(self.context.$arrows.filter('.' + self.classnames.arrow + '-next'), 'button', 'disabled');
+				self._addMod(self.context.$arrows.filter('.' + self.classnames.arrow + '-next'), 'arrow', 'disabled');
 
 			if (self.context.indices.current === 0 && !self.config.loop)
-				self._addMod(self.context.$arrows.filter('.' + self.classnames.arrow + '-prev'), 'button', 'disabled');
+				self._addMod(self.context.$arrows.filter('.' + self.classnames.arrow + '-prev'), 'arrow', 'disabled');
 
 			self._updateSlides(animate, callback);
 			self._updatePagination();

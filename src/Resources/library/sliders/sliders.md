@@ -28,10 +28,10 @@ Options can be added in html to the slider to choose the animation type, hold an
 ### Animations
 
 ~~~~
-<slider data-animation="slide">
+<slider data-transition="slide">
 ~~~~
     
-Available animations are :
+Available transitions are :
 
 * vertical
 * crossfade
