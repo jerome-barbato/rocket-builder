@@ -216,6 +216,7 @@
         };
 
         self._scroll = function () {
+
             if (self.context.hold) return;
 
             var scrollTop = $(window).scrollTop() + self.context.window_height;
@@ -236,6 +237,7 @@
             self.context.disable = browser && browser.mobile && !self.config.mobile;
 
             if (self.context.disable) {
+
                 $('[data-activation]').initialize(function () {
                     $(this).removeAttr('data-activation');
                 });
@@ -249,6 +251,7 @@
                 $('html').addClass('no-activation');
             }
             else {
+
                 $('html').addClass('activation');
 
                 $('[data-activation]').initialize(function () {
@@ -269,7 +272,7 @@
                     }
                 });
 
-                $(document).on('loaded', function () {
+                $(window).on('load', function () {
                     self._setupEvents();
                     self._recompute();
                 });

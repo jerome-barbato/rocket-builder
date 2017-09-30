@@ -113,7 +113,7 @@
             else
                 self.compute($element);
 
-            $(document).on('loaded', function(){ self.compute($element) });
+            $(window).on('load', function(){ self.compute($element) });
             $(window).resize(function(){ self.compute($element) });
         };
 

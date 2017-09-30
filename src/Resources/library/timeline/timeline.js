@@ -42,7 +42,7 @@
                 .resize(self._resize)
                 .scroll(self._play);
 
-            $(document).on('loaded', self._resize);
+            $(window).on('load', self._resize);
         };
 
         /* Public */

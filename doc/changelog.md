@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.6.1 - 2017-09-29
+### Changed
+- replaced $(document).on('loaded') with nativ $(window).on('load')
+- replaced $(document).on('boot') with nativ $(document).ready
+
 ## 3.6.0 - 2017-09-29
 ### Removed
 - dom compilation from library files

@@ -246,7 +246,7 @@
 
 			$(window).on('scroll', self._loadAll).on('resize', resize);
 
-			$(document).on('loaded', function ()
+			$(window).on('load', function ()
 			{
 				self._resize();
 				setTimeout(self._loadAll, 300);

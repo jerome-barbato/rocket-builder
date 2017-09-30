@@ -42,7 +42,7 @@
         };
 
 
-        $(document).on('boot', self.__construct);
+        $(document).ready( self.__construct);
     };
 
     rocket      = typeof rocket == 'undefined' ? {} : rocket;

@@ -191,7 +191,7 @@
                 self.add($(this));
             });
 
-            $(document).on('boot', function(){
+            $(document).ready( function(){
 	            self.context.$body = $('body');
 	            self._resize();
             });

@@ -36,12 +36,12 @@
 
         self._setupEvents = function () {
 
-            $(document).ready(self._recompute)
-                .on('loaded', self._recompute);
+            $(document).ready(self._recompute);
 
             $(window)
-                .scroll(function () { requestAnimationFrame(self._update) })
-                .resize(self._recompute);
+	            .on('scroll', function () { requestAnimationFrame(self._update) })
+                .on('resize', self._recompute)
+                .on('loaded', self._recompute);
         };
 
 

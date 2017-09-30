@@ -295,7 +295,7 @@
 				.resize(self._computeOffset)
 				.scroll(self._checkVisibility);
 
-			$(document).on('loaded', self._computeOffset);
+			$(window).on('load', self._computeOffset);
 
 
 			self.config.$element.on('slider.update', function (e, index, animate)
@@ -478,6 +478,8 @@
 
 				self._preload();
 				self._autoplay();
+
+				self.config.$element.trigger('slider.animated');
 
 				if( callback )
 					callback();
