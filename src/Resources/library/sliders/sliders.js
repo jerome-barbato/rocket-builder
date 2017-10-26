@@ -195,7 +195,7 @@
 					if( self.config[device] === false )
 					{
 						destroy = true;
-						return false;
+						break;
 					}
 					else
 					{

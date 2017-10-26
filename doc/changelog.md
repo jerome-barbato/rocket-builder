@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.6.2 - 2017-10-26
+### Fixed
+- Slider disabled on mobile
+- scroll-to item click
+
 ## 3.6.1 - 2017-09-29
 ### Changed
 - replaced $(document).on('loaded') with nativ $(window).on('load')

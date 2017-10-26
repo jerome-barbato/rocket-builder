@@ -34,7 +34,11 @@
 
 
 		self._setupEvents = function () {
-			$(window).scroll(self._setActive).resize(self._resize);
+
+			$(window)
+				.on('scroll', self._setActive)
+				.on('resize', self._resize)
+				.on('hashchange', self._handleHash)
 		};
 
 
@@ -56,19 +60,15 @@
 			if (animate) {
 				if (typeof duration == 'undefined' || !duration) {
 					var scroll_diff = Math.abs(self.scroll_top - scroll_to);
-					var velocity = Math.sqrt(scroll_diff / $(window).height());
-					duration     = Math.max(self.config.speed, velocity * self.config.speed);
+					var velocity    = Math.sqrt(scroll_diff / $(window).height());
+					duration        = Math.max(self.config.speed, velocity * self.config.speed);
 
 				} else {
 					duration = parseInt(duration);
 				}
 
 				$('html, body').stop().animate({scrollTop: scroll_to}, duration, 'easeInOutCubic', function () {
-					$(document)
-						.trigger('meta-scroll', [
-							id,
-							target
-						]);
+					$(document).trigger('meta-scroll', [id, target]);
 				});
 			}
 			else {
@@ -183,7 +183,8 @@
 		self.__construct = function () {
 
 			$('[href^="#/"]').initialize(function () {
-				self.add($(this))
+				self.add($(this));
+				$(this).click(self._handleHash);
 			});
 
 			$(window).on('load', function () {
