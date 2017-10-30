@@ -8,6 +8,8 @@
     }
   }
 
+  .ie picture.has-object-fit{ height: 100% }
+
   [data-object_fit]{ width: 100%; height: 100%; overflow: hidden; display: block }
 
   $fit-positions: 'top' 'top left' 'top center' 'top right' 'center' 'center left' 'center right' 'bottom' 'bottom left' 'bottom center' 'bottom right' 'left' 'left top' 'left center' 'left bottom' 'right' 'right top' 'right center' 'right bottom';

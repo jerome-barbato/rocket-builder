@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.6.3 - 2017-10-30
+### Added
+- GTM Tag management support
+### Fixed
+- Image resize on tab change for IE
+
 ## 3.6.2 - 2017-10-26
 ### Fixed
 - Slider disabled on mobile

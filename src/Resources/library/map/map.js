@@ -112,14 +112,14 @@
                 }
             }
 
-            if( typeof google != 'undefined' && 'maps' in google ){
-
+            if( typeof google != 'undefined' && 'maps' in google )
+            {
                 self._init($map, callback);
             }
             else{
 
-                $(document).on('google.maps.initialized', function () {
-
+                $(document).on('google.maps.initialized', function ()
+                {
                     self._init($map, callback);
                 });
             }
@@ -447,6 +447,7 @@
             if( 'gmap' in self.context && typeof self.context.gmap.fit != 'undefined' )
                 self.context.gmap.fit();
         };
+
 
         self.resize = function(){
 

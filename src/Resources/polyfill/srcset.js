@@ -2,48 +2,51 @@
 
 (function ($) {
 
-    if (window.Modernizr && !Modernizr.srcset) {
+	if (window.Modernizr && !Modernizr.srcset) {
 
-        var chooseSrc = function($element, srcsets){
+		var chooseSrc = function($element, srcsets){
 
-            var window_width = $(window).width();
-            var src = srcsets[0][0];
-            var current_src = $element.attr('src');
+			var window_width = $(window).width();
+			var src = srcsets[0][0];
+			var current_src = $element.attr('src');
 
-            $.each(srcsets, function(i, srcset){
+			$.each(srcsets, function(i, srcset){
 
-                if( window_width <= srcset[1] )
-                    src = srcset[0];
-            });
+				if( window_width <= srcset[1] )
+					src = srcset[0];
+			});
 
-            if( src != current_src ){
+			if( src != current_src ){
 
-                $element.attr('src', src);
+				$element.attr('src', src);
 
-                if( $.fn.fit )
-                    $element.fit(true);
-            }
-        };
+				if( $.fn.fit )
+					$element.fit(true);
+			}
+		};
 
-        $('[srcset]').initialize(function(){
+		$('[srcset]').initialize(function(){
 
-            var $elem   = $(this);
-            var srcsets = $elem.attr('srcset').replace(', ',',').replace(' ,',',').split(',');
+			var $elem   = $(this);
+			var srcsets = $elem.attr('srcset').replace(', ',',').replace(' ,',',').split(',');
 
-            $.each(srcsets, function(i, srcset){
+			$.each(srcsets, function(i, srcset){
 
-                srcset = srcset.split(' ');
+				srcset = srcset.split(' ');
 
-                srcsets[i] = srcset;
-                srcsets[i][1] = parseInt( srcset[1].replace('w','') );
-            });
+				if( srcset.length > 1 )
+				{
+					srcsets[i] = srcset;
+					srcsets[i][1] = parseInt( srcset[1].replace('w','') );
+				}
+			});
 
-            chooseSrc($elem, srcsets);
+			chooseSrc($elem, srcsets);
 
-            $(window).resize(function(){
-                chooseSrc($elem, srcsets);
-            });
-        });
-    }
+			$(window).resize(function(){
+				chooseSrc($elem, srcsets);
+			});
+		});
+	}
 })(jQuery);
 

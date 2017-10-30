@@ -55,6 +55,10 @@
 
             if (self.context.id.length)
                 cookies.set('meta-tab-' + self.context.id, id);
+
+            var $img = self.context.$tabs.filter(id).find('[data-object_fit]');
+            if( $img.length )
+                setTimeout(function(){ $img.fit() });
         };
 
 
