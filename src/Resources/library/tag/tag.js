@@ -19,51 +19,65 @@
 (function ($) {
 
     var Tag = function () {
-        var self = this;
 
-        self.type = 'ga';
+        var self  = this;
 
+        self.type = false;
 
-        self.page = function (url) {
-            if (typeof url != 'undefined' && url.length) {
-                if (self.type == 'ga') {
-                    if (typeof ga != 'undefined') {
-                        if (app && app.debug > 2) {
-                            console.log('ga', 'send', 'pageview', url);
-                        }
+        self.page = function (url, title)
+        {
+            if (typeof url != 'undefined' && url.length)
+            {
+	            if (typeof title == 'undefined' )
+		            title = '';
 
-                        ga('send', 'pageview', url);
+                if ( self.type == 'ga' )
+                {
+                    if (app && app.debug > 2)
+                        console.log('ga', 'send', 'pageview', url);
 
-                    }
-                    else {
-                        if (app && app.debug) {
-                            console.warn('ga is not yet defined');
-                        }
-                    }
+                    ga('send', 'pageview', url);
+                }
+                else if ( self.type == 'gtm' )
+                {
+	                if (app && app.debug > 2)
+		                console.log('gtm', 'send', 'pageview', url);
+
+	                window.dataLayer.push({
+		                'event':'VirtualPageview',
+		                'virtualPageURL': url,
+		                'virtualPageTitle' : title
+	                });
                 }
             }
         };
 
 
         self.event = function (category, action, label) {
-            if (typeof label == 'undefined') {
+
+            if (typeof label == 'undefined')
                 label = '';
-            }
 
             if (typeof category != 'undefined' && typeof action != 'undefined') {
-                if (self.type == 'ga') {
-                    if (typeof ga != 'undefined') {
-                        if (app && app.debug > 2) {
-                            console.log('ga', 'send', 'event', category, action, label);
-                        }
 
-                        ga('send', 'event', category, action, label);
-                    }
-                    else {
-                        if (app && app.debug) {
-                            console.warn('ga is not yet defined');
-                        }
-                    }
+                if ( self.type == 'ga' )
+                {
+                    if (app && app.debug > 2)
+                        console.log('ga', 'send', 'event', category, action, label);
+
+                    ga('send', 'event', category, action, label);
+                }
+                else if( self.type == 'gtm'){
+
+	                if (app && app.debug > 2)
+		                console.log('gtm', 'event', category, action, label);
+
+	                window.dataLayer.push({
+		                'event' : 'uaevent',
+		                'eventCategory': category,
+		                'eventAction': action,
+		                'eventLabel': label
+	                });
                 }
             }
         };
@@ -71,15 +85,23 @@
 
         /* Constructor. */
 
-        self.__construct = function () {
-            $(document).on('click', '[data-tag]', function () {
+        self.__construct = function ()
+        {
+            if( 'dataLayer' in window )
+                self.type = 'gtm';
+            else if( typeof ga != 'undefined')
+	            self.type = 'ga';
+            else
+                return;
+
+            $(document).on('click', '[data-tag]', function ()
+            {
                 var data = $(this).data('tag').split('|');
 
-                if (data.length == 2) {
+                if (data.length == 2)
                     self.event(data[0], data[1]);
-                } else if (data.length == 3) {
+                else if (data.length == 3)
                     self.event(data[0], data[1], data[2]);
-                }
             });
         };
 
