@@ -24,6 +24,7 @@ style:
 # HTML compilation options
 template:
   compile: true
+  simple_tree: true
   bem_level: 2
 
 

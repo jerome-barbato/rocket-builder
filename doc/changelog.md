@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.6.4 - 2017-11-13
+### Added
+- Builder: simple_tree option
+
 ## 3.6.3 - 2017-10-30
 ### Added
 - GTM Tag management support

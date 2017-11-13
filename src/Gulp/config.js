@@ -42,6 +42,9 @@ var config = module.exports = {
             config.builder = yaml.safeLoad(fs.readFileSync(config.base_path + gpath.sep + 'config' + gpath.sep + 'builder.yml'));
         }
 
+        if( typeof (config.builder.template.simple_tree) == 'undefined' )
+	        config.builder.template.simple_tree = true;
+
         if ('browsers' in config.builder.style == false)
         {
             config.builder.style.browsers = [

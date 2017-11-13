@@ -127,7 +127,7 @@ function getCompiledPath(path)
     var dirname = path.dirname.split(gpath.sep);
     var lastdir = dirname[dirname.length-1];
 
-    if( lastdir === path.basename )
+    if( lastdir === path.basename && config.builder.template.simple_tree )
     {
         dirname.pop();
         path.dirname = dirname.join(gpath.sep);
