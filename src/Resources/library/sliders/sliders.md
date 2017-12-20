@@ -1,6 +1,6 @@
 # Slider
    
-######file: js/metabolism/sliders.js, sass/metabolism/sliders.scss
+## Declaration
  
 Manage sliders interface, slides, arrows and pagination sliders can be imbricated.
 
@@ -105,3 +105,28 @@ Display: all, desktop, mobile, tablet, phone
 <slider data-height="auto">
 ~~~~
 
+## Events
+
+### Update
+
+Go to specific slide
+~~~
+var $slider = $('.swiper-container');
+$slider.trigger('slider.update',[index, animate]);
+~~~
+
+### Resize
+
+Force recomputation
+~~~
+var $slider = $('.swiper-container');
+$slider.trigger('slider.resize');
+~~~
+
+### Autoplay
+
+Enable/Disable autoplay
+~~~
+var $slider = $('.swiper-container');
+$slider.trigger('slider.autoplay', true/false);
+~~~

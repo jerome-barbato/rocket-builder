@@ -3,7 +3,10 @@
 @mixin lib-activation {
 
   [data-activation] {
-    &, [data-animation]{ animation-play-state: paused!important }
+    &, [data-animation]{
+      animation-play-state: paused!important;
+      .safari &{ animation: none!important }
+    }
   }
 
   [data-activation="play"], [data-activation="played"], [data-activation="rewind"] {

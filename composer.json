@@ -1,6 +1,6 @@
 {
   "name": "metabolism/rocket-builder",
-  "version": "3.6.4",
+  "version": "3.7.0",
   "description": "Gulp tasks to compile scss, js, and templates. Metabolism framework included.",
   "type": "composer-plugin",
   "license": "AGPL-3.0",
@@ -23,11 +23,11 @@
       "copy": {
         "metabolism/rocket-builder": {
           "doc": "doc/builder",
-          "src/Resources/library": "src/FrontBundle/Resources/private/vendor/metabolism",
-          "src/Resources/polyfill": "src/FrontBundle/Resources/private/vendor/polyfill",
-          "src/Resources/sass-framework": "src/FrontBundle/Resources/private/framework",
-          "src/Resources/browser.js": "src/FrontBundle/Resources/private/vendor/browser.js",
-          "src/Resources/modernizr.js": "src/FrontBundle/Resources/private/vendor/modernizr.js"
+          "src/Resources/library": "src/FrontBundle/Resources/src/vendor/metabolism",
+          "src/Resources/polyfill": "src/FrontBundle/Resources/src/vendor/polyfill",
+          "src/Resources/sass-framework": "src/FrontBundle/Resources/src/framework",
+          "src/Resources/browser.js": "src/FrontBundle/Resources/src/vendor/browser.js",
+          "src/Resources/modernizr.js": "src/FrontBundle/Resources/src/vendor/modernizr.js"
         }
       }
     },
@@ -35,16 +35,17 @@
         "copy": {
           "metabolism/rocket-builder": {
             "doc": "doc/builder",
-            "src/Resources/library": "src/FrontBundle/Resources/private/vendor/metabolism",
-            "src/Resources/polyfill": "src/FrontBundle/Resources/private/vendor/polyfill",
-            "src/Resources/sass-framework": "src/FrontBundle/Resources/private/framework",
-            "src/Resources/browser.js": "src/FrontBundle/Resources/private/vendor/browser.js",
-            "src/Resources/modernizr.js": "src/FrontBundle/Resources/private/vendor/modernizr.js"
+            "src/Resources/library": "src/FrontBundle/Resources/src/vendor/metabolism",
+            "src/Resources/polyfill": "src/FrontBundle/Resources/src/vendor/polyfill",
+            "src/Resources/sass-framework": "src/FrontBundle/Resources/src/framework",
+            "src/Resources/browser.js": "src/FrontBundle/Resources/src/vendor/browser.js",
+            "src/Resources/modernizr.js": "src/FrontBundle/Resources/src/vendor/modernizr.js"
           }
         }
     },
     "branch-alias": {
-      "dev-3.6.x": "3.5.x-dev",
+      "dev-3.7.x": "3.7.x-dev",
+      "dev-3.6.x": "3.6.x-dev",
       "dev-3.5.x": "3.5.x-dev",
       "dev-3.4.x": "3.4.x-dev",
       "dev-3.3.x": "3.3.x-dev",
