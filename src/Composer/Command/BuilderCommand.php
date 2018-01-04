@@ -17,7 +17,7 @@ use Composer\Composer;
 class BuilderCommand extends BaseCommand
 {
 
-    protected $pkg_path;
+    protected $pkg_paths;
 
     /**
      * BuilderCommand constructor.
@@ -28,7 +28,10 @@ class BuilderCommand extends BaseCommand
     {
         parent::__construct( $name );
 
-        $this->pkg_path = getcwd() . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'metabolism'. DIRECTORY_SEPARATOR .'rocket-builder' . DIRECTORY_SEPARATOR;
+        $this->pkg_paths = [
+	        'app' => getcwd() . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'FrontBundle'. DIRECTORY_SEPARATOR .'Resources' . DIRECTORY_SEPARATOR .'src' . DIRECTORY_SEPARATOR,
+        	'builder' => getcwd() . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'metabolism'. DIRECTORY_SEPARATOR .'rocket-builder' . DIRECTORY_SEPARATOR
+	    ];
     }
 
     /**
@@ -36,25 +39,28 @@ class BuilderCommand extends BaseCommand
      */
     protected function installNodeModules()
     {
-        if ( is_dir( $this->pkg_path ) )
-        {
-            $this->getIO()->write( '  Installing node modules...' );
-            chdir( $this->pkg_path );
+    	foreach ($this->pkg_paths as $name=>$path)
+	    {
+		    if ( is_dir( $path ) )
+		    {
+			    $this->getIO()->write( '<comment>Installing '.$name.' node modules...</comment>' );
+			    chdir( $path );
 
-            if ( is_dir( 'node_modules' ) )
-            {
-                passthru( "yarn upgrade --production", $err);
+			    if ( is_dir( 'node_modules' ) )
+			    {
+				    passthru( "yarn upgrade --production", $err);
 
-                if( $err )
-                    passthru( "npm upgrade --production");
-            }
-            else
-            {
-                passthru( "yarn install --production", $err);
+				    if( $err )
+					    passthru( "npm upgrade --production");
+			    }
+			    else
+			    {
+				    passthru( "yarn install --production", $err);
 
-                if( $err )
-                    passthru( "npm install --production");
-            }
-        }
+				    if( $err )
+					    passthru( "npm install --production");
+			    }
+		    }
+	    }
     }
 }

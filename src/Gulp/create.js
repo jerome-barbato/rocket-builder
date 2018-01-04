@@ -4,13 +4,8 @@
  * todo: make as gulp module
  */
 
-var gulp    = require('gulp'),
-    fs      = require('fs'),
-    fs_path = require('fs-path'),
-    config  = require('./config'),
-    gpath   = require('path'),
-    chalk   = require('chalk'),
-    gutil   = require('gulp-util');
+var fs_path = require('fs-path'),
+    chalk   = require('chalk');
 
 
 /**

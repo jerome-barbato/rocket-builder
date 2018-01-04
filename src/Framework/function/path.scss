@@ -1,0 +1,32 @@
+// Path
+$public-path  : '..'!default;
+
+$misc-path   :  $public-path+'/media/misc/' !default;
+$component-path :  $public-path+'/media/component/' !default;
+$tmp-path    :  $public-path+'/media/tmp/' !default;
+$icon-path   :  $public-path+'/media/icon/' !default;
+$font-path   :  $public-path+'/font/' !default;
+
+@function component-url($path){
+  @return url( $component-path + $path )
+}
+
+@function media-url($path){
+  @return url( $public-path + '/media/' + $path )
+}
+
+@function font-url($path){
+  @return url( $font-path + $path )
+}
+
+@function tmp-url($path){
+  @return url( $tmp-path + $path )
+}
+
+@function icon-url($path){
+  @return url( $icon-path + $path )
+}
+
+@function misc-url($path){
+  @return url( $misc-path + $path )
+}

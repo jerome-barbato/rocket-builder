@@ -47,11 +47,7 @@
 
         self.attr = function (elem, attr, value) {
 
-            if (window.precompile) {
-                elem.attr('data-' + attr, value);
-            } else {
-                elem.data(attr, value);
-            }
+            elem.attr('data-' + attr, value);
         };
 
 
@@ -63,9 +59,7 @@
 
                 var value = element.attributes[i].value;
 
-                if (window.precompile) {
-                    value = value.replace(/\{\{ /g, '{{').replace(/ \}\}/g, '}}');
-                }
+                value = value.replace(/\{\{ /g, '{{').replace(/ \}\}/g, '}}');
 
                 attributes[self.camelCase(element.attributes[i].name)] = value.trim();
             }
@@ -166,11 +160,8 @@
 
         self.run = function ($dom) {
 
-            var raw_init = $dom.html();
-
-            if (app && app.debug) {
+            if (debug)
                 console.time('dom compilation');
-            }
 
             $dom = $dom.not('template');
 
@@ -180,19 +171,7 @@
 
             self._cleanAttributes($dom);
 
-            if (raw_init != $dom.html()) {
-
-                setTimeout(function () {
-
-                    $(document)
-                        .trigger('DOMNodeUpdated', [
-                            $dom,
-                            'dom-compiler'
-                        ]);
-                });
-            }
-
-            if (app && app.debug) {
+            if (debug) {
 
                 console.timeEnd('dom compilation');
                 console.info('dom element count : ' + ($dom.find('*').length + $dom.length));
@@ -230,7 +209,7 @@
         };
     };
 
-    dom          = typeof dom == 'undefined' ? {} : dom;
+    dom          = typeof dom === 'undefined' ? {} : dom;
     dom.compiler = new DOMCompiler();
 
 })(jQuery);

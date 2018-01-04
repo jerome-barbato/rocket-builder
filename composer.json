@@ -1,7 +1,7 @@
 {
   "name": "metabolism/rocket-builder",
   "version": "3.7.0",
-  "description": "Gulp tasks to compile scss, js, and templates. Metabolism framework included.",
+  "description": "Gulp tasks to compile scss, js, and templates. Metabolism css framework included.",
   "type": "composer-plugin",
   "license": "AGPL-3.0",
   "authors": [{
@@ -20,26 +20,18 @@
   "extra": {
     "class": "Rocket\\Composer\\BuilderPlugin",
     "post-package-install": {
-      "copy": {
+      "symlink": {
         "metabolism/rocket-builder": {
           "doc": "doc/builder",
-          "src/Resources/library": "src/FrontBundle/Resources/src/vendor/metabolism",
-          "src/Resources/polyfill": "src/FrontBundle/Resources/src/vendor/polyfill",
-          "src/Resources/sass-framework": "src/FrontBundle/Resources/src/framework",
-          "src/Resources/browser.js": "src/FrontBundle/Resources/src/vendor/browser.js",
-          "src/Resources/modernizr.js": "src/FrontBundle/Resources/src/vendor/modernizr.js"
+          "src/Framework": "src/FrontBundle/Resources/src/framework"
         }
       }
     },
       "post-package-update": {
-        "copy": {
+        "symlink": {
           "metabolism/rocket-builder": {
             "doc": "doc/builder",
-            "src/Resources/library": "src/FrontBundle/Resources/src/vendor/metabolism",
-            "src/Resources/polyfill": "src/FrontBundle/Resources/src/vendor/polyfill",
-            "src/Resources/sass-framework": "src/FrontBundle/Resources/src/framework",
-            "src/Resources/browser.js": "src/FrontBundle/Resources/src/vendor/browser.js",
-            "src/Resources/modernizr.js": "src/FrontBundle/Resources/src/vendor/modernizr.js"
+            "src/Framework": "src/FrontBundle/Resources/src/framework"
           }
         }
     },

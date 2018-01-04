@@ -15,149 +15,97 @@
 
 (function ($) {
 
-    var BEM = function () {
+	var BEM = function () {
 
-        var self = this;
+		var self = this;
 
-        self.debug = false;
+		self.debug = false;
 
-        self._configure = function (type, elem, block_class_name, element_class_name) {
+		self._configure = function (type, elem, block_class_name, element_class_name) {
 
-            var single_binding = false;
-            var double_binding = false;
+			if (typeof element_class_name !== 'undefined' && element_class_name.length)
+				element_class_name = '__' + element_class_name;
+			else
+				element_class_name = '';
 
-            if (typeof element_class_name != 'undefined' && element_class_name.length) {
+			elem.data(':bem', block_class_name);
+			elem.data('bem', block_class_name + element_class_name);
 
-                if (element_class_name.substring(0, 2) == '::') {
+			//add class before any other class
+			var current_class = elem.attr('class');
+			current_class = typeof current_class !== 'undefined' ? ' ' + current_class : '';
 
-                    double_binding     = true;
-                    element_class_name = element_class_name.substring(2);
-                }
-                else if (element_class_name.substring(0, 1) == ':') {
+			elem.attr('class', block_class_name + element_class_name + current_class);
 
-                    single_binding     = true;
-                    element_class_name = element_class_name.substring(1);
-                }
-
-                element_class_name = '__' + element_class_name;
-            }
-            else {
-                element_class_name = '';
-            }
-
-            elem.data(':bem', single_binding ? block_class_name : block_class_name + element_class_name);
-            elem.data('bem', block_class_name + element_class_name);
-
-            if (elem.data('bem').split('__').length > window.bem_level) {
-                console.warn(elem.data('bem') + ' : BEM depth is important, please use single/double binding');
-            }
-
-            if (double_binding) {
-
-                var bem = block_class_name.split('__');
-
-                if (bem.length > 1) {
-                    bem.pop();
-                }
-
-                elem.addClass(bem.join('__') + element_class_name);
-            }
-            else {
-                elem.addClass(block_class_name + element_class_name);
-            }
-
-            if (self.debug) {
-                elem.attr('is', type);
-            }
-        };
+			if (self.debug)
+				elem.attr('is', type);
+		};
 
 
-        self.addModifier = function (elem, attrs) {
+		self.addModifier = function (elem, attrs) {
 
-            if (window.precompile) {
-                attrs.mod = attrs.mod.replace(/\s+(?=[^\{\}]*\})/g, '[__]');
-            }
+			attrs.mod = attrs.mod.replace(/\s+(?=[^\{\}]*\})/g, '[__]')
 
-            attrs.mod.split(' ').forEach(function (mod) {
+			attrs.mod.split(' ').forEach(function (mod) {
 
-                if (mod.length) {
+				if (mod.length) {
 
-                    if (window.precompile) {
-                        mod = mod.replace(/\[__\]/g, ' ');
-                    }
+					mod = mod.replace(/\[__\]/g, ' ');
 
-                    if (typeof elem.data('bem') != "undefined") {
-                        elem.addClass(elem.data('bem') + '--' + mod);
-                    } else {
-                        elem.addClass(mod);
-                    }
-                }
-            });
-        };
+					if (typeof elem.data('bem') !== "undefined")
+					{
+						elem.removeClass(elem.data('bem'));
 
+						var current_class = elem.attr('class');
+						current_class = typeof current_class !== 'undefined' ? ' ' + current_class : '';
 
-        self.removeModifier = function (elem, attrs) {
-
-            if (window.precompile) {
-                attrs.mod = attrs.mod.replace(/\s+(?=[^\{\}]*\})/g, '[__]');
-            }
-
-            attrs.mod.split(' ').forEach(function (mod) {
-
-                if (window.precompile) {
-                    mod = mod.replace(/\[__\]/g, ' ');
-                }
-
-                if (mod.length && mod != " ") {
-
-                    if (typeof elem.data('bem') != "undefined") {
-                        elem.removeClass(elem.data('bem') + '--' + mod);
-                    } else {
-                        elem.removeClass(mod);
-                    }
-                }
-            });
-        };
+						elem.attr('class', elem.data('bem') + ' ' + elem.data('bem') + '--' + mod + ' ' + current_class );
+					}
+					else
+						elem.addClass(mod);
+				}
+			});
+		};
 
 
-        self.manageBlock = function (elem, attrs) {
+		self.manageBlock = function (elem, attrs) {
 
-            self._configure('block', elem, attrs.block);
-        };
-
-
-        self.manageElements = function (elem, attrs) {
-
-            var $element = elem.parents('[element]');
-            var $block   = elem.parents('[block]');
-
-            if (!$element.length || $element.parents('[block]').data(':bem') != $block.data(':bem')) {
-                $element = $block;
-            }
-
-            if ($element.length) {
-                self._configure('element', elem, $element.data(':bem'), attrs.element);
-            }
-        };
+			self._configure('block', elem, attrs.block);
+		};
 
 
-        dom.compiler.register('attribute', 'block', function(elem, attrs) {
+		self.manageElements = function (elem, attrs) {
 
-            self.manageBlock(elem, attrs);
-        });
+			var $element = elem.parents('[element]');
+			var $block   = elem.parents('[block]');
 
-        dom.compiler.register('attribute', 'element', function(elem, attrs) {
+			if (!$element.length || $element.parents('[block]').data(':bem') != $block.data(':bem')) {
+				$element = $block;
+			}
 
-            self.manageElements(elem, attrs);
-        });
+			if ($element.length) {
+				self._configure('element', elem, $element.data(':bem'), attrs.element);
+			}
+		};
 
-        dom.compiler.register('attribute', 'mod', function(elem, attrs) {
 
-            self.addModifier(elem, attrs);
-        });
-    };
+		dom.compiler.register('attribute', 'block', function(elem, attrs) {
 
-    dom     = typeof dom == 'undefined' ? {} : dom;
-    dom.bem = new BEM();
+			self.manageBlock(elem, attrs);
+		});
+
+		dom.compiler.register('attribute', 'element', function(elem, attrs) {
+
+			self.manageElements(elem, attrs);
+		});
+
+		dom.compiler.register('attribute', 'mod', function(elem, attrs) {
+
+			self.addModifier(elem, attrs);
+		});
+	};
+
+	dom     = typeof dom == 'undefined' ? {} : dom;
+	dom.bem = new BEM();
 
 })(jQuery);

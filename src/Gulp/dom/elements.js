@@ -63,84 +63,10 @@
         url     = url.replace(/%7B/g, '{').replace(/%7D/g, '}');
 
         if (options.defer) {
-            return '<iframe data-src="' + url + '" allowfullscreen class="youtube-embed meta-defer"></iframe>';
+            return '<iframe src="" data-src="' + url + '" allowfullscreen class="youtube-embed"></iframe>';
         } else {
             return '<iframe src="' + url + '" allowfullscreen class="youtube-embed"></iframe>';
         }
     });
-
-
-    dom.compiler.register('element', 'vtop', function (elem) {
-
-        var $parent = elem.parent();
-
-        if ($parent.is('a') || $parent.is('span')) {
-            return '<span class="valign"><span class="valign__top"><transclude/></span></span>';
-        } else {
-            return '<div class="valign"><div class="valign__top"><transclude/></div></div>';
-        }
-    });
-
-
-    dom.compiler.register('element', 'vbottom', function (elem) {
-
-        var $parent = elem.parent();
-
-        if ($parent.is('a') || $parent.is('span')) {
-            return '<span class="valign"><span class="valign__bottom"><transclude/></span></span>';
-        } else {
-            return '<div class="valign"><div class="valign__bottom"><transclude/></div></div>';
-        }
-    });
-
-	dom.compiler.register('element', 'grid', function(elem, attrs) {
-
-		if( 'mod' in attrs && !'element' in attrs && !'block' in attrs )
-			elem.removeAttr('mod');
-
-		return '<div data-grid="'+(attrs.mod?attrs.mod:'')+'"><transclude/></div>';
-	});
-
-
-	dom.compiler.register('element', 'row', function(elem, attrs) {
-
-		if( 'mod' in attrs && !'element' in attrs && !'block' in attrs )
-			elem.removeAttr('mod');
-
-		return '<div data-row="'+(attrs.mod?attrs.mod:'')+'"><transclude/></div>';
-	});
-
-
-	dom.compiler.register('element', 'column', function(elem, attrs) {
-
-		var attributes = ['data-col="'+(attrs.size?attrs.size:'1/1')+'"'];
-
-		if( attrs.size )
-			elem.removeAttr('size');
-
-		if( 'mod' in attrs && !'element' in attrs && !'block' in attrs ){
-
-			attributes.push('data-align="'+attrs.mod+'"');
-			elem.removeAttr('mod');
-		}
-
-		if( 'offsetBy' in attrs ){
-
-			$('<div data-col="'+attrs.offsetBy+'"></div>').insertBefore(elem);
-			elem.removeAttr('offset-by');
-		}
-
-		$.each(grid_breakpoints, function(i, media){
-
-			var c_media = camelCase('size-'+media);
-			if (attrs[c_media]) {
-
-				attributes.push('data-col-' + media + '="' + attrs[c_media] + '"');
-				elem.removeAttr('size-' + media);
-			}
-		});
-
-		return '<div '+attributes.join(' ')+'><transclude/></div>';
-	});
 
 })(jQuery);

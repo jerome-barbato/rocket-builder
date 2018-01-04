@@ -6,10 +6,18 @@
 
 'use strict';
 
-var gulp        = require('gulp'),
-    fs          = require('fs'),
-    config      = require('./src/Gulp/config'),
-    livereload  = require('gulp-livereload');
+global.fs      = require('fs');
+global.gulp    = require('gulp');
+global.del     = require('del');
+global.gpath   = require('path');
+global.gif     = require('gulp-if');
+global.bundle  = require('gulp-bundle-assets');
+global.gutil   = require('gulp-util');
+
+gulp.watch   = require('gulp-watch');
+global.config  = require('./src/Gulp/config');
+
+var livereload  = require('gulp-livereload');
 
 
 /**
@@ -31,24 +39,18 @@ for (var i in files)
  *  main optimization build task
  */
 
-gulp.task('default', ["views::clean", "script::browser", "script::vendor", "script::app", "style::compile", "templates::compile"], function ()
+gulp.task('default', ['clean', 'compile', 'make', 'sync'], function ()
 {
-    if (config.watching_mode)
-    {
-        if (config.environment === 'development')
-            livereload.listen();
+	if (config.watching_mode)
+	{
+		livereload.listen();
 
-        gulp.start("template::watch");
+		compile_watch();
+		make_watch();
 
-        gulp.watch(config.paths.watch.js.app, ["script::app"]);
-        gulp.watch(config.paths.watch.js.vendors, ["script::vendor", "templates::compile"]);
-        gulp.watch(config.paths.watch.scss, ["style::compile"]);
+		gulp.watch([config.paths.dist + gpath.sep + 'bundle' + gpath.sep + '*.*', config.paths.views + gpath.sep + '**' + gpath.sep + '*.*'], function (files) {
 
-        if (config.environment === 'development') {
-
-            gulp.watch([config.paths.dest.css + '/**/*.css', config.paths.dest.js + '/**/*.js', config.paths.dest.views + '/**/*.*' ], function (files) {
-                livereload.changed(files)
-            });
-        }
-    }
+			livereload.changed(files);
+		});
+	}
 });

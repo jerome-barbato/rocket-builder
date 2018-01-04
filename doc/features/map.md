@@ -1,1 +1,0 @@
-../../src/Resources/library/map/map.md

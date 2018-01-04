@@ -2,14 +2,10 @@
  * configuration
  */
 
-var builder_config_version = 1;
+var builder_config_version = 2;
 
 // Dependencies
-var gutil = require('gulp-util'),
-    fs    = require('fs'),
-    gpath = require('path'),
-    gulp  = require('gulp'),
-    yaml  = require('js-yaml');
+var yaml  = require('js-yaml');
 
 var getArg = function (key) {
 
@@ -27,7 +23,7 @@ var config = module.exports = {
     // Enable watching for changes in src files
     watching_mode: true,
     // Application root path
-    base_path    : ".." + gpath.sep + ".." + gpath.sep + "..",
+    base_path    : __dirname.replace(gpath.sep + 'vendor' + gpath.sep + 'metabolism' + gpath.sep + 'rocket-builder' + gpath.sep + 'src' + gpath.sep + 'Gulp', ''),
     // Global config file
     paths        : {},
 
@@ -42,10 +38,13 @@ var config = module.exports = {
             config.builder = yaml.safeLoad(fs.readFileSync(config.base_path + gpath.sep + 'config' + gpath.sep + 'builder.yml'));
         }
 
-        if( typeof (config.builder.template.simple_tree) == 'undefined' )
+        if( typeof (config.builder.template.split) === 'undefined' )
+	        config.builder.template.split = false;
+
+        if( typeof (config.builder.template.simple_tree) === 'undefined' )
 	        config.builder.template.simple_tree = true;
 
-        if ('browsers' in config.builder.style == false)
+        if ('browsers' in config.builder.style === false)
         {
             config.builder.style.browsers = [
                 "last 3 versions",
@@ -53,119 +52,10 @@ var config = module.exports = {
             ];
         }
 
-        config.paths.sm_private = ".." + gpath.sep + ".." + config.builder.paths.private;
-        config.paths.public   = config.base_path + config.builder.paths.public;
-        config.paths.views    = config.base_path + config.builder.paths.views;
-        config.paths.split    = 'split_by_type' in config.builder.paths && config.builder.paths.split_by_type;
-
-	    config.paths.private = {
-	        root : config.base_path + config.builder.paths.private,
-	    	js : config.base_path + config.builder.paths.private + (config.paths.split ? gpath.sep + 'js' : ''),
-		    scss : config.base_path + config.builder.paths.private + (config.paths.split ? gpath.sep + 'scss' : ''),
-		    template : config.base_path + config.builder.paths.private + (config.paths.split ? gpath.sep + 'template' : '')
-	    };
-
-        config.paths.css_to_sass = '..' + gpath.sep + 'private' + gpath.sep;
-
-        config.paths.src = {
-            js      : {
-                vendor  : [],
-                browser : [],
-                app     : [],
-                compiler: []
-            },
-	        scss    : config.paths.private.scss + gpath.sep + "*.scss",
-            template: [
-	            config.paths.private.template + gpath.sep + "**" + gpath.sep + "*.twig",
-	            config.paths.private.template + gpath.sep + "**" + gpath.sep + "*.tpl"
-            ],
-            html    : config.paths.public + gpath.sep + "views" + gpath.sep + "**" + gpath.sep + "*.html"
-        };
-
-        config.paths.dest = {
-            js      : config.paths.public + gpath.sep + "js",
-            css     : config.paths.public + gpath.sep + "css",
-	        views   : config.paths.views
-        };
-
-        config.paths.watch = {
-            js        : {
-                app    : [
-                    config.paths.private.js + gpath.sep + "**" + gpath.sep + "*.js",
-                    "!"+config.paths.private.js + gpath.sep + "vendor" + gpath.sep + "**" + gpath.sep + "*.js"
-                ],
-                vendors: [config.paths.private.js + gpath.sep + "vendor" + gpath.sep + "**" + gpath.sep + "*.js"]
-            },
-            scss      : config.paths.private.scss + gpath.sep + "**" + gpath.sep + "*.scss",
-            template  : [
-                config.paths.private.template + gpath.sep + "**" + gpath.sep + "*.twig",
-                config.paths.private.template + gpath.sep + "**" + gpath.sep + "*.tpl"
-            ]
-        };
-    },
-
-
-    addApp: function addApp(){
-
-        if (config.builder && config.builder.script && config.builder.script.app )
-        {
-            config.builder.script.app.forEach(function (element) {
-
-                config.paths.src.js.app.push(config.paths.private.js + gpath.sep + element + '.js');
-            });
-        }
-        else {
-
-            config.paths.src.js.app = false;
-        }
-    },
-
-
-
-    addLibs: function addVendor(libraries, additional_path, vendors) {
-
-        libraries.forEach(function (library)
-        {
-            if (typeof library === 'string')
-            {
-                vendors.push(config.paths.private.js + gpath.sep + 'vendor' + gpath.sep + additional_path + library + '.js');
-            }
-            else
-            {
-                for (var path in library)
-                {
-                    config.addLibs(library[path], additional_path + path + gpath.sep, vendors);
-                }
-            }
-        });
-    },
-
-
-    /**
-     * Rocket front configuration added some paths to configuration file
-     * we add them by merging two objects
-     * @TODO: Optimize
-     */
-    addVendors: function addVendors() {
-
-        if ( config.builder && config.builder.script && 'vendor' in config.builder.script )
-        {
-            config.addLibs(config.builder.script.vendor, '', config.paths.src.js.vendor);
-        }
-        else
-        {
-            config.paths.src.js.vendor = false;
-        }
-
-
-        if ( config.builder &&  config.builder.script && 'browser' in config.builder.script )
-        {
-            config.addLibs(config.builder.script.browser, '', config.paths.src.js.browser);
-        }
-        else
-        {
-            config.paths.src.js.browser = false;
-        }
+        config.paths.src    = config.base_path + config.builder.paths.src;
+        config.paths.dist   = config.base_path + config.builder.paths.dist;
+        config.paths.views  = config.base_path + config.builder.paths.views;
+        config.paths.web    = config.base_path + gpath.sep + 'web' + gpath.sep;
     },
 
     /**
@@ -196,7 +86,6 @@ var config = module.exports = {
         if (getArg("--development") || getArg("-d"))
             config.environment = 'development';
 
-
         gutil.log("Loading...");
 
         // Watching mode
@@ -204,8 +93,6 @@ var config = module.exports = {
             config.watching_mode = false;
 
         config.load();
-        config.addVendors();
-        config.addApp();
     }
 };
 

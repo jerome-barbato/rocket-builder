@@ -47,20 +47,7 @@ Depending on what usage you will do of the builder, two options are available :
 * Minimum dependencies
   * Preprocessors CSS
   * Preprocessors HTML
-  * Linting
-
-        cd builder
-        npm install --production
-
-* Install full dependencies
-  * Preprocessors CSS
-  * Preprocessors HTML
-  * Linting
-  * Tests modules
-  
-        cd builder
-        npm install
-        
+    
         
 USAGE
 ------
