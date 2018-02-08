@@ -12,7 +12,8 @@ var paths = [
 	'!'+config.paths.src+'/component/**/*.scss',
 	'!'+config.paths.src+'/component/**/*.twig',
 	'!'+config.paths.src+'/component/**/*.tpl',
-	'!'+config.paths.src+'/component/**/*__'
+	'!'+config.paths.src+'/component/**/*__',
+	'!'+config.paths.src+'/component/**/__*'
 ];
 
 function synchronize(done){
