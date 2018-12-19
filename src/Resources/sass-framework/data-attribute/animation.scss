@@ -1,0 +1,45 @@
+@mixin data-animation{
+
+  @each $name, $properties in $animations{
+    [data-animation="#{$name}"]{
+      animation: $name $animation-duration $ease-out-cubic both;
+      will-change: unquote($properties);
+    }
+  }
+
+  span[data-animation] { display: inline-block }
+
+  [data-animation="reveal"]{
+    position: relative;
+    &:before {
+      display: block; position: overlay();
+      z-index: 1; will-change: opacity, transform;
+      background: $animation-reveal-color;
+      content: ''; animation: appear $ease-in-out-cubic $animation-duration both
+    }
+    > * {
+      animation: fade-in-half $animation-duration steps(1, end) both;
+      height: 100%;
+      will-change: opacity
+    }
+    > span {
+      display: inline-block; line-height: 100%
+    }
+    > img{ display: block }
+    > *, &:before { animation-delay: inherit }
+  }
+
+  @for $i from 0 through $animation-delay-values{
+    [data-delay="#{$i}"]{ animation-delay: $animation-delay*$i }
+  }
+
+  @each $name, $easing in $easings{
+    [data-easing="#{$name}"]{ animation-timing-function: $easing }
+  }
+}
+
+$animations: false !default;
+
+@if (variable-exists(data-attributes) and index($data-attributes, 'animation') and $animations) {
+  @include data-animation;
+}

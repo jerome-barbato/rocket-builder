@@ -1,0 +1,10 @@
+.sass-cache
+.idea
+.rb
+.map
+.DS_Store
+npm-debug.log
+cache
+node_modules
+debug*
+*.debug

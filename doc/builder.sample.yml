@@ -1,0 +1,78 @@
+#
+# Rocket Builder Configuration
+# Perform specific compilation upon theme assets before it can be used by the framework.
+#
+
+
+# Defines rocket-builder folders for resources.
+paths:
+  # Resources folders with raw sources
+  private: /src/FrontBundle/Resources/private
+  # Folder where all the assets will be generated
+  public: /src/FrontBundle/Resources/public
+  # Folder where the views will be compiled
+  views: /app/views
+
+
+# Style compatibility
+style:
+  browsers:
+  - last 2 versions
+  - iOS 8
+
+
+# HTML compilation options
+template:
+  compile: true
+  simple_tree: true
+  bem_level: 2
+
+
+# Gulp scripts compilation
+# Defines which files will be included after compilation
+script:
+  # Vendors
+  browser:
+    - modernizr
+    - browser
+
+  app:
+    - layout/**/*
+    - shared/**/*
+    - page/**/*
+    - app
+
+  vendor:
+    - jquery:
+      - jquery
+      - easing/easing
+      - ui/ui
+      - touchSwipe/touchSwipe
+      - validate/validate
+    - gmap3/gmap3
+    - polyfill:
+      - jquery.utils
+      - jquery.transform3d
+      - jquery.initialize
+      - misc
+      - cookie
+    - metabolism:
+      - activation/activation
+      - angulight/angulight
+      - detect/detect
+      - fit/fit
+      - on-demand/on-demand
+      - parallax/parallax
+      - scroll-to/scroll-to
+      - sliders/sliders
+      - mail/mail
+      - popin/popin
+      - toggle/toggle
+      - custom/custom
+      - defer/defer
+      - map/map
+      - router/router
+      - share/share
+      - tabs/tabs
+      - bind/bind
+      - tag/tag
