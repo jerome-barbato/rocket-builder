@@ -6,7 +6,7 @@
   "dependencies": {
     "chalk": "^2.0.1",
     "del": "^3.0.0",
-    "fs-path": "0.0.23",
+    "fs-path": "0.0.25",
     "gulp": "^3.9.1",
     "gulp-bundle-assets": "^2.29.0",
     "gulp-css-globbing": "^0.2.2",
